@@ -16,10 +16,10 @@ const Pricing = () => {
       id: "bronze",
       title: "Bronze",
       price: "£100",
-      color: "bg-gradient-to-b from-amber-700/80 to-amber-900/60",
+      color: "from-amber-700/80 to-amber-900/60",
       textColor: "text-white",
       borderColor: "border-amber-600",
-      hoverShadow: "shadow-amber-500/50",
+      shadowColor: "rgba(217, 119, 6, 0.5)", // amber-600 in rgb
       features: [
         "Basic company setup guidance",
         "Essential document templates",
@@ -31,10 +31,10 @@ const Pricing = () => {
       id: "silver",
       title: "Silver",
       price: "£200",
-      color: "bg-gradient-to-b from-slate-300/80 to-slate-500/60",
+      color: "from-slate-300/80 to-slate-500/60",
       textColor: "text-white", 
       borderColor: "border-slate-400",
-      hoverShadow: "shadow-slate-400/50",
+      shadowColor: "rgba(148, 163, 184, 0.5)", // slate-400 in rgb
       features: [
         "Everything in Bronze",
         "Extended document library",
@@ -46,10 +46,10 @@ const Pricing = () => {
       id: "gold",
       title: "Gold",
       price: "£300",
-      color: "bg-gradient-to-b from-amber-400/80 to-amber-600/60",
+      color: "from-amber-400/80 to-amber-600/60",
       textColor: "text-white",
       borderColor: "border-amber-500",
-      hoverShadow: "shadow-amber-400/50",
+      shadowColor: "rgba(245, 158, 11, 0.5)", // amber-500 in rgb
       features: [
         "Everything in Silver",
         "Complete document engine",
@@ -62,10 +62,10 @@ const Pricing = () => {
       id: "platinum",
       title: "Platinum",
       price: "£500",
-      color: "bg-gradient-to-b from-slate-50 via-slate-200 to-slate-300",
+      color: "from-slate-50 via-slate-200 to-slate-300",
       textColor: "text-gray-800",
       borderColor: "border-slate-400",
-      hoverShadow: "shadow-slate-300/50",
+      shadowColor: "rgba(203, 213, 225, 0.8)", // slate-300 in rgb
       features: [
         "Everything in Gold",
         "Full access to all resources",
@@ -108,71 +108,96 @@ const Pricing = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {plans.map((plan) => (
-            <Card 
-              key={plan.id} 
-              className={`
-                ${selectedPlan === plan.id 
-                  ? "border-[#1d4ed8] ring-2 ring-[#1d4ed8] shadow-2xl shadow-[#1d4ed8]/40" 
-                  : plan.borderColor
-                } 
-                ${plan.color} 
-                cursor-pointer relative backdrop-blur-sm bg-opacity-70 flex flex-col
-                transition-all duration-500 ease-out
-                hover:-translate-y-2 hover:scale-105 hover:brightness-110
-              `}
-              onClick={() => handleSelectPlan(plan.id)}
-              style={{
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = selectedPlan === plan.id 
-                  ? '0 25px 50px -12px rgba(29, 78, 216, 0.4)'
-                  : '0 25px 50px -12px rgba(59, 130, 246, 0.5)';
-                e.currentTarget.style.transform = 'translateY(-8px) scale(1.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = selectedPlan === plan.id 
-                  ? '0 25px 50px -12px rgba(29, 78, 216, 0.4)'
-                  : '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-              }}
+            <div
+              key={plan.id}
+              className="group relative"
             >
-              {plan.recommended && (
-                <Badge className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-6 py-1 text-base font-bold z-20">
-                  Recommended
-                </Badge>
-              )}
-              <CardHeader className={plan.recommended ? "pt-10" : ""}>
-                <CardTitle className={`${plan.id === "platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor} transition-all duration-300`}>{plan.title}</CardTitle>
-                <div className={`text-3xl font-bold ${plan.id === "platinum" ? "text-gray-800" : plan.textColor} transition-all duration-300`}>{plan.price}</div>
-                <CardDescription className={`${plan.id === "platinum" ? "text-gray-800" : plan.textColor} opacity-90 transition-all duration-300`}>One-time payment</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <ul className="space-y-2">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className={`flex items-center gap-2 ${plan.id === "platinum" ? "text-gray-800" : plan.textColor} transition-all duration-300`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`${plan.id === "platinum" ? "text-gray-800" : "text-[#3b82f6]"} transition-all duration-300`}>
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-              <CardFooter className="mt-auto">
-                <Button 
-                  className={`w-full ${
-                    selectedPlan === plan.id
-                      ? "bg-[#1d4ed8] hover:bg-[#1d4ed8]/80" 
-                      : plan.id === "platinum"
-                        ? "bg-gray-800 hover:bg-gray-700 text-white"
-                        : "bg-blue-900/50 hover:bg-[#1d4ed8]/60 border border-blue-700"
-                  } transition-all duration-300`}
-                >
-                  {selectedPlan === plan.id ? "Selected" : "Select Plan"}
-                </Button>
-              </CardFooter>
-            </Card>
+              <Card 
+                className={`
+                  ${selectedPlan === plan.id 
+                    ? "border-[#1d4ed8] ring-2 ring-[#1d4ed8]" 
+                    : plan.borderColor
+                  } 
+                  bg-gradient-to-b ${plan.color}
+                  cursor-pointer relative backdrop-blur-sm bg-opacity-70 flex flex-col h-full
+                  transition-all duration-300 ease-out
+                  transform-gpu
+                  group-hover:-translate-y-3 group-hover:scale-[1.02]
+                  shadow-lg
+                  group-hover:shadow-2xl
+                `}
+                onClick={() => handleSelectPlan(plan.id)}
+                style={{
+                  boxShadow: selectedPlan === plan.id 
+                    ? `0 20px 40px -10px ${plan.shadowColor}`
+                    : '0 10px 25px -5px rgba(0, 0, 0, 0.2)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+                onMouseEnter={(e) => {
+                  if (selectedPlan !== plan.id) {
+                    e.currentTarget.style.boxShadow = `0 30px 60px -15px ${plan.shadowColor}`;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedPlan !== plan.id) {
+                    e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
+                  }
+                }}
+              >
+                {plan.recommended && (
+                  <Badge className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-6 py-1 text-base font-bold z-20 shadow-lg">
+                    Recommended
+                  </Badge>
+                )}
+                <CardHeader className={plan.recommended ? "pt-10" : ""}>
+                  <CardTitle className={`${plan.id === "platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor} transition-all duration-300 text-xl`}>
+                    {plan.title}
+                  </CardTitle>
+                  <div className={`text-4xl font-bold ${plan.id === "platinum" ? "text-gray-800" : plan.textColor} transition-all duration-300 mt-2`}>
+                    {plan.price}
+                  </div>
+                  <CardDescription className={`${plan.id === "platinum" ? "text-gray-700" : plan.textColor} opacity-90 transition-all duration-300`}>
+                    One-time payment
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <ul className="space-y-3">
+                    {plan.features.map((feature, i) => (
+                      <li key={i} className={`flex items-start gap-2 ${plan.id === "platinum" ? "text-gray-700" : plan.textColor} transition-all duration-300`}>
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          width="20" 
+                          height="20" 
+                          viewBox="0 0 24 24" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          strokeWidth="2" 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          className={`${plan.id === "platinum" ? "text-gray-800" : "text-[#60a5fa]"} transition-all duration-300 flex-shrink-0 mt-0.5`}
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span className="text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+                <CardFooter className="mt-auto">
+                  <Button 
+                    className={`w-full transform transition-all duration-300 ${
+                      selectedPlan === plan.id
+                        ? "bg-[#1d4ed8] hover:bg-[#1d4ed8]/90 scale-105" 
+                        : plan.id === "platinum"
+                          ? "bg-gray-800 hover:bg-gray-700 text-white group-hover:scale-105"
+                          : "bg-blue-900/50 hover:bg-[#1d4ed8]/60 border border-blue-700 group-hover:scale-105"
+                    }`}
+                  >
+                    {selectedPlan === plan.id ? "Selected" : "Select Plan"}
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
           ))}
         </div>
         
@@ -180,7 +205,7 @@ const Pricing = () => {
           <Button 
             onClick={handleProceedToPayment}
             disabled={!selectedPlan || isLoading}
-            className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 px-8 py-6 text-lg"
+            className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 px-8 py-6 text-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105"
             size="lg"
           >
             {isLoading ? "Processing..." : "Proceed to Payment"}
