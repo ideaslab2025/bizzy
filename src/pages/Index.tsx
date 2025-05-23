@@ -38,9 +38,9 @@ const Index = () => {
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
       {/* Header/Navigation - fixed and always visible with solid background */}
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f] shadow-md">
-        <div className="container mx-auto py-1 flex justify-between items-center">
+        <div className="container mx-auto py-0.5 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-56" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-60" />
           </Link>
           <nav className="hidden md:flex gap-6">
             <a href="#about" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">About</a>
@@ -82,7 +82,10 @@ const Index = () => {
               </div>
             </div>
             <div className="relative h-[400px] md:h-[500px] flex items-center justify-center">
-              <img src="/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png" alt="Frustrated business owners" className="w-full h-full object-contain drop-shadow-[0_0_35px_rgba(59,130,246,0.8)]" />
+              <img src="/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png" 
+                alt="Happy business owners" 
+                className="w-full h-full object-contain rounded-3xl bg-blend-screen mix-blend-lighten drop-shadow-[0_0_35px_rgba(59,130,246,0.8)]" 
+              />
             </div>
           </div>
         </div>
@@ -159,7 +162,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pricing Section - Updated with improved platinum color and correct recommended badge */}
+      {/* Pricing Section */}
       <section id="pricing" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
@@ -198,7 +201,7 @@ const Index = () => {
             borderColor: "border-blue-300",
             features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
           }].map((plan, index) => <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden`}>
-                {plan.recommended && <Badge className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-0.5 text-xs font-bold z-10">
+                {plan.recommended && <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-0.5 text-xs font-bold z-10">
                     Recommended
                   </Badge>}
                 <CardHeader className={plan.recommended ? "pt-6" : ""}>
@@ -228,7 +231,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Testimonials Section - updated to use circles instead of boxes */}
       <section id="testimonials" className="py-16 bg-blue-900/10">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-10 text-center text-[#3b82f6]">What Our Customers Say</h2>
@@ -236,8 +239,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* About Section with Bizzy character - enlarged image with better glow effect */}
-      <section id="about" className="py-16 bg-blue-900/20">
+      {/* About Section with Bizzy character - thinner section and larger image */}
+      <section id="about" className="py-12 bg-blue-900/20">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="md:w-1/2">
@@ -257,7 +260,7 @@ const Index = () => {
             <div className="md:w-1/2 flex justify-center">
               <div className="relative">
                 <div className="absolute inset-0 bg-[#1d4ed8]/30 blur-3xl rounded-full"></div>
-                <img src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" alt="Bizzy Character" className="w-[400px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]" />
+                <img src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" alt="Bizzy Character" className="w-[500px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]" />
               </div>
             </div>
           </div>

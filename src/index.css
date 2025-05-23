@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -97,5 +98,16 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+  
+  /* Fix for header transparency */
+  header.sticky {
+    @apply bg-[#0a192f] !important;
+    backdrop-filter: blur(8px);
+  }
+  
+  /* Feature boxes styling */
+  #features .relative.overflow-hidden {
+    @apply shadow-xl transition-all hover:-translate-y-1 hover:shadow-blue-500/30;
   }
 }

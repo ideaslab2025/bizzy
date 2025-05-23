@@ -112,10 +112,12 @@ const BizzyChat = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
         <DrawerHeader className="bg-[#0a192f] text-white border-b border-blue-900/30">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" alt="Bizzy" />
-                <AvatarFallback>BZ</AvatarFallback>
-              </Avatar>
+              <img 
+                src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" 
+                alt="Bizzy" 
+                className="h-8 w-8"
+                style={{ filter: "drop-shadow(0 0 5px rgba(59,130,246,0.8))" }}
+              />
               <DrawerTitle className="text-[#3b82f6]">Chat with Bizzy</DrawerTitle>
             </div>
             <DrawerClose className="rounded-full h-8 w-8 flex items-center justify-center hover:bg-blue-900/30">

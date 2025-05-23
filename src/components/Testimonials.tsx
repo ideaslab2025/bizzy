@@ -9,35 +9,35 @@ const testimonials = [
   {
     name: "Sarah Johnson",
     position: "CEO, GrowthTech Ltd",
-    image: "/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png",
+    image: "/lovable-uploads/e47628c4-cf40-47c0-b63e-4825b01d4574.png",
     text: "Bizzy transformed our operations. Setting up all the admin was a breeze, and the document templates saved us countless hours.",
     rating: 5
   },
   {
     name: "Michael Thompson",
     position: "Founder, Innovate Solutions",
-    image: "/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png",
+    image: "/lovable-uploads/7cff5e86-7507-49eb-a840-ee12479e3704.png",
     text: "The AI guidance was like having a business consultant on demand. Best investment we made for our startup.",
     rating: 5
   },
   {
     name: "Emma Richards",
     position: "Director, Clarity Consulting",
-    image: "/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png",
+    image: "/lovable-uploads/45d4bf2f-78d8-453d-ba15-ea8ee14cd38d.png",
     text: "From company formation to compliance documents, Bizzy handled it all. Their Gold plan is worth every penny.",
     rating: 4
   },
   {
     name: "David Wilson",
     position: "CFO, NextStep Digital",
-    image: "/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png",
+    image: "/lovable-uploads/6858378c-f597-4de9-abad-831c0c17c14b.png",
     text: "The document templates alone saved us thousands in legal fees. Bizzy is a must-have for any new business.",
     rating: 5
   },
   {
     name: "Jennifer Adams",
     position: "Owner, Bright Ideas Co",
-    image: "/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png",
+    image: "/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png",
     text: "I was worried about compliance issues, but Bizzy guided me through each step perfectly. Excellent platform.",
     rating: 5
   }
@@ -70,40 +70,38 @@ const Testimonials = () => {
         <CarouselContent>
           {testimonials.map((testimonial, index) => (
             <CarouselItem key={index} className="md:basis-1/3 pl-4">
-              <Card className="bg-blue-900/30 border-blue-800 h-full">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    {Array(testimonial.rating).fill(0).map((_, i) => (
-                      <svg key={i} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                      </svg>
-                    ))}
-                  </div>
-                  
-                  <p className="text-blue-100 mb-6 italic">"{testimonial.text}"</p>
-                  
-                  <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarImage src={testimonial.image} alt={testimonial.name} />
-                      <AvatarFallback>{testimonial.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium text-[#3b82f6]">{testimonial.name}</p>
-                      <p className="text-sm text-blue-100/70">{testimonial.position}</p>
-                    </div>
-                  </div>
-                </CardContent>
+              <div className="bg-blue-900/30 border-blue-800 rounded-full p-6 h-full flex flex-col">
+                <div className="flex items-center gap-2 mb-4">
+                  {Array(testimonial.rating).fill(0).map((_, i) => (
+                    <svg key={i} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                  ))}
+                </div>
                 
-                <CardFooter className="border-t border-blue-800/50 pt-4">
-                  <a href="https://www.trustpilot.com" target="_blank" rel="noopener noreferrer" className="text-sm text-[#3b82f6] flex items-center">
+                <p className="text-blue-100 mb-6 italic text-center">"{testimonial.text}"</p>
+                
+                <div className="flex items-center justify-center gap-3 mt-auto">
+                  <Avatar>
+                    <AvatarImage src={testimonial.image} alt={testimonial.name} />
+                    <AvatarFallback>{testimonial.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium text-[#3b82f6]">{testimonial.name}</p>
+                    <p className="text-sm text-blue-100/70">{testimonial.position}</p>
+                  </div>
+                </div>
+                
+                <div className="mt-4 pt-4 border-t border-blue-800/50 text-center">
+                  <a href="https://www.trustpilot.com" target="_blank" rel="noopener noreferrer" className="text-sm text-[#3b82f6] flex items-center justify-center">
                     <span>View on Trustpilot</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1">
                       <line x1="7" y1="17" x2="17" y2="7"></line>
                       <polyline points="7 7 17 7 17 17"></polyline>
                     </svg>
                   </a>
-                </CardFooter>
-              </Card>
+                </div>
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
