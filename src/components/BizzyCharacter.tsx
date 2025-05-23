@@ -20,7 +20,7 @@ const BizzyCharacter = () => {
       onMouseLeave={() => setIsHovering(false)}
     >
       <img 
-        src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png"
+        src="/lovable-uploads/e47628c4-cf40-47c0-b63e-4825b01d4574.png" 
         alt="Bizzy assistant" 
         className="w-[120px] drop-shadow-[0_0_15px_rgba(29,78,216,0.7)]"
       />

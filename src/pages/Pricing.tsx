@@ -16,8 +16,8 @@ const Pricing = () => {
       id: "bronze",
       title: "Bronze",
       price: "£100",
-      color: "bg-gradient-to-b from-amber-700/50 to-amber-900/30",
-      textColor: "text-amber-100",
+      color: "bg-gradient-to-b from-amber-700/80 to-amber-900/60",
+      textColor: "text-white",
       borderColor: "border-amber-600",
       features: [
         "Basic company setup guidance",
@@ -30,8 +30,8 @@ const Pricing = () => {
       id: "silver",
       title: "Silver",
       price: "£200",
-      color: "bg-gradient-to-b from-slate-300/50 to-slate-500/30",
-      textColor: "text-slate-100", 
+      color: "bg-gradient-to-b from-slate-300/80 to-slate-500/60",
+      textColor: "text-white", 
       borderColor: "border-slate-400",
       features: [
         "Everything in Bronze",
@@ -44,8 +44,8 @@ const Pricing = () => {
       id: "gold",
       title: "Gold",
       price: "£300",
-      color: "bg-gradient-to-b from-amber-400/50 to-amber-600/30",
-      textColor: "text-amber-100",
+      color: "bg-gradient-to-b from-amber-400/80 to-amber-600/60",
+      textColor: "text-white",
       borderColor: "border-amber-500",
       features: [
         "Everything in Silver",
@@ -59,8 +59,8 @@ const Pricing = () => {
       id: "platinum",
       title: "Platinum",
       price: "£500",
-      color: "bg-gradient-to-b from-slate-200/50 to-slate-400/30",
-      textColor: "text-slate-100",
+      color: "bg-gradient-to-b from-slate-200/80 to-slate-400/60",
+      textColor: "text-white",
       borderColor: "border-slate-300",
       features: [
         "Everything in Gold",
@@ -121,7 +121,7 @@ const Pricing = () => {
               <CardHeader className={plan.recommended ? "pt-6" : ""}>
                 <CardTitle className={plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
                 <div className="text-3xl font-bold text-white">{plan.price}</div>
-                <CardDescription className={`${plan.textColor} opacity-90`}>One-time payment</CardDescription>
+                <CardDescription className="text-white opacity-90">One-time payment</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">

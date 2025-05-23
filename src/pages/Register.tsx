@@ -29,7 +29,7 @@ const Register = () => {
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
           <Link to="/">
-            <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-16" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-24" />
           </Link>
         </div>
         
@@ -71,14 +71,14 @@ const Register = () => {
             <CardFooter className="flex flex-col">
               <Button 
                 type="submit" 
-                className="w-full mb-4 bg-[#0088cc] hover:bg-[#0088cc]/90"
+                className="w-full mb-4 bg-[#1d4ed8] hover:bg-[#1d4ed8]/90"
                 disabled={isLoading}
               >
                 {isLoading ? "Creating account..." : "Create account"}
               </Button>
               <p className="text-sm text-center text-muted-foreground">
                 Already have an account?{" "}
-                <Link to="/login" className="text-[#0088cc] hover:underline">
+                <Link to="/login" className="text-[#1d4ed8] hover:underline">
                   Log in
                 </Link>
               </p>

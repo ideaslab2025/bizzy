@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
+import Testimonials from "@/components/Testimonials";
 
 const Index = () => {
   const [floatingPosition, setFloatingPosition] = useState({ x: window.innerWidth - 150, y: window.innerHeight - 150 });
@@ -44,14 +45,14 @@ const Index = () => {
       {/* Header/Navigation */}
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f]/90 backdrop-blur-sm">
         <div className="container mx-auto py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-36" />
-          </div>
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-48" />
+          </Link>
           <nav className="hidden md:flex gap-6">
-            <a href="#features" className="text-[#1d4ed8] hover:text-[#3b82f6] transition">Features</a>
-            <a href="#pricing" className="text-[#1d4ed8] hover:text-[#3b82f6] transition">Pricing</a>
-            <a href="#about" className="text-[#1d4ed8] hover:text-[#3b82f6] transition">About</a>
-            <a href="#faq" className="text-[#1d4ed8] hover:text-[#3b82f6] transition">FAQ</a>
+            <a href="#features" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-lg font-semibold">Features</a>
+            <a href="#pricing" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-lg font-semibold">Pricing</a>
+            <a href="#about" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-lg font-semibold">About</a>
+            <a href="#faqs" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-lg font-semibold">FAQs</a>
           </nav>
           <div className="flex gap-2">
             <Link to="/login">
@@ -77,6 +78,9 @@ const Index = () => {
               <p className="text-xl mb-8 text-blue-100/80 max-w-2xl">
                 All the steps for company setup with document templates and AI guidance
               </p>
+              <h2 className="text-2xl font-semibold italic mb-8 text-[#3b82f6]">
+                Business without the busyness
+              </h2>
               <div className="flex flex-wrap gap-4">
                 <Link to="/register">
                   <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Start Your Journey</Button>
@@ -152,8 +156,8 @@ const Index = () => {
               {
                 title: "Bronze",
                 price: "£100",
-                color: "bg-gradient-to-b from-amber-700/50 to-amber-900/30",
-                textColor: "text-amber-100",
+                color: "bg-gradient-to-b from-amber-700/80 to-amber-900/60",
+                textColor: "text-white",
                 borderColor: "border-amber-600",
                 features: [
                   "Basic company setup guidance",
@@ -165,8 +169,8 @@ const Index = () => {
               {
                 title: "Silver",
                 price: "£200",
-                color: "bg-gradient-to-b from-slate-300/50 to-slate-500/30",
-                textColor: "text-slate-100", 
+                color: "bg-gradient-to-b from-slate-300/80 to-slate-500/60",
+                textColor: "text-white", 
                 borderColor: "border-slate-400",
                 features: [
                   "Everything in Bronze",
@@ -178,8 +182,8 @@ const Index = () => {
               {
                 title: "Gold",
                 price: "£300",
-                color: "bg-gradient-to-b from-amber-400/50 to-amber-600/30",
-                textColor: "text-amber-100",
+                color: "bg-gradient-to-b from-amber-400/80 to-amber-600/60",
+                textColor: "text-white",
                 borderColor: "border-amber-500",
                 features: [
                   "Everything in Silver",
@@ -192,8 +196,8 @@ const Index = () => {
               {
                 title: "Platinum",
                 price: "£500",
-                color: "bg-gradient-to-b from-slate-200/50 to-slate-400/30",
-                textColor: "text-slate-100",
+                color: "bg-gradient-to-b from-slate-200/80 to-slate-400/60",
+                textColor: "text-white",
                 borderColor: "border-slate-300",
                 features: [
                   "Everything in Gold",
@@ -205,14 +209,14 @@ const Index = () => {
             ].map((plan, index) => (
               <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative`}>
                 {plan.recommended && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-6 py-2 text-base font-bold">
+                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-8 py-3 text-lg font-bold">
                     Recommended
                   </Badge>
                 )}
                 <CardHeader className={plan.recommended ? "pt-6" : ""}>
                   <CardTitle className={plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
                   <div className="text-3xl font-bold text-white">{plan.price}</div>
-                  <CardDescription className={`${plan.textColor} opacity-90`}>One-time payment</CardDescription>
+                  <CardDescription className="text-white opacity-90">One-time payment</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
@@ -239,6 +243,9 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <Testimonials />
+
       {/* About Section with Bizzy character */}
       <section id="about" className="py-16 bg-blue-900/20">
         <div className="container mx-auto px-4">
@@ -260,13 +267,13 @@ const Index = () => {
             <div className="md:w-1/2 flex justify-center">
               <div className="relative">
                 <div className="absolute inset-0 bg-[#1d4ed8]/30 blur-3xl rounded-full"></div>
-                <AspectRatio ratio={1/1} className="overflow-hidden max-w-[300px] relative">
+                <div className="max-w-[300px] relative">
                   <img 
-                    src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
+                    src="/lovable-uploads/e47628c4-cf40-47c0-b63e-4825b01d4574.png" 
                     alt="Bizzy Character" 
-                    className="object-contain drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]"
+                    className="w-full drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]"
                   />
-                </AspectRatio>
+                </div>
               </div>
             </div>
           </div>
@@ -274,7 +281,7 @@ const Index = () => {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-16">
+      <section id="faqs" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
           <div className="max-w-3xl mx-auto space-y-6">
@@ -330,35 +337,35 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6]">Product</h3>
+              <h3 className="font-bold mb-4 text-[#3b82f6] text-xl">Product</h3>
               <ul className="space-y-2">
-                <li><a href="#features" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Features</a></li>
-                <li><a href="#pricing" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Pricing</a></li>
-                <li><a href="#faq" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">FAQ</a></li>
+                <li><a href="#features" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Features</a></li>
+                <li><a href="#pricing" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Pricing</a></li>
+                <li><a href="#faqs" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">FAQs</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6]">Resources</h3>
+              <h3 className="font-bold mb-4 text-[#3b82f6] text-xl">Resources</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Blog</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Guides</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Support</a></li>
+                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Blog</a></li>
+                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Guides</a></li>
+                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Support</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6]">Company</h3>
+              <h3 className="font-bold mb-4 text-[#3b82f6] text-xl">Company</h3>
               <ul className="space-y-2">
-                <li><a href="#about" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">About Us</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Careers</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Contact</a></li>
+                <li><a href="#about" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">About Us</a></li>
+                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Careers</a></li>
+                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Contact</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6]">Legal</h3>
+              <h3 className="font-bold mb-4 text-[#3b82f6] text-xl">Legal</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Terms</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Privacy</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Cookies</a></li>
+                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Terms</a></li>
+                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Privacy</a></li>
+                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Cookies</a></li>
               </ul>
             </div>
           </div>
