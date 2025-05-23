@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
-
 const Index = () => {
   const [floatingPosition, setFloatingPosition] = useState({
     x: window.innerWidth - 150,
@@ -16,7 +15,6 @@ const Index = () => {
 
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
-
   useEffect(() => {
     const floatingAnimation = () => {
       // Keep in bottom left area, but with some gentle floating movement
@@ -44,23 +42,24 @@ const Index = () => {
         const yOffset = -100; // Adjust this value to control how far above the section to scroll
         const element = faqsRef.current;
         const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
+        window.scrollTo({
+          top: y,
+          behavior: 'smooth'
+        });
       }
     };
 
     // Check hash on initial load
     handleHashChange();
-    
+
     // Add event listener for hash changes
     window.addEventListener('hashchange', handleHashChange);
-
     return () => {
       cancelAnimationFrame(animation);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
-
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
       {/* Header/Navigation */}
       <header className="border-b border-blue-900/30 sticky top-0 z-50 bg-[#0a192f] bg-opacity-100 backdrop-blur-md shadow-md">
@@ -108,11 +107,7 @@ const Index = () => {
               </div>
             </div>
             <div className="relative h-[500px] md:h-[600px] flex items-center justify-center -mt-32 overflow-visible">
-              <img 
-                src="/lovable-uploads/642ffc5f-5961-48bc-84b1-0546760e70a3.png" 
-                alt="Business owners with paperwork" 
-                className="w-[160%] h-full object-contain hero-image" 
-              />
+              <img src="/lovable-uploads/642ffc5f-5961-48bc-84b1-0546760e70a3.png" alt="Business owners with paperwork" className="w-[160%] h-full object-contain hero-image" />
             </div>
           </div>
         </div>
@@ -133,18 +128,12 @@ const Index = () => {
               
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="mb-2 w-full mx-auto flex-grow">
-                  <AspectRatio ratio={4/3} className="h-full">
-                    <img 
-                      src="/lovable-uploads/c94a4cc7-d428-4ab5-a334-592beb1b09d8.png" 
-                      alt="Step-by-Step Guidance" 
-                      className="w-full h-full object-cover rounded-lg" 
-                    />
+                  <AspectRatio ratio={4 / 3} className="h-full">
+                    <img src="/lovable-uploads/c94a4cc7-d428-4ab5-a334-592beb1b09d8.png" alt="Step-by-Step Guidance" className="w-full h-full object-cover rounded-lg" />
                   </AspectRatio>
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mt-2 mb-1 text-center">Step-by-Step Guidance</h3>
-                <p className="text-blue-100 text-center text-sm">
-                  Comprehensive guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections and interactive learning.
-                </p>
+                <p className="text-blue-100 text-center text-sm">Comprehensive step by step guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections </p>
               </div>
             </div>
             
@@ -156,12 +145,8 @@ const Index = () => {
               
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="mb-2 w-full mx-auto flex-grow">
-                  <AspectRatio ratio={4/3} className="h-full">
-                    <img 
-                      src="/lovable-uploads/5f026859-665d-4fb3-bcbf-452c8c82deab.png" 
-                      alt="Document Engine" 
-                      className="w-full h-full object-cover rounded-lg" 
-                    />
+                  <AspectRatio ratio={4 / 3} className="h-full">
+                    <img src="/lovable-uploads/5f026859-665d-4fb3-bcbf-452c8c82deab.png" alt="Document Engine" className="w-full h-full object-cover rounded-lg" />
                   </AspectRatio>
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Document Engine</h3>
@@ -179,12 +164,8 @@ const Index = () => {
               
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="mb-2 w-full mx-auto flex-grow">
-                  <AspectRatio ratio={4/3} className="h-full">
-                    <img 
-                      src="/lovable-uploads/3df548c5-49bb-4ffd-9e17-ed1e75fa6900.png" 
-                      alt="Bizzy AI Assistant" 
-                      className="w-full h-full object-cover rounded-lg" 
-                    />
+                  <AspectRatio ratio={4 / 3} className="h-full">
+                    <img src="/lovable-uploads/3df548c5-49bb-4ffd-9e17-ed1e75fa6900.png" alt="Bizzy AI Assistant" className="w-full h-full object-cover rounded-lg" />
                   </AspectRatio>
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Bizzy AI Assistant</h3>
@@ -202,12 +183,8 @@ const Index = () => {
               
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="mb-2 w-full mx-auto flex-grow">
-                  <AspectRatio ratio={4/3} className="h-full">
-                    <img 
-                      src="/lovable-uploads/99726d2f-fd05-48de-b3d1-ed990262b1bc.png" 
-                      alt="Video Explainers" 
-                      className="w-full h-full object-cover rounded-lg" 
-                    />
+                  <AspectRatio ratio={4 / 3} className="h-full">
+                    <img src="/lovable-uploads/99726d2f-fd05-48de-b3d1-ed990262b1bc.png" alt="Video Explainers" className="w-full h-full object-cover rounded-lg" />
                   </AspectRatio>
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Video Explainers</h3>
@@ -461,5 +438,4 @@ const Index = () => {
       </div>
     </div>;
 };
-
 export default Index;
