@@ -91,8 +91,8 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="text-left">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                Helping New Business Owners<br />
-                <span className="text-[#3b82f6]">Business</span>
+                Business without the<br />
+                <span className="text-[#3b82f6]">Busyness</span>
               </h1>
               <p className="text-xl mb-8 text-blue-100/80 max-w-2xl">All the steps for helping you after company setup, with personalised document templates, step-by-step process guidance and AI assistance</p>
               <div className="flex flex-wrap gap-4">
