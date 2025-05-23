@@ -12,9 +12,6 @@ const BizzyCharacter = () => {
   
   return <>
       <div className="flex flex-col items-center">
-        <div className="text-[#3b82f6] font-bold text-sm flex items-center gap-1 -mb-2 leading-none">
-          Click me!
-        </div>
         <div 
           className="relative cursor-pointer transition-all duration-300 hover:scale-110" 
           onClick={handleChatWithBizzy} 
@@ -22,7 +19,7 @@ const BizzyCharacter = () => {
           onMouseLeave={() => setIsHovering(false)}
         >
           <img 
-            src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" 
+            src="/lovable-uploads/0d9fe08c-c696-458d-ac9c-7222b1d84ca7.png" 
             alt="Bizzy assistant" 
             className="w-[120px]" 
           />
