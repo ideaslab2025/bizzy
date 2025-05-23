@@ -14,6 +14,9 @@ const Index = () => {
     y: window.innerHeight - 150
   });
 
+  // Add refs for scroll targets
+  const faqsRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
     const floatingAnimation = () => {
       // Keep in bottom left area, but with some gentle floating movement
@@ -33,9 +36,28 @@ const Index = () => {
       });
     };
     window.addEventListener('resize', handleResize);
+
+    // Scroll handling for hash links
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash === '#faqs' && faqsRef.current) {
+        const yOffset = -100; // Adjust this value to control how far above the section to scroll
+        const element = faqsRef.current;
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    };
+
+    // Check hash on initial load
+    handleHashChange();
+    
+    // Add event listener for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+
     return () => {
       cancelAnimationFrame(animation);
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
 
@@ -303,8 +325,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* FAQ Section - MODIFIED: Replaced with accordion functionality */}
-      <section id="faqs" className="py-16">
+      {/* FAQ Section - Using the ref for better scroll targeting */}
+      <section id="faqs" ref={faqsRef} className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
           <div className="max-w-3xl mx-auto">

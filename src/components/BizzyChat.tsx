@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -108,7 +107,7 @@ const BizzyChat = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="fixed inset-x-0 bottom-0 rounded-t-xl h-[70vh] max-w-md mx-auto">
+      <DrawerContent className="fixed bottom-0 right-0 rounded-tl-xl h-[70vh] w-full max-w-md mr-0 ml-auto">
         <DrawerHeader className="bg-[#0a192f] text-white border-b border-blue-900/30">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
