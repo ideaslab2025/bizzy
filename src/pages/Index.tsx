@@ -6,41 +6,36 @@ import BizzyCharacter from "@/components/BizzyCharacter";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useRef } from "react";
 import Testimonials from "@/components/Testimonials";
-
 const Index = () => {
-  const [floatingPosition, setFloatingPosition] = useState({ x: window.innerWidth - 150, y: window.innerHeight - 150 });
-  
+  const [floatingPosition, setFloatingPosition] = useState({
+    x: window.innerWidth - 150,
+    y: window.innerHeight - 150
+  });
   useEffect(() => {
     const floatingAnimation = () => {
       // Keep in bottom left area, but with some gentle floating movement
       setFloatingPosition(prev => ({
         x: window.innerWidth - 150 + Math.sin(Date.now() / 1000) * 10,
-        y: window.innerHeight - 150 + Math.cos(Date.now() / 1200) * 15,
+        y: window.innerHeight - 150 + Math.cos(Date.now() / 1200) * 15
       }));
-      
       requestAnimationFrame(floatingAnimation);
     };
-    
     const animation = requestAnimationFrame(floatingAnimation);
-    
+
     // Handle window resize
     const handleResize = () => {
       setFloatingPosition({
         x: window.innerWidth - 150,
-        y: window.innerHeight - 150,
+        y: window.innerHeight - 150
       });
     };
-    
     window.addEventListener('resize', handleResize);
-    
     return () => {
       cancelAnimationFrame(animation);
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  return (
-    <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
+  return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
       {/* Header/Navigation - fixed and always visible with solid background */}
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f] shadow-md">
         <div className="container mx-auto py-1 flex justify-between items-center">
@@ -71,7 +66,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="text-left">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                Helping New Business Owners<br/>
+                Helping New Business Owners<br />
                 <span className="text-[#3b82f6]">Start Off Right</span>
               </h1>
               <p className="text-xl mb-8 text-blue-100/80 max-w-2xl">
@@ -87,11 +82,7 @@ const Index = () => {
               </div>
             </div>
             <div className="relative h-[400px] md:h-[500px] flex items-center justify-center">
-              <img 
-                src="/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png" 
-                alt="Frustrated business owners" 
-                className="w-full h-full object-contain drop-shadow-[0_0_35px_rgba(59,130,246,0.8)]"
-              />
+              <img src="/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png" alt="Frustrated business owners" className="w-full h-full object-contain drop-shadow-[0_0_35px_rgba(59,130,246,0.8)]" />
             </div>
           </div>
         </div>
@@ -101,9 +92,7 @@ const Index = () => {
       <section id="features" className="pt-0 pb-12">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
-          <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">
-            Bizzy provides all the tools and guidance you need to navigate the complex world of business administration
-          </p>
+          <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Enhanced feature cards with fancy styles */}
@@ -179,67 +168,39 @@ const Index = () => {
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                title: "Bronze",
-                price: "£100",
-                color: "bg-gradient-to-b from-amber-700/80 to-amber-900/60",
-                textColor: "text-white",
-                borderColor: "border-amber-600",
-                features: [
-                  "Basic company setup guidance",
-                  "Essential document templates",
-                  "Standard support",
-                  "Basic AI assistant access"
-                ]
-              },
-              {
-                title: "Silver",
-                price: "£200",
-                color: "bg-gradient-to-b from-slate-300/80 to-slate-500/60",
-                textColor: "text-white", 
-                borderColor: "border-slate-400",
-                features: [
-                  "Everything in Bronze",
-                  "Extended document library",
-                  "Tax & compliance guidance",
-                  "Full AI assistant access"
-                ]
-              },
-              {
-                title: "Gold",
-                price: "£300",
-                color: "bg-gradient-to-b from-amber-400/80 to-amber-600/60",
-                textColor: "text-white",
-                borderColor: "border-amber-500",
-                features: [
-                  "Everything in Silver",
-                  "Complete document engine",
-                  "Advanced sector-specific guidance",
-                  "Priority support"
-                ],
-                recommended: true
-              },
-              {
-                title: "Platinum",
-                price: "£500",
-                color: "bg-gradient-radial from-slate-200 via-blue-100/90 to-blue-300/80",
-                textColor: "text-gray-800",
-                borderColor: "border-blue-300",
-                features: [
-                  "Everything in Gold",
-                  "Full access to all resources",
-                  "Video consultations with experts",
-                  "Custom document customization"
-                ]
-              }
-            ].map((plan, index) => (
-              <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden`}>
-                {plan.recommended && (
-                  <Badge className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-0.5 text-xs font-bold z-10">
+            {[{
+            title: "Bronze",
+            price: "£100",
+            color: "bg-gradient-to-b from-amber-700/80 to-amber-900/60",
+            textColor: "text-white",
+            borderColor: "border-amber-600",
+            features: ["Basic company setup guidance", "Essential document templates", "Standard support", "Basic AI assistant access"]
+          }, {
+            title: "Silver",
+            price: "£200",
+            color: "bg-gradient-to-b from-slate-300/80 to-slate-500/60",
+            textColor: "text-white",
+            borderColor: "border-slate-400",
+            features: ["Everything in Bronze", "Extended document library", "Tax & compliance guidance", "Full AI assistant access"]
+          }, {
+            title: "Gold",
+            price: "£300",
+            color: "bg-gradient-to-b from-amber-400/80 to-amber-600/60",
+            textColor: "text-white",
+            borderColor: "border-amber-500",
+            features: ["Everything in Silver", "Complete document engine", "Advanced sector-specific guidance", "Priority support"],
+            recommended: true
+          }, {
+            title: "Platinum",
+            price: "£500",
+            color: "bg-gradient-radial from-slate-200 via-blue-100/90 to-blue-300/80",
+            textColor: "text-gray-800",
+            borderColor: "border-blue-300",
+            features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
+          }].map((plan, index) => <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden`}>
+                {plan.recommended && <Badge className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-0.5 text-xs font-bold z-10">
                     Recommended
-                  </Badge>
-                )}
+                  </Badge>}
                 <CardHeader className={plan.recommended ? "pt-6" : ""}>
                   <CardTitle className={plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
                   <div className={`text-3xl font-bold ${plan.textColor}`}>{plan.price}</div>
@@ -247,14 +208,12 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className={`flex items-center gap-2 ${plan.textColor}`}>
+                    {plan.features.map((feature, i) => <li key={i} className={`flex items-center gap-2 ${plan.textColor}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={plan.title === "Platinum" ? "text-gray-800" : "text-[#3b82f6]"}>
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                         {feature}
-                      </li>
-                    ))}
+                      </li>)}
                   </ul>
                 </CardContent>
                 <CardFooter>
@@ -264,8 +223,7 @@ const Index = () => {
                     </Button>
                   </Link>
                 </CardFooter>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -273,7 +231,7 @@ const Index = () => {
       {/* Testimonials Section */}
       <section id="testimonials" className="py-16 bg-blue-900/10">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-10 text-center text-[#3b82f6]">What Our Clients Say</h2>
+          <h2 className="text-3xl font-bold mb-10 text-center text-[#3b82f6]">What Our Customers Say</h2>
           <Testimonials />
         </div>
       </section>
@@ -299,11 +257,7 @@ const Index = () => {
             <div className="md:w-1/2 flex justify-center">
               <div className="relative">
                 <div className="absolute inset-0 bg-[#1d4ed8]/30 blur-3xl rounded-full"></div>
-                <img 
-                  src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" 
-                  alt="Bizzy Character" 
-                  className="w-[400px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]"
-                />
+                <img src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" alt="Bizzy Character" className="w-[400px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]" />
               </div>
             </div>
           </div>
@@ -315,33 +269,25 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
           <div className="max-w-3xl mx-auto space-y-6">
-            {[
-              {
-                question: "How does Bizzy help with company formation?",
-                answer: "Bizzy provides step-by-step guidance through the company formation process, offering document templates and AI assistance to ensure you complete all required legal steps correctly."
-              },
-              {
-                question: "Is there a recurring subscription?",
-                answer: "No, Bizzy operates on a one-time payment model. You pay once for the plan of your choice and get lifetime access to the features included in that plan."
-              },
-              {
-                question: "Can I upgrade my plan later?",
-                answer: "Yes, you can upgrade to a higher-tier plan at any time by paying the difference between your current plan and the new one."
-              },
-              {
-                question: "How does the AI assistant work?",
-                answer: "Bizzy's AI assistant uses advanced natural language processing to understand your questions and provide relevant guidance, document suggestions, and compliance advice specific to your business needs."
-              },
-              {
-                question: "Is my data secure with Bizzy?",
-                answer: "Absolutely. We employ enterprise-grade encryption and follow strict data protection protocols to ensure your business information remains completely secure and confidential."
-              }
-            ].map((faq, index) => (
-              <div key={index} className="bg-blue-900/30 border border-blue-800 rounded-lg p-6">
+            {[{
+            question: "How does Bizzy help with company formation?",
+            answer: "Bizzy provides step-by-step guidance through the company formation process, offering document templates and AI assistance to ensure you complete all required legal steps correctly."
+          }, {
+            question: "Is there a recurring subscription?",
+            answer: "No, Bizzy operates on a one-time payment model. You pay once for the plan of your choice and get lifetime access to the features included in that plan."
+          }, {
+            question: "Can I upgrade my plan later?",
+            answer: "Yes, you can upgrade to a higher-tier plan at any time by paying the difference between your current plan and the new one."
+          }, {
+            question: "How does the AI assistant work?",
+            answer: "Bizzy's AI assistant uses advanced natural language processing to understand your questions and provide relevant guidance, document suggestions, and compliance advice specific to your business needs."
+          }, {
+            question: "Is my data secure with Bizzy?",
+            answer: "Absolutely. We employ enterprise-grade encryption and follow strict data protection protocols to ensure your business information remains completely secure and confidential."
+          }].map((faq, index) => <div key={index} className="bg-blue-900/30 border border-blue-800 rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-2 text-[#3b82f6]">{faq.question}</h3>
                 <p className="text-blue-100">{faq.answer}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -418,15 +364,13 @@ const Index = () => {
       </footer>
 
       {/* Floating Bizzy character */}
-      <div className="fixed z-50" style={{ 
-        left: `${floatingPosition.x}px`, 
-        top: `${floatingPosition.y}px`,
-        transition: 'all 0.5s ease-out'
-      }}>
+      <div className="fixed z-50" style={{
+      left: `${floatingPosition.x}px`,
+      top: `${floatingPosition.y}px`,
+      transition: 'all 0.5s ease-out'
+    }}>
         <BizzyCharacter />
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
