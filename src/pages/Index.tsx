@@ -181,6 +181,9 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Added spacer div for better separation */}
+      <div className="h-16 md:h-24"></div>
+
       {/* Features Section */}
       <section id="features" ref={featuresRef} className="pt-24 pb-12">
         <div className="container mx-auto px-4">
