@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -220,7 +221,7 @@ const Index = () => {
                   <img 
                     src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" 
                     alt="Step-by-Step Guidance" 
-                    className="max-w-full max-h-[230px] object-contain" 
+                    className="max-w-full max-h-[230px] object-contain scale-110" 
                   />
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mt-2 mb-1 text-center">Step-by-Step Guidance</h3>
