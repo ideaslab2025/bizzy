@@ -19,7 +19,7 @@ const Pricing = () => {
       color: "bg-gradient-to-b from-amber-700/80 to-amber-900/60",
       textColor: "text-white",
       borderColor: "border-amber-600",
-      hoverShadow: "hover:shadow-amber-500/50",
+      hoverShadow: "shadow-amber-500/50",
       features: [
         "Basic company setup guidance",
         "Essential document templates",
@@ -34,7 +34,7 @@ const Pricing = () => {
       color: "bg-gradient-to-b from-slate-300/80 to-slate-500/60",
       textColor: "text-white", 
       borderColor: "border-slate-400",
-      hoverShadow: "hover:shadow-slate-400/50",
+      hoverShadow: "shadow-slate-400/50",
       features: [
         "Everything in Bronze",
         "Extended document library",
@@ -49,7 +49,7 @@ const Pricing = () => {
       color: "bg-gradient-to-b from-amber-400/80 to-amber-600/60",
       textColor: "text-white",
       borderColor: "border-amber-500",
-      hoverShadow: "hover:shadow-amber-400/50",
+      hoverShadow: "shadow-amber-400/50",
       features: [
         "Everything in Silver",
         "Complete document engine",
@@ -65,7 +65,7 @@ const Pricing = () => {
       color: "bg-gradient-to-b from-slate-50 via-slate-200 to-slate-300",
       textColor: "text-gray-800",
       borderColor: "border-slate-400",
-      hoverShadow: "hover:shadow-slate-300/50",
+      hoverShadow: "shadow-slate-300/50",
       features: [
         "Everything in Gold",
         "Full access to all resources",
@@ -110,31 +110,31 @@ const Pricing = () => {
           {plans.map((plan) => (
             <Card 
               key={plan.id} 
-              className={`${
-                selectedPlan === plan.id 
+              className={`
+                ${selectedPlan === plan.id 
                   ? "border-[#1d4ed8] ring-2 ring-[#1d4ed8] shadow-2xl shadow-[#1d4ed8]/40" 
                   : plan.borderColor
-              } ${plan.color} cursor-pointer relative backdrop-blur-sm bg-opacity-70 flex flex-col
-              transform transition-all duration-300 ease-out
-              hover:-translate-y-2 hover:scale-105
-              hover:shadow-2xl ${plan.hoverShadow}
-              hover:brightness-110`}
+                } 
+                ${plan.color} 
+                cursor-pointer relative backdrop-blur-sm bg-opacity-70 flex flex-col
+                transition-all duration-500 ease-out
+                hover:-translate-y-2 hover:scale-105 hover:brightness-110
+              `}
               onClick={() => handleSelectPlan(plan.id)}
               style={{
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                boxShadow: selectedPlan === plan.id 
-                  ? '0 25px 50px -12px rgba(29, 78, 216, 0.4)' 
-                  : '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
               }}
               onMouseEnter={(e) => {
-                if (selectedPlan !== plan.id) {
-                  e.currentTarget.style.boxShadow = '0 25px 50px -12px rgba(59, 130, 246, 0.5)';
-                }
+                e.currentTarget.style.boxShadow = selectedPlan === plan.id 
+                  ? '0 25px 50px -12px rgba(29, 78, 216, 0.4)'
+                  : '0 25px 50px -12px rgba(59, 130, 246, 0.5)';
+                e.currentTarget.style.transform = 'translateY(-8px) scale(1.05)';
               }}
               onMouseLeave={(e) => {
-                if (selectedPlan !== plan.id) {
-                  e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
-                }
+                e.currentTarget.style.boxShadow = selectedPlan === plan.id 
+                  ? '0 25px 50px -12px rgba(29, 78, 216, 0.4)'
+                  : '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
               }}
             >
               {plan.recommended && (
