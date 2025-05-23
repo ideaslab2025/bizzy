@@ -1,3 +1,4 @@
+
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -84,11 +85,11 @@ const Index = () => {
                 </Button>
               </div>
             </div>
-            <div className="relative h-[400px] md:h-[500px] flex items-center justify-center">
+            <div className="relative h-[450px] md:h-[550px] flex items-center justify-center -mt-10">
               <img 
-                src="/lovable-uploads/642ffc5f-5961-48bc-84b1-0546760e70a3.png" 
+                src="/lovable-uploads/7cff5e86-7507-49eb-a840-ee12479e3704.png" 
                 alt="Happy business owners with paperwork" 
-                className="w-full h-full object-contain mix-blend-screen drop-shadow-[0_0_35px_rgba(59,130,246,0.8)]" 
+                className="w-[130%] h-full object-contain mix-blend-screen drop-shadow-[0_0_35px_rgba(59,130,246,0.8)]" 
               />
             </div>
           </div>
@@ -200,7 +201,7 @@ const Index = () => {
           }, {
             title: "Platinum",
             price: "£500",
-            color: "bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400",
+            color: "bg-gradient-to-b from-slate-50 via-slate-200 to-slate-300",
             textColor: "text-gray-800",
             borderColor: "border-slate-400",
             features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
@@ -244,7 +245,7 @@ const Index = () => {
       </section>
 
       {/* About Section with Bizzy character - Made thinner */}
-      <section id="about" className="py-8 bg-blue-900/20">
+      <section id="about" className="py-6 bg-blue-900/20">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="md:w-1/2">

@@ -59,7 +59,7 @@ const Pricing = () => {
       id: "platinum",
       title: "Platinum",
       price: "£500",
-      color: "bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400",
+      color: "bg-gradient-to-b from-slate-50 via-slate-200 to-slate-300",
       textColor: "text-gray-800",
       borderColor: "border-slate-400",
       features: [
@@ -119,9 +119,9 @@ const Pricing = () => {
                 </Badge>
               )}
               <CardHeader className={plan.recommended ? "pt-8" : ""}>
-                <CardTitle className={plan.id === "platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
+                <CardTitle className={`${plan.id === "platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor}`}>{plan.title}</CardTitle>
                 <div className={`text-3xl font-bold ${plan.id === "platinum" ? "text-gray-800" : "text-white"}`}>{plan.price}</div>
-                <CardDescription className={plan.id === "platinum" ? "text-gray-800" : "text-white opacity-90"}>One-time payment</CardDescription>
+                <CardDescription className={`${plan.id === "platinum" ? "text-gray-800" : "text-white opacity-90"}`}>One-time payment</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
