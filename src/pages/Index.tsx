@@ -1,3 +1,4 @@
+
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,8 +40,8 @@ const Index = () => {
   }, []);
 
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
-      {/* Header/Navigation - MODIFIED: reduced height with py-0 -> py-0 and smaller logo */}
-      <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f] shadow-md">
+      {/* Header/Navigation - FIXED: Added higher z-index and backdrop-blur for better visibility */}
+      <header className="border-b border-blue-900/30 sticky top-0 z-50 bg-[#0a192f] bg-opacity-100 backdrop-blur-md shadow-md">
         <div className="container mx-auto py-0 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
             <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-40" />
