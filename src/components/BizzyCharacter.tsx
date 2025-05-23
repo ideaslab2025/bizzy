@@ -24,10 +24,10 @@ const BizzyCharacter = () => {
           <img 
             src="/lovable-uploads/e33c51f9-ea21-4658-ae6a-bbe28ae76211.png" 
             alt="Bizzy Chat" 
-            className="w-[200px]" /* Increased from 160px to 200px */
+            className="w-[200px]" 
             style={{ filter: "none" }}
           />
-          <style jsx>{`
+          <style>{`
             @keyframes float {
               0% {
                 transform: translatey(0px);
