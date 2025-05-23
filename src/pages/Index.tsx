@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
 
@@ -39,7 +40,7 @@ const Index = () => {
   }, []);
 
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
-      {/* Header/Navigation - FIXED: Added higher z-index and backdrop-blur for better visibility */}
+      {/* Header/Navigation */}
       <header className="border-b border-blue-900/30 sticky top-0 z-50 bg-[#0a192f] bg-opacity-100 backdrop-blur-md shadow-md">
         <div className="container mx-auto py-0 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
@@ -62,7 +63,7 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section - MODIFIED: increased bottom padding to add spacing */}
+      {/* Hero Section */}
       <section className="py-10 md:py-16 pb-40 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1d4ed8]/10 to-transparent z-0"></div>
         <div className="container mx-auto px-4 relative z-10">
@@ -95,89 +96,91 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section - MODIFIED: Added top padding to create more space from hero */}
+      {/* Features Section - MODIFIED: Added human images to each feature box */}
       <section id="features" className="pt-24 pb-12">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
           <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-            {/* Feature 1 */}
+            {/* Feature 1 - Step-by-Step Guidance */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
               <div className="p-8 z-10 relative">
-                <div className="w-16 h-16 mb-6 rounded-full bg-blue-700/40 flex items-center justify-center shadow-inner shadow-blue-600/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 22V8"></path>
-                    <path d="m5 12 7-4 7 4"></path>
-                    <path d="M5 17 12 13 19 17"></path>
-                    <path d="M19 6 12 2 5 6 12 10 19 6z"></path>
-                  </svg>
+                <div className="mb-6 rounded-full overflow-hidden w-16 h-16 mx-auto">
+                  <img 
+                    src="/lovable-uploads/14331dcc-8300-4049-8ee4-81015f428fb8.png" 
+                    alt="Step-by-Step Guidance" 
+                    className="w-full h-full object-cover object-top" 
+                  />
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-3">Step-by-Step Guidance</h3>
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-3 text-center">Step-by-Step Guidance</h3>
                 <p className="text-blue-100">
                   Comprehensive guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections and interactive learning.
                 </p>
               </div>
             </div>
             
-            {/* Feature 2 */}
+            {/* Feature 2 - Document Engine */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-400/30 via-blue-600/30 to-blue-800/40 border border-blue-600/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
               <div className="p-8 z-10 relative">
-                <div className="w-16 h-16 mb-6 rounded-full bg-blue-600/40 flex items-center justify-center shadow-inner shadow-blue-500/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                    <polyline points="10 9 9 9 8 9"></polyline>
-                  </svg>
+                <div className="mb-6 rounded-full overflow-hidden w-16 h-16 mx-auto">
+                  <img 
+                    src="/lovable-uploads/14331dcc-8300-4049-8ee4-81015f428fb8.png" 
+                    alt="Document Engine" 
+                    className="w-full h-full object-cover object-center" 
+                  />
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-3">Document Engine</h3>
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-3 text-center">Document Engine</h3>
                 <p className="text-blue-100">
                   Access hundreds of pre-approved templates for every business need, automatically populated with your company details.
                 </p>
               </div>
             </div>
             
-            {/* Feature 3 */}
+            {/* Feature 3 - Bizzy AI Assistant */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
               <div className="p-8 z-10 relative">
-                <div className="w-16 h-16 mb-6 rounded-full bg-blue-700/40 flex items-center justify-center shadow-inner shadow-blue-600/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M12 16v-4"></path>
-                    <path d="M12 8h.01"></path>
-                  </svg>
+                <div className="mb-6 rounded-full overflow-hidden w-16 h-16 mx-auto">
+                  <img 
+                    src="/lovable-uploads/14331dcc-8300-4049-8ee4-81015f428fb8.png" 
+                    alt="Bizzy AI Assistant" 
+                    className="w-full h-full object-cover object-bottom" 
+                  />
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-3">Bizzy AI Assistant</h3>
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-3 text-center">Bizzy AI Assistant</h3>
                 <p className="text-blue-100">
                   Get real-time help from our AI assistant, pointing you to resources and answering your questions instantly.
                 </p>
               </div>
             </div>
             
-            {/* NEW Feature 4 - Video Explainers */}
+            {/* Feature 4 - Video Explainers */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-400/30 via-blue-600/30 to-blue-800/40 border border-blue-600/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
               <div className="p-8 z-10 relative">
-                <div className="w-16 h-16 mb-6 rounded-full bg-blue-600/40 flex items-center justify-center shadow-inner shadow-blue-500/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
-                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-                  </svg>
+                <div className="mb-6 rounded-full overflow-hidden w-16 h-16 mx-auto">
+                  <img 
+                    src="/lovable-uploads/14331dcc-8300-4049-8ee4-81015f428fb8.png" 
+                    alt="Video Explainers" 
+                    className="w-full h-full object-cover object-center" 
+                  />
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-3">Video Explainers</h3>
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-3 text-center">Video Explainers</h3>
                 <p className="text-blue-100">
                   Watch short 30-60 second video explainers on key process steps to quickly understand complex business procedures.
                 </p>
@@ -187,7 +190,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pricing Section - MODIFIED: Made recommended badge bigger */}
+      {/* Pricing Section */}
       <section id="pricing" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
@@ -264,7 +267,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* About Section with Bizzy character - Made thinner */}
+      {/* About Section with Bizzy character */}
       <section id="about" className="py-6 bg-blue-900/20">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
@@ -292,30 +295,57 @@ const Index = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* FAQ Section - MODIFIED: Replaced with accordion functionality */}
       <section id="faqs" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
-          <div className="max-w-3xl mx-auto space-y-6">
-            {[{
-            question: "How does Bizzy help with company formation?",
-            answer: "Bizzy provides step-by-step guidance through the company formation process, offering document templates and AI assistance to ensure you complete all required legal steps correctly."
-          }, {
-            question: "Is there a recurring subscription?",
-            answer: "No, Bizzy operates on a one-time payment model. You pay once for the plan of your choice and get lifetime access to the features included in that plan."
-          }, {
-            question: "Can I upgrade my plan later?",
-            answer: "Yes, you can upgrade to a higher-tier plan at any time by paying the difference between your current plan and the new one."
-          }, {
-            question: "How does the AI assistant work?",
-            answer: "Bizzy's AI assistant uses advanced natural language processing to understand your questions and provide relevant guidance, document suggestions, and compliance advice specific to your business needs."
-          }, {
-            question: "Is my data secure with Bizzy?",
-            answer: "Absolutely. We employ enterprise-grade encryption and follow strict data protection protocols to ensure your business information remains completely secure and confidential."
-          }].map((faq, index) => <div key={index} className="bg-blue-900/30 border border-blue-800 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-2 text-[#3b82f6]">{faq.question}</h3>
-                <p className="text-blue-100">{faq.answer}</p>
-              </div>)}
+          <div className="max-w-3xl mx-auto">
+            <Accordion type="single" collapsible className="space-y-4">
+              <AccordionItem value="item-1" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
+                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
+                  How does Bizzy help with company formation?
+                </AccordionTrigger>
+                <AccordionContent className="pb-4 text-blue-100">
+                  Bizzy provides step-by-step guidance through the company formation process, offering document templates and AI assistance to ensure you complete all required legal steps correctly.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-2" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
+                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
+                  Is there a recurring subscription?
+                </AccordionTrigger>
+                <AccordionContent className="pb-4 text-blue-100">
+                  No, Bizzy operates on a one-time payment model. You pay once for the plan of your choice and get lifetime access to the features included in that plan.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-3" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
+                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
+                  Can I upgrade my plan later?
+                </AccordionTrigger>
+                <AccordionContent className="pb-4 text-blue-100">
+                  Yes, you can upgrade to a higher-tier plan at any time by paying the difference between your current plan and the new one.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-4" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
+                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
+                  How does the AI assistant work?
+                </AccordionTrigger>
+                <AccordionContent className="pb-4 text-blue-100">
+                  Bizzy's AI assistant uses advanced natural language processing to understand your questions and provide relevant guidance, document suggestions, and compliance advice specific to your business needs.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-5" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
+                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
+                  Is my data secure with Bizzy?
+                </AccordionTrigger>
+                <AccordionContent className="pb-4 text-blue-100">
+                  Absolutely. We employ enterprise-grade encryption and follow strict data protection protocols to ensure your business information remains completely secure and confidential.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
       </section>

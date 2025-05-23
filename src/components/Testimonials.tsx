@@ -114,7 +114,7 @@ const Testimonials = () => {
       
       <div className="mt-10 text-center">
         <a href="https://www.trustpilot.com" target="_blank" rel="noopener noreferrer">
-          <Button variant="outline" className="border-[#1d4ed8] text-[#3b82f6] hover:bg-blue-900/30">
+          <Button variant="outline" className="border-[#1d4ed8] text-[#3b82f6] hover:bg-blue-900/30 hover:text-white font-medium">
             See All Reviews on Trustpilot
           </Button>
         </a>
