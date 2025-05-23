@@ -201,17 +201,17 @@ const Index = () => {
             borderColor: "border-blue-300",
             features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
           }].map((plan, index) => <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden`}>
-                {plan.recommended && <Badge className="absolute -top-1 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-0.5 text-xs font-bold z-20">
+                {plan.recommended && <Badge className="absolute -top-1 -translate-y-1 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-0.5 text-xs font-bold z-20">
                     Recommended
                   </Badge>}
                 <CardHeader className={plan.recommended ? "pt-8" : ""}>
-                  <CardTitle className={plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
-                  <div className={`text-3xl font-bold ${plan.textColor}`}>{plan.price}</div>
-                  <CardDescription className={plan.textColor}>One-time payment</CardDescription>
+                  <CardTitle className={plan.title === "Platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
+                  <div className={`text-3xl font-bold ${plan.title === "Platinum" ? "text-gray-800" : plan.textColor}`}>{plan.price}</div>
+                  <CardDescription className={plan.title === "Platinum" ? "text-gray-800" : plan.textColor}>One-time payment</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {plan.features.map((feature, i) => <li key={i} className={`flex items-center gap-2 ${plan.textColor}`}>
+                    {plan.features.map((feature, i) => <li key={i} className={`flex items-center gap-2 ${plan.title === "Platinum" ? "text-gray-800" : plan.textColor}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={plan.title === "Platinum" ? "text-gray-800" : "text-[#3b82f6]"}>
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>

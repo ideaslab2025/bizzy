@@ -59,9 +59,9 @@ const Pricing = () => {
       id: "platinum",
       title: "Platinum",
       price: "£500",
-      color: "bg-gradient-to-b from-slate-200/80 to-slate-400/60",
-      textColor: "text-white",
-      borderColor: "border-slate-300",
+      color: "bg-gradient-radial from-slate-200 via-blue-100/90 to-blue-300/80",
+      textColor: "text-gray-800",
+      borderColor: "border-blue-300",
       features: [
         "Everything in Gold",
         "Full access to all resources",
@@ -119,15 +119,15 @@ const Pricing = () => {
                 </Badge>
               )}
               <CardHeader className={plan.recommended ? "pt-6" : ""}>
-                <CardTitle className={plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
-                <div className="text-3xl font-bold text-white">{plan.price}</div>
-                <CardDescription className="text-white opacity-90">One-time payment</CardDescription>
+                <CardTitle className={plan.id === "platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
+                <div className={`text-3xl font-bold ${plan.id === "platinum" ? "text-gray-800" : "text-white"}`}>{plan.price}</div>
+                <CardDescription className={plan.id === "platinum" ? "text-gray-800" : "text-white opacity-90"}>One-time payment</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
                   {plan.features.map((feature, i) => (
-                    <li key={i} className={`flex items-center gap-2 ${plan.textColor}`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#3b82f6]">
+                    <li key={i} className={`flex items-center gap-2 ${plan.id === "platinum" ? "text-gray-800" : plan.textColor}`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={plan.id === "platinum" ? "text-gray-800" : "text-[#3b82f6]"}>
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>
                       {feature}
@@ -138,9 +138,11 @@ const Pricing = () => {
               <CardFooter>
                 <Button 
                   className={`w-full ${
-                    selectedPlan === plan.id || plan.recommended 
+                    selectedPlan === plan.id
                       ? "bg-[#1d4ed8] hover:bg-[#1d4ed8]/80" 
-                      : "bg-blue-900/50 hover:bg-[#1d4ed8]/60 border border-blue-700"
+                      : plan.id === "platinum"
+                        ? "bg-gray-800 hover:bg-gray-700 text-white"
+                        : "bg-blue-900/50 hover:bg-[#1d4ed8]/60 border border-blue-700"
                   }`}
                 >
                   {selectedPlan === plan.id ? "Selected" : "Select Plan"}
