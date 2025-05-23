@@ -10,6 +10,7 @@ import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/
 import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+
 const Index = () => {
   const [floatingPosition, setFloatingPosition] = useState({
     x: window.innerWidth - 150,
@@ -94,6 +95,13 @@ const Index = () => {
           </nav>
           
           <div className="flex gap-2 items-center">
+            {/* Mobile Login Button - NEW ADDITION */}
+            <Link to="/login" className="md:hidden">
+              <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
+                Log in
+              </Button>
+            </Link>
+            
             {/* Mobile Menu */}
             <Drawer>
               <DrawerTrigger asChild className="md:hidden mr-2">
@@ -553,4 +561,5 @@ const Index = () => {
       </div>
     </div>;
 };
+
 export default Index;
