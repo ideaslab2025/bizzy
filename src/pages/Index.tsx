@@ -1,3 +1,4 @@
+
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,11 +42,11 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
-      {/* Header/Navigation - made even thinner */}
+      {/* Header/Navigation - made thinner, links set to match footer */}
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f]/90 backdrop-blur-sm">
         <div className="container mx-auto py-1 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-36" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-48" />
           </Link>
           <nav className="hidden md:flex gap-6">
             <a href="#about" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">About</a>
@@ -64,7 +65,7 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section - updated with human image */}
       <section className="py-10 md:py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1d4ed8]/10 to-transparent z-0"></div>
         <div className="container mx-auto px-4 relative z-10">
@@ -88,8 +89,8 @@ const Index = () => {
             </div>
             <div className="relative h-[400px] md:h-[500px] flex items-center justify-center">
               <img 
-                src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
-                alt="Bizzy character" 
+                src="/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png" 
+                alt="Frustrated business owners" 
                 className="w-full h-full object-contain drop-shadow-[0_0_35px_rgba(59,130,246,0.8)]"
               />
             </div>
@@ -97,49 +98,77 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section - moved up with minimal gap from hero section */}
-      <section id="features" className="py-2 mb-16">
+      {/* Features Section - moved up with minimal gap from hero section and enhanced boxes */}
+      <section id="features" className="py-0 mb-12">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
-          <p className="text-xl mb-12 text-center text-blue-100/80 max-w-3xl mx-auto">
+          <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">
             Bizzy provides all the tools and guidance you need to navigate the complex world of business administration
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            <Card className="bg-blue-900/30 border-blue-800 h-full">
-              <CardHeader>
-                <CardTitle className="text-[#3b82f6]">Step-by-Step Guidance</CardTitle>
-                <CardDescription className="text-blue-100/70">Interactive process for every stage</CardDescription>
-              </CardHeader>
-              <CardContent className="text-blue-100">
-                Comprehensive guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections and interactive learning.
-              </CardContent>
-            </Card>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Enhanced feature cards with gradients and icons */}
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-800/60 to-blue-900/40 border border-blue-700 shadow-lg transform transition-all hover:scale-105 group">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-bl-full"></div>
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
+              <div className="p-8">
+                <div className="w-14 h-14 mb-6 rounded-full bg-blue-700/40 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22V8"></path>
+                    <path d="m5 12 7-4 7 4"></path>
+                    <path d="M5 17 12 13 19 17"></path>
+                    <path d="M19 6 12 2 5 6 12 10 19 6z"></path>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-3">Step-by-Step Guidance</h3>
+                <p className="text-blue-100">
+                  Comprehensive guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections and interactive learning.
+                </p>
+              </div>
+            </div>
             
-            <Card className="bg-blue-900/30 border-blue-800 h-full">
-              <CardHeader>
-                <CardTitle className="text-[#3b82f6]">Document Engine</CardTitle>
-                <CardDescription className="text-blue-100/70">All templates automatically personalized</CardDescription>
-              </CardHeader>
-              <CardContent className="text-blue-100">
-                Access hundreds of pre-approved templates for every business need, automatically populated with your company details.
-              </CardContent>
-            </Card>
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-700/60 to-blue-900/40 border border-blue-700 shadow-lg transform transition-all hover:scale-105 group">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-bl-full"></div>
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
+              <div className="p-8">
+                <div className="w-14 h-14 mb-6 rounded-full bg-blue-700/40 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-3">Document Engine</h3>
+                <p className="text-blue-100">
+                  Access hundreds of pre-approved templates for every business need, automatically populated with your company details.
+                </p>
+              </div>
+            </div>
             
-            <Card className="bg-blue-900/30 border-blue-800 h-full">
-              <CardHeader>
-                <CardTitle className="text-[#3b82f6]">Bizzy AI Assistant</CardTitle>
-                <CardDescription className="text-blue-100/70">Your friendly guide through your journey</CardDescription>
-              </CardHeader>
-              <CardContent className="text-blue-100">
-                Get real-time help from our AI assistant, pointing you to resources and answering your questions instantly.
-              </CardContent>
-            </Card>
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-800/60 to-blue-900/40 border border-blue-700 shadow-lg transform transition-all hover:scale-105 group">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-bl-full"></div>
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
+              <div className="p-8">
+                <div className="w-14 h-14 mb-6 rounded-full bg-blue-700/40 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 16v-4"></path>
+                    <path d="M12 8h.01"></path>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-3">Bizzy AI Assistant</h3>
+                <p className="text-blue-100">
+                  Get real-time help from our AI assistant, pointing you to resources and answering your questions instantly.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Section - Updated for better readability and enhanced platinum color */}
+      {/* Pricing Section - Updated with improved platinum color and badge positioning */}
       <section id="pricing" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
@@ -192,7 +221,7 @@ const Index = () => {
               {
                 title: "Platinum",
                 price: "£500",
-                color: "bg-gradient-to-b from-blue-200/90 to-slate-300/70",
+                color: "bg-gradient-to-b from-slate-100/90 to-blue-200/80",
                 textColor: "text-gray-800",
                 borderColor: "border-blue-300",
                 features: [
@@ -205,7 +234,7 @@ const Index = () => {
             ].map((plan, index) => (
               <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden`}>
                 {plan.recommended && (
-                  <Badge className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-4 py-1 text-sm font-bold">
+                  <Badge className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-4 py-1 text-sm font-bold z-10">
                     Recommended
                   </Badge>
                 )}
@@ -247,7 +276,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* About Section with Bizzy character - updated with transparent glowing image */}
+      {/* About Section with Bizzy character - enlarged image with better glow effect */}
       <section id="about" className="py-16 bg-blue-900/20">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
@@ -271,7 +300,7 @@ const Index = () => {
                 <img 
                   src="/lovable-uploads/fdc48325-c3c5-4db8-b746-83ca078817b4.png" 
                   alt="Bizzy Character" 
-                  className="w-[300px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]"
+                  className="w-[350px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]"
                 />
               </div>
             </div>
@@ -386,7 +415,7 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* Floating Bizzy character - only one, bottom right */}
+      {/* Floating Bizzy character - with bigger text and exclamation */}
       <div className="fixed z-50" style={{ 
         left: `${floatingPosition.x}px`, 
         top: `${floatingPosition.y}px`,

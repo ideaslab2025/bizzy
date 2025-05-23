@@ -13,8 +13,8 @@ const BizzyCharacter = () => {
   return (
     <>
       <div className="flex flex-col items-center">
-        <div className="mb-2 text-[#3b82f6] font-medium text-sm">
-          Chat to Bizzy
+        <div className="mb-2 text-[#3b82f6] font-bold text-lg">
+          Chat to Bizzy!
         </div>
         <div 
           className="relative cursor-pointer transition-all duration-300 hover:scale-110"
@@ -25,7 +25,7 @@ const BizzyCharacter = () => {
           <img 
             src="/lovable-uploads/fdc48325-c3c5-4db8-b746-83ca078817b4.png" 
             alt="Bizzy assistant" 
-            className="w-[90px] drop-shadow-[0_0_15px_rgba(29,78,216,0.7)]"
+            className="w-[110px] drop-shadow-[0_0_15px_rgba(29,78,216,0.7)]"
           />
         </div>
       </div>

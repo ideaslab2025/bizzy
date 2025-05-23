@@ -9,35 +9,35 @@ const testimonials = [
   {
     name: "Sarah Johnson",
     position: "CEO, GrowthTech Ltd",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png",
     text: "Bizzy transformed our operations. Setting up all the admin was a breeze, and the document templates saved us countless hours.",
     rating: 5
   },
   {
     name: "Michael Thompson",
     position: "Founder, Innovate Solutions",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png",
     text: "The AI guidance was like having a business consultant on demand. Best investment we made for our startup.",
     rating: 5
   },
   {
     name: "Emma Richards",
     position: "Director, Clarity Consulting",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png",
     text: "From company formation to compliance documents, Bizzy handled it all. Their Gold plan is worth every penny.",
     rating: 4
   },
   {
     name: "David Wilson",
     position: "CFO, NextStep Digital",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png",
     text: "The document templates alone saved us thousands in legal fees. Bizzy is a must-have for any new business.",
     rating: 5
   },
   {
     name: "Jennifer Adams",
     position: "Owner, Bright Ideas Co",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png",
     text: "I was worried about compliance issues, but Bizzy guided me through each step perfectly. Excellent platform.",
     rating: 5
   }
