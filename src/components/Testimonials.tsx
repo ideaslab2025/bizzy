@@ -70,18 +70,17 @@ const Testimonials = () => {
         <CarouselContent>
           {testimonials.map((testimonial, index) => (
             <CarouselItem key={index} className="md:basis-1/3 pl-4">
-              {/* Modified: changed from rounded-full to rounded-2xl for better content fit, added min-h-[400px] */}
               <div className="bg-blue-900/30 border-blue-800 rounded-2xl p-6 h-full flex flex-col min-h-[400px]">
-                {/* Star rating with smaller icon size and better spacing */}
-                <div className="flex items-center gap-1 mb-3">
+                {/* Star rating with better containment */}
+                <div className="flex items-center gap-1 mb-3 px-1">
                   {Array(testimonial.rating).fill(0).map((_, i) => (
-                    <svg key={i} xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                    <svg key={i} xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                     </svg>
                   ))}
                 </div>
                 
-                <p className="text-blue-100 mb-4 italic text-sm">"{testimonial.text}"</p>
+                <p className="text-blue-100 mb-4 italic text-sm line-clamp-6">"{testimonial.text}"</p>
                 
                 <div className="flex items-center mt-auto gap-3">
                   <Avatar className="h-10 w-10">

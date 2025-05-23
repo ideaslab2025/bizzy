@@ -63,7 +63,7 @@ const Index = () => {
       </header>
 
       {/* Hero Section - MODIFIED: increased bottom padding to add spacing */}
-      <section className="py-10 md:py-16 pb-32 relative overflow-hidden">
+      <section className="py-10 md:py-16 pb-40 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1d4ed8]/10 to-transparent z-0"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -96,13 +96,13 @@ const Index = () => {
       </section>
 
       {/* Features Section - MODIFIED: Added top padding to create more space from hero */}
-      <section id="features" className="pt-16 pb-12">
+      <section id="features" className="pt-24 pb-12">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
           <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Enhanced feature cards with fancy styles */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {/* Feature 1 */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
@@ -123,6 +123,7 @@ const Index = () => {
               </div>
             </div>
             
+            {/* Feature 2 */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-400/30 via-blue-600/30 to-blue-800/40 border border-blue-600/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
@@ -144,6 +145,7 @@ const Index = () => {
               </div>
             </div>
             
+            {/* Feature 3 */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
@@ -159,6 +161,25 @@ const Index = () => {
                 <h3 className="text-xl font-bold text-[#3b82f6] mb-3">Bizzy AI Assistant</h3>
                 <p className="text-blue-100">
                   Get real-time help from our AI assistant, pointing you to resources and answering your questions instantly.
+                </p>
+              </div>
+            </div>
+            
+            {/* NEW Feature 4 - Video Explainers */}
+            <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-400/30 via-blue-600/30 to-blue-800/40 border border-blue-600/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
+              <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="p-8 z-10 relative">
+                <div className="w-16 h-16 mb-6 rounded-full bg-blue-600/40 flex items-center justify-center shadow-inner shadow-blue-500/20">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-3">Video Explainers</h3>
+                <p className="text-blue-100">
+                  Watch short 30-60 second video explainers on key process steps to quickly understand complex business procedures.
                 </p>
               </div>
             </div>
@@ -204,11 +225,11 @@ const Index = () => {
             textColor: "text-gray-800",
             borderColor: "border-slate-400",
             features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
-          }].map((plan, index) => <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden`}>
-                {plan.recommended && <Badge className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-1 text-xs font-bold z-20">
+          }].map((plan, index) => <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden ${plan.recommended ? "pt-6" : ""}`}>
+                {plan.recommended && <Badge className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-1 text-xs font-bold z-20">
                     Recommended
                   </Badge>}
-                <CardHeader className={plan.recommended ? "pt-10" : ""}>
+                <CardHeader>
                   <CardTitle className={plan.title === "Platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
                   <div className={`text-3xl font-bold ${plan.title === "Platinum" ? "text-gray-800" : plan.textColor}`}>{plan.price}</div>
                   <CardDescription className={plan.title === "Platinum" ? "text-gray-800" : plan.textColor}>One-time payment</CardDescription>
