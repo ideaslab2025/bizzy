@@ -67,9 +67,9 @@ const Testimonials = () => {
           loop: true,
         }}
       >
-        <CarouselContent>
+        <CarouselContent className="-ml-2">
           {testimonials.map((testimonial, index) => (
-            <CarouselItem key={index} className="md:basis-1/3 pl-4">
+            <CarouselItem key={index} className="md:basis-1/3 pl-2">
               <div className="flex flex-col items-center">
                 <div className="rounded-full bg-blue-900/30 border-blue-800 w-72 h-72 flex flex-col items-center justify-center p-6 relative overflow-hidden">
                   {/* Star rating */}
@@ -108,8 +108,8 @@ const Testimonials = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-0" />
-        <CarouselNext className="right-0" />
+        <CarouselPrevious className="left-0 bg-white text-blue-500 border-blue-300 opacity-100" />
+        <CarouselNext className="right-0 bg-white text-blue-500 border-blue-300 opacity-100" />
       </Carousel>
       
       <div className="mt-10 text-center">

@@ -187,7 +187,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pricing Section - MODIFIED: Fixed recommended badge positioning */}
+      {/* Pricing Section - MODIFIED: Made recommended badge bigger */}
       <section id="pricing" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
@@ -226,7 +226,7 @@ const Index = () => {
             borderColor: "border-slate-400",
             features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
           }].map((plan, index) => <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden ${plan.recommended ? "pt-6" : ""}`}>
-                {plan.recommended && <Badge className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-1 text-xs font-bold z-20">
+                {plan.recommended && <Badge className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-4 py-1.5 text-sm font-bold z-20">
                     Recommended
                   </Badge>}
                 <CardHeader>
