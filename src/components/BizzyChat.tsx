@@ -13,6 +13,7 @@ type Message = {
 };
 
 // Predefined responses based on keywords
+// *** MODIFY THIS SECTION TO CHANGE CHATBOT RESPONSES ***
 const responses = [
   {
     keywords: ["hello", "hi", "hey", "greetings"],
@@ -37,6 +38,7 @@ const responses = [
 ];
 
 // Default responses if no keyword matches
+// *** MODIFY THESE RESPONSES FOR NON-MATCHING QUERIES ***
 const defaultResponses = [
   "I'd be happy to help with that! Could you provide more details?",
   "That's a great question. Our platform is designed to make business admin simple for you.",
