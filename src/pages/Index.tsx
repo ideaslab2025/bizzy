@@ -277,7 +277,7 @@ const Index = () => {
             <div className="md:w-1/2">
               <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Meet Bizzy</h2>
               <p className="text-blue-100 mb-3">Your AI-powered assistant for navigating the complexities of starting a UK business. Bizzy transforms business startup administration from a chore into a breeze.</p>
-              <p className="text-blue-100 mb-3">Clear, modern, up to date guidance on exactly what to do, every step of the way and in every category and department you can think of. Short videos and document library. </p>
+              <p className="text-blue-100 mb-3">Clear, up-to-date guidance on exactly what to do, every step of the way and in every category you can think of. Short video clips and a document library. Chat to Bizzy if you get stuck. </p>
               <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">
                 Learn More About Bizzy
               </Button>
