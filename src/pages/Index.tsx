@@ -1,24 +1,43 @@
-
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from "react";
 
 const Index = () => {
+  const [floatingPosition, setFloatingPosition] = useState({ x: 20, y: window.innerHeight - 150 });
+  
+  useEffect(() => {
+    const floatingAnimation = () => {
+      // Keep in bottom left area, but with some gentle floating movement
+      setFloatingPosition(prev => ({
+        x: 20 + Math.sin(Date.now() / 1000) * 10,
+        y: window.innerHeight - 150 + Math.cos(Date.now() / 1200) * 15,
+      }));
+      
+      requestAnimationFrame(floatingAnimation);
+    };
+    
+    const animation = requestAnimationFrame(floatingAnimation);
+    
+    return () => cancelAnimationFrame(animation);
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
       {/* Header/Navigation */}
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f]/90 backdrop-blur-sm">
         <div className="container mx-auto py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-16" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-24" />
           </div>
           <nav className="hidden md:flex gap-6">
             <a href="#features" className="text-[#1d4ed8] hover:text-[#3b82f6] transition">Features</a>
             <a href="#pricing" className="text-[#1d4ed8] hover:text-[#3b82f6] transition">Pricing</a>
             <a href="#about" className="text-[#1d4ed8] hover:text-[#3b82f6] transition">About</a>
+            <a href="#faq" className="text-[#1d4ed8] hover:text-[#3b82f6] transition">FAQ</a>
           </nav>
           <div className="flex gap-2">
             <Link to="/login">
@@ -55,23 +74,20 @@ const Index = () => {
             </div>
             <div className="relative h-[400px] md:h-[500px] flex items-center justify-center">
               <img 
-                src="/lovable-uploads/451c5886-b36b-4e91-a5e0-9b61612c8f5b.png" 
+                src="/lovable-uploads/6858378c-f597-4de9-abad-831c0c17c14b.png" 
                 alt="Business startup with Bizzy" 
-                className="rounded-lg shadow-2xl w-full h-full object-contain"
+                className="rounded-lg shadow-2xl w-full h-full object-cover"
               />
-              <div className="absolute bottom-[-30px] right-[-30px]">
-                <BizzyCharacter />
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-16">
+      {/* Features Section - moved up with less gap */}
+      <section id="features" className="py-8">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
-          <p className="text-xl mb-12 text-center text-blue-100/80 max-w-3xl mx-auto">
+          <p className="text-xl mb-8 text-center text-blue-100/80 max-w-3xl mx-auto">
             Bizzy provides all the tools and guidance you need to navigate the complex world of business administration
           </p>
           
@@ -109,37 +125,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Core Features Grid */}
-      <section className="py-16 bg-blue-900/20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-            <div className="bg-gradient-to-br from-blue-800/50 to-blue-900/30 p-8 rounded-xl border border-blue-700/30 flex flex-col">
-              <h3 className="text-2xl font-bold mb-4 text-[#3b82f6]">What to Do Next</h3>
-              <p className="text-blue-100 flex-grow mb-6">
-                Learn about the actions to take to set your business up for success with our structured guides and resources.
-              </p>
-              <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 w-full">Start Learning</Button>
-            </div>
-            
-            <div className="bg-gradient-to-br from-blue-800/50 to-blue-900/30 p-8 rounded-xl border border-blue-700/30 flex flex-col relative">
-              <h3 className="text-2xl font-bold mb-4 text-[#3b82f6]">Get Help from Bizzy</h3>
-              <p className="text-blue-100 flex-grow mb-6">
-                Follow step-by-step instructions from the Bizzy assistant to guide you through each part of your business journey.
-              </p>
-              <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 w-full">Get Guidance</Button>
-            </div>
-            
-            <div className="bg-gradient-to-br from-blue-800/50 to-blue-900/30 p-8 rounded-xl border border-blue-700/30 flex flex-col">
-              <h3 className="text-2xl font-bold mb-4 text-[#3b82f6]">Download Documents</h3>
-              <p className="text-blue-100 flex-grow mb-6">
-                Find and access important documents for your business, all customized with your company information.
-              </p>
-              <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 w-full">Access Documents</Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Pricing Section */}
       <section id="pricing" className="py-16">
         <div className="container mx-auto px-4">
@@ -153,7 +138,7 @@ const Index = () => {
               {
                 title: "Bronze",
                 price: "£100",
-                color: "from-amber-700/40 to-amber-900/30",
+                color: "from-amber-700/20 to-amber-900/10",
                 borderColor: "border-amber-800",
                 features: [
                   "Basic company setup guidance",
@@ -165,7 +150,7 @@ const Index = () => {
               {
                 title: "Silver",
                 price: "£200",
-                color: "from-slate-400/40 to-slate-600/30",
+                color: "from-slate-400/20 to-slate-600/10", 
                 borderColor: "border-slate-500",
                 features: [
                   "Everything in Bronze",
@@ -177,7 +162,7 @@ const Index = () => {
               {
                 title: "Gold",
                 price: "£300",
-                color: "from-amber-400/40 to-amber-600/30",
+                color: "from-amber-400/20 to-amber-600/10",
                 borderColor: "border-amber-500",
                 features: [
                   "Everything in Silver",
@@ -190,7 +175,7 @@ const Index = () => {
               {
                 title: "Platinum",
                 price: "£500",
-                color: "from-slate-300/40 to-slate-500/30",
+                color: "from-slate-300/20 to-slate-500/10",
                 borderColor: "border-slate-400",
                 features: [
                   "Everything in Gold",
@@ -202,7 +187,7 @@ const Index = () => {
             ].map((plan, index) => (
               <Card key={index} className={`bg-gradient-to-b ${plan.color} ${plan.borderColor} shadow-lg relative`}>
                 {plan.recommended && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-1">
+                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-4 py-1.5 text-sm font-bold">
                     Recommended
                   </Badge>
                 )}
@@ -266,6 +251,42 @@ const Index = () => {
                 </AspectRatio>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section (added) */}
+      <section id="faq" className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
+          <div className="max-w-3xl mx-auto space-y-6">
+            {[
+              {
+                question: "How does Bizzy help with company formation?",
+                answer: "Bizzy provides step-by-step guidance through the company formation process, offering document templates and AI assistance to ensure you complete all required legal steps correctly."
+              },
+              {
+                question: "Is there a recurring subscription?",
+                answer: "No, Bizzy operates on a one-time payment model. You pay once for the plan of your choice and get lifetime access to the features included in that plan."
+              },
+              {
+                question: "Can I upgrade my plan later?",
+                answer: "Yes, you can upgrade to a higher-tier plan at any time by paying the difference between your current plan and the new one."
+              },
+              {
+                question: "How does the AI assistant work?",
+                answer: "Bizzy's AI assistant uses advanced natural language processing to understand your questions and provide relevant guidance, document suggestions, and compliance advice specific to your business needs."
+              },
+              {
+                question: "Is my data secure with Bizzy?",
+                answer: "Absolutely. We employ enterprise-grade encryption and follow strict data protection protocols to ensure your business information remains completely secure and confidential."
+              }
+            ].map((faq, index) => (
+              <div key={index} className="bg-blue-900/30 border border-blue-800 rounded-lg p-6">
+                <h3 className="text-xl font-semibold mb-2 text-[#3b82f6]">{faq.question}</h3>
+                <p className="text-blue-100">{faq.answer}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -340,6 +361,20 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* Floating Bizzy character that follows along */}
+      <div className="fixed z-50" style={{ 
+        left: `${floatingPosition.x}px`, 
+        top: `${floatingPosition.y}px`,
+        transition: 'all 0.5s ease-out'
+      }}>
+        <div className="animate-pulse">
+          <Badge className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] whitespace-nowrap">
+            Need help?
+          </Badge>
+          <BizzyCharacter />
+        </div>
+      </div>
     </div>
   );
 };

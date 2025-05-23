@@ -16,7 +16,7 @@ const Pricing = () => {
       id: "bronze",
       title: "Bronze",
       price: "£100",
-      color: "from-amber-700/40 to-amber-900/30",
+      color: "from-amber-700/20 to-amber-900/10",
       borderColor: "border-amber-800",
       features: [
         "Basic company setup guidance",
@@ -29,7 +29,7 @@ const Pricing = () => {
       id: "silver",
       title: "Silver",
       price: "£200",
-      color: "from-slate-400/40 to-slate-600/30",
+      color: "from-slate-400/20 to-slate-600/10",
       borderColor: "border-slate-500",
       features: [
         "Everything in Bronze",
@@ -42,7 +42,7 @@ const Pricing = () => {
       id: "gold",
       title: "Gold",
       price: "£300",
-      color: "from-amber-400/40 to-amber-600/30",
+      color: "from-amber-400/20 to-amber-600/10",
       borderColor: "border-amber-500",
       features: [
         "Everything in Silver",
@@ -56,7 +56,7 @@ const Pricing = () => {
       id: "platinum",
       title: "Platinum",
       price: "£500",
-      color: "from-slate-300/40 to-slate-500/30",
+      color: "from-slate-300/20 to-slate-500/10",
       borderColor: "border-slate-400",
       features: [
         "Everything in Gold",
@@ -110,7 +110,7 @@ const Pricing = () => {
               onClick={() => handleSelectPlan(plan.id)}
             >
               {plan.recommended && (
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-1">
+                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-4 py-1.5 text-sm font-bold">
                   Recommended
                 </Badge>
               )}
