@@ -6,11 +6,13 @@ import BizzyCharacter from "@/components/BizzyCharacter";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useRef } from "react";
 import Testimonials from "@/components/Testimonials";
+
 const Index = () => {
   const [floatingPosition, setFloatingPosition] = useState({
     x: window.innerWidth - 150,
     y: window.innerHeight - 150
   });
+
   useEffect(() => {
     const floatingAnimation = () => {
       // Keep in bottom left area, but with some gentle floating movement
@@ -35,12 +37,13 @@ const Index = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
       {/* Header/Navigation - fixed and always visible with solid background - MADE THINNER */}
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f] shadow-md">
         <div className="container mx-auto py-0 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-64" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-60" />
           </Link>
           <nav className="hidden md:flex gap-6">
             <a href="#about" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">About</a>
@@ -59,7 +62,7 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section - updated with human image */}
+      {/* Hero Section - updated with new image with transparent background */}
       <section className="py-10 md:py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1d4ed8]/10 to-transparent z-0"></div>
         <div className="container mx-auto px-4 relative z-10">
@@ -82,9 +85,10 @@ const Index = () => {
               </div>
             </div>
             <div className="relative h-[400px] md:h-[500px] flex items-center justify-center">
-              <img src="/lovable-uploads/046483a2-9015-4137-beee-239507aaf8ad.png" 
-                alt="Happy business owners" 
-                className="w-full h-full object-contain rounded-3xl bg-blend-screen mix-blend-lighten drop-shadow-[0_0_35px_rgba(59,130,246,0.8)]" 
+              <img 
+                src="/lovable-uploads/642ffc5f-5961-48bc-84b1-0546760e70a3.png" 
+                alt="Happy business owners with paperwork" 
+                className="w-full h-full object-contain mix-blend-screen drop-shadow-[0_0_35px_rgba(59,130,246,0.8)]" 
               />
             </div>
           </div>
@@ -162,7 +166,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pricing Section - Fixed the Gold recommended badge and Platinum box */}
+      {/* Pricing Section */}
       <section id="pricing" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
@@ -196,12 +200,12 @@ const Index = () => {
           }, {
             title: "Platinum",
             price: "£500",
-            color: "bg-gradient-radial from-slate-200 via-blue-100/90 to-blue-300/80",
+            color: "bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400",
             textColor: "text-gray-800",
-            borderColor: "border-blue-300",
+            borderColor: "border-slate-400",
             features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
           }].map((plan, index) => <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden`}>
-                {plan.recommended && <Badge className="absolute -top-1 -translate-y-1 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-0.5 text-xs font-bold z-20">
+                {plan.recommended && <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-1 text-xs font-bold z-20">
                     Recommended
                   </Badge>}
                 <CardHeader className={plan.recommended ? "pt-8" : ""}>
@@ -231,7 +235,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials Section - updated to use circles instead of boxes */}
+      {/* Testimonials Section */}
       <section id="testimonials" className="py-16 bg-blue-900/10">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-10 text-center text-[#3b82f6]">What Our Customers Say</h2>
@@ -376,4 +380,5 @@ const Index = () => {
       </div>
     </div>;
 };
+
 export default Index;

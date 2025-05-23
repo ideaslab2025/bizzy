@@ -59,9 +59,9 @@ const Pricing = () => {
       id: "platinum",
       title: "Platinum",
       price: "£500",
-      color: "bg-gradient-radial from-slate-200 via-blue-100/90 to-blue-300/80",
+      color: "bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400",
       textColor: "text-gray-800",
-      borderColor: "border-blue-300",
+      borderColor: "border-slate-400",
       features: [
         "Everything in Gold",
         "Full access to all resources",
@@ -114,11 +114,11 @@ const Pricing = () => {
               onClick={() => handleSelectPlan(plan.id)}
             >
               {plan.recommended && (
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-6 py-2 text-base font-bold">
+                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-6 py-1 text-base font-bold z-20">
                   Recommended
                 </Badge>
               )}
-              <CardHeader className={plan.recommended ? "pt-6" : ""}>
+              <CardHeader className={plan.recommended ? "pt-8" : ""}>
                 <CardTitle className={plan.id === "platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
                 <div className={`text-3xl font-bold ${plan.id === "platinum" ? "text-gray-800" : "text-white"}`}>{plan.price}</div>
                 <CardDescription className={plan.id === "platinum" ? "text-gray-800" : "text-white opacity-90"}>One-time payment</CardDescription>
