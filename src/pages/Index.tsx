@@ -42,17 +42,17 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
-      {/* Header/Navigation - made thinner */}
+      {/* Header/Navigation - made even thinner */}
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f]/90 backdrop-blur-sm">
-        <div className="container mx-auto py-2 flex justify-between items-center">
+        <div className="container mx-auto py-1 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-20" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-28" />
           </Link>
           <nav className="hidden md:flex gap-6">
-            <a href="#about" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-xl font-semibold">About</a>
-            <a href="#features" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-xl font-semibold">Features</a>
-            <a href="#pricing" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-xl font-semibold">Pricing</a>
-            <a href="#faqs" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-xl font-semibold">FAQs</a>
+            <a href="#about" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">About</a>
+            <a href="#features" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">Features</a>
+            <a href="#pricing" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">Pricing</a>
+            <a href="#faqs" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">FAQs</a>
           </nav>
           <div className="flex gap-2">
             <Link to="/login">
@@ -65,7 +65,7 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section - removed "business without the busyness" */}
+      {/* Hero Section */}
       <section className="py-16 md:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1d4ed8]/10 to-transparent z-0"></div>
         <div className="container mx-auto px-4 relative z-10">
@@ -98,11 +98,11 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section - moved up with less gap */}
-      <section id="features" className="py-4">
+      {/* Features Section - moved up more with increased gap */}
+      <section id="features" className="py-8 mb-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
-          <p className="text-xl mb-8 text-center text-blue-100/80 max-w-3xl mx-auto">
+          <p className="text-xl mb-12 text-center text-blue-100/80 max-w-3xl mx-auto">
             Bizzy provides all the tools and guidance you need to navigate the complex world of business administration
           </p>
           
@@ -193,9 +193,9 @@ const Index = () => {
               {
                 title: "Platinum",
                 price: "£500",
-                color: "bg-gradient-to-b from-gray-100/90 to-gray-300/70",
+                color: "bg-gradient-to-b from-slate-200/90 to-slate-400/70",
                 textColor: "text-gray-800",
-                borderColor: "border-gray-200",
+                borderColor: "border-gray-300",
                 features: [
                   "Everything in Gold",
                   "Full access to all resources",
@@ -204,9 +204,9 @@ const Index = () => {
                 ]
               }
             ].map((plan, index) => (
-              <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative`}>
+              <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden`}>
                 {plan.recommended && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-8 py-3 text-lg font-bold">
+                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-6 py-2 text-base font-bold">
                     Recommended
                   </Badge>
                 )}
@@ -271,7 +271,7 @@ const Index = () => {
                 <div className="absolute inset-0 bg-[#1d4ed8]/30 blur-3xl rounded-full"></div>
                 <div className="max-w-[300px] relative">
                   <img 
-                    src="/lovable-uploads/7cff5e86-7507-49eb-a840-ee12479e3704.png" 
+                    src="/lovable-uploads/45d4bf2f-78d8-453d-ba15-ea8ee14cd38d.png" 
                     alt="Bizzy Character" 
                     className="w-full drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]"
                   />
@@ -282,7 +282,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* FAQ Section - changed FAQs */}
+      {/* FAQ Section */}
       <section id="faqs" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
@@ -318,7 +318,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section - Changed title to "Business without the busyness" */}
+      {/* CTA Section - Using "Business without the busyness" slogan */}
       <section className="py-16 bg-gradient-to-br from-blue-800/50 to-blue-900/30">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Business without the busyness</h2>
