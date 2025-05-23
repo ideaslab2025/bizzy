@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Link } from "react-router-dom";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Testimonials from "@/components/Testimonials";
 
 const Index = () => {
@@ -42,17 +42,17 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
-      {/* Header/Navigation */}
+      {/* Header/Navigation - made thinner */}
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f]/90 backdrop-blur-sm">
-        <div className="container mx-auto py-4 flex justify-between items-center">
+        <div className="container mx-auto py-2 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-48" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-20" />
           </Link>
           <nav className="hidden md:flex gap-6">
-            <a href="#features" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-lg font-semibold">Features</a>
-            <a href="#pricing" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-lg font-semibold">Pricing</a>
-            <a href="#about" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-lg font-semibold">About</a>
-            <a href="#faqs" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-lg font-semibold">FAQs</a>
+            <a href="#about" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-xl font-semibold">About</a>
+            <a href="#features" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-xl font-semibold">Features</a>
+            <a href="#pricing" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-xl font-semibold">Pricing</a>
+            <a href="#faqs" className="text-[#1d4ed8] hover:text-[#3b82f6] transition text-xl font-semibold">FAQs</a>
           </nav>
           <div className="flex gap-2">
             <Link to="/login">
@@ -65,7 +65,7 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section - removed "business without the busyness" */}
       <section className="py-16 md:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1d4ed8]/10 to-transparent z-0"></div>
         <div className="container mx-auto px-4 relative z-10">
@@ -78,9 +78,6 @@ const Index = () => {
               <p className="text-xl mb-8 text-blue-100/80 max-w-2xl">
                 All the steps for company setup with document templates and AI guidance
               </p>
-              <h2 className="text-2xl font-semibold italic mb-8 text-[#3b82f6]">
-                Business without the busyness
-              </h2>
               <div className="flex flex-wrap gap-4">
                 <Link to="/register">
                   <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Start Your Journey</Button>
@@ -143,7 +140,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pricing Section - Updated colors to be more metalllic and readable text */}
+      {/* Pricing Section - Updated for better readability and platinum color */}
       <section id="pricing" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
@@ -196,9 +193,9 @@ const Index = () => {
               {
                 title: "Platinum",
                 price: "£500",
-                color: "bg-gradient-to-b from-slate-200/80 to-slate-400/60",
-                textColor: "text-white",
-                borderColor: "border-slate-300",
+                color: "bg-gradient-to-b from-gray-100/90 to-gray-300/70",
+                textColor: "text-gray-800",
+                borderColor: "border-gray-200",
                 features: [
                   "Everything in Gold",
                   "Full access to all resources",
@@ -215,14 +212,14 @@ const Index = () => {
                 )}
                 <CardHeader className={plan.recommended ? "pt-6" : ""}>
                   <CardTitle className={plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
-                  <div className="text-3xl font-bold text-white">{plan.price}</div>
-                  <CardDescription className="text-white opacity-90">One-time payment</CardDescription>
+                  <div className={`text-3xl font-bold ${plan.textColor}`}>{plan.price}</div>
+                  <CardDescription className={plan.textColor}>One-time payment</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
                     {plan.features.map((feature, i) => (
                       <li key={i} className={`flex items-center gap-2 ${plan.textColor}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#3b82f6]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={plan.title === "Platinum" ? "text-gray-800" : "text-[#3b82f6]"}>
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                         {feature}
@@ -232,7 +229,7 @@ const Index = () => {
                 </CardContent>
                 <CardFooter>
                   <Link to="/register" className="w-full">
-                    <Button className={`w-full bg-[#1d4ed8] hover:bg-[#1d4ed8]/80`}>
+                    <Button className={`w-full ${plan.title === "Platinum" ? "bg-gray-800 hover:bg-gray-700 text-white" : "bg-[#1d4ed8] hover:bg-[#1d4ed8]/80"}`}>
                       Choose Plan
                     </Button>
                   </Link>
@@ -244,9 +241,14 @@ const Index = () => {
       </section>
 
       {/* Testimonials Section */}
-      <Testimonials />
+      <section id="testimonials" className="py-16 bg-blue-900/10">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-10 text-center text-[#3b82f6]">What Our Clients Say</h2>
+          <Testimonials />
+        </div>
+      </section>
 
-      {/* About Section with Bizzy character */}
+      {/* About Section with Bizzy character - updated with new image */}
       <section id="about" className="py-16 bg-blue-900/20">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
@@ -269,7 +271,7 @@ const Index = () => {
                 <div className="absolute inset-0 bg-[#1d4ed8]/30 blur-3xl rounded-full"></div>
                 <div className="max-w-[300px] relative">
                   <img 
-                    src="/lovable-uploads/e47628c4-cf40-47c0-b63e-4825b01d4574.png" 
+                    src="/lovable-uploads/7cff5e86-7507-49eb-a840-ee12479e3704.png" 
                     alt="Bizzy Character" 
                     className="w-full drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]"
                   />
@@ -280,7 +282,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* FAQ Section - changed FAQs */}
       <section id="faqs" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
@@ -316,10 +318,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section - Changed title to "Business without the busyness" */}
       <section className="py-16 bg-gradient-to-br from-blue-800/50 to-blue-900/30">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Ready to Make Business Easy?</h2>
+          <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Business without the busyness</h2>
           <p className="text-xl mb-8 text-blue-100/80 max-w-2xl mx-auto">
             Join thousands of UK startups who are saving time, reducing stress, and ensuring
             compliance with Bizzy's comprehensive platform.
@@ -337,7 +339,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-xl">Product</h3>
+              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Product</h3>
               <ul className="space-y-2">
                 <li><a href="#features" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Features</a></li>
                 <li><a href="#pricing" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Pricing</a></li>
@@ -345,7 +347,7 @@ const Index = () => {
               </ul>
             </div>
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-xl">Resources</h3>
+              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Resources</h3>
               <ul className="space-y-2">
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Blog</a></li>
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Guides</a></li>
@@ -353,7 +355,7 @@ const Index = () => {
               </ul>
             </div>
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-xl">Company</h3>
+              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Company</h3>
               <ul className="space-y-2">
                 <li><a href="#about" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">About Us</a></li>
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Careers</a></li>
@@ -361,7 +363,7 @@ const Index = () => {
               </ul>
             </div>
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-xl">Legal</h3>
+              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Legal</h3>
               <ul className="space-y-2">
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Terms</a></li>
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Privacy</a></li>
