@@ -218,11 +218,11 @@ const Index = () => {
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="mb-2 w-full mx-auto flex-grow">
                   <AspectRatio ratio={4 / 3} className="h-full">
-                    <img src="/lovable-uploads/c94a4cc7-d428-4ab5-a334-592beb1b09d8.png" alt="Step-by-Step Guidance" className="w-full h-full object-cover rounded-lg" />
+                    <img src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" alt="Step-by-Step Guidance" className="w-full h-full object-cover rounded-lg" />
                   </AspectRatio>
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mt-2 mb-1 text-center">Step-by-Step Guidance</h3>
-                <p className="text-blue-100 text-center text-sm">Comprehensive step by step guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections </p>
+                <p className="text-blue-100 text-center text-sm">Comprehensive step by step guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections </p>
               </div>
             </div>
             
@@ -235,7 +235,7 @@ const Index = () => {
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="mb-2 w-full mx-auto flex-grow">
                   <AspectRatio ratio={4 / 3} className="h-full">
-                    <img src="/lovable-uploads/5f026859-665d-4fb3-bcbf-452c8c82deab.png" alt="Document Engine" className="w-full h-full object-cover rounded-lg" />
+                    <img src="/lovable-uploads/90f74494-efee-4fb1-9e17-f1398ff68008.png" alt="Document Engine" className="w-full h-full object-cover rounded-lg" />
                   </AspectRatio>
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Document Engine</h3>
@@ -254,7 +254,7 @@ const Index = () => {
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="mb-2 w-full mx-auto flex-grow">
                   <AspectRatio ratio={4 / 3} className="h-full">
-                    <img src="/lovable-uploads/3df548c5-49bb-4ffd-9e17-ed1e75fa6900.png" alt="Bizzy AI Assistant" className="w-full h-full object-cover rounded-lg" />
+                    <img src="/lovable-uploads/a4589c72-9113-4641-a8bd-1d23e740ac0d.png" alt="Bizzy AI Assistant" className="w-full h-full object-cover rounded-lg" />
                   </AspectRatio>
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Bizzy AI Assistant</h3>
@@ -273,7 +273,7 @@ const Index = () => {
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="mb-2 w-full mx-auto flex-grow">
                   <AspectRatio ratio={4 / 3} className="h-full">
-                    <img src="/lovable-uploads/99726d2f-fd05-48de-b3d1-ed990262b1bc.png" alt="Video Explainers" className="w-full h-full object-cover rounded-lg" />
+                    <img src="/lovable-uploads/13ddab9c-cf4d-4451-99b7-a0e7c8d24062.png" alt="Video Explainers" className="w-full h-full object-cover rounded-lg" />
                   </AspectRatio>
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Video Explainers</h3>
