@@ -96,29 +96,29 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section - MODIFIED: Added human images to each feature box */}
+      {/* Features Section - Updated with larger human image for the first feature */}
       <section id="features" className="pt-24 pb-12">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
           <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-            {/* Feature 1 - Step-by-Step Guidance */}
+            {/* Feature 1 - Step-by-Step Guidance - Updated with human image */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
-              <div className="p-8 z-10 relative">
-                <div className="mb-6 rounded-full overflow-hidden w-16 h-16 mx-auto">
+              <div className="p-4 z-10 relative flex flex-col h-full">
+                <div className="mb-3 overflow-hidden w-full h-auto mx-auto flex-grow">
                   <img 
-                    src="/lovable-uploads/14331dcc-8300-4049-8ee4-81015f428fb8.png" 
+                    src="/lovable-uploads/c94a4cc7-d428-4ab5-a334-592beb1b09d8.png" 
                     alt="Step-by-Step Guidance" 
-                    className="w-full h-full object-cover object-top" 
+                    className="w-full h-auto object-cover rounded-lg" 
                   />
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-3 text-center">Step-by-Step Guidance</h3>
-                <p className="text-blue-100">
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-2 text-center">Step-by-Step Guidance</h3>
+                <p className="text-blue-100 text-center">
                   Comprehensive guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections and interactive learning.
                 </p>
               </div>
