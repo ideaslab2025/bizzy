@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ import {
 } from "@/components/ui/drawer";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const Index = () => {
   const [floatingPosition, setFloatingPosition] = useState({
@@ -24,6 +24,7 @@ const Index = () => {
 
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
+  const featuresRef = useRef<HTMLElement>(null);
   
   useEffect(() => {
     const floatingAnimation = () => {
@@ -184,7 +185,12 @@ const Index = () => {
                 <Link to="/register">
                   <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Start Your Journey</Button>
                 </Link>
-                <Button size="lg" variant="outline" className="border-[#1d4ed8] text-[#3b82f6] hover:bg-blue-900/50 hover:text-[#60a5fa] hover:border-[#60a5fa]">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-[#1d4ed8] text-[#3b82f6] hover:bg-blue-900/50 hover:text-[#60a5fa] hover:border-[#60a5fa]"
+                  onClick={() => scrollToSection('features')}
+                >
                   See How It Works
                 </Button>
               </div>
@@ -197,7 +203,7 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="pt-24 pb-12">
+      <section id="features" ref={featuresRef} className="pt-24 pb-12">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
           <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
@@ -286,7 +292,8 @@ const Index = () => {
           <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
           <p className="text-xl text-center mb-12 text-blue-100/80 max-w-3xl mx-auto">One-time payment, lifetime access. No hidden fees or subscriptions.</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Desktop pricing grid */}
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[{
             title: "Bronze",
             price: "£100",
@@ -344,6 +351,84 @@ const Index = () => {
             </CardFooter>
           </Card>)}
           </div>
+          
+          {/* Mobile pricing carousel */}
+          <div className="md:hidden w-full">
+            <Carousel
+              className="w-full"
+              opts={{
+                align: "start",
+                loop: true,
+              }}
+            >
+              <CarouselContent className="-ml-2">
+                {[{
+                title: "Bronze",
+                price: "£100",
+                color: "bg-gradient-to-b from-amber-700/80 to-amber-900/60",
+                textColor: "text-white",
+                borderColor: "border-amber-600",
+                features: ["Basic company setup guidance", "Essential document templates", "Standard support", "Basic AI assistant access"]
+              }, {
+                title: "Silver",
+                price: "£200",
+                color: "bg-gradient-to-b from-slate-300/80 to-slate-500/60",
+                textColor: "text-white",
+                borderColor: "border-slate-400",
+                features: ["Everything in Bronze", "Extended document library", "Tax & compliance guidance", "Full AI assistant access"]
+              }, {
+                title: "Gold",
+                price: "£300",
+                color: "bg-gradient-to-b from-amber-400/80 to-amber-600/60",
+                textColor: "text-white",
+                borderColor: "border-amber-500",
+                features: ["Everything in Silver", "Complete document engine", "Advanced sector-specific guidance", "Priority support"],
+                recommended: true
+              }, {
+                title: "Platinum",
+                price: "£500",
+                color: "bg-gradient-to-b from-slate-50 via-slate-200 to-slate-300",
+                textColor: "text-gray-800",
+                borderColor: "border-slate-400",
+                features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
+              }].map((plan, index) => (
+                <CarouselItem key={index} className="basis-full pl-2">
+                  <Card className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden ${plan.recommended ? "pt-6" : ""} backdrop-blur-sm bg-opacity-70 flex flex-col h-full`}>
+                    {plan.recommended && <Badge className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-4 py-1.5 text-sm font-bold z-20">
+                      Recommended
+                    </Badge>}
+                    <CardHeader>
+                      <CardTitle className={plan.title === "Platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
+                      <div className={`text-3xl font-bold ${plan.title === "Platinum" ? "text-gray-800" : plan.textColor}`}>{plan.price}</div>
+                      <CardDescription className={plan.title === "Platinum" ? "text-gray-800" : plan.textColor}>One-time payment</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <ul className="space-y-2">
+                        {plan.features.map((feature, i) => <li key={i} className={`flex items-center gap-2 ${plan.title === "Platinum" ? "text-gray-800" : plan.textColor}`}>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={plan.title === "Platinum" ? "text-gray-800" : "text-[#3b82f6]"}>
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                          {feature}
+                        </li>)}
+                      </ul>
+                    </CardContent>
+                    <CardFooter className="mt-auto">
+                      <Link to="/register" className="w-full">
+                        <Button className={`w-full ${plan.title === "Platinum" ? "bg-gray-800 hover:bg-gray-700 text-white" : "bg-[#1d4ed8] hover:bg-[#1d4ed8]/80"}`}>
+                          Choose Plan
+                        </Button>
+                      </Link>
+                    </CardFooter>
+                  </Card>
+                </CarouselItem>
+              ))}
+              </CarouselContent>
+              <div className="flex justify-center gap-2 mt-4">
+                <CarouselPrevious className="static transform-none mx-1 bg-white text-blue-500 border-blue-300" />
+                <CarouselNext className="static transform-none mx-1 bg-white text-blue-500 border-blue-300" />
+              </div>
+            </Carousel>
+          </div>
         </div>
       </section>
 
@@ -355,20 +440,20 @@ const Index = () => {
         </div>
       </section>
 
-      {/* About Section with Bizzy character */}
+      {/* About Section with Bizzy character - Smaller on mobile */}
       <section id="about" className="py-6 bg-blue-900/20">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="md:w-1/2">
               <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Meet Bizzy</h2>
-              <p className="text-blue-100 mb-3">Your AI-powered assistant for navigating the complexities of starting a UK business. Bizzy transforms business startup administration from a chore into a breeze.</p>
-              <p className="text-blue-100 mb-3">Clear, up-to-date guidance on exactly what to do, every step of the way and in every category you can think of. Short video clips and a document library. Chat to Bizzy if you get stuck. </p>
-              <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">
+              <p className="text-blue-100 mb-3 text-sm md:text-base">Your AI-powered assistant for navigating the complexities of starting a UK business. Bizzy transforms business startup administration from a chore into a breeze.</p>
+              <p className="text-blue-100 mb-3 text-sm md:text-base">Clear, up-to-date guidance on exactly what to do, every step of the way and in every category you can think of. Short video clips and a document library. Chat to Bizzy if you get stuck. </p>
+              <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 text-sm md:text-base">
                 Learn More About Bizzy
               </Button>
             </div>
             <div className="md:w-1/2 flex justify-center">
-              <div className="relative">
+              <div className="relative scale-75 md:scale-100">
                 <div className="absolute inset-0 bg-[#1d4ed8]/30 blur-3xl rounded-full"></div>
                 <img src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" alt="Bizzy Character" className="w-[600px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]" />
               </div>
