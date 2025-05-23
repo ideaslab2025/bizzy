@@ -124,22 +124,22 @@ const Index = () => {
               </div>
             </div>
             
-            {/* Feature 2 - Document Engine */}
+            {/* Feature 2 - Document Engine - UPDATED with larger human image */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-400/30 via-blue-600/30 to-blue-800/40 border border-blue-600/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
-              <div className="p-8 z-10 relative">
-                <div className="mb-6 rounded-full overflow-hidden w-16 h-16 mx-auto">
+              <div className="p-4 z-10 relative flex flex-col h-full">
+                <div className="mb-3 overflow-hidden w-full h-auto mx-auto flex-grow">
                   <img 
-                    src="/lovable-uploads/14331dcc-8300-4049-8ee4-81015f428fb8.png" 
+                    src="/lovable-uploads/5f026859-665d-4fb3-bcbf-452c8c82deab.png" 
                     alt="Document Engine" 
-                    className="w-full h-full object-cover object-center" 
+                    className="w-full h-auto object-cover rounded-lg" 
                   />
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-3 text-center">Document Engine</h3>
-                <p className="text-blue-100">
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-2 text-center">Document Engine</h3>
+                <p className="text-blue-100 text-center">
                   Access hundreds of pre-approved templates for every business need, automatically populated with your company details.
                 </p>
               </div>
