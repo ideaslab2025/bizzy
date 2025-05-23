@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -5,8 +6,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Menu } from "lucide-react";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
+
 const Index = () => {
   const [floatingPosition, setFloatingPosition] = useState({
     x: window.innerWidth - 150,
@@ -15,6 +24,7 @@ const Index = () => {
 
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
+  
   useEffect(() => {
     const floatingAnimation = () => {
       // Keep in bottom left area, but with some gentle floating movement
@@ -60,6 +70,20 @@ const Index = () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
+  
+  // Function to handle scroll to sections
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const yOffset = -100;
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({
+        top: y,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
       {/* Header/Navigation */}
       <header className="border-b border-blue-900/30 sticky top-0 z-50 bg-[#0a192f] bg-opacity-100 backdrop-blur-md shadow-md">
@@ -67,17 +91,78 @@ const Index = () => {
           <Link to="/" className="flex items-center gap-2">
             <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-40" />
           </Link>
+          
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex gap-6">
             <a href="#about" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">About</a>
             <a href="#features" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">Features</a>
             <a href="#pricing" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">Pricing</a>
             <a href="#faqs" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">FAQs</a>
           </nav>
-          <div className="flex gap-2">
-            <Link to="/login">
+          
+          <div className="flex gap-2 items-center">
+            {/* Mobile Menu */}
+            <Drawer>
+              <DrawerTrigger asChild className="md:hidden mr-2">
+                <Button variant="ghost" size="icon" className="text-[#3b82f6]">
+                  <Menu size={24} />
+                  <span className="sr-only">Menu</span>
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent className="bg-[#0a192f] border-t border-blue-900/30">
+                <div className="flex flex-col p-4 space-y-4">
+                  <DrawerClose asChild>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold"
+                      onClick={() => scrollToSection('about')}
+                    >
+                      About
+                    </Button>
+                  </DrawerClose>
+                  <DrawerClose asChild>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold"
+                      onClick={() => scrollToSection('features')}
+                    >
+                      Features
+                    </Button>
+                  </DrawerClose>
+                  <DrawerClose asChild>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold"
+                      onClick={() => scrollToSection('pricing')}
+                    >
+                      Pricing
+                    </Button>
+                  </DrawerClose>
+                  <DrawerClose asChild>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold"
+                      onClick={() => scrollToSection('faqs')}
+                    >
+                      FAQs
+                    </Button>
+                  </DrawerClose>
+                  <div className="border-t border-blue-900/30 pt-4 flex flex-col space-y-2">
+                    <Link to="/login" className="w-full">
+                      <Button variant="ghost" className="w-full text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Log in</Button>
+                    </Link>
+                    <Link to="/register" className="w-full">
+                      <Button className="w-full bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started</Button>
+                    </Link>
+                  </div>
+                </div>
+              </DrawerContent>
+            </Drawer>
+            
+            <Link to="/login" className="hidden md:block">
               <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Log in</Button>
             </Link>
-            <Link to="/register">
+            <Link to="/register" className="hidden md:block">
               <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started</Button>
             </Link>
           </div>
