@@ -60,7 +60,7 @@ const Pricing = () => {
       title: "Platinum",
       price: "£500",
       color: "bg-gradient-to-b from-slate-50 via-slate-200 to-slate-300",
-      textColor: "text-gray-800",
+      textColor: "text-gray-800", // Enforcing dark text for better contrast
       borderColor: "border-slate-400",
       features: [
         "Everything in Gold",
@@ -114,14 +114,14 @@ const Pricing = () => {
               onClick={() => handleSelectPlan(plan.id)}
             >
               {plan.recommended && (
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-6 py-1 text-base font-bold z-20">
+                <Badge className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-6 py-1 text-base font-bold z-20">
                   Recommended
                 </Badge>
               )}
-              <CardHeader className={plan.recommended ? "pt-8" : ""}>
+              <CardHeader className={plan.recommended ? "pt-10" : ""}>
                 <CardTitle className={`${plan.id === "platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor}`}>{plan.title}</CardTitle>
-                <div className={`text-3xl font-bold ${plan.id === "platinum" ? "text-gray-800" : "text-white"}`}>{plan.price}</div>
-                <CardDescription className={`${plan.id === "platinum" ? "text-gray-800" : "text-white opacity-90"}`}>One-time payment</CardDescription>
+                <div className={`text-3xl font-bold ${plan.id === "platinum" ? "text-gray-800" : plan.textColor}`}>{plan.price}</div>
+                <CardDescription className={`${plan.id === "platinum" ? "text-gray-800" : plan.textColor} opacity-90`}>One-time payment</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">

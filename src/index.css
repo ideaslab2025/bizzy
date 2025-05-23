@@ -100,10 +100,16 @@
     @apply bg-background text-foreground;
   }
   
-  /* Fix for header transparency - ensure solid background */
+  /* Fixed header transparency issue - make it completely solid */
   header.sticky {
-    @apply bg-opacity-100 bg-[#0a192f] !important;
-    backdrop-filter: none;
+    @apply bg-[#0a192f] !important;
+    background-color: #0a192f !important;
+    backdrop-filter: none !important;
+  }
+  
+  /* Platinum box fix - ensure text is visible */
+  [class*="from-slate-50"] {
+    @apply text-gray-800 !important;
   }
   
   /* Feature boxes styling */
@@ -114,6 +120,6 @@
   /* Hero image styling */
   .hero-image {
     @apply mix-blend-screen drop-shadow-[0_0_35px_rgba(59,130,246,0.8)];
-    transform: scale(1.2) translateY(-40px);
+    transform: scale(1.3) translateY(-50px);
   }
 }

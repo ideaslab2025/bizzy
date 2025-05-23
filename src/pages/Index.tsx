@@ -39,17 +39,17 @@ const Index = () => {
   }, []);
 
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
-      {/* Header/Navigation - fixed and always visible with solid background */}
+      {/* Header/Navigation - MODIFIED: reduced height with py-0 -> py-0 and smaller logo */}
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f] shadow-md">
         <div className="container mx-auto py-0 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-60" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-40" />
           </Link>
           <nav className="hidden md:flex gap-6">
-            <a href="#about" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">About</a>
-            <a href="#features" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">Features</a>
-            <a href="#pricing" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">Pricing</a>
-            <a href="#faqs" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">FAQs</a>
+            <a href="#about" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">About</a>
+            <a href="#features" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">Features</a>
+            <a href="#pricing" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">Pricing</a>
+            <a href="#faqs" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">FAQs</a>
           </nav>
           <div className="flex gap-2">
             <Link to="/login">
@@ -62,8 +62,8 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section - updated with new image with transparent background */}
-      <section className="py-10 md:py-16 relative overflow-hidden">
+      {/* Hero Section - MODIFIED: increased bottom padding to add spacing */}
+      <section className="py-10 md:py-16 pb-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1d4ed8]/10 to-transparent z-0"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -84,19 +84,19 @@ const Index = () => {
                 </Button>
               </div>
             </div>
-            <div className="relative h-[500px] md:h-[600px] flex items-center justify-center -mt-20 overflow-visible">
+            <div className="relative h-[500px] md:h-[600px] flex items-center justify-center -mt-32 overflow-visible">
               <img 
-                src="/lovable-uploads/53a29b38-0363-48f4-a073-85c064e7960d.png" 
+                src="/lovable-uploads/642ffc5f-5961-48bc-84b1-0546760e70a3.png" 
                 alt="Business owners with paperwork" 
-                className="w-[140%] h-full object-contain hero-image" 
+                className="w-[160%] h-full object-contain hero-image" 
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section - moved up with minimal gap to hero section */}
-      <section id="features" className="pt-0 pb-12">
+      {/* Features Section - MODIFIED: Added top padding to create more space from hero */}
+      <section id="features" className="pt-16 pb-12">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
           <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
@@ -166,7 +166,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* Pricing Section - MODIFIED: Fixed recommended badge positioning */}
       <section id="pricing" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
@@ -205,10 +205,10 @@ const Index = () => {
             borderColor: "border-slate-400",
             features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
           }].map((plan, index) => <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden`}>
-                {plan.recommended && <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-1 text-xs font-bold z-20">
+                {plan.recommended && <Badge className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-1 text-xs font-bold z-20">
                     Recommended
                   </Badge>}
-                <CardHeader className={plan.recommended ? "pt-8" : ""}>
+                <CardHeader className={plan.recommended ? "pt-10" : ""}>
                   <CardTitle className={plan.title === "Platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
                   <div className={`text-3xl font-bold ${plan.title === "Platinum" ? "text-gray-800" : plan.textColor}`}>{plan.price}</div>
                   <CardDescription className={plan.title === "Platinum" ? "text-gray-800" : plan.textColor}>One-time payment</CardDescription>

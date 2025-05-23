@@ -70,32 +70,34 @@ const Testimonials = () => {
         <CarouselContent>
           {testimonials.map((testimonial, index) => (
             <CarouselItem key={index} className="md:basis-1/3 pl-4">
-              <div className="bg-blue-900/30 border-blue-800 rounded-full p-8 h-full flex flex-col">
-                <div className="flex items-center gap-2 mb-4">
+              {/* Modified: changed from rounded-full to rounded-2xl for better content fit, added min-h-[400px] */}
+              <div className="bg-blue-900/30 border-blue-800 rounded-2xl p-6 h-full flex flex-col min-h-[400px]">
+                {/* Star rating with smaller icon size and better spacing */}
+                <div className="flex items-center gap-1 mb-3">
                   {Array(testimonial.rating).fill(0).map((_, i) => (
-                    <svg key={i} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg key={i} xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                     </svg>
                   ))}
                 </div>
                 
-                <p className="text-blue-100 mb-6 italic text-center text-sm">"{testimonial.text}"</p>
+                <p className="text-blue-100 mb-4 italic text-sm">"{testimonial.text}"</p>
                 
-                <div className="flex items-center justify-center gap-3 mt-auto">
-                  <Avatar>
+                <div className="flex items-center mt-auto gap-3">
+                  <Avatar className="h-10 w-10">
                     <AvatarImage src={testimonial.image} alt={testimonial.name} />
                     <AvatarFallback>{testimonial.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium text-[#3b82f6]">{testimonial.name}</p>
-                    <p className="text-sm text-blue-100/70">{testimonial.position}</p>
+                    <p className="font-medium text-[#3b82f6] text-sm">{testimonial.name}</p>
+                    <p className="text-xs text-blue-100/70">{testimonial.position}</p>
                   </div>
                 </div>
                 
-                <div className="mt-4 pt-4 border-t border-blue-800/50 text-center">
-                  <a href="https://www.trustpilot.com" target="_blank" rel="noopener noreferrer" className="text-sm text-[#3b82f6] flex items-center justify-center">
+                <div className="mt-4 pt-3 border-t border-blue-800/50 text-center">
+                  <a href="https://www.trustpilot.com" target="_blank" rel="noopener noreferrer" className="text-xs text-[#3b82f6] flex items-center justify-center">
                     <span>View on Trustpilot</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1">
                       <line x1="7" y1="17" x2="17" y2="7"></line>
                       <polyline points="7 7 17 7 17 17"></polyline>
                     </svg>
