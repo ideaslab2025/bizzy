@@ -42,7 +42,7 @@ export const PlanCard = ({ plan, isSelected, onSelect }: PlanCardProps) => {
               ? `border-[#1d4ed8] ring-2 ring-[#1d4ed8] shadow-xl shadow-[#1d4ed8]/40` 
               : `${plan.borderColor} shadow-md`
             } 
-            group-hover:shadow-xl ${plan.shadowClass} group-hover:brightness-110
+            group-hover:shadow-xl ${isSelected ? "shadow-[#1d4ed8]/40" : plan.shadowClass} 
             bg-gradient-to-b ${plan.color}
             cursor-pointer relative backdrop-blur-sm bg-opacity-70 flex flex-col h-full
             transition-all duration-300

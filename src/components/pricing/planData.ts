@@ -26,7 +26,7 @@ export const pricingPlans: PlanData[] = [
     textColor: "text-white", 
     borderColor: "border-slate-400",
     shadowClass: "shadow-slate-400/50",
-    buttonClass: "bg-slate-600 hover:bg-slate-700 text-white border border-slate-500 hover:shadow-slate-400/50",
+    buttonClass: "bg-slate-500 hover:bg-slate-600 text-white border border-slate-400 hover:shadow-slate-400/50",
     features: [
       "Everything in Bronze",
       "Extended document library",
@@ -42,7 +42,7 @@ export const pricingPlans: PlanData[] = [
     textColor: "text-white",
     borderColor: "border-amber-500",
     shadowClass: "shadow-amber-500/50",
-    buttonClass: "bg-blue-900/50 hover:bg-[#1d4ed8]/60 text-white border border-blue-700 hover:shadow-blue-700/50",
+    buttonClass: "bg-[#1d4ed8] hover:bg-[#1e40af] text-white border border-blue-700 hover:shadow-blue-700/50",
     features: [
       "Everything in Silver",
       "Complete document engine",

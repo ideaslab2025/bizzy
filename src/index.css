@@ -166,4 +166,19 @@
   #features {
     @apply pt-12 pb-8;
   }
+  
+  /* Enhanced pricing card hover effects */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  /* Ensure pricing cards have consistent height and hover effects */
+  .pricing-card {
+    @apply h-full transition-all duration-300;
+  }
+  
+  /* Better button hover states for pricing cards */
+  .pricing-button:hover {
+    @apply transform scale-105 -translate-y-1 shadow-lg;
+  }
 }
