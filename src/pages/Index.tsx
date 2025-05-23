@@ -102,15 +102,15 @@ const Index = () => {
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
           <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
             {/* Feature 1 - Step-by-Step Guidance */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
-              <div className="p-4 z-10 relative flex flex-col h-full">
-                <div className="mb-3 overflow-hidden w-full aspect-[4/3] mx-auto flex-grow">
+              <div className="p-3 z-10 relative flex flex-col h-full">
+                <div className="mb-2 w-full mx-auto flex-grow">
                   <AspectRatio ratio={4/3} className="h-full">
                     <img 
                       src="/lovable-uploads/c94a4cc7-d428-4ab5-a334-592beb1b09d8.png" 
@@ -119,8 +119,8 @@ const Index = () => {
                     />
                   </AspectRatio>
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-2 text-center">Step-by-Step Guidance</h3>
-                <p className="text-blue-100 text-center">
+                <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Step-by-Step Guidance</h3>
+                <p className="text-blue-100 text-center text-sm">
                   Comprehensive guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections and interactive learning.
                 </p>
               </div>
@@ -132,29 +132,31 @@ const Index = () => {
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
-              <div className="p-4 z-10 relative flex flex-col h-full">
-                <div className="mb-3 overflow-hidden w-full h-auto mx-auto flex-grow">
-                  <img 
-                    src="/lovable-uploads/5f026859-665d-4fb3-bcbf-452c8c82deab.png" 
-                    alt="Document Engine" 
-                    className="w-full h-auto object-cover rounded-lg" 
-                  />
+              <div className="p-3 z-10 relative flex flex-col h-full">
+                <div className="mb-2 w-full mx-auto flex-grow">
+                  <AspectRatio ratio={4/3} className="h-full">
+                    <img 
+                      src="/lovable-uploads/5f026859-665d-4fb3-bcbf-452c8c82deab.png" 
+                      alt="Document Engine" 
+                      className="w-full h-full object-cover rounded-lg" 
+                    />
+                  </AspectRatio>
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-2 text-center">Document Engine</h3>
-                <p className="text-blue-100 text-center">
+                <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Document Engine</h3>
+                <p className="text-blue-100 text-center text-sm">
                   Access hundreds of pre-approved templates for every business need, automatically populated with your company details.
                 </p>
               </div>
             </div>
             
-            {/* Feature 3 - Bizzy AI Assistant - UPDATED to fix image fitting */}
+            {/* Feature 3 - Bizzy AI Assistant */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
-              <div className="p-4 z-10 relative flex flex-col h-full">
-                <div className="mb-3 overflow-hidden w-full aspect-[4/3] mx-auto flex-grow">
+              <div className="p-3 z-10 relative flex flex-col h-full">
+                <div className="mb-2 w-full mx-auto flex-grow">
                   <AspectRatio ratio={4/3} className="h-full">
                     <img 
                       src="/lovable-uploads/3df548c5-49bb-4ffd-9e17-ed1e75fa6900.png" 
@@ -163,8 +165,8 @@ const Index = () => {
                     />
                   </AspectRatio>
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-2 text-center">Bizzy AI Assistant</h3>
-                <p className="text-blue-100 text-center">
+                <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Bizzy AI Assistant</h3>
+                <p className="text-blue-100 text-center text-sm">
                   Get real-time help from our AI assistant, pointing you to resources and answering your questions instantly.
                 </p>
               </div>
@@ -176,16 +178,18 @@ const Index = () => {
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
-              <div className="p-4 z-10 relative flex flex-col h-full">
-                <div className="mb-3 overflow-hidden w-full h-auto mx-auto flex-grow">
-                  <img 
-                    src="/lovable-uploads/99726d2f-fd05-48de-b3d1-ed990262b1bc.png" 
-                    alt="Video Explainers" 
-                    className="w-full h-auto object-cover rounded-lg" 
-                  />
+              <div className="p-3 z-10 relative flex flex-col h-full">
+                <div className="mb-2 w-full mx-auto flex-grow">
+                  <AspectRatio ratio={4/3} className="h-full">
+                    <img 
+                      src="/lovable-uploads/99726d2f-fd05-48de-b3d1-ed990262b1bc.png" 
+                      alt="Video Explainers" 
+                      className="w-full h-full object-cover rounded-lg" 
+                    />
+                  </AspectRatio>
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-2 text-center">Video Explainers</h3>
-                <p className="text-blue-100 text-center">
+                <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Video Explainers</h3>
+                <p className="text-blue-100 text-center text-sm">
                   Watch short 30-60 second video explainers on key process steps to quickly understand complex business procedures.
                 </p>
               </div>
