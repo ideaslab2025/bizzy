@@ -70,7 +70,7 @@ const Testimonials = () => {
         <CarouselContent>
           {testimonials.map((testimonial, index) => (
             <CarouselItem key={index} className="md:basis-1/3 pl-4">
-              <div className="bg-blue-900/30 border-blue-800 rounded-full p-6 h-full flex flex-col">
+              <div className="bg-blue-900/30 border-blue-800 rounded-full p-8 h-full flex flex-col">
                 <div className="flex items-center gap-2 mb-4">
                   {Array(testimonial.rating).fill(0).map((_, i) => (
                     <svg key={i} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -79,7 +79,7 @@ const Testimonials = () => {
                   ))}
                 </div>
                 
-                <p className="text-blue-100 mb-6 italic text-center">"{testimonial.text}"</p>
+                <p className="text-blue-100 mb-6 italic text-center text-sm">"{testimonial.text}"</p>
                 
                 <div className="flex items-center justify-center gap-3 mt-auto">
                   <Avatar>

@@ -36,11 +36,11 @@ const Index = () => {
     };
   }, []);
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
-      {/* Header/Navigation - fixed and always visible with solid background */}
+      {/* Header/Navigation - fixed and always visible with solid background - MADE THINNER */}
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f] shadow-md">
-        <div className="container mx-auto py-0.5 flex justify-between items-center">
+        <div className="container mx-auto py-0 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-60" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-64" />
           </Link>
           <nav className="hidden md:flex gap-6">
             <a href="#about" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-2xl font-bold">About</a>
@@ -162,7 +162,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* Pricing Section - Fixed the Gold recommended badge and Platinum box */}
       <section id="pricing" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
@@ -201,10 +201,10 @@ const Index = () => {
             borderColor: "border-blue-300",
             features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
           }].map((plan, index) => <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden`}>
-                {plan.recommended && <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-0.5 text-xs font-bold z-10">
+                {plan.recommended && <Badge className="absolute -top-1 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-0.5 text-xs font-bold z-20">
                     Recommended
                   </Badge>}
-                <CardHeader className={plan.recommended ? "pt-6" : ""}>
+                <CardHeader className={plan.recommended ? "pt-8" : ""}>
                   <CardTitle className={plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
                   <div className={`text-3xl font-bold ${plan.textColor}`}>{plan.price}</div>
                   <CardDescription className={plan.textColor}>One-time payment</CardDescription>
@@ -239,17 +239,17 @@ const Index = () => {
         </div>
       </section>
 
-      {/* About Section with Bizzy character - thinner section and larger image */}
-      <section id="about" className="py-12 bg-blue-900/20">
+      {/* About Section with Bizzy character - Made thinner */}
+      <section id="about" className="py-8 bg-blue-900/20">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="md:w-1/2">
               <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Meet Bizzy</h2>
-              <p className="text-blue-100 mb-4">
+              <p className="text-blue-100 mb-3">
                 Your AI-powered assistant for navigating the complexities of running a UK business. 
                 Bizzy transforms business administration from a chore into a breeze.
               </p>
-              <p className="text-blue-100 mb-4">
+              <p className="text-blue-100 mb-3">
                 We're like what challenger banks were to banking - a modern, digital solution 
                 to startup administration and support.
               </p>
@@ -260,7 +260,7 @@ const Index = () => {
             <div className="md:w-1/2 flex justify-center">
               <div className="relative">
                 <div className="absolute inset-0 bg-[#1d4ed8]/30 blur-3xl rounded-full"></div>
-                <img src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" alt="Bizzy Character" className="w-[500px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]" />
+                <img src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" alt="Bizzy Character" className="w-[600px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]" />
               </div>
             </div>
           </div>
