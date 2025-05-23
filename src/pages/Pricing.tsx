@@ -177,7 +177,7 @@ const Pricing = () => {
                       className={`w-full transition-all duration-300 ${
                         selectedPlan === plan.id
                           ? "bg-[#1d4ed8] hover:bg-[#1d4ed8]/90 scale-105" 
-                          : plan.buttonClass + " group-hover:scale-105"
+                          : plan.buttonClass
                       }`}
                     >
                       {selectedPlan === plan.id ? "Selected" : "Select Plan"}
