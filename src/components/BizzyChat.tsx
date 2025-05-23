@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -50,7 +51,7 @@ const BizzyChat = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hi there! I'm Bizzy, your business setup assistant. How can I help you today?",
+      text: "How can we help? Just type in what you are looking for.",
       isUser: false,
       timestamp: new Date()
     }
@@ -107,7 +108,7 @@ const BizzyChat = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="fixed bottom-0 right-0 rounded-tl-xl h-[70vh] w-full max-w-md mr-0 ml-auto">
+      <DrawerContent className="fixed bottom-0 right-0 rounded-tl-xl h-[60vh] w-full max-w-[350px] mr-0 ml-auto">
         <DrawerHeader className="bg-[#0a192f] text-white border-b border-blue-900/30">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
