@@ -1,4 +1,3 @@
-
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,7 +39,7 @@ const Index = () => {
   }, []);
 
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
-      {/* Header/Navigation - fixed and always visible with solid background - MADE THINNER */}
+      {/* Header/Navigation - fixed and always visible with solid background */}
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f] shadow-md">
         <div className="container mx-auto py-0 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
@@ -85,11 +84,11 @@ const Index = () => {
                 </Button>
               </div>
             </div>
-            <div className="relative h-[450px] md:h-[550px] flex items-center justify-center -mt-10">
+            <div className="relative h-[500px] md:h-[600px] flex items-center justify-center -mt-20 overflow-visible">
               <img 
-                src="/lovable-uploads/7cff5e86-7507-49eb-a840-ee12479e3704.png" 
-                alt="Happy business owners with paperwork" 
-                className="w-[130%] h-full object-contain mix-blend-screen drop-shadow-[0_0_35px_rgba(59,130,246,0.8)]" 
+                src="/lovable-uploads/53a29b38-0363-48f4-a073-85c064e7960d.png" 
+                alt="Business owners with paperwork" 
+                className="w-[140%] h-full object-contain hero-image" 
               />
             </div>
           </div>

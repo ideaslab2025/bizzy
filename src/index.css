@@ -1,5 +1,4 @@
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -110,5 +109,11 @@
   /* Feature boxes styling */
   #features .relative.overflow-hidden {
     @apply shadow-xl transition-all hover:-translate-y-1 hover:shadow-blue-500/30;
+  }
+
+  /* Hero image styling */
+  .hero-image {
+    @apply mix-blend-screen drop-shadow-[0_0_35px_rgba(59,130,246,0.8)];
+    transform: scale(1.2) translateY(-40px);
   }
 }
