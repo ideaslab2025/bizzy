@@ -42,7 +42,7 @@ export const pricingPlans: PlanData[] = [
     textColor: "text-white",
     borderColor: "border-amber-500",
     shadowClass: "shadow-amber-500/50",
-    buttonClass: "bg-[#1d4ed8] hover:bg-[#1e40af] text-white border border-blue-700 hover:shadow-blue-700/50",
+    buttonClass: "bg-amber-500 hover:bg-amber-600 text-white border border-amber-500 hover:shadow-amber-500/50",
     features: [
       "Everything in Silver",
       "Complete document engine",
