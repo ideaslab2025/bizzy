@@ -12,34 +12,20 @@ const BizzyCharacter = () => {
   
   return <>
       <div className="flex flex-col items-center">
+        <div className="text-[#3b82f6] font-bold text-sm flex items-center gap-1 -mb-2 leading-none">
+          Click me!
+        </div>
         <div 
-          className="relative cursor-pointer transition-all duration-500 hover:scale-110 animate-pulse" 
+          className="relative cursor-pointer transition-all duration-300 hover:scale-110" 
           onClick={handleChatWithBizzy} 
           onMouseEnter={() => setIsHovering(true)} 
           onMouseLeave={() => setIsHovering(false)}
-          style={{
-            animation: 'float 6s ease-in-out infinite',
-          }}
         >
           <img 
-            src="/lovable-uploads/e33c51f9-ea21-4658-ae6a-bbe28ae76211.png" 
-            alt="Bizzy Chat" 
-            className="w-[200px]" 
-            style={{ filter: "none" }}
+            src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" 
+            alt="Bizzy assistant" 
+            className="w-[120px]" 
           />
-          <style>{`
-            @keyframes float {
-              0% {
-                transform: translatey(0px);
-              }
-              50% {
-                transform: translatey(-20px);
-              }
-              100% {
-                transform: translatey(0px);
-              }
-            }
-          `}</style>
         </div>
       </div>
       <BizzyChat isOpen={chatOpen} onClose={() => setChatOpen(false)} />
