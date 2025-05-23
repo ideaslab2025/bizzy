@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { useInterval } from "@/hooks/use-interval";
 
 const testimonials = [
   {
@@ -48,11 +47,15 @@ const Testimonials = () => {
   const [api, setApi] = useState<any>();
 
   // Auto-scroll every 5 seconds
-  useInterval(() => {
-    if (api) {
+  useEffect(() => {
+    if (!api) return;
+    
+    const interval = setInterval(() => {
       api.scrollNext();
-    }
-  }, 5000);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [api]);
 
   return (
     <div className="w-full max-w-4xl mx-auto">
