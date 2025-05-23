@@ -216,11 +216,11 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="mb-2 w-full mx-auto flex-grow flex items-center justify-center">
+                <div className="w-full h-[180px] mx-auto flex items-center justify-center">
                   <img 
                     src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" 
                     alt="Step-by-Step Guidance" 
-                    className="w-full h-auto object-contain max-h-[150px]" 
+                    className="max-w-[90%] max-h-[170px] object-contain" 
                   />
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mt-2 mb-1 text-center">Step-by-Step Guidance</h3>
@@ -235,11 +235,11 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="mb-2 w-full mx-auto flex-grow flex items-center justify-center">
+                <div className="w-full h-[180px] mx-auto flex items-center justify-center">
                   <img 
                     src="/lovable-uploads/90f74494-efee-4fb1-9e17-f1398ff68008.png" 
                     alt="Document Engine" 
-                    className="w-full h-auto object-contain max-h-[150px]" 
+                    className="max-w-[90%] max-h-[170px] object-contain" 
                   />
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Document Engine</h3>
@@ -256,11 +256,11 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="mb-2 w-full mx-auto flex-grow flex items-center justify-center">
+                <div className="w-full h-[180px] mx-auto flex items-center justify-center">
                   <img 
                     src="/lovable-uploads/a4589c72-9113-4641-a8bd-1d23e740ac0d.png" 
                     alt="Bizzy AI Assistant" 
-                    className="w-full h-auto object-contain max-h-[150px]" 
+                    className="max-w-[90%] max-h-[170px] object-contain" 
                   />
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Bizzy AI Assistant</h3>
@@ -277,11 +277,11 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="mb-2 w-full mx-auto flex-grow flex items-center justify-center">
+                <div className="w-full h-[180px] mx-auto flex items-center justify-center">
                   <img 
                     src="/lovable-uploads/13ddab9c-cf4d-4451-99b7-a0e7c8d24062.png" 
                     alt="Video Explainers" 
-                    className="w-full h-auto object-contain max-h-[150px]" 
+                    className="max-w-[90%] max-h-[170px] object-contain" 
                   />
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Video Explainers</h3>

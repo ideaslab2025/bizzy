@@ -110,7 +110,7 @@ const Pricing = () => {
                 selectedPlan === plan.id 
                   ? "border-[#1d4ed8] ring-2 ring-[#1d4ed8]" 
                   : plan.borderColor
-              } ${plan.color} cursor-pointer transition-all duration-300 relative backdrop-blur-sm bg-opacity-70 flex flex-col transform hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-500/30`}
+              } ${plan.color} cursor-pointer transition-all duration-300 relative backdrop-blur-sm bg-opacity-70 flex flex-col transform hover:-translate-y-3 hover:shadow-2xl hover:shadow-blue-500/30`}
               onClick={() => handleSelectPlan(plan.id)}
             >
               {plan.recommended && (
