@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,16 +6,10 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Menu } from "lucide-react";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-
 const Index = () => {
   const [floatingPosition, setFloatingPosition] = useState({
     x: window.innerWidth - 150,
@@ -26,7 +19,6 @@ const Index = () => {
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
-  
   useEffect(() => {
     const floatingAnimation = () => {
       // Keep in bottom left area, but with some gentle floating movement
@@ -72,7 +64,7 @@ const Index = () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
-  
+
   // Function to handle scroll to sections
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -85,7 +77,6 @@ const Index = () => {
       });
     }
   };
-
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
       {/* Header/Navigation */}
       <header className="border-b border-blue-900/30 sticky top-0 z-50 bg-[#0a192f] bg-opacity-100 backdrop-blur-md shadow-md">
@@ -114,38 +105,22 @@ const Index = () => {
               <DrawerContent className="bg-[#0a192f] border-t border-blue-900/30">
                 <div className="flex flex-col p-4 space-y-4">
                   <DrawerClose asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold"
-                      onClick={() => scrollToSection('about')}
-                    >
+                    <Button variant="ghost" className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold" onClick={() => scrollToSection('about')}>
                       About
                     </Button>
                   </DrawerClose>
                   <DrawerClose asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold"
-                      onClick={() => scrollToSection('features')}
-                    >
+                    <Button variant="ghost" className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold" onClick={() => scrollToSection('features')}>
                       Features
                     </Button>
                   </DrawerClose>
                   <DrawerClose asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold"
-                      onClick={() => scrollToSection('pricing')}
-                    >
+                    <Button variant="ghost" className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold" onClick={() => scrollToSection('pricing')}>
                       Pricing
                     </Button>
                   </DrawerClose>
                   <DrawerClose asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold"
-                      onClick={() => scrollToSection('faqs')}
-                    >
+                    <Button variant="ghost" className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold" onClick={() => scrollToSection('faqs')}>
                       FAQs
                     </Button>
                   </DrawerClose>
@@ -186,12 +161,7 @@ const Index = () => {
                 <Link to="/register">
                   <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Start Your Journey</Button>
                 </Link>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-[#1d4ed8] text-[#3b82f6] hover:bg-blue-900/50 hover:text-[#60a5fa] hover:border-[#60a5fa]"
-                  onClick={() => scrollToSection('features')}
-                >
+                <Button size="lg" variant="outline" className="border-[#1d4ed8] text-[#3b82f6] hover:bg-blue-900/50 hover:text-[#60a5fa] hover:border-[#60a5fa]" onClick={() => scrollToSection('features')}>
                   See How It Works
                 </Button>
               </div>
@@ -218,11 +188,7 @@ const Index = () => {
               
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="w-full h-[240px] mx-auto flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" 
-                    alt="Step-by-Step Guidance" 
-                    className="max-w-full max-h-[230px] object-contain scale-110" 
-                  />
+                  <img src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" alt="Step-by-Step Guidance" className="max-w-full max-h-[230px] object-contain scale-110" />
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mt-2 mb-1 text-center">Step-by-Step Guidance</h3>
                 <p className="text-blue-100 text-center text-sm">Comprehensive step by step guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections </p>
@@ -237,11 +203,7 @@ const Index = () => {
               
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="w-full h-[240px] mx-auto flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/90f74494-efee-4fb1-9e17-f1398ff68008.png" 
-                    alt="Document Engine" 
-                    className="max-w-full max-h-[230px] object-contain" 
-                  />
+                  <img src="/lovable-uploads/90f74494-efee-4fb1-9e17-f1398ff68008.png" alt="Document Engine" className="max-w-full max-h-[230px] object-contain" />
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Document Engine</h3>
                 <p className="text-blue-100 text-center text-sm">
@@ -258,11 +220,7 @@ const Index = () => {
               
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="w-full h-[240px] mx-auto flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/a4589c72-9113-4641-a8bd-1d23e740ac0d.png" 
-                    alt="Bizzy AI Assistant" 
-                    className="max-w-full max-h-[230px] object-contain" 
-                  />
+                  <img src="/lovable-uploads/a4589c72-9113-4641-a8bd-1d23e740ac0d.png" alt="Bizzy AI Assistant" className="max-w-full max-h-[230px] object-contain" />
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Bizzy AI Assistant</h3>
                 <p className="text-blue-100 text-center text-sm">
@@ -279,11 +237,7 @@ const Index = () => {
               
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="w-full h-[240px] mx-auto flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/13ddab9c-cf4d-4451-99b7-a0e7c8d24062.png" 
-                    alt="Video Explainers" 
-                    className="max-w-full max-h-[230px] object-contain" 
-                  />
+                  <img src="/lovable-uploads/13ddab9c-cf4d-4451-99b7-a0e7c8d24062.png" alt="Video Explainers" className="max-w-full max-h-[230px] object-contain" />
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Video Explainers</h3>
                 <p className="text-blue-100 text-center text-sm">
@@ -363,13 +317,10 @@ const Index = () => {
           
           {/* Mobile pricing carousel */}
           <div className="md:hidden w-full">
-            <Carousel
-              className="w-full"
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-            >
+            <Carousel className="w-full" opts={{
+            align: "start",
+            loop: true
+          }}>
               <CarouselContent className="-ml-2">
                 {[{
                 title: "Bronze",
@@ -400,8 +351,7 @@ const Index = () => {
                 textColor: "text-gray-800",
                 borderColor: "border-slate-400",
                 features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
-              }].map((plan, index) => (
-                <CarouselItem key={index} className="basis-full pl-2">
+              }].map((plan, index) => <CarouselItem key={index} className="basis-full pl-2">
                   <Card className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden ${plan.recommended ? "pt-6" : ""} backdrop-blur-sm bg-opacity-70 flex flex-col h-full`}>
                     {plan.recommended && <Badge className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-4 py-1.5 text-sm font-bold z-20">
                       Recommended
@@ -429,8 +379,7 @@ const Index = () => {
                       </Link>
                     </CardFooter>
                   </Card>
-                </CarouselItem>
-              ))}
+                </CarouselItem>)}
               </CarouselContent>
               <div className="flex justify-center gap-2 mt-4">
                 <CarouselPrevious className="static transform-none mx-1 bg-white text-blue-500 border-blue-300" />
@@ -456,7 +405,7 @@ const Index = () => {
             <div className="md:w-1/2">
               <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Meet Bizzy</h2>
               <p className="text-blue-100 mb-3 text-sm md:text-base">Your AI-powered assistant for navigating the complexities of starting a UK business. Bizzy transforms business startup administration from a chore into a breeze.</p>
-              <p className="text-blue-100 mb-3 text-sm md:text-base">Clear, up-to-date guidance on exactly what to do, every step of the way and in every category you can think of. Short video clips and a document library. Chat to Bizzy if you get stuck. </p>
+              <p className="text-blue-100 mb-3 text-sm md:text-base">Clear, up-to-date guidance on exactly what to do, every step of the way. Short video clips and a document library to boot. Chat to Bizzy if you get stuck!</p>
               <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 text-sm md:text-base">
                 Learn More About Bizzy
               </Button>
