@@ -1,7 +1,6 @@
 
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
@@ -81,14 +80,17 @@ const Testimonials = () => {
                     ))}
                   </div>
                   
-                  {/* Updated quotes styling */}
+                  {/* Updated quotes styling with proper quote marks */}
                   <div className="relative text-center mb-4">
-                    <span className="absolute top-0 left-0 text-blue-500 text-4xl font-serif opacity-30">"</span>
-                    <p className="text-blue-100 italic text-base px-7 line-clamp-4">{testimonial.text}</p>
-                    <span className="absolute bottom-0 right-0 text-blue-500 text-4xl font-serif opacity-30">"</span>
+                    <p className="text-blue-100 italic text-base px-7 line-clamp-4">
+                      <span className="text-blue-500 text-xl font-serif">"</span>
+                      {testimonial.text}
+                      <span className="text-blue-500 text-xl font-serif">"</span>
+                    </p>
                   </div>
                   
-                  <div className="flex flex-col items-center mt-2">
+                  {/* Moved up slightly */}
+                  <div className="flex flex-col items-center mt-auto mb-3">
                     <Avatar className="h-20 w-20 mb-2 border-2 border-blue-500">
                       <AvatarImage src={testimonial.image} alt={testimonial.name} />
                       <AvatarFallback>{testimonial.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
@@ -100,15 +102,7 @@ const Testimonials = () => {
                   </div>
                 </div>
                 
-                <div className="mt-2 text-center">
-                  <a href="https://www.trustpilot.com" target="_blank" rel="noopener noreferrer" className="text-xs text-[#3b82f6] flex items-center justify-center">
-                    <span>View on Trustpilot</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1">
-                      <line x1="7" y1="17" x2="17" y2="7"></line>
-                      <polyline points="7 7 17 7 17 17"></polyline>
-                    </svg>
-                  </a>
-                </div>
+                {/* Removed "View on Trustpilot" link */}
               </div>
             </CarouselItem>
           ))}
@@ -117,6 +111,7 @@ const Testimonials = () => {
         <CarouselNext className="right-0 bg-white text-blue-500 border-blue-300 opacity-100" />
       </Carousel>
       
+      {/* Kept the main "See All Reviews" button */}
       <div className="mt-10 text-center">
         <a href="https://www.trustpilot.com" target="_blank" rel="noopener noreferrer">
           <Button variant="outline" className="border-[#1d4ed8] text-[#3b82f6] hover:bg-blue-900/30 hover:text-white font-medium">
