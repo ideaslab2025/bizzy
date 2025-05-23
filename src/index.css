@@ -125,12 +125,17 @@
   
   /* Increase hamburger menu icon size */
   button[aria-label="Toggle menu"] svg {
-    @apply w-8 h-8;
+    @apply w-10 h-10;
+  }
+  
+  /* Make mobile login button bigger */
+  .md\\:hidden .text-\\[\\#1d4ed8\\] {
+    @apply text-lg py-2 px-4;
   }
   
   /* Compress "Meet Bizzy" section */
   #meet-bizzy {
-    @apply py-8 !important;
+    @apply py-6 !important;
   }
   
   #meet-bizzy .container {
@@ -138,22 +143,27 @@
   }
   
   #meet-bizzy .grid {
-    @apply gap-4;
+    @apply gap-2;
   }
   
   #meet-bizzy h2 {
-    @apply mb-4;
+    @apply mb-2;
   }
   
   #meet-bizzy .py-12 {
-    @apply py-6;
-  }
-  
-  #meet-bizzy .py-8 {
     @apply py-4;
   }
   
+  #meet-bizzy .py-8 {
+    @apply py-2;
+  }
+  
   #meet-bizzy .my-8 {
-    @apply my-4;
+    @apply my-2;
+  }
+  
+  /* Fix spacing before "Everything You Need" section */
+  #features {
+    @apply pt-12 pb-8;
   }
 }
