@@ -119,7 +119,7 @@ const Index = () => {
                     />
                   </AspectRatio>
                 </div>
-                <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Step-by-Step Guidance</h3>
+                <h3 className="text-lg font-bold text-[#3b82f6] mt-2 mb-1 text-center">Step-by-Step Guidance</h3>
                 <p className="text-blue-100 text-center text-sm">
                   Comprehensive guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections and interactive learning.
                 </p>

@@ -19,9 +19,10 @@ const BizzyCharacter = () => {
           onMouseLeave={() => setIsHovering(false)}
         >
           <img 
-            src="/lovable-uploads/0d9fe08c-c696-458d-ac9c-7222b1d84ca7.png" 
-            alt="Bizzy assistant" 
+            src="/lovable-uploads/e33c51f9-ea21-4658-ae6a-bbe28ae76211.png" 
+            alt="Bizzy Chat" 
             className="w-[120px]" 
+            style={{ filter: "none" }}
           />
         </div>
       </div>

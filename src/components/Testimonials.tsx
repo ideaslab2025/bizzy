@@ -81,10 +81,10 @@ const Testimonials = () => {
                     ))}
                   </div>
                   
-                  <p className="text-blue-100 mb-auto italic text-base text-center px-2 line-clamp-4">"{testimonial.text}"</p>
+                  <p className="text-blue-100 mb-4 italic text-base text-center px-2 line-clamp-4">"{testimonial.text}"</p>
                   
-                  <div className="flex flex-col items-center mt-auto">
-                    <Avatar className="h-24 w-24 mb-2 border-2 border-blue-500">
+                  <div className="flex flex-col items-center mt-2">
+                    <Avatar className="h-20 w-20 mb-2 border-2 border-blue-500">
                       <AvatarImage src={testimonial.image} alt={testimonial.name} />
                       <AvatarFallback>{testimonial.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                     </Avatar>
