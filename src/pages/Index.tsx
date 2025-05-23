@@ -145,43 +145,43 @@ const Index = () => {
               </div>
             </div>
             
-            {/* Feature 3 - Bizzy AI Assistant */}
+            {/* Feature 3 - Bizzy AI Assistant - UPDATED with larger human image */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
-              <div className="p-8 z-10 relative">
-                <div className="mb-6 rounded-full overflow-hidden w-16 h-16 mx-auto">
+              <div className="p-4 z-10 relative flex flex-col h-full">
+                <div className="mb-3 overflow-hidden w-full h-auto mx-auto flex-grow">
                   <img 
-                    src="/lovable-uploads/14331dcc-8300-4049-8ee4-81015f428fb8.png" 
+                    src="/lovable-uploads/3df548c5-49bb-4ffd-9e17-ed1e75fa6900.png" 
                     alt="Bizzy AI Assistant" 
-                    className="w-full h-full object-cover object-bottom" 
+                    className="w-full h-auto object-cover rounded-lg" 
                   />
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-3 text-center">Bizzy AI Assistant</h3>
-                <p className="text-blue-100">
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-2 text-center">Bizzy AI Assistant</h3>
+                <p className="text-blue-100 text-center">
                   Get real-time help from our AI assistant, pointing you to resources and answering your questions instantly.
                 </p>
               </div>
             </div>
             
-            {/* Feature 4 - Video Explainers */}
+            {/* Feature 4 - Video Explainers - UPDATED with larger human image */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-400/30 via-blue-600/30 to-blue-800/40 border border-blue-600/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
-              <div className="p-8 z-10 relative">
-                <div className="mb-6 rounded-full overflow-hidden w-16 h-16 mx-auto">
+              <div className="p-4 z-10 relative flex flex-col h-full">
+                <div className="mb-3 overflow-hidden w-full h-auto mx-auto flex-grow">
                   <img 
-                    src="/lovable-uploads/14331dcc-8300-4049-8ee4-81015f428fb8.png" 
+                    src="/lovable-uploads/99726d2f-fd05-48de-b3d1-ed990262b1bc.png" 
                     alt="Video Explainers" 
-                    className="w-full h-full object-cover object-center" 
+                    className="w-full h-auto object-cover rounded-lg" 
                   />
                 </div>
-                <h3 className="text-xl font-bold text-[#3b82f6] mb-3 text-center">Video Explainers</h3>
-                <p className="text-blue-100">
+                <h3 className="text-xl font-bold text-[#3b82f6] mb-2 text-center">Video Explainers</h3>
+                <p className="text-blue-100 text-center">
                   Watch short 30-60 second video explainers on key process steps to quickly understand complex business procedures.
                 </p>
               </div>
