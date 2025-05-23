@@ -16,8 +16,9 @@ const Pricing = () => {
       id: "bronze",
       title: "Bronze",
       price: "£100",
-      color: "from-amber-700/20 to-amber-900/10",
-      borderColor: "border-amber-800",
+      color: "bg-gradient-to-b from-amber-700/50 to-amber-900/30",
+      textColor: "text-amber-100",
+      borderColor: "border-amber-600",
       features: [
         "Basic company setup guidance",
         "Essential document templates",
@@ -29,8 +30,9 @@ const Pricing = () => {
       id: "silver",
       title: "Silver",
       price: "£200",
-      color: "from-slate-400/20 to-slate-600/10",
-      borderColor: "border-slate-500",
+      color: "bg-gradient-to-b from-slate-300/50 to-slate-500/30",
+      textColor: "text-slate-100", 
+      borderColor: "border-slate-400",
       features: [
         "Everything in Bronze",
         "Extended document library",
@@ -42,7 +44,8 @@ const Pricing = () => {
       id: "gold",
       title: "Gold",
       price: "£300",
-      color: "from-amber-400/20 to-amber-600/10",
+      color: "bg-gradient-to-b from-amber-400/50 to-amber-600/30",
+      textColor: "text-amber-100",
       borderColor: "border-amber-500",
       features: [
         "Everything in Silver",
@@ -56,8 +59,9 @@ const Pricing = () => {
       id: "platinum",
       title: "Platinum",
       price: "£500",
-      color: "from-slate-300/20 to-slate-500/10",
-      borderColor: "border-slate-400",
+      color: "bg-gradient-to-b from-slate-200/50 to-slate-400/30",
+      textColor: "text-slate-100",
+      borderColor: "border-slate-300",
       features: [
         "Everything in Gold",
         "Full access to all resources",
@@ -106,23 +110,23 @@ const Pricing = () => {
                 selectedPlan === plan.id 
                   ? "border-[#1d4ed8] ring-2 ring-[#1d4ed8]" 
                   : plan.borderColor
-              } bg-gradient-to-b ${plan.color} cursor-pointer transition-all relative`}
+              } ${plan.color} cursor-pointer transition-all relative`}
               onClick={() => handleSelectPlan(plan.id)}
             >
               {plan.recommended && (
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-4 py-1.5 text-sm font-bold">
+                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-6 py-2 text-base font-bold">
                   Recommended
                 </Badge>
               )}
               <CardHeader className={plan.recommended ? "pt-6" : ""}>
-                <CardTitle className={plan.recommended ? "text-[#3b82f6]" : "text-white"}>{plan.title}</CardTitle>
+                <CardTitle className={plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
                 <div className="text-3xl font-bold text-white">{plan.price}</div>
-                <CardDescription className="text-blue-100/80">One-time payment</CardDescription>
+                <CardDescription className={`${plan.textColor} opacity-90`}>One-time payment</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
                   {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-2 text-blue-100">
+                    <li key={i} className={`flex items-center gap-2 ${plan.textColor}`}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#3b82f6]">
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>

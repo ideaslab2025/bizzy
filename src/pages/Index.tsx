@@ -1,3 +1,4 @@
+
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,13 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 
 const Index = () => {
-  const [floatingPosition, setFloatingPosition] = useState({ x: 20, y: window.innerHeight - 150 });
+  const [floatingPosition, setFloatingPosition] = useState({ x: window.innerWidth - 150, y: window.innerHeight - 150 });
   
   useEffect(() => {
     const floatingAnimation = () => {
       // Keep in bottom left area, but with some gentle floating movement
       setFloatingPosition(prev => ({
-        x: 20 + Math.sin(Date.now() / 1000) * 10,
+        x: window.innerWidth - 150 + Math.sin(Date.now() / 1000) * 10,
         y: window.innerHeight - 150 + Math.cos(Date.now() / 1200) * 15,
       }));
       
@@ -22,7 +23,20 @@ const Index = () => {
     
     const animation = requestAnimationFrame(floatingAnimation);
     
-    return () => cancelAnimationFrame(animation);
+    // Handle window resize
+    const handleResize = () => {
+      setFloatingPosition({
+        x: window.innerWidth - 150,
+        y: window.innerHeight - 150,
+      });
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      cancelAnimationFrame(animation);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   return (
@@ -31,7 +45,7 @@ const Index = () => {
       <header className="border-b border-blue-900/30 sticky top-0 z-10 bg-[#0a192f]/90 backdrop-blur-sm">
         <div className="container mx-auto py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-24" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-36" />
           </div>
           <nav className="hidden md:flex gap-6">
             <a href="#features" className="text-[#1d4ed8] hover:text-[#3b82f6] transition">Features</a>
@@ -74,9 +88,9 @@ const Index = () => {
             </div>
             <div className="relative h-[400px] md:h-[500px] flex items-center justify-center">
               <img 
-                src="/lovable-uploads/6858378c-f597-4de9-abad-831c0c17c14b.png" 
-                alt="Business startup with Bizzy" 
-                className="rounded-lg shadow-2xl w-full h-full object-cover"
+                src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
+                alt="Bizzy character" 
+                className="w-full h-full object-contain drop-shadow-[0_0_35px_rgba(59,130,246,0.8)]"
               />
             </div>
           </div>
@@ -84,7 +98,7 @@ const Index = () => {
       </section>
 
       {/* Features Section - moved up with less gap */}
-      <section id="features" className="py-8">
+      <section id="features" className="py-4">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
           <p className="text-xl mb-8 text-center text-blue-100/80 max-w-3xl mx-auto">
@@ -125,7 +139,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* Pricing Section - Updated colors to be more metalllic and readable text */}
       <section id="pricing" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
@@ -138,8 +152,9 @@ const Index = () => {
               {
                 title: "Bronze",
                 price: "£100",
-                color: "from-amber-700/20 to-amber-900/10",
-                borderColor: "border-amber-800",
+                color: "bg-gradient-to-b from-amber-700/50 to-amber-900/30",
+                textColor: "text-amber-100",
+                borderColor: "border-amber-600",
                 features: [
                   "Basic company setup guidance",
                   "Essential document templates",
@@ -150,8 +165,9 @@ const Index = () => {
               {
                 title: "Silver",
                 price: "£200",
-                color: "from-slate-400/20 to-slate-600/10", 
-                borderColor: "border-slate-500",
+                color: "bg-gradient-to-b from-slate-300/50 to-slate-500/30",
+                textColor: "text-slate-100", 
+                borderColor: "border-slate-400",
                 features: [
                   "Everything in Bronze",
                   "Extended document library",
@@ -162,7 +178,8 @@ const Index = () => {
               {
                 title: "Gold",
                 price: "£300",
-                color: "from-amber-400/20 to-amber-600/10",
+                color: "bg-gradient-to-b from-amber-400/50 to-amber-600/30",
+                textColor: "text-amber-100",
                 borderColor: "border-amber-500",
                 features: [
                   "Everything in Silver",
@@ -175,8 +192,9 @@ const Index = () => {
               {
                 title: "Platinum",
                 price: "£500",
-                color: "from-slate-300/20 to-slate-500/10",
-                borderColor: "border-slate-400",
+                color: "bg-gradient-to-b from-slate-200/50 to-slate-400/30",
+                textColor: "text-slate-100",
+                borderColor: "border-slate-300",
                 features: [
                   "Everything in Gold",
                   "Full access to all resources",
@@ -185,21 +203,21 @@ const Index = () => {
                 ]
               }
             ].map((plan, index) => (
-              <Card key={index} className={`bg-gradient-to-b ${plan.color} ${plan.borderColor} shadow-lg relative`}>
+              <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative`}>
                 {plan.recommended && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-4 py-1.5 text-sm font-bold">
+                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-6 py-2 text-base font-bold">
                     Recommended
                   </Badge>
                 )}
                 <CardHeader className={plan.recommended ? "pt-6" : ""}>
-                  <CardTitle className={plan.recommended ? "text-[#3b82f6]" : "text-blue-100"}>{plan.title}</CardTitle>
+                  <CardTitle className={plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
                   <div className="text-3xl font-bold text-white">{plan.price}</div>
-                  <CardDescription className="text-blue-100/70">One-time payment</CardDescription>
+                  <CardDescription className={`${plan.textColor} opacity-90`}>One-time payment</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
                     {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-2 text-blue-100">
+                      <li key={i} className={`flex items-center gap-2 ${plan.textColor}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#3b82f6]">
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
@@ -255,7 +273,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* FAQ Section (added) */}
+      {/* FAQ Section */}
       <section id="faq" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
@@ -314,9 +332,9 @@ const Index = () => {
             <div>
               <h3 className="font-bold mb-4 text-[#3b82f6]">Product</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Features</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Pricing</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">FAQ</a></li>
+                <li><a href="#features" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Features</a></li>
+                <li><a href="#pricing" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Pricing</a></li>
+                <li><a href="#faq" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">FAQ</a></li>
               </ul>
             </div>
             <div>
@@ -330,7 +348,7 @@ const Index = () => {
             <div>
               <h3 className="font-bold mb-4 text-[#3b82f6]">Company</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">About Us</a></li>
+                <li><a href="#about" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">About Us</a></li>
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Careers</a></li>
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors">Contact</a></li>
               </ul>
@@ -362,18 +380,13 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* Floating Bizzy character that follows along */}
+      {/* Floating Bizzy character - only one, bottom right */}
       <div className="fixed z-50" style={{ 
         left: `${floatingPosition.x}px`, 
         top: `${floatingPosition.y}px`,
         transition: 'all 0.5s ease-out'
       }}>
-        <div className="animate-pulse">
-          <Badge className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] whitespace-nowrap">
-            Need help?
-          </Badge>
-          <BizzyCharacter />
-        </div>
+        <BizzyCharacter />
       </div>
     </div>
   );
