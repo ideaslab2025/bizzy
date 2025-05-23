@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/sonner";
 
 const Pricing = () => {
@@ -15,6 +16,8 @@ const Pricing = () => {
       id: "bronze",
       title: "Bronze",
       price: "£100",
+      color: "from-amber-700/40 to-amber-900/30",
+      borderColor: "border-amber-800",
       features: [
         "Basic company setup guidance",
         "Essential document templates",
@@ -26,6 +29,8 @@ const Pricing = () => {
       id: "silver",
       title: "Silver",
       price: "£200",
+      color: "from-slate-400/40 to-slate-600/30",
+      borderColor: "border-slate-500",
       features: [
         "Everything in Bronze",
         "Extended document library",
@@ -37,24 +42,28 @@ const Pricing = () => {
       id: "gold",
       title: "Gold",
       price: "£300",
+      color: "from-amber-400/40 to-amber-600/30",
+      borderColor: "border-amber-500",
       features: [
         "Everything in Silver",
         "Complete document engine",
         "Advanced sector-specific guidance",
         "Priority support"
-      ]
+      ],
+      recommended: true
     },
     {
       id: "platinum",
       title: "Platinum",
       price: "£500",
+      color: "from-slate-300/40 to-slate-500/30",
+      borderColor: "border-slate-400",
       features: [
         "Everything in Gold",
         "Full access to all resources",
         "Video consultations with experts",
         "Custom document customization"
-      ],
-      highlight: true
+      ]
     }
   ];
   
@@ -79,11 +88,11 @@ const Pricing = () => {
   };
   
   return (
-    <div className="min-h-screen bg-muted/30 py-16">
+    <div className="min-h-screen bg-[#0a192f] py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-12">
-          <h1 className="text-3xl font-bold mb-4">Choose Your Plan</h1>
-          <p className="text-lg text-muted-foreground">
+          <h1 className="text-3xl font-bold mb-4 text-[#3b82f6]">Choose Your Plan</h1>
+          <p className="text-lg text-blue-100">
             Select the package that best suits your business needs.
             All plans include a one-time payment with no recurring fees.
           </p>
@@ -95,23 +104,26 @@ const Pricing = () => {
               key={plan.id} 
               className={`${
                 selectedPlan === plan.id 
-                  ? "border-[#0088cc] ring-2 ring-[#0088cc]" 
-                  : plan.highlight 
-                    ? "border-[#0088cc]" 
-                    : ""
-              } cursor-pointer transition-all`}
+                  ? "border-[#1d4ed8] ring-2 ring-[#1d4ed8]" 
+                  : plan.borderColor
+              } bg-gradient-to-b ${plan.color} cursor-pointer transition-all relative`}
               onClick={() => handleSelectPlan(plan.id)}
             >
-              <CardHeader>
-                <CardTitle>{plan.title}</CardTitle>
-                <div className="text-3xl font-bold">{plan.price}</div>
-                <CardDescription>One-time payment</CardDescription>
+              {plan.recommended && (
+                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-3 py-1">
+                  Recommended
+                </Badge>
+              )}
+              <CardHeader className={plan.recommended ? "pt-6" : ""}>
+                <CardTitle className={plan.recommended ? "text-[#3b82f6]" : "text-white"}>{plan.title}</CardTitle>
+                <div className="text-3xl font-bold text-white">{plan.price}</div>
+                <CardDescription className="text-blue-100/80">One-time payment</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
                   {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#0088cc]">
+                    <li key={i} className="flex items-center gap-2 text-blue-100">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#3b82f6]">
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>
                       {feature}
@@ -122,11 +134,10 @@ const Pricing = () => {
               <CardFooter>
                 <Button 
                   className={`w-full ${
-                    selectedPlan === plan.id || plan.highlight 
-                      ? "bg-[#0088cc] hover:bg-[#0088cc]/90" 
-                      : "variant-outline"
+                    selectedPlan === plan.id || plan.recommended 
+                      ? "bg-[#1d4ed8] hover:bg-[#1d4ed8]/80" 
+                      : "bg-blue-900/50 hover:bg-[#1d4ed8]/60 border border-blue-700"
                   }`}
-                  variant={selectedPlan === plan.id || plan.highlight ? "default" : "outline"}
                 >
                   {selectedPlan === plan.id ? "Selected" : "Select Plan"}
                 </Button>
@@ -139,12 +150,12 @@ const Pricing = () => {
           <Button 
             onClick={handleProceedToPayment}
             disabled={!selectedPlan || isLoading}
-            className="bg-[#0088cc] hover:bg-[#0088cc]/90 px-8 py-6 text-lg"
+            className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 px-8 py-6 text-lg"
             size="lg"
           >
             {isLoading ? "Processing..." : "Proceed to Payment"}
           </Button>
-          <p className="mt-4 text-sm text-muted-foreground">
+          <p className="mt-4 text-sm text-blue-100/70">
             Secure payment powered by Stripe. Your data is encrypted and secure.
           </p>
         </div>
