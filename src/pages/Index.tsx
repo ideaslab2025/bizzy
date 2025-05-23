@@ -92,11 +92,9 @@ const Index = () => {
             <div className="text-left">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
                 Helping New Business Owners<br />
-                <span className="text-[#3b82f6]">Start Off Right</span>
+                <span className="text-[#3b82f6]">Busyness</span>
               </h1>
-              <p className="text-xl mb-8 text-blue-100/80 max-w-2xl">
-                All the steps for company setup with document templates and AI guidance
-              </p>
+              <p className="text-xl mb-8 text-blue-100/80 max-w-2xl">All the steps for helping you after company setup, with personalised document templates, step-by-step process guidance and AI assistance</p>
               <div className="flex flex-wrap gap-4">
                 <Link to="/register">
                   <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Start Your Journey</Button>
@@ -360,11 +358,8 @@ const Index = () => {
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-br from-blue-800/50 to-blue-900/30">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Business without the busyness</h2>
-          <p className="text-xl mb-8 text-blue-100/80 max-w-2xl mx-auto">
-            Join thousands of UK startups who are saving time, reducing stress, and ensuring
-            compliance with Bizzy's comprehensive platform.
-          </p>
+          <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Helping new business owners get going</h2>
+          <p className="text-xl mb-8 text-blue-100/80 max-w-2xl mx-auto">Join thousands of UK startups who are saving time, reducing stress, and ensuring compliance with Bizzy's comprehensive platform.</p>
           <Link to="/register">
             <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">
               Get Started Today
