@@ -122,4 +122,38 @@
     @apply mix-blend-screen drop-shadow-[0_0_35px_rgba(59,130,246,0.8)];
     transform: scale(1.3) translateY(-50px);
   }
+  
+  /* Increase hamburger menu icon size */
+  button[aria-label="Toggle menu"] svg {
+    @apply w-8 h-8;
+  }
+  
+  /* Compress "Meet Bizzy" section */
+  #meet-bizzy {
+    @apply py-8 !important;
+  }
+  
+  #meet-bizzy .container {
+    @apply max-w-3xl;
+  }
+  
+  #meet-bizzy .grid {
+    @apply gap-4;
+  }
+  
+  #meet-bizzy h2 {
+    @apply mb-4;
+  }
+  
+  #meet-bizzy .py-12 {
+    @apply py-6;
+  }
+  
+  #meet-bizzy .py-8 {
+    @apply py-4;
+  }
+  
+  #meet-bizzy .my-8 {
+    @apply my-4;
+  }
 }
