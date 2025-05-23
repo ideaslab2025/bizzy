@@ -1,11 +1,10 @@
-
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "react-router-dom";
-import BizzyCharacter from "@/components/BizzyCharacter";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState, useRef } from "react";
+import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
 
 const Index = () => {
