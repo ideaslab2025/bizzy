@@ -199,9 +199,7 @@ const Index = () => {
       <section id="pricing" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
-          <p className="text-xl text-center mb-12 text-blue-100/80 max-w-3xl mx-auto">
-            One-time payment, lifetime access. No hidden fees or subscriptions.
-          </p>
+          <p className="text-xl text-center mb-12 text-blue-100/80 max-w-3xl mx-auto">One-time payment, lifetime access. No hidden fees or subscriptions.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[{
@@ -278,14 +276,8 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="md:w-1/2">
               <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Meet Bizzy</h2>
-              <p className="text-blue-100 mb-3">
-                Your AI-powered assistant for navigating the complexities of running a UK business. 
-                Bizzy transforms business administration from a chore into a breeze.
-              </p>
-              <p className="text-blue-100 mb-3">
-                We're like what challenger banks were to banking - a modern, digital solution 
-                to startup administration and support.
-              </p>
+              <p className="text-blue-100 mb-3">Your AI-powered assistant for navigating the complexities of starting a UK business. Bizzy transforms business startup administration from a chore into a breeze.</p>
+              <p className="text-blue-100 mb-3">Clear, modern, up to date guidance on exactly what to do, every step of the way and in every category and department you can think of. Short videos and document library. </p>
               <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">
                 Learn More About Bizzy
               </Button>
