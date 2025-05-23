@@ -90,10 +90,10 @@ export const PlanCard = ({ plan, isSelected, onSelect }: PlanCardProps) => {
           </CardContent>
           <CardFooter className="mt-auto">
             <Button 
-              className={`w-full transition-all duration-300 ${
+              className={`w-full transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-lg ${
                 isSelected
-                  ? "bg-[#1d4ed8] hover:bg-[#1d4ed8]/90 scale-105" 
-                  : plan.buttonClass
+                  ? "bg-[#1d4ed8] hover:bg-[#1d4ed8]/90" 
+                  : `${plan.buttonClass}`
               }`}
             >
               {isSelected ? "Selected" : "Select Plan"}

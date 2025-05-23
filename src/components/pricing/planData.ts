@@ -10,7 +10,7 @@ export const pricingPlans: PlanData[] = [
     textColor: "text-white",
     borderColor: "border-amber-600",
     shadowClass: "shadow-amber-600/50",
-    buttonClass: "bg-amber-700 hover:bg-amber-800 border border-amber-600",
+    buttonClass: "bg-amber-700 hover:bg-amber-800 text-white border border-amber-600 hover:shadow-amber-600/50",
     features: [
       "Basic company setup guidance",
       "Essential document templates",
@@ -26,7 +26,7 @@ export const pricingPlans: PlanData[] = [
     textColor: "text-white", 
     borderColor: "border-slate-400",
     shadowClass: "shadow-slate-400/50",
-    buttonClass: "bg-slate-600 hover:bg-slate-700 border border-slate-500",
+    buttonClass: "bg-slate-600 hover:bg-slate-700 text-white border border-slate-500 hover:shadow-slate-400/50",
     features: [
       "Everything in Bronze",
       "Extended document library",
@@ -42,7 +42,7 @@ export const pricingPlans: PlanData[] = [
     textColor: "text-white",
     borderColor: "border-amber-500",
     shadowClass: "shadow-amber-500/50",
-    buttonClass: "bg-blue-900/50 hover:bg-[#1d4ed8]/60 border border-blue-700",
+    buttonClass: "bg-blue-900/50 hover:bg-[#1d4ed8]/60 text-white border border-blue-700 hover:shadow-blue-700/50",
     features: [
       "Everything in Silver",
       "Complete document engine",
@@ -59,7 +59,7 @@ export const pricingPlans: PlanData[] = [
     textColor: "text-gray-800",
     borderColor: "border-slate-400",
     shadowClass: "shadow-slate-300/80",
-    buttonClass: "bg-gray-800 hover:bg-gray-700 text-white",
+    buttonClass: "bg-gray-800 hover:bg-gray-700 text-white border border-gray-600 hover:shadow-gray-600/50",
     features: [
       "Everything in Gold",
       "Full access to all resources",
