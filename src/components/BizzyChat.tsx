@@ -113,7 +113,7 @@ const BizzyChat = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Avatar className="h-8 w-8">
-                <AvatarImage src="/lovable-uploads/fdc48325-c3c5-4db8-b746-83ca078817b4.png" alt="Bizzy" />
+                <AvatarImage src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" alt="Bizzy" />
                 <AvatarFallback>BZ</AvatarFallback>
               </Avatar>
               <DrawerTitle className="text-[#3b82f6]">Chat with Bizzy</DrawerTitle>

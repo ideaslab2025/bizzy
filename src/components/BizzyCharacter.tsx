@@ -12,8 +12,8 @@ const BizzyCharacter = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center">
-        <div className="mb-2 text-[#3b82f6] font-bold text-lg">
+      <div className="flex flex-col items-center gap-1">
+        <div className="mb-0 text-[#3b82f6] font-bold text-xl">
           Chat to Bizzy!
         </div>
         <div 
@@ -23,7 +23,7 @@ const BizzyCharacter = () => {
           onMouseLeave={() => setIsHovering(false)}
         >
           <img 
-            src="/lovable-uploads/fdc48325-c3c5-4db8-b746-83ca078817b4.png" 
+            src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" 
             alt="Bizzy assistant" 
             className="w-[110px] drop-shadow-[0_0_15px_rgba(29,78,216,0.7)]"
           />
