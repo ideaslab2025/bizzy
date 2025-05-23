@@ -110,7 +110,7 @@ const Pricing = () => {
                 selectedPlan === plan.id 
                   ? "border-[#1d4ed8] ring-2 ring-[#1d4ed8]" 
                   : plan.borderColor
-              } ${plan.color} cursor-pointer transition-all relative`}
+              } ${plan.color} cursor-pointer transition-all relative backdrop-blur-sm bg-opacity-70 flex flex-col`}
               onClick={() => handleSelectPlan(plan.id)}
             >
               {plan.recommended && (
@@ -123,7 +123,7 @@ const Pricing = () => {
                 <div className={`text-3xl font-bold ${plan.id === "platinum" ? "text-gray-800" : plan.textColor}`}>{plan.price}</div>
                 <CardDescription className={`${plan.id === "platinum" ? "text-gray-800" : plan.textColor} opacity-90`}>One-time payment</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex-grow">
                 <ul className="space-y-2">
                   {plan.features.map((feature, i) => (
                     <li key={i} className={`flex items-center gap-2 ${plan.id === "platinum" ? "text-gray-800" : plan.textColor}`}>
@@ -135,7 +135,7 @@ const Pricing = () => {
                   ))}
                 </ul>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="mt-auto">
                 <Button 
                   className={`w-full ${
                     selectedPlan === plan.id

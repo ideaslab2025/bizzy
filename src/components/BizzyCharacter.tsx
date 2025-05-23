@@ -21,7 +21,7 @@ const BizzyCharacter = () => {
           <img 
             src="/lovable-uploads/e33c51f9-ea21-4658-ae6a-bbe28ae76211.png" 
             alt="Bizzy Chat" 
-            className="w-[120px]" 
+            className="w-[160px]" /* Increased from 120px to 160px */
             style={{ filter: "none" }}
           />
         </div>
