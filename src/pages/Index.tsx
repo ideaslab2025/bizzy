@@ -155,7 +155,7 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="py-6 md:py-12 pb-40 relative overflow-hidden">
+      <section className="py-2 md:py-6 pb-40 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1d4ed8]/10 to-transparent z-0"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
