@@ -6,22 +6,48 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { useEffect } from "react";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
   
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // This is a placeholder for actual Supabase authentication
-    // Once Supabase is connected, replace with actual auth code
-    setTimeout(() => {
-      toast.success("Logged in successfully!");
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+
+      if (data.user) {
+        toast.success("Logged in successfully!");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+    } finally {
       setIsLoading(false);
-      navigate("/dashboard");
-    }, 1500);
+    }
   };
   
   return (
@@ -44,12 +70,25 @@ const Login = () => {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="john@example.com" required />
+                <Input 
+                  id="email" 
+                  type="email" 
+                  placeholder="john@example.com" 
+                  required 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
               
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" required />
+                <Input 
+                  id="password" 
+                  type="password" 
+                  required 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
               
               <div className="flex items-center justify-end">

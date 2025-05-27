@@ -7,12 +7,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 const Onboarding = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    companyName: "",
+    companyNumber: "",
+    companyType: "limited",
+    sector: "",
+    employees: "",
+    vatRegistered: "",
+    vatNumber: "",
+    address: "",
+    city: "",
+    postcode: "",
+  });
   
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (step < 3) {
@@ -21,12 +40,35 @@ const Onboarding = () => {
     }
     
     setIsLoading(true);
-    // This is a placeholder for saving onboarding data
-    setTimeout(() => {
+    
+    try {
+      if (!user) {
+        toast.error("User not found. Please log in again.");
+        navigate("/login");
+        return;
+      }
+
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          company_name: formData.companyName,
+          business_type: formData.companyType,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
+
+      if (error) {
+        toast.error("Failed to save company details: " + error.message);
+        return;
+      }
+
       toast.success("Company details saved!");
-      setIsLoading(false);
       navigate("/pricing");
-    }, 1500);
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   return (
@@ -50,17 +92,32 @@ const Onboarding = () => {
                 <>
                   <div className="space-y-2">
                     <Label htmlFor="companyName">Company name</Label>
-                    <Input id="companyName" placeholder="Acme Ltd" required />
+                    <Input 
+                      id="companyName" 
+                      placeholder="Acme Ltd" 
+                      required 
+                      value={formData.companyName}
+                      onChange={(e) => handleInputChange("companyName", e.target.value)}
+                    />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="companyNumber">Company registration number</Label>
-                    <Input id="companyNumber" placeholder="12345678" required />
+                    <Input 
+                      id="companyNumber" 
+                      placeholder="12345678" 
+                      required 
+                      value={formData.companyNumber}
+                      onChange={(e) => handleInputChange("companyNumber", e.target.value)}
+                    />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="companyType">Company type</Label>
-                    <Select defaultValue="limited">
+                    <Select 
+                      value={formData.companyType} 
+                      onValueChange={(value) => handleInputChange("companyType", value)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select company type" />
                       </SelectTrigger>
@@ -78,7 +135,10 @@ const Onboarding = () => {
                 <>
                   <div className="space-y-2">
                     <Label htmlFor="sector">Business sector</Label>
-                    <Select>
+                    <Select 
+                      value={formData.sector} 
+                      onValueChange={(value) => handleInputChange("sector", value)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select sector" />
                       </SelectTrigger>
@@ -97,7 +157,10 @@ const Onboarding = () => {
                   
                   <div className="space-y-2">
                     <Label htmlFor="employees">Number of employees</Label>
-                    <Select>
+                    <Select 
+                      value={formData.employees} 
+                      onValueChange={(value) => handleInputChange("employees", value)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select range" />
                       </SelectTrigger>
@@ -113,7 +176,10 @@ const Onboarding = () => {
                   
                   <div className="space-y-2">
                     <Label htmlFor="vatRegistered">VAT registered?</Label>
-                    <Select>
+                    <Select 
+                      value={formData.vatRegistered} 
+                      onValueChange={(value) => handleInputChange("vatRegistered", value)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select option" />
                       </SelectTrigger>
@@ -131,22 +197,45 @@ const Onboarding = () => {
                 <>
                   <div className="space-y-2">
                     <Label htmlFor="vatNumber">VAT number (if applicable)</Label>
-                    <Input id="vatNumber" placeholder="GB123456789" />
+                    <Input 
+                      id="vatNumber" 
+                      placeholder="GB123456789" 
+                      value={formData.vatNumber}
+                      onChange={(e) => handleInputChange("vatNumber", e.target.value)}
+                    />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="address">Registered address</Label>
-                    <Input id="address" placeholder="1 Business Street" required />
+                    <Input 
+                      id="address" 
+                      placeholder="1 Business Street" 
+                      required 
+                      value={formData.address}
+                      onChange={(e) => handleInputChange("address", e.target.value)}
+                    />
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="city">City</Label>
-                      <Input id="city" placeholder="London" required />
+                      <Input 
+                        id="city" 
+                        placeholder="London" 
+                        required 
+                        value={formData.city}
+                        onChange={(e) => handleInputChange("city", e.target.value)}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="postcode">Postcode</Label>
-                      <Input id="postcode" placeholder="EC1A 1BB" required />
+                      <Input 
+                        id="postcode" 
+                        placeholder="EC1A 1BB" 
+                        required 
+                        value={formData.postcode}
+                        onChange={(e) => handleInputChange("postcode", e.target.value)}
+                      />
                     </div>
                   </div>
                 </>
@@ -162,7 +251,7 @@ const Onboarding = () => {
                   Back
                 </Button>
               ) : (
-                <div></div> // Empty div to maintain spacing
+                <div></div>
               )}
               <Button 
                 type="submit" 
