@@ -171,7 +171,7 @@ const GuidedHelp = () => {
         {/* Logo */}
         <div className="p-6 bg-white">
           <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-24" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
           </Link>
         </div>
 
@@ -363,7 +363,7 @@ const GuidedHelp = () => {
                 <div className="w-8 h-8 bg-white rounded-full overflow-hidden">
                   <AspectRatio ratio={1}>
                     <img 
-                      src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" 
+                      src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
                       alt="Bizzy" 
                       className="w-full h-full object-contain"
                     />

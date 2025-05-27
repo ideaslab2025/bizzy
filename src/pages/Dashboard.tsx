@@ -40,11 +40,11 @@ const Dashboard = () => {
         <div className="flex items-center justify-between p-4 border-b">
           {isSidebarOpen ? (
             <Link to="/dashboard" className="flex items-center justify-center w-full">
-              <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-12" />
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-16" />
             </Link>
           ) : (
             <Link to="/dashboard" className="mx-auto">
-              <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-8" />
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-10" />
             </Link>
           )}
           <Button
@@ -141,7 +141,7 @@ const Dashboard = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="flex items-center gap-2 hidden sm:flex"
+                className="flex items-center gap-2 hidden sm:flex bg-blue-100 text-blue-600 border-blue-200 hover:bg-blue-200"
                 onClick={() => setShowChatbot(true)}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -154,7 +154,7 @@ const Dashboard = () => {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="relative"
+                  className="relative text-white hover:text-gray-200"
                   onClick={handleNotificationClick}
                 >
                   <Bell className="w-5 h-5" />
@@ -189,9 +189,9 @@ const Dashboard = () => {
               {/* Account Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-gray-700 hover:text-gray-900">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200">
                     <User className="h-4 w-4" />
-                    <span className="hidden sm:inline text-gray-700">{user?.email?.split('@')[0] || 'Account'}</span>
+                    <span className="hidden sm:inline">{user?.email?.split('@')[0] || 'Account'}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
@@ -229,7 +229,7 @@ const Dashboard = () => {
               <div className="w-8 h-8 bg-white rounded-full overflow-hidden">
                 <AspectRatio ratio={1}>
                   <img 
-                    src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" 
+                    src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
                     alt="Bizzy" 
                     className="w-full h-full object-contain"
                   />
@@ -256,7 +256,7 @@ const Dashboard = () => {
                 <div className="w-6 h-6 overflow-hidden rounded-full">
                   <AspectRatio ratio={1}>
                     <img 
-                      src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" 
+                      src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
                       alt="Bizzy" 
                       className="w-full h-full object-contain"
                     />

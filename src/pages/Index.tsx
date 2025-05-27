@@ -487,11 +487,11 @@ const Index = () => {
                   <img 
                     src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" 
                     alt="Step-by-Step Guidance" 
-                    className="h-[180px] object-contain scale-110 translate-y-4" 
+                    className="h-[180px] object-contain scale-125 translate-y-6" 
                     style={{ maxWidth: '85%' }}
                   />
                 </div>
-                <div className="mt-6 mb-4">
+                <div className="mt-8 mb-4">
                   <h3 className="text-lg font-bold text-[#3b82f6] mb-2 text-center">Step-by-Step Guidance</h3>
                   <p className="text-blue-100 text-center text-sm">Comprehensive step by step guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections </p>
                 </div>
