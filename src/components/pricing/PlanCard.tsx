@@ -27,8 +27,8 @@ interface PlanCardProps {
 export const PlanCard = ({ plan, isSelected, onSelect }: PlanCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   
-  // Dynamic styles for shadows and borders
-  const cardStyle = {
+  // Dynamic styles for shadows and borders using inline styles
+  const cardStyle: React.CSSProperties = {
     border: `2px solid ${isSelected ? '#1d4ed8' : plan.borderColor}`,
     boxShadow: isSelected 
       ? `0 0 0 2px #1d4ed8, 0 25px 50px -12px rgba(29, 78, 216, 0.5)`
@@ -39,12 +39,13 @@ export const PlanCard = ({ plan, isSelected, onSelect }: PlanCardProps) => {
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
   };
 
-  const buttonStyle = {
+  const buttonStyle: React.CSSProperties = {
     backgroundColor: isSelected ? '#1d4ed8' : plan.buttonBg,
     color: 'white',
     transform: isHovered ? 'translateY(-2px) scale(1.05)' : 'scale(1)',
     boxShadow: isHovered ? '0 10px 20px -5px rgba(0, 0, 0, 0.3)' : '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    transition: 'all 0.2s ease-out'
+    transition: 'all 0.2s ease-out',
+    border: 'none'
   };
 
   const checkIconColor = plan.id === "platinum" ? "#1f2937" : "#60a5fa";
@@ -104,16 +105,16 @@ export const PlanCard = ({ plan, isSelected, onSelect }: PlanCardProps) => {
         
         <CardFooter className="mt-auto">
           <Button 
-            className="w-full text-white"
+            className="w-full"
             style={buttonStyle}
-            onMouseOver={(e) => {
+            onMouseEnter={(e) => {
               if (!isSelected) {
-                e.currentTarget.style.backgroundColor = plan.buttonHoverBg;
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = plan.buttonHoverBg;
               }
             }}
-            onMouseOut={(e) => {
+            onMouseLeave={(e) => {
               if (!isSelected) {
-                e.currentTarget.style.backgroundColor = isSelected ? '#1d4ed8' : plan.buttonBg;
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = plan.buttonBg;
               }
             }}
           >
