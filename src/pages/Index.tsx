@@ -468,7 +468,7 @@ const Index = () => {
           <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
-            {/* Feature 1 - Step-by-Step Guidance - Updated image positioning and size */}
+            {/* Feature 1 - Step-by-Step Guidance - Fixed image size and positioning */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               {/* Professionally Assured Badge */}
               <div className="absolute top-3 right-3 z-10">
@@ -483,10 +483,10 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="w-full h-[180px] mx-auto flex items-center justify-center">
-                  <img src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" alt="Step-by-Step Guidance" className="max-w-full max-h-[160px] object-contain scale-125" />
+                <div className="w-full h-[160px] mx-auto flex items-end justify-center pt-12">
+                  <img src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" alt="Step-by-Step Guidance" className="max-w-full max-h-[140px] object-contain scale-150" />
                 </div>
-                <h3 className="text-lg font-bold text-[#3b82f6] mt-6 mb-1 text-center">Step-by-Step Guidance</h3>
+                <h3 className="text-lg font-bold text-[#3b82f6] mt-8 mb-1 text-center">Step-by-Step Guidance</h3>
                 <p className="text-blue-100 text-center text-sm">Comprehensive step by step guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections </p>
               </div>
             </div>
@@ -551,12 +551,14 @@ const Index = () => {
             </div>
           </div>
           
-          {/* Disclaimer Links - Moved to span under first two boxes */}
+          {/* Disclaimer Links - Positioned to straddle under first two boxes */}
           <div className="flex justify-start max-w-5xl mx-auto mt-8">
-            <div className="w-full md:w-1/2 lg:w-1/2">
-              <a href="/disclaimer" className="text-blue-300 hover:text-blue-100 text-sm underline">
-                Read our disclaimer
-              </a>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
+              <div className="md:col-span-2 lg:col-span-2 flex justify-center">
+                <a href="/disclaimer" className="text-blue-300 hover:text-blue-100 text-sm underline">
+                  Read our disclaimer
+                </a>
+              </div>
             </div>
           </div>
         </div>
