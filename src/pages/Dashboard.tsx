@@ -115,7 +115,7 @@ const Dashboard = () => {
       
       {/* Main content area */}
       <div className="flex-1 flex flex-col">
-        {/* Top navigation bar */}
+        {/* Top navigation bar - FIXED text visibility */}
         <header className="bg-white border-b sticky top-0 z-20 h-16">
           <div className="flex items-center justify-between h-full px-4">
             <div className="flex items-center gap-2">
@@ -160,7 +160,7 @@ const Dashboard = () => {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="relative text-gray-800 hover:text-gray-900 hover:bg-gray-100"
+                  className="relative text-gray-900 hover:text-gray-700 hover:bg-gray-100"
                 >
                   <Bell className="w-5 h-5" />
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0088cc] text-white text-xs rounded-full flex items-center justify-center">
@@ -191,16 +191,16 @@ const Dashboard = () => {
                 )}
               </div>
 
-              {/* Account Dropdown - FIXED hover functionality and brighter default colors */}
+              {/* Account Dropdown - FIXED hover functionality and visibility */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="flex items-center gap-2 text-gray-800 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 data-[state=open]:bg-gray-100 data-[state=open]:text-gray-900"
+                    className="flex items-center gap-2 text-gray-900 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 data-[state=open]:bg-gray-100 data-[state=open]:text-gray-700"
                   >
                     <User className="h-4 w-4" />
-                    <span className="hidden sm:inline">
+                    <span className="hidden sm:inline text-gray-900">
                       {user?.user_metadata?.company_name || 
                        (user?.user_metadata?.first_name 
                          ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`

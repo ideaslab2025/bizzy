@@ -395,6 +395,7 @@ const Index = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
+      // Redirect will be handled by the auth state change
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -422,7 +423,7 @@ const Index = () => {
               <>
                 {/* Mobile Dashboard Button */}
                 <Link to="/dashboard" className="md:hidden">
-                  <Button variant="ghost" className="text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30">
+                  <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
                     Dashboard
                   </Button>
                 </Link>
@@ -432,14 +433,14 @@ const Index = () => {
                   <DropdownMenuTrigger asChild className="hidden md:flex">
                     <Button 
                       variant="ghost" 
-                      className="flex items-center gap-2 text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[state=open]:bg-blue-900/30 data-[state=open]:text-[#60a5fa]"
+                      className="flex items-center gap-2 text-white hover:text-blue-200 hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[state=open]:bg-blue-900/30 data-[state=open]:text-blue-200"
                     >
                       <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-medium text-white">
                         {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || 
                          user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || 
                          user?.email?.charAt(0)?.toUpperCase() || 'U'}
                       </div>
-                      <span className="hidden lg:inline">
+                      <span className="hidden lg:inline text-white">
                         {user?.user_metadata?.company_name || 
                          (user?.user_metadata?.first_name 
                            ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
@@ -449,7 +450,7 @@ const Index = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
                     <DropdownMenuItem asChild>
-                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
+                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2">
                         <User className="h-4 w-4" />
                         Dashboard
                       </Link>
@@ -466,6 +467,7 @@ const Index = () => {
                 </DropdownMenu>
               </>
             ) : (
+              // ... keep existing code (login/register buttons)
               <>
                 {/* Mobile Login Button */}
                 <Link to="/login" className="md:hidden">
@@ -493,6 +495,7 @@ const Index = () => {
                 </Button>
               </DrawerTrigger>
               <DrawerContent className="bg-[#0a192f] border-t border-blue-900/30">
+                {/* ... keep existing code (mobile menu content) */}
                 <div className="flex flex-col p-4 space-y-4">
                   <DrawerClose asChild>
                     <Button variant="ghost" className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold" onClick={() => scrollToSection('about')}>
@@ -583,7 +586,7 @@ const Index = () => {
           <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
-            {/* Feature 1 - Step-by-Step Guidance - FIXED image size and title positioning */}
+            {/* Feature 1 - Step-by-Step Guidance - FIXED image size */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               {/* Professionally Assured Badge */}
               <div className="absolute top-3 right-3 z-20">
@@ -598,15 +601,15 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="w-full h-[180px] mx-auto flex items-end justify-center pt-8">
+                <div className="w-full h-[180px] mx-auto flex items-center justify-center pt-4">
                   <img 
                     src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" 
                     alt="Step-by-Step Guidance" 
-                    className="h-[220px] object-contain scale-[1.8] translate-y-3" 
-                    style={{ maxWidth: '90%' }}
+                    className="h-[140px] object-contain" 
+                    style={{ maxWidth: '85%' }}
                   />
                 </div>
-                <div className="mt-6 mb-4">
+                <div className="mt-4 mb-4">
                   <h3 className="text-lg font-bold text-[#3b82f6] mb-2 text-center">Step-by-Step Guidance</h3>
                   <p className="text-blue-100 text-center text-sm">Comprehensive step by step guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections </p>
                 </div>
