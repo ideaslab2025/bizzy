@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -72,6 +71,13 @@ const GuidedHelp = () => {
     }
   }, [currentStep, steps, user]);
 
+  // Auto-complete section when all steps are visited
+  useEffect(() => {
+    if (sections.length > 0 && visitedSteps.size > 0 && steps.length > 0) {
+      checkAndAutoCompleteSection(currentSection);
+    }
+  }, [visitedSteps, currentSection, sections, steps]);
+
   const fetchSections = async () => {
     const { data, error } = await supabase
       .from('guidance_sections')
@@ -99,21 +105,34 @@ const GuidedHelp = () => {
   const fetchProgress = async () => {
     if (!user) return;
     
+    // Get the most recent progress for each step to avoid duplicates
     const { data, error } = await supabase
       .from('user_guidance_progress')
-      .select('section_id, step_id, completed, section_completed')
-      .eq('user_id', user.id);
+      .select('section_id, step_id, completed, section_completed, last_visited_at')
+      .eq('user_id', user.id)
+      .order('last_visited_at', { ascending: false });
     
     if (data && !error) {
-      setProgress(data);
+      // Remove duplicates by keeping only the most recent entry for each step
+      const uniqueProgress = data.reduce((acc, item) => {
+        const key = `${item.section_id}-${item.step_id}`;
+        if (!acc[key]) {
+          acc[key] = item;
+        }
+        return acc;
+      }, {} as Record<string, typeof data[0]>);
+      
+      const progressArray = Object.values(uniqueProgress);
+      setProgress(progressArray);
+      
       // Extract completed sections
-      const completedSectionIds = data
+      const completedSectionIds = progressArray
         .filter(item => item.section_completed)
         .map(item => item.section_id);
       setCompletedSections(new Set(completedSectionIds));
       
       // Extract visited steps
-      const visitedStepIds = data.map(item => item.step_id);
+      const visitedStepIds = progressArray.map(item => item.step_id);
       setVisitedSteps(new Set(visitedStepIds));
     }
   };
@@ -121,60 +140,110 @@ const GuidedHelp = () => {
   const saveStepProgress = async (stepId: number, sectionId: number) => {
     if (!user) return;
     
-    await supabase
+    // Use update with match to avoid duplicates
+    const { data: existingProgress } = await supabase
       .from('user_guidance_progress')
-      .upsert({
-        user_id: user.id,
-        section_id: sectionId,
-        step_id: stepId,
-        completed: true,
-        section_completed: false,
-        last_visited_at: new Date().toISOString()
-      });
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('section_id', sectionId)
+      .eq('step_id', stepId)
+      .single();
+
+    if (existingProgress) {
+      // Update existing record
+      await supabase
+        .from('user_guidance_progress')
+        .update({
+          completed: true,
+          last_visited_at: new Date().toISOString()
+        })
+        .eq('id', existingProgress.id);
+    } else {
+      // Insert new record
+      await supabase
+        .from('user_guidance_progress')
+        .insert({
+          user_id: user.id,
+          section_id: sectionId,
+          step_id: stepId,
+          completed: true,
+          section_completed: false,
+          last_visited_at: new Date().toISOString()
+        });
+    }
   };
 
   const toggleSectionCompleted = async (sectionId: number) => {
     if (!user) return;
     
-    const isCurrentlyCompleted = completedSections.has(sectionId);
+    const isNowCompleted = !completedSections.has(sectionId);
     
     // Get all steps for this section
-    const { data: sectionSteps } = await supabase
+    const { data: sectionSteps, error } = await supabase
       .from('guidance_steps')
       .select('id')
       .eq('section_id', sectionId);
     
-    if (!sectionSteps) return;
+    if (error || !sectionSteps) return;
     
-    // Toggle completion status
+    // Update all steps for this section
     for (const step of sectionSteps) {
-      await supabase
+      const { data: existingProgress } = await supabase
         .from('user_guidance_progress')
-        .upsert({
-          user_id: user.id,
-          section_id: sectionId,
-          step_id: step.id,
-          completed: !isCurrentlyCompleted,
-          section_completed: !isCurrentlyCompleted,
-          last_visited_at: new Date().toISOString()
-        });
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('section_id', sectionId)
+        .eq('step_id', step.id)
+        .single();
+
+      if (existingProgress) {
+        // Update existing record
+        await supabase
+          .from('user_guidance_progress')
+          .update({
+            completed: isNowCompleted,
+            section_completed: isNowCompleted,
+            last_visited_at: new Date().toISOString()
+          })
+          .eq('id', existingProgress.id);
+      } else {
+        // Insert new record
+        await supabase
+          .from('user_guidance_progress')
+          .insert({
+            user_id: user.id,
+            section_id: sectionId,
+            step_id: step.id,
+            completed: isNowCompleted,
+            section_completed: isNowCompleted,
+            last_visited_at: new Date().toISOString()
+          });
+      }
     }
     
     // Update local state immediately
-    const newCompletedSections = new Set(completedSections);
-    if (isCurrentlyCompleted) {
-      newCompletedSections.delete(sectionId);
-    } else {
-      newCompletedSections.add(sectionId);
-    }
-    setCompletedSections(newCompletedSections);
+    setCompletedSections(prev => {
+      const next = new Set(prev);
+      if (isNowCompleted) {
+        next.add(sectionId);
+      } else {
+        next.delete(sectionId);
+      }
+      return next;
+    });
     
-    // Refresh progress from database
-    await fetchProgress();
+    // Update visited steps if marking as completed
+    if (isNowCompleted) {
+      setVisitedSteps(prev => {
+        const next = new Set(prev);
+        sectionSteps.forEach(step => next.add(step.id));
+        return next;
+      });
+    }
   };
 
   const checkAndAutoCompleteSection = async (sectionId: number) => {
-    if (!user) return;
+    if (!user || completedSections.has(sectionId)) return;
     
     // Get all steps for this section
     const { data: sectionSteps } = await supabase
@@ -187,8 +256,29 @@ const GuidedHelp = () => {
     // Check if all steps have been visited
     const allStepsVisited = sectionSteps.every(step => visitedSteps.has(step.id));
     
-    if (allStepsVisited && !completedSections.has(sectionId)) {
-      await toggleSectionCompleted(sectionId);
+    if (allStepsVisited) {
+      // Mark section as completed
+      for (const step of sectionSteps) {
+        const { data: existingProgress } = await supabase
+          .from('user_guidance_progress')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('section_id', sectionId)
+          .eq('step_id', step.id)
+          .single();
+
+        if (existingProgress) {
+          await supabase
+            .from('user_guidance_progress')
+            .update({
+              section_completed: true,
+              last_visited_at: new Date().toISOString()
+            })
+            .eq('id', existingProgress.id);
+        }
+      }
+      
+      setCompletedSections(prev => new Set([...prev, sectionId]));
     }
   };
 
@@ -208,9 +298,6 @@ const GuidedHelp = () => {
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
     } else if (currentSection < sections.length) {
-      // Check if all steps in current section have been visited
-      await checkAndAutoCompleteSection(currentSection);
-      
       setCurrentSection(currentSection + 1);
       setCurrentStep(1);
     }
