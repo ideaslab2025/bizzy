@@ -1,5 +1,8 @@
-
 import React, { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/components/ui/sonner';
+import { useNavigate } from 'react-router-dom';
 
 // Plan data with all styling information
 const pricingPlans = [
@@ -78,9 +81,11 @@ interface PlanCardProps {
   plan: typeof pricingPlans[0];
   isSelected: boolean;
   onSelect: (planId: string) => void;
+  onPurchase: (planId: string) => void;
+  isProcessing: boolean;
 }
 
-const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect }) => {
+const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect, onPurchase, isProcessing }) => {
   const [isHovered, setIsHovered] = useState(false);
   
   // Card styles
@@ -113,10 +118,11 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect }) => {
     borderRadius: '8px',
     fontSize: '16px',
     fontWeight: '600',
-    cursor: 'pointer',
-    transform: isHovered ? 'translateY(-2px) scale(1.05)' : 'scale(1)',
-    boxShadow: isHovered ? '0 10px 20px -5px rgba(0, 0, 0, 0.3)' : '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    transition: 'all 0.2s ease-out'
+    cursor: isProcessing ? 'not-allowed' : 'pointer',
+    transform: isHovered && !isProcessing ? 'translateY(-2px) scale(1.05)' : 'scale(1)',
+    boxShadow: isHovered && !isProcessing ? '0 10px 20px -5px rgba(0, 0, 0, 0.3)' : '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+    transition: 'all 0.2s ease-out',
+    opacity: isProcessing ? 0.7 : 1
   };
 
   const headerStyle: React.CSSProperties = {
@@ -233,22 +239,29 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect }) => {
         <div style={footerStyle}>
           <button 
             style={buttonStyle}
+            disabled={isProcessing}
             onMouseOver={(e) => {
-              if (!isSelected) {
+              if (!isSelected && !isProcessing) {
                 e.currentTarget.style.backgroundColor = plan.buttonHoverBg;
               }
             }}
             onMouseOut={(e) => {
-              if (!isSelected) {
+              if (!isSelected && !isProcessing) {
                 e.currentTarget.style.backgroundColor = isSelected ? '#1d4ed8' : plan.buttonBg;
               }
             }}
             onClick={(e) => {
               e.stopPropagation();
-              onSelect(plan.id);
+              if (!isProcessing) {
+                if (isSelected) {
+                  onPurchase(plan.id);
+                } else {
+                  onSelect(plan.id);
+                }
+              }
             }}
           >
-            {isSelected ? "Selected" : "Select Plan"}
+            {isProcessing ? "Processing..." : isSelected ? "Purchase Now" : "Select Plan"}
           </button>
         </div>
       </div>
@@ -260,21 +273,41 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect }) => {
 export default function PricingNew() {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
   
   const handleSelectPlan = (planId: string) => {
     setSelectedPlan(planId);
   };
   
-  const handleProceedToPayment = () => {
-    if (!selectedPlan) {
+  const handlePurchasePlan = async (planId: string) => {
+    if (!user) {
+      toast.error("Please log in to purchase a plan");
+      navigate("/login");
       return;
     }
-    
+
     setIsLoading(true);
-    setTimeout(() => {
-      alert(`Processing ${selectedPlan} plan payment...`);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: { planId },
+      });
+
+      if (error) throw error;
+
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else {
+        throw new Error("No payment URL received");
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error("Failed to create payment session. Please try again.");
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const containerStyle: React.CSSProperties = {
@@ -315,28 +348,25 @@ export default function PricingNew() {
     margin: '0 auto'
   };
 
-  const footerStyle: React.CSSProperties = {
+  const authPromptStyle: React.CSSProperties = {
     marginTop: '48px',
-    textAlign: 'center' as const
+    textAlign: 'center' as const,
+    padding: '24px',
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    borderRadius: '12px',
+    border: '1px solid rgba(59, 130, 246, 0.3)'
   };
 
-  const proceedButtonStyle: React.CSSProperties = {
-    padding: '12px 32px',
-    fontSize: '18px',
-    backgroundColor: selectedPlan ? '#2563eb' : '#6b7280',
+  const authButtonStyle: React.CSSProperties = {
+    padding: '12px 24px',
+    backgroundColor: '#2563eb',
     color: 'white',
     border: 'none',
     borderRadius: '8px',
-    cursor: selectedPlan ? 'pointer' : 'not-allowed',
-    opacity: selectedPlan ? 1 : 0.5,
-    transition: 'all 0.2s',
-    transform: selectedPlan ? 'scale(1)' : 'scale(1)',
-  };
-
-  const errorStyle: React.CSSProperties = {
-    color: '#f87171',
-    marginTop: '16px',
-    fontSize: '16px'
+    fontSize: '16px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    marginTop: '16px'
   };
   
   return (
@@ -356,34 +386,25 @@ export default function PricingNew() {
               plan={plan}
               isSelected={selectedPlan === plan.id}
               onSelect={handleSelectPlan}
+              onPurchase={handlePurchasePlan}
+              isProcessing={isLoading}
             />
           ))}
         </div>
         
-        <div style={footerStyle}>
-          <button 
-            style={proceedButtonStyle}
-            onClick={handleProceedToPayment}
-            disabled={!selectedPlan || isLoading}
-            onMouseOver={(e) => {
-              if (selectedPlan && !isLoading) {
-                e.currentTarget.style.backgroundColor = '#1d4ed8';
-                e.currentTarget.style.transform = 'scale(1.05)';
-              }
-            }}
-            onMouseOut={(e) => {
-              if (selectedPlan && !isLoading) {
-                e.currentTarget.style.backgroundColor = '#2563eb';
-                e.currentTarget.style.transform = 'scale(1)';
-              }
-            }}
-          >
-            {isLoading ? "Processing..." : "Proceed to Payment"}
-          </button>
-          {!selectedPlan && (
-            <p style={errorStyle}>Please select a plan to continue</p>
-          )}
-        </div>
+        {!user && (
+          <div style={authPromptStyle}>
+            <p style={{ color: '#e5e7eb', fontSize: '18px', margin: 0 }}>
+              Please log in to purchase a plan
+            </p>
+            <button 
+              style={authButtonStyle}
+              onClick={() => navigate("/login")}
+            >
+              Go to Login
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
