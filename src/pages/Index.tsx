@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -12,6 +12,8 @@ import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/components/ui/sonner";
 
 // Plan data from PricingNew
 const pricingPlans = [
@@ -270,6 +272,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect }) => {
 
 const Index = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   
   const [floatingPosition, setFloatingPosition] = useState({
     x: window.innerWidth - 150,
@@ -338,7 +341,7 @@ const Index = () => {
     }
   };
 
-  // Modified pricing handlers to allow deselection
+  // Modified pricing handlers to implement actual Stripe payment
   const handleSelectPlan = (planId: string) => {
     if (selectedPlan === planId) {
       setSelectedPlan(null); // Deselect if already selected
@@ -347,16 +350,39 @@ const Index = () => {
     }
   };
   
-  const handleProceedToPayment = () => {
+  const handleProceedToPayment = async () => {
     if (!selectedPlan) {
+      toast.error("Please select a plan to continue");
+      return;
+    }
+
+    if (!user) {
+      toast.error("Please log in to purchase a plan");
+      navigate("/login");
       return;
     }
     
     setIsLoading(true);
-    setTimeout(() => {
-      alert(`Processing ${selectedPlan} plan payment...`);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: { planId: selectedPlan },
+      });
+
+      if (error) throw error;
+
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else {
+        throw new Error("No payment URL received");
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error("Failed to create payment session. Please try again.");
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleSignOut = async () => {
@@ -395,10 +421,13 @@ const Index = () => {
                   </Button>
                 </Link>
                 
-                {/* Desktop Account Dropdown */}
+                {/* Desktop Account Dropdown with proper hover */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className="hidden md:flex">
-                    <Button variant="ghost" className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
+                    <Button 
+                      variant="ghost" 
+                      className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
                       <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-medium text-white">
                         {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || 
                          user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || 
@@ -412,9 +441,9 @@ const Index = () => {
                       </span>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
+                  <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
                     <DropdownMenuItem asChild>
-                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900">
+                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2">
                         <User className="h-4 w-4" />
                         Dashboard
                       </Link>
@@ -422,7 +451,7 @@ const Index = () => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       onClick={handleSignOut}
-                      className="flex items-center gap-2 text-red-600 focus:text-red-600 cursor-pointer"
+                      className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2"
                     >
                       <LogOut className="h-4 w-4" />
                       Sign Out
@@ -548,10 +577,10 @@ const Index = () => {
           <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
-            {/* Feature 1 - Step-by-Step Guidance - Updated positioning and sizing */}
+            {/* Feature 1 - Step-by-Step Guidance - Fixed image positioning */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               {/* Professionally Assured Badge */}
-              <div className="absolute top-3 right-3 z-10">
+              <div className="absolute top-3 right-3 z-20">
                 <div className="bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
                   <Star className="w-3 h-3" fill="currentColor" />
                   <span>Professionally Assured</span>
@@ -563,11 +592,11 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="w-full h-[200px] mx-auto flex items-end justify-center pt-12">
+                <div className="w-full h-[200px] mx-auto flex items-end justify-center pt-16">
                   <img 
                     src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" 
                     alt="Step-by-Step Guidance" 
-                    className="h-[190px] object-contain scale-125 translate-y-1" 
+                    className="h-[170px] object-contain scale-125 translate-y-3" 
                     style={{ maxWidth: '90%' }}
                   />
                 </div>
@@ -581,7 +610,7 @@ const Index = () => {
             {/* Feature 2 - Document Engine */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-400/30 via-blue-600/30 to-blue-800/40 border border-blue-600/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               {/* Professionally Assured Badge */}
-              <div className="absolute top-3 right-3 z-10">
+              <div className="absolute top-3 right-3 z-20">
                 <div className="bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
                   <Star className="w-3 h-3" fill="currentColor" />
                   <span>Professionally Assured</span>
