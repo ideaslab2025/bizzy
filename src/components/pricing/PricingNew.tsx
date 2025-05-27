@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -174,14 +175,14 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect, onPurch
 
   const badgeStyle: React.CSSProperties = {
     position: 'absolute' as const,
-    top: '-12px',
+    top: '-8px',
     left: '50%',
     transform: 'translateX(-50%)',
     backgroundColor: '#1d4ed8',
     color: 'white',
-    padding: '4px 24px',
+    padding: '6px 28px',
     borderRadius: '9999px',
-    fontSize: '14px',
+    fontSize: '15px',
     fontWeight: 'bold',
     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
     zIndex: 20
