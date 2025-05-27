@@ -9,6 +9,74 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      guidance_sections: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: number
+          order_number: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: number
+          order_number: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: number
+          order_number?: number
+          title?: string
+        }
+        Relationships: []
+      }
+      guidance_steps: {
+        Row: {
+          content: string | null
+          created_at: string
+          external_links: Json | null
+          id: number
+          order_number: number
+          section_id: number | null
+          title: string
+          video_url: string | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          external_links?: Json | null
+          id?: number
+          order_number: number
+          section_id?: number | null
+          title: string
+          video_url?: string | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          external_links?: Json | null
+          id?: number
+          order_number?: number
+          section_id?: number | null
+          title?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guidance_steps_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "guidance_sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           amount: number
@@ -86,6 +154,51 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      user_guidance_progress: {
+        Row: {
+          completed: boolean | null
+          created_at: string
+          id: string
+          last_visited_at: string
+          section_id: number | null
+          step_id: number | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          created_at?: string
+          id?: string
+          last_visited_at?: string
+          section_id?: number | null
+          step_id?: number | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          created_at?: string
+          id?: string
+          last_visited_at?: string
+          section_id?: number | null
+          step_id?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_guidance_progress_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "guidance_sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_guidance_progress_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "guidance_steps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

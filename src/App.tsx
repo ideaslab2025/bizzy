@@ -13,6 +13,7 @@ import Onboarding from "./pages/Onboarding";
 import Pricing from "./pages/Pricing";
 import Dashboard from "./pages/Dashboard";
 import Overview from "./pages/dashboard/Overview";
+import GuidedHelp from "./pages/GuidedHelp";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
 import NotFound from "./pages/NotFound";
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/payment-cancel" element={<PaymentCancel />} />
             <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+            <Route path="/guided-help" element={<ProtectedRoute><GuidedHelp /></ProtectedRoute>} />
             
             {/* Dashboard routes - protected */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
