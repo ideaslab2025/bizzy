@@ -12,6 +12,7 @@ const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const { user, signOut } = useAuth();
   
   const handleSignOut = async () => {
@@ -191,40 +192,46 @@ const Dashboard = () => {
                 )}
               </div>
 
-              {/* Account Dropdown - Fixed hover implementation */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="flex items-center gap-2 text-gray-900 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 font-medium data-[state=open]:bg-gray-100"
-                  >
-                    <User className="h-4 w-4" />
-                    <span className="hidden sm:inline">
-                      {user?.user_metadata?.company_name || 
-                       (user?.user_metadata?.first_name 
-                         ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
-                         : user?.email?.split('@')[0] || 'Account')}
-                    </span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
+              {/* Account Dropdown - Added hover functionality */}
+              <div 
+                className="relative"
+                onMouseEnter={() => setIsAccountDropdownOpen(true)}
+                onMouseLeave={() => setIsAccountDropdownOpen(false)}
+              >
+                <DropdownMenu open={isAccountDropdownOpen} onOpenChange={setIsAccountDropdownOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="flex items-center gap-2 text-gray-900 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 font-medium data-[state=open]:bg-gray-100"
+                    >
                       <User className="h-4 w-4" />
-                      Account Settings
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem 
-                    onClick={handleSignOut}
-                    className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                      <span className="hidden sm:inline">
+                        {user?.user_metadata?.company_name || 
+                         (user?.user_metadata?.first_name 
+                           ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
+                           : user?.email?.split('@')[0] || 'Account')}
+                      </span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
+                    <DropdownMenuItem asChild>
+                      <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
+                        <User className="h-4 w-4" />
+                        Account Settings
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={handleSignOut}
+                      className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
         </header>
