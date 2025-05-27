@@ -150,7 +150,12 @@ const GuidedHelp = () => {
   // Helper function to safely parse external links
   const getExternalLinks = (links: Json): Array<{ title: string; url: string }> => {
     if (Array.isArray(links)) {
-      return links;
+      return links.filter((link): link is { title: string; url: string } => 
+        typeof link === 'object' && 
+        link !== null && 
+        typeof (link as any).title === 'string' && 
+        typeof (link as any).url === 'string'
+      );
     }
     return [];
   };
