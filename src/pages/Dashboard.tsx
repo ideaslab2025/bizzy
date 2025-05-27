@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -35,11 +34,11 @@ const Dashboard = () => {
         <div className="flex items-center justify-between p-4 border-b">
           {isSidebarOpen ? (
             <Link to="/dashboard" className="flex items-center justify-center w-full">
-              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-40" />
             </Link>
           ) : (
             <Link to="/dashboard" className="mx-auto">
-              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-16" />
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-20" />
             </Link>
           )}
           <Button
@@ -59,7 +58,6 @@ const Dashboard = () => {
             )}
           </Button>
         </div>
-        
         
         <nav className="p-2 flex-1">
           <ul className="space-y-1">
@@ -161,7 +159,7 @@ const Dashboard = () => {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="relative text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                  className="relative text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                 >
                   <Bell className="w-5 h-5" />
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0088cc] text-white text-xs rounded-full flex items-center justify-center">
@@ -198,7 +196,7 @@ const Dashboard = () => {
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="flex items-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                   >
                     <User className="h-4 w-4" />
                     <span className="hidden sm:inline">
@@ -211,7 +209,7 @@ const Dashboard = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2">
+                    <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
                       <User className="h-4 w-4" />
                       Account Settings
                     </Link>

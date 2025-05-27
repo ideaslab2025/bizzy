@@ -31,6 +31,7 @@ interface UserProgress {
   section_id: number;
   step_id: number;
   completed: boolean;
+  section_completed?: boolean;
 }
 
 const GuidedHelp = () => {
@@ -40,6 +41,8 @@ const GuidedHelp = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [steps, setSteps] = useState<GuidanceStep[]>([]);
   const [progress, setProgress] = useState<UserProgress[]>([]);
+  const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
+  const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set());
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -55,6 +58,16 @@ const GuidedHelp = () => {
       fetchSteps(currentSection);
     }
   }, [currentSection]);
+
+  // Track step visits automatically
+  useEffect(() => {
+    if (steps.length > 0 && currentStep) {
+      const currentStepData = steps.find(step => step.order_number === currentStep);
+      if (currentStepData) {
+        setVisitedSteps(prev => new Set([...prev, currentStepData.id]));
+      }
+    }
+  }, [currentStep, steps]);
 
   const fetchSections = async () => {
     const { data, error } = await supabase
@@ -85,49 +98,69 @@ const GuidedHelp = () => {
     
     const { data, error } = await supabase
       .from('user_guidance_progress')
-      .select('section_id, step_id, completed')
+      .select('section_id, step_id, completed, section_completed')
       .eq('user_id', user.id);
     
     if (data && !error) {
       setProgress(data);
+      // Extract completed sections
+      const completedSectionIds = data
+        .filter(item => item.section_completed)
+        .map(item => item.section_id);
+      setCompletedSections(new Set(completedSectionIds));
+      
+      // Extract visited steps
+      const visitedStepIds = data.map(item => item.step_id);
+      setVisitedSteps(new Set(visitedStepIds));
     }
   };
 
-  const markStepCompleted = async (stepId: number) => {
+  const markSectionCompleted = async (sectionId: number) => {
     if (!user) return;
     
-    await supabase
-      .from('user_guidance_progress')
-      .upsert({
-        user_id: user.id,
-        section_id: currentSection,
-        step_id: stepId,
-        completed: true,
-        last_visited_at: new Date().toISOString()
-      });
+    // Mark all steps in this section as completed
+    const sectionSteps = steps.filter(step => step.section_id === sectionId);
+    for (const step of sectionSteps) {
+      await supabase
+        .from('user_guidance_progress')
+        .upsert({
+          user_id: user.id,
+          section_id: sectionId,
+          step_id: step.id,
+          completed: true,
+          section_completed: true,
+          last_visited_at: new Date().toISOString()
+        });
+    }
     
+    setCompletedSections(prev => new Set([...prev, sectionId]));
     fetchProgress();
   };
 
-  const isStepCompleted = (stepId: number) => {
-    return progress.some(p => p.step_id === stepId && p.completed);
-  };
-
   const isSectionCompleted = (sectionId: number) => {
-    const sectionSteps = steps.filter(step => step.section_id === sectionId);
-    if (sectionSteps.length === 0) return false;
-    const completedSteps = progress.filter(p => p.section_id === sectionId && p.completed);
-    return sectionSteps.length === completedSteps.length;
+    return completedSections.has(sectionId);
   };
 
   const getCurrentStepData = () => {
     return steps.find(step => step.order_number === currentStep);
   };
 
+  const isLastStepInSection = () => {
+    return currentStep === steps.length;
+  };
+
   const nextStep = () => {
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
     } else if (currentSection < sections.length) {
+      // Auto-complete section if all steps visited
+      const sectionSteps = steps.filter(step => step.section_id === currentSection);
+      const allStepsVisited = sectionSteps.every(step => visitedSteps.has(step.id));
+      
+      if (allStepsVisited) {
+        markSectionCompleted(currentSection);
+      }
+      
       setCurrentSection(currentSection + 1);
       setCurrentStep(1);
     }
@@ -198,7 +231,7 @@ const GuidedHelp = () => {
                   key={section.id}
                   onClick={() => setCurrentSection(section.order_number)}
                   className={`w-full flex items-center gap-4 p-3 rounded-lg transition-all ${
-                    isCurrent
+                    isCurrent && !isCompleted
                       ? 'bg-white text-[#0088cc]'
                       : isCompleted
                       ? 'bg-white/10 text-white/70 opacity-70'
@@ -267,7 +300,7 @@ const GuidedHelp = () => {
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="relative text-white hover:text-gray-200"
+                className="relative text-white hover:text-gray-200 hover:bg-white/20"
               >
                 <Bell className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
@@ -278,19 +311,19 @@ const GuidedHelp = () => {
               {showNotifications && (
                 <div className="absolute right-0 top-full mt-2 w-80 bg-white border rounded-lg shadow-lg z-50">
                   <div className="p-4 border-b bg-gray-50">
-                    <h3 className="font-medium text-gray-800">Notifications</h3>
+                    <h3 className="font-medium text-gray-900">Notifications</h3>
                   </div>
                   <div className="p-4 space-y-3">
                     <div className="text-sm">
-                      <p className="font-medium text-gray-800">New guidance available</p>
+                      <p className="font-medium text-gray-900">New guidance available</p>
                       <p className="text-gray-600">VAT registration guide has been updated</p>
                     </div>
                     <div className="text-sm">
-                      <p className="font-medium text-gray-800">Document ready</p>
+                      <p className="font-medium text-gray-900">Document ready</p>
                       <p className="text-gray-600">Your employee handbook is ready for download</p>
                     </div>
                     <div className="text-sm">
-                      <p className="font-medium text-gray-800">Consultation reminder</p>
+                      <p className="font-medium text-gray-900">Consultation reminder</p>
                       <p className="text-gray-600">Your meeting is scheduled for tomorrow at 2 PM</p>
                     </div>
                   </div>
@@ -300,7 +333,7 @@ const GuidedHelp = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200">
+                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1">
                   <User className="h-4 w-4" />
                   <span className="hidden sm:inline">
                     {user?.user_metadata?.company_name || 
@@ -312,7 +345,7 @@ const GuidedHelp = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
                 <DropdownMenuItem asChild>
-                  <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900">
+                  <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 cursor-pointer">
                     <User className="h-4 w-4" />
                     Account Settings
                   </Link>
@@ -389,21 +422,18 @@ const GuidedHelp = () => {
                 </CardContent>
               </Card>
 
-              {/* Mark as Complete */}
-              <div className="mb-8">
-                <Button
-                  onClick={() => currentStepData && markStepCompleted(currentStepData.id)}
-                  className={`${
-                    isStepCompleted(currentStepData.id)
-                      ? 'bg-green-600 hover:bg-green-700'
-                      : 'bg-green-600 hover:bg-green-700'
-                  }`}
-                  disabled={isStepCompleted(currentStepData.id)}
-                >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  {isStepCompleted(currentStepData.id) ? 'Completed' : 'Mark as Complete'}
-                </Button>
-              </div>
+              {/* Mark Section Complete Button - Only show on last step */}
+              {isLastStepInSection() && !isSectionCompleted(currentSection) && (
+                <div className="mb-8">
+                  <Button
+                    onClick={() => markSectionCompleted(currentSection)}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Mark Section as Complete
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -420,14 +450,16 @@ const GuidedHelp = () => {
           </Button>
 
           <div className="flex gap-3">
-            <Button
-              variant="outline"
-              onClick={skipSection}
-              disabled={currentSection === sections.length}
-            >
-              <SkipForward className="w-4 h-4 mr-2" />
-              Skip Section
-            </Button>
+            {isLastStepInSection() && (
+              <Button
+                variant="outline"
+                onClick={skipSection}
+                disabled={currentSection === sections.length}
+              >
+                <SkipForward className="w-4 h-4 mr-2" />
+                Skip Section
+              </Button>
+            )}
             
             <Button
               onClick={nextStep}

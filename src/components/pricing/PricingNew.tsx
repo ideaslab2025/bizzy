@@ -1,412 +1,218 @@
 
-import React, { useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/components/ui/sonner';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Check, Star, Users, Building2, Crown, Sparkles, Zap, Shield } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
-// Plan data with all styling information
-const pricingPlans = [
-  {
-    id: "bronze",
-    title: "Bronze",
-    price: "£100",
-    gradient: "linear-gradient(to bottom, rgba(217, 119, 6, 0.8), rgba(180, 83, 9, 0.6))",
-    textColor: "#ffffff",
-    borderColor: "#d97706",
-    shadowColor: "217, 119, 6",
-    buttonBg: "#d97706",
-    buttonHoverBg: "#b45309",
-    features: [
-      "Basic company setup guidance",
-      "Essential document templates",
-      "Standard support",
-      "Basic AI assistant access"
-    ]
-  },
-  {
-    id: "silver",
-    title: "Silver",
-    price: "£200",
-    gradient: "linear-gradient(to bottom, rgba(203, 213, 225, 0.8), rgba(100, 116, 139, 0.6))",
-    textColor: "#ffffff",
-    borderColor: "#94a3b8",
-    shadowColor: "148, 163, 184",
-    buttonBg: "#64748b",
-    buttonHoverBg: "#475569",
-    features: [
-      "Everything in Bronze",
-      "Extended document library",
-      "Tax & compliance guidance",
-      "Full AI assistant access"
-    ]
-  },
-  {
-    id: "gold",
-    title: "Gold",
-    price: "£300",
-    gradient: "linear-gradient(to bottom, rgba(251, 191, 36, 0.8), rgba(217, 119, 6, 0.6))",
-    textColor: "#ffffff",
-    borderColor: "#f59e0b",
-    shadowColor: "245, 158, 11",
-    buttonBg: "#f59e0b",
-    buttonHoverBg: "#d97706",
-    features: [
-      "Everything in Silver",
-      "Complete document engine",
-      "Advanced sector-specific guidance",
-      "Priority support"
-    ],
-    recommended: true
-  },
-  {
-    id: "platinum",
-    title: "Platinum",
-    price: "£500",
-    gradient: "linear-gradient(to bottom, #f8fafc, #e2e8f0, #cbd5e1)",
-    textColor: "#1f2937",
-    borderColor: "#94a3b8",
-    shadowColor: "71, 85, 105",
-    buttonBg: "#1f2937",
-    buttonHoverBg: "#111827",
-    features: [
-      "Everything in Gold",
-      "Full access to all resources",
-      "Video consultations with experts",
-      "Custom document customization"
-    ]
-  }
-];
+const PricingNew = () => {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
-interface PlanCardProps {
-  plan: typeof pricingPlans[0];
-  isSelected: boolean;
-  onSelect: (planId: string) => void;
-  onPurchase: (planId: string) => void;
-  isProcessing: boolean;
-}
+  const plans = [
+    {
+      name: "Starter",
+      price: "£7.99",
+      period: "/month",
+      description: "Perfect for solo entrepreneurs and small startups",
+      icon: <Users className="w-6 h-6" />,
+      badge: null,
+      priceId: "price_starter_test", // Replace with your actual Stripe price ID
+      features: [
+        "Basic business setup guidance",
+        "Essential document templates",
+        "Email support",
+        "Basic compliance checking",
+        "1 consultation session"
+      ],
+      color: "border-gray-200",
+      buttonStyle: "bg-gray-900 hover:bg-gray-800 text-white"
+    },
+    {
+      name: "Professional",
+      price: "£19.99",
+      period: "/month",
+      description: "Ideal for growing businesses and established companies",
+      icon: <Building2 className="w-6 h-6" />,
+      badge: <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Most Popular</Badge>,
+      priceId: "price_professional_test", // Replace with your actual Stripe price ID
+      features: [
+        "Everything in Starter",
+        "Advanced business tools",
+        "Priority email & chat support",
+        "Custom document generation",
+        "3 consultation sessions",
+        "Advanced compliance monitoring",
+        "Team collaboration tools"
+      ],
+      color: "border-blue-200 shadow-lg",
+      buttonStyle: "bg-blue-600 hover:bg-blue-700 text-white"
+    },
+    {
+      name: "Enterprise",
+      price: "£49.99",
+      period: "/month",
+      description: "Comprehensive solution for large organizations",
+      icon: <Crown className="w-6 h-6" />,
+      badge: <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">Premium</Badge>,
+      priceId: "price_enterprise_test", // Replace with your actual Stripe price ID
+      features: [
+        "Everything in Professional",
+        "Unlimited consultations",
+        "Dedicated account manager",
+        "Custom integrations",
+        "Advanced analytics",
+        "White-label options",
+        "24/7 phone support",
+        "Legal review services"
+      ],
+      color: "border-purple-200",
+      buttonStyle: "bg-purple-600 hover:bg-purple-700 text-white"
+    }
+  ];
 
-const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect, onPurchase, isProcessing }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  // Card styles
-  const cardStyle: React.CSSProperties = {
-    position: 'relative' as const,
-    border: `2px solid ${isSelected ? '#1d4ed8' : plan.borderColor}`,
-    borderRadius: '12px',
-    padding: '0',
-    background: plan.gradient,
-    boxShadow: isSelected 
-      ? `0 0 0 2px #1d4ed8, 0 25px 50px -12px rgba(29, 78, 216, 0.5)`
-      : isHovered 
-        ? `0 25px 50px -12px rgba(${plan.shadowColor}, 0.5)`
-        : '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-    transform: `translateY(${isSelected ? '-16px' : isHovered ? '-8px' : '0'}) scale(${isSelected || isHovered ? '1.03' : '1'})`,
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    cursor: 'pointer',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    overflow: 'hidden'
-  };
+  const handleSubscribe = async (priceId: string, planName: string) => {
+    try {
+      setLoadingPlan(planName);
+      
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { priceId, planName }
+      });
 
-  const buttonStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '12px 24px',
-    backgroundColor: isSelected ? '#1d4ed8' : plan.buttonBg,
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: isProcessing ? 'not-allowed' : 'pointer',
-    transform: isHovered && !isProcessing ? 'translateY(-2px) scale(1.05)' : 'scale(1)',
-    boxShadow: isHovered && !isProcessing ? '0 10px 20px -5px rgba(0, 0, 0, 0.3)' : '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    transition: 'all 0.2s ease-out',
-    opacity: isProcessing ? 0.7 : 1
-  };
+      if (error) {
+        throw error;
+      }
 
-  const headerStyle: React.CSSProperties = {
-    padding: plan.recommended ? '40px 24px 24px' : '24px',
-    textAlign: 'center' as const
-  };
-
-  const titleStyle: React.CSSProperties = {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    color: plan.id === "platinum" ? "#1f2937" : plan.recommended ? "#3b82f6" : plan.textColor,
-    marginBottom: '8px'
-  };
-
-  const priceStyle: React.CSSProperties = {
-    fontSize: '40px',
-    fontWeight: 'bold',
-    color: plan.id === "platinum" ? "#1f2937" : plan.textColor,
-    marginBottom: '4px'
-  };
-
-  const descriptionStyle: React.CSSProperties = {
-    color: plan.id === "platinum" ? "#4b5563" : plan.textColor,
-    opacity: 0.9,
-    fontSize: '14px'
-  };
-
-  const contentStyle: React.CSSProperties = {
-    padding: '0 24px 24px',
-    flex: 1
-  };
-
-  const featureListStyle: React.CSSProperties = {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0
-  };
-
-  const featureItemStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '8px',
-    marginBottom: '12px',
-    color: plan.id === "platinum" ? "#4b5563" : plan.textColor,
-    fontSize: '14px'
-  };
-
-  const checkIconColor = plan.id === "platinum" ? "#1f2937" : "#60a5fa";
-
-  const badgeStyle: React.CSSProperties = {
-    position: 'absolute' as const,
-    top: '-8px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    backgroundColor: '#1d4ed8',
-    color: 'white',
-    padding: '6px 28px',
-    borderRadius: '9999px',
-    fontSize: '15px',
-    fontWeight: 'bold',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    zIndex: 20
-  };
-
-  const footerStyle: React.CSSProperties = {
-    padding: '24px',
-    marginTop: 'auto'
+      if (data?.url) {
+        // Open Stripe checkout in a new tab
+        window.open(data.url, '_blank');
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      toast({
+        title: "Payment Error",
+        description: "Failed to start checkout session. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingPlan(null);
+    }
   };
 
   return (
-    <div 
-      style={{ position: 'relative', height: '100%' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={() => onSelect(plan.id)}
-    >
-      <div style={cardStyle}>
-        {plan.recommended && (
-          <div style={badgeStyle}>
-            Recommended
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-20">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Sparkles className="w-8 h-8 text-blue-600" />
+            <h1 className="text-4xl font-bold text-gray-900">Choose Your Plan</h1>
           </div>
-        )}
-        
-        <div style={headerStyle}>
-          <h3 style={titleStyle}>{plan.title}</h3>
-          <div style={priceStyle}>{plan.price}</div>
-          <p style={descriptionStyle}>One-time payment</p>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Select the perfect plan to accelerate your business journey with Bizzy's comprehensive tools and expert guidance.
+          </p>
         </div>
-        
-        <div style={contentStyle}>
-          <ul style={featureListStyle}>
-            {plan.features.map((feature, i) => (
-              <li key={i} style={featureItemStyle}>
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="20" 
-                  height="20" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke={checkIconColor}
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  style={{ flexShrink: 0, marginTop: '2px' }}
+
+        {/* Pricing Cards */}
+        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {plans.map((plan, index) => (
+            <Card key={plan.name} className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300`}>
+              {plan.badge && (
+                <div className="absolute top-4 right-4">
+                  {plan.badge}
+                </div>
+              )}
+              
+              <CardHeader className="text-center pb-8">
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  {plan.icon}
+                  <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
+                </div>
+                
+                <div className="mb-4">
+                  <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                  <span className="text-gray-600">{plan.period}</span>
+                </div>
+                
+                <CardDescription className="text-gray-600 text-base">
+                  {plan.description}
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="pt-0">
+                <Button 
+                  className={`w-full mb-8 py-6 text-lg font-semibold ${plan.buttonStyle}`}
+                  onClick={() => handleSubscribe(plan.priceId, plan.name)}
+                  disabled={loadingPlan === plan.name}
                 >
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
+                  {loadingPlan === plan.name ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Processing...
+                    </div>
+                  ) : (
+                    <>
+                      <Zap className="w-5 h-5 mr-2" />
+                      Get Started
+                    </>
+                  )}
+                </Button>
+
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-gray-900 flex items-center gap-2">
+                    <Shield className="w-4 h-4" />
+                    What's included:
+                  </h4>
+                  <ul className="space-y-3">
+                    {plan.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-        
-        <div style={footerStyle}>
-          <button 
-            style={buttonStyle}
-            disabled={isProcessing}
-            onMouseOver={(e) => {
-              if (!isSelected && !isProcessing) {
-                e.currentTarget.style.backgroundColor = plan.buttonHoverBg;
-              }
-            }}
-            onMouseOut={(e) => {
-              if (!isSelected && !isProcessing) {
-                e.currentTarget.style.backgroundColor = isSelected ? '#1d4ed8' : plan.buttonBg;
-              }
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!isProcessing) {
-                if (isSelected) {
-                  onPurchase(plan.id);
-                } else {
-                  onSelect(plan.id);
-                }
-              }
-            }}
-          >
-            {isProcessing ? "Processing..." : isSelected ? "Purchase Now" : "Select Plan"}
-          </button>
+
+        {/* Additional Features */}
+        <div className="mt-20 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Why Choose Bizzy?</h2>
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                <Star className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Expert Guidance</h3>
+              <p className="text-gray-600">Professional advice from business setup experts</p>
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                <Shield className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Compliance Assured</h3>
+              <p className="text-gray-600">Stay compliant with UK business regulations</p>
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                <Zap className="w-8 h-8 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Fast Setup</h3>
+              <p className="text-gray-600">Get your business running in days, not weeks</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-// Main Pricing Component
-export default function PricingNew() {
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  
-  const handleSelectPlan = (planId: string) => {
-    setSelectedPlan(planId);
-  };
-  
-  const handlePurchasePlan = async (planId: string) => {
-    if (!user) {
-      toast.error("Please log in to purchase a plan");
-      navigate("/login");
-      return;
-    }
-
-    setIsLoading(true);
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: { planId },
-      });
-
-      if (error) throw error;
-
-      if (data.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      } else {
-        throw new Error("No payment URL received");
-      }
-    } catch (error) {
-      console.error("Payment error:", error);
-      toast.error("Failed to create payment session. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const containerStyle: React.CSSProperties = {
-    minHeight: '100vh',
-    backgroundColor: '#0a192f',
-    padding: '64px 16px'
-  };
-
-  const innerContainerStyle: React.CSSProperties = {
-    maxWidth: '1280px',
-    margin: '0 auto'
-  };
-
-  const headerStyle: React.CSSProperties = {
-    textAlign: 'center' as const,
-    marginBottom: '48px'
-  };
-
-  const titleStyle: React.CSSProperties = {
-    fontSize: '40px',
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: '16px'
-  };
-
-  const descriptionStyle: React.CSSProperties = {
-    fontSize: '18px',
-    color: '#e5e7eb',
-    maxWidth: '768px',
-    margin: '0 auto'
-  };
-
-  const gridStyle: React.CSSProperties = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-    gap: '24px',
-    maxWidth: '1200px',
-    margin: '0 auto'
-  };
-
-  const authPromptStyle: React.CSSProperties = {
-    marginTop: '48px',
-    textAlign: 'center' as const,
-    padding: '24px',
-    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-    borderRadius: '12px',
-    border: '1px solid rgba(59, 130, 246, 0.3)'
-  };
-
-  const authButtonStyle: React.CSSProperties = {
-    padding: '12px 24px',
-    backgroundColor: '#2563eb',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    marginTop: '16px'
-  };
-  
-  return (
-    <div style={containerStyle}>
-      <div style={innerContainerStyle}>
-        <div style={headerStyle}>
-          <h1 style={titleStyle}>Choose Your Plan</h1>
-          <p style={descriptionStyle}>
-            Select the package that best suits your business needs. All plans include a one-time payment with no recurring fees.
-          </p>
-        </div>
-        
-        <div style={gridStyle}>
-          {pricingPlans.map((plan) => (
-            <PlanCard 
-              key={plan.id}
-              plan={plan}
-              isSelected={selectedPlan === plan.id}
-              onSelect={handleSelectPlan}
-              onPurchase={handlePurchasePlan}
-              isProcessing={isLoading}
-            />
-          ))}
-        </div>
-        
-        {!user && (
-          <div style={authPromptStyle}>
-            <p style={{ color: '#e5e7eb', fontSize: '18px', margin: 0 }}>
-              Please log in to purchase a plan
-            </p>
-            <button 
-              style={authButtonStyle}
-              onClick={() => navigate("/login")}
-            >
-              Go to Login
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+export default PricingNew;
