@@ -1,156 +1,39 @@
+
 import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
-import { User, LogOut, Bell } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { CheckCircle, Clock, ArrowRight, User, LogOut, Bell } from "lucide-react";
+import { Link } from "react-router-dom";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const Dashboard = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [showChatbot, setShowChatbot] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
   const { user, signOut } = useAuth();
-  
+  const [showNotifications, setShowNotifications] = useState(false);
+
   const handleSignOut = async () => {
     try {
       await signOut();
-      // Redirect will be handled by the ProtectedRoute component
     } catch (error) {
       console.error('Error signing out:', error);
     }
   };
-  
+
   return (
-    <div className="min-h-screen flex bg-muted/30">
-      {/* Sidebar */}
-      <aside
-        className={`fixed lg:relative lg:flex bg-white border-r h-full z-30 flex-col transition-all duration-300 ${
-          isSidebarOpen ? "w-64" : "w-0 lg:w-16 overflow-hidden"
-        }`}
-      >
-        {/* Sidebar header */}
-        <div className="flex items-center justify-between p-4 border-b">
-          {isSidebarOpen ? (
-            <Link to="/dashboard" className="flex items-center justify-center w-full">
-              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-40" />
-            </Link>
-          ) : (
-            <Link to="/dashboard" className="mx-auto">
-              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-20" />
-            </Link>
-          )}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:flex hidden"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          >
-            {isSidebarOpen ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m15 18-6-6 6-6" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6" />
-              </svg>
-            )}
-          </Button>
-        </div>
-        
-        <nav className="p-2 flex-1">
-          <ul className="space-y-1">
-            {[
-              { name: "Overview", icon: "home", path: "/dashboard" },
-              { name: "Guided Help", icon: "map", path: "/guided-help" },
-              { name: "Documents", icon: "file", path: "/dashboard/documents" },
-              { name: "Consultations", icon: "video", path: "/dashboard/consultations" },
-              { name: "Settings", icon: "settings", path: "/dashboard/settings" }
-            ].map((item) => (
-              <li key={item.name}>
-                <Link
-                  to={item.path}
-                  className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-muted/50 transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    {item.icon === "home" && <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />}
-                    {item.icon === "map" && <path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" />}
-                    {item.icon === "file" && <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />}
-                    {item.icon === "video" && <path d="m22 8-6 4 6 4V8Z" />}
-                    {item.icon === "settings" && <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 2.73.73l.15.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />}
-                  </svg>
-                  {isSidebarOpen && <span>{item.name}</span>}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        
-        <div className={`border-t p-4 ${isSidebarOpen ? '' : 'hidden lg:block'}`}>
-          <Link
-            to="/profile"
-            className="flex items-center gap-2 hover:bg-muted/50 p-2 rounded-md transition-colors"
-          >
-            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
-              {user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-[#0088cc] border-b shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <div className="flex items-center">
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-12" />
             </div>
-            {isSidebarOpen && (
-              <div>
-                <p className="text-sm font-medium">
-                  {user?.user_metadata?.company_name || 
-                   (user?.user_metadata?.first_name && user?.user_metadata?.last_name 
-                     ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)} ${user.user_metadata.last_name.charAt(0).toUpperCase() + user.user_metadata.last_name.slice(1)}`
-                     : user?.email?.split('@')[0] || 'User')}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {user?.user_metadata?.company_name ? user.user_metadata.company_name : 'Business Owner'}
-                </p>
-              </div>
-            )}
-          </Link>
-        </div>
-      </aside>
-      
-      {/* Main content area */}
-      <div className="flex-1 flex flex-col">
-        {/* Top navigation bar */}
-        <header className="bg-white border-b sticky top-0 z-20 h-16">
-          <div className="flex items-center justify-between h-full px-4">
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="lg:hidden"
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="4" x2="20" y1="12" y2="12" />
-                  <line x1="4" x2="20" y1="6" y2="6" />
-                  <line x1="4" x2="20" y1="18" y2="18" />
-                </svg>
-              </Button>
-              <div className="lg:w-72">
-                <Input 
-                  placeholder="Search..." 
-                  className="max-w-xs"
-                />
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex items-center gap-2 hidden sm:flex bg-blue-100 text-blue-600 border-blue-200 hover:bg-blue-200"
-                onClick={() => setShowChatbot(true)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
-                <span>Ask Bizzy</span>
-              </Button>
-              
+
+            {/* Right side - Navigation */}
+            <div className="flex items-center space-x-4">
+              {/* Notifications */}
               <div 
                 className="relative"
                 onMouseEnter={() => setShowNotifications(true)}
@@ -159,10 +42,10 @@ const Dashboard = () => {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="relative text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  className="relative text-white hover:text-white hover:bg-white/20"
                 >
                   <Bell className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0088cc] text-white text-xs rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                     3
                   </span>
                 </Button>
@@ -190,13 +73,13 @@ const Dashboard = () => {
                 )}
               </div>
 
-              {/* Account Dropdown - Fixed hover implementation */}
+              {/* User Menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    className="flex items-center gap-2 text-white hover:text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1"
                   >
                     <User className="h-4 w-4" />
                     <span className="hidden sm:inline">
@@ -207,9 +90,9 @@ const Dashboard = () => {
                     </span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
+                <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
+                    <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 cursor-pointer">
                       <User className="h-4 w-4" />
                       Account Settings
                     </Link>
@@ -217,7 +100,7 @@ const Dashboard = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={handleSignOut}
-                    className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2"
+                    className="flex items-center gap-2 text-red-600 focus:text-red-600 cursor-pointer"
                   >
                     <LogOut className="h-4 w-4" />
                     Sign Out
@@ -226,77 +109,94 @@ const Dashboard = () => {
               </DropdownMenu>
             </div>
           </div>
-        </header>
-        
-        {/* Main content */}
-        <main className="flex-1 p-6">
-          <Outlet />
-        </main>
-      </div>
-      
-      {/* Bizzy AI Assistant chatbot */}
-      {showChatbot && (
-        <div className="fixed bottom-4 right-4 w-80 h-96 bg-white border rounded-lg shadow-lg flex flex-col z-40">
-          <div className="flex items-center justify-between p-3 border-b bg-[#0088cc] text-white rounded-t-lg">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-white rounded-full overflow-hidden">
-                <AspectRatio ratio={1}>
-                  <img 
-                    src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
-                    alt="Bizzy" 
-                    className="w-full h-full object-contain"
-                  />
-                </AspectRatio>
-              </div>
-              <span className="font-medium">Bizzy Assistant</span>
-            </div>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-6 w-6 p-0 text-white hover:bg-white/20"
-              onClick={() => setShowChatbot(false)}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
-            </Button>
-          </div>
-          
-          <div className="flex-1 p-3 overflow-y-auto space-y-4">
-            <div className="flex gap-2">
-              <div className="w-8 h-8 bg-[#0088cc]/20 rounded-full flex-shrink-0 flex items-center justify-center">
-                <div className="w-6 h-6 overflow-hidden rounded-full">
-                  <AspectRatio ratio={1}>
-                    <img 
-                      src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
-                      alt="Bizzy" 
-                      className="w-full h-full object-contain"
-                    />
-                  </AspectRatio>
-                </div>
-              </div>
-              <div className="bg-muted/50 p-2 rounded-lg rounded-tl-none max-w-[85%]">
-                <p className="text-sm">
-                  Hello! I'm Bizzy, your assistant. How can I help you with your business today?
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t p-3">
-            <div className="flex gap-2">
-              <Input placeholder="Type your message..." className="flex-1" />
-              <Button className="bg-[#0088cc] hover:bg-[#0088cc]/90">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m22 2-7 20-4-9-9-4Z" />
-                  <path d="M22 2 11 13" />
-                </svg>
-              </Button>
-            </div>
-          </div>
         </div>
-      )}
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome back, {user?.user_metadata?.first_name || user?.email?.split('@')[0] || 'there'}!
+          </h1>
+          <p className="text-gray-600">Here's your business setup progress and next steps.</p>
+        </div>
+
+        {/* Progress Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-gray-600">Overall Progress</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-[#0088cc] mb-2">65%</div>
+              <Progress value={65} className="h-2" />
+              <p className="text-sm text-gray-600 mt-2">3 of 5 sections complete</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-gray-600">Next Step</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2 text-orange-600 mb-2">
+                <Clock className="w-4 h-4" />
+                <span className="font-medium">Tax Registration</span>
+              </div>
+              <p className="text-sm text-gray-600">Complete your VAT registration process</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-gray-600">Completed</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2 text-green-600 mb-2">
+                <CheckCircle className="w-4 h-4" />
+                <span className="font-medium">Company Formation</span>
+              </div>
+              <p className="text-sm text-gray-600">Your company is officially registered</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Continue Your Journey</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">
+                Pick up where you left off with your business setup guidance.
+              </p>
+              <Link to="/guided-help">
+                <Button className="bg-[#0088cc] hover:bg-[#0088cc]/90 w-full">
+                  Continue Setup
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Talk to Bizzy</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">
+                Get instant help and answers to your business questions.
+              </p>
+              <Button variant="outline" className="w-full">
+                Start Conversation
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
     </div>
   );
 };

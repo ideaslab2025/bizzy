@@ -46,6 +46,7 @@ const GuidedHelp = () => {
   const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set());
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [sectionCompleteToggled, setSectionCompleteToggled] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     fetchSections();
@@ -133,7 +134,7 @@ const GuidedHelp = () => {
       });
   };
 
-  const markSectionCompleted = async (sectionId: number) => {
+  const markSectionCompleted = async (sectionId: number, completed: boolean = true) => {
     if (!user) return;
     
     // Mark all steps in this section as completed
@@ -146,12 +147,27 @@ const GuidedHelp = () => {
           section_id: sectionId,
           step_id: step.id,
           completed: true,
-          section_completed: true,
+          section_completed: completed,
           last_visited_at: new Date().toISOString()
         });
     }
     
-    setCompletedSections(prev => new Set([...prev, sectionId]));
+    if (completed) {
+      setCompletedSections(prev => new Set([...prev, sectionId]));
+      setSectionCompleteToggled(prev => new Set([...prev, sectionId]));
+    } else {
+      setCompletedSections(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(sectionId);
+        return newSet;
+      });
+      setSectionCompleteToggled(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(sectionId);
+        return newSet;
+      });
+    }
+    
     fetchProgress();
   };
 
@@ -244,9 +260,9 @@ const GuidedHelp = () => {
       {/* Left Sidebar - Blue */}
       <div className="w-80 bg-[#0088cc] text-white flex flex-col">
         {/* Logo */}
-        <div className="p-6 bg-white">
+        <div className="p-4 bg-white">
           <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-48" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-16" />
           </Link>
         </div>
 
@@ -332,7 +348,7 @@ const GuidedHelp = () => {
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="relative text-white hover:text-gray-200 hover:bg-white/20"
+                className="relative text-white hover:text-white hover:bg-white/20"
               >
                 <Bell className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
@@ -365,7 +381,11 @@ const GuidedHelp = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="flex items-center gap-2 text-white hover:text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1"
+                >
                   <User className="h-4 w-4" />
                   <span className="hidden sm:inline">
                     {user?.user_metadata?.company_name || 
@@ -469,28 +489,25 @@ const GuidedHelp = () => {
           </Button>
 
           <div className="flex gap-3">
-            {/* Only show Mark Section Complete and Skip Section buttons on last step */}
+            {/* Skip Section - Always available */}
+            <Button
+              variant="outline"
+              onClick={skipSection}
+              disabled={currentSection === sections.length}
+            >
+              <SkipForward className="w-4 h-4 mr-2" />
+              Skip Section
+            </Button>
+            
+            {/* Show Mark Section Complete only on last step */}
             {isLastStepInSection() && (
-              <>
-                {!isSectionCompleted(currentSection) && (
-                  <Button
-                    onClick={() => markSectionCompleted(currentSection)}
-                    className="bg-green-600 hover:bg-green-700"
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Mark Section as Complete
-                  </Button>
-                )}
-                
-                <Button
-                  variant="outline"
-                  onClick={skipSection}
-                  disabled={currentSection === sections.length}
-                >
-                  <SkipForward className="w-4 h-4 mr-2" />
-                  Skip Section
-                </Button>
-              </>
+              <Button
+                onClick={() => markSectionCompleted(currentSection, !isSectionCompleted(currentSection))}
+                className={isSectionCompleted(currentSection) ? "bg-gray-500 hover:bg-gray-600" : "bg-green-600 hover:bg-green-700"}
+              >
+                <CheckCircle className="w-4 h-4 mr-2" />
+                {isSectionCompleted(currentSection) ? "Mark as Incomplete" : "Mark Section as Complete"}
+              </Button>
             )}
             
             <Button
