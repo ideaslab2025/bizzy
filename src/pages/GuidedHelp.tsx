@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { CheckCircle, Play, ExternalLink, ChevronLeft, ChevronRight, SkipForward } from "lucide-react";
 import { Link } from "react-router-dom";
+import type { Json } from "@/integrations/supabase/types";
 
 interface GuidanceSection {
   id: number;
@@ -22,7 +23,7 @@ interface GuidanceStep {
   title: string;
   content: string;
   video_url?: string;
-  external_links: any[];
+  external_links: Json;
   order_number: number;
 }
 
@@ -145,6 +146,14 @@ const GuidedHelp = () => {
   };
 
   const currentStepData = getCurrentStepData();
+  
+  // Helper function to safely parse external links
+  const getExternalLinks = (links: Json): Array<{ title: string; url: string }> => {
+    if (Array.isArray(links)) {
+      return links;
+    }
+    return [];
+  };
 
   return (
     <div className="min-h-screen bg-white flex">
@@ -252,11 +261,11 @@ const GuidedHelp = () => {
                   </div>
 
                   {/* External Links */}
-                  {currentStepData.external_links && currentStepData.external_links.length > 0 && (
+                  {getExternalLinks(currentStepData.external_links).length > 0 && (
                     <div className="mt-6 pt-6 border-t">
                       <h3 className="font-semibold mb-3">Helpful Resources:</h3>
                       <div className="space-y-2">
-                        {currentStepData.external_links.map((link: any, index: number) => (
+                        {getExternalLinks(currentStepData.external_links).map((link, index) => (
                           <a
                             key={index}
                             href={link.url}
