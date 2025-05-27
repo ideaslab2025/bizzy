@@ -263,14 +263,14 @@ const GuidedHelp = () => {
       {/* Left Sidebar - Blue */}
       <div className="w-80 bg-[#0088cc] text-white flex flex-col">
         {/* Logo */}
-        <div className="p-6 bg-white">
+        <div className="p-4 bg-white">
           <Link to="/dashboard" className="flex items-center justify-center">
             <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-48" />
           </Link>
         </div>
 
         {/* Progress Steps - moved up with reduced padding */}
-        <div className="flex-1 p-4">
+        <div className="flex-1 p-4 pt-0">
           <h2 className="text-lg font-semibold mb-4">Your Business Setup Journey</h2>
           <div className="space-y-3">
             {sections.map((section) => {
@@ -384,9 +384,9 @@ const GuidedHelp = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1">
+                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200 hover:bg-white/20 data-[state=open]:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1">
                   <User className="h-4 w-4" />
-                  <span className="hidden sm:inline">
+                  <span className="hidden sm:inline font-medium">
                     {user?.user_metadata?.company_name || 
                      (user?.user_metadata?.first_name 
                        ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
