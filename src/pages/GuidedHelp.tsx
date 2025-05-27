@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,7 +32,7 @@ interface UserProgress {
   section_id: number;
   step_id: number;
   completed: boolean;
-  section_completed?: boolean;
+  section_completed: boolean;
 }
 
 const GuidedHelp = () => {
@@ -59,15 +60,17 @@ const GuidedHelp = () => {
     }
   }, [currentSection]);
 
-  // Track step visits automatically
+  // Track step visits automatically and save to database
   useEffect(() => {
-    if (steps.length > 0 && currentStep) {
+    if (steps.length > 0 && currentStep && user) {
       const currentStepData = steps.find(step => step.order_number === currentStep);
-      if (currentStepData) {
+      if (currentStepData && !visitedSteps.has(currentStepData.id)) {
         setVisitedSteps(prev => new Set([...prev, currentStepData.id]));
+        // Save step visit to database
+        saveStepProgress(currentStepData.id, currentSection);
       }
     }
-  }, [currentStep, steps]);
+  }, [currentStep, steps, user]);
 
   const fetchSections = async () => {
     const { data, error } = await supabase
@@ -115,6 +118,21 @@ const GuidedHelp = () => {
     }
   };
 
+  const saveStepProgress = async (stepId: number, sectionId: number) => {
+    if (!user) return;
+    
+    await supabase
+      .from('user_guidance_progress')
+      .upsert({
+        user_id: user.id,
+        section_id: sectionId,
+        step_id: stepId,
+        completed: true,
+        section_completed: false,
+        last_visited_at: new Date().toISOString()
+      });
+  };
+
   const markSectionCompleted = async (sectionId: number) => {
     if (!user) return;
     
@@ -137,6 +155,25 @@ const GuidedHelp = () => {
     fetchProgress();
   };
 
+  const checkAndAutoCompleteSection = async (sectionId: number) => {
+    if (!user) return;
+    
+    // Get all steps for this section
+    const { data: sectionSteps } = await supabase
+      .from('guidance_steps')
+      .select('id')
+      .eq('section_id', sectionId);
+    
+    if (!sectionSteps) return;
+    
+    // Check if all steps have been visited
+    const allStepsVisited = sectionSteps.every(step => visitedSteps.has(step.id));
+    
+    if (allStepsVisited && !completedSections.has(sectionId)) {
+      await markSectionCompleted(sectionId);
+    }
+  };
+
   const isSectionCompleted = (sectionId: number) => {
     return completedSections.has(sectionId);
   };
@@ -149,17 +186,12 @@ const GuidedHelp = () => {
     return currentStep === steps.length;
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
     } else if (currentSection < sections.length) {
-      // Auto-complete section if all steps visited
-      const sectionSteps = steps.filter(step => step.section_id === currentSection);
-      const allStepsVisited = sectionSteps.every(step => visitedSteps.has(step.id));
-      
-      if (allStepsVisited) {
-        markSectionCompleted(currentSection);
-      }
+      // Check if all steps in current section have been visited
+      await checkAndAutoCompleteSection(currentSection);
       
       setCurrentSection(currentSection + 1);
       setCurrentStep(1);
@@ -214,7 +246,7 @@ const GuidedHelp = () => {
         {/* Logo */}
         <div className="p-6 bg-white">
           <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-40" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-48" />
           </Link>
         </div>
 
@@ -421,19 +453,6 @@ const GuidedHelp = () => {
                   )}
                 </CardContent>
               </Card>
-
-              {/* Mark Section Complete Button - Only show on last step */}
-              {isLastStepInSection() && !isSectionCompleted(currentSection) && (
-                <div className="mb-8">
-                  <Button
-                    onClick={() => markSectionCompleted(currentSection)}
-                    className="bg-green-600 hover:bg-green-700"
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Mark Section as Complete
-                  </Button>
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -450,15 +469,28 @@ const GuidedHelp = () => {
           </Button>
 
           <div className="flex gap-3">
+            {/* Only show Mark Section Complete and Skip Section buttons on last step */}
             {isLastStepInSection() && (
-              <Button
-                variant="outline"
-                onClick={skipSection}
-                disabled={currentSection === sections.length}
-              >
-                <SkipForward className="w-4 h-4 mr-2" />
-                Skip Section
-              </Button>
+              <>
+                {!isSectionCompleted(currentSection) && (
+                  <Button
+                    onClick={() => markSectionCompleted(currentSection)}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Mark Section as Complete
+                  </Button>
+                )}
+                
+                <Button
+                  variant="outline"
+                  onClick={skipSection}
+                  disabled={currentSection === sections.length}
+                >
+                  <SkipForward className="w-4 h-4 mr-2" />
+                  Skip Section
+                </Button>
+              </>
             )}
             
             <Button

@@ -161,6 +161,7 @@ export type Database = {
           created_at: string
           id: string
           last_visited_at: string
+          section_completed: boolean | null
           section_id: number | null
           step_id: number | null
           user_id: string
@@ -170,6 +171,7 @@ export type Database = {
           created_at?: string
           id?: string
           last_visited_at?: string
+          section_completed?: boolean | null
           section_id?: number | null
           step_id?: number | null
           user_id: string
@@ -179,6 +181,7 @@ export type Database = {
           created_at?: string
           id?: string
           last_visited_at?: string
+          section_completed?: boolean | null
           section_id?: number | null
           step_id?: number | null
           user_id?: string
