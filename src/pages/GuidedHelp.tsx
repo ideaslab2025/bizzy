@@ -171,7 +171,7 @@ const GuidedHelp = () => {
         {/* Logo */}
         <div className="p-6 bg-white">
           <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-16" />
+            <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-24" />
           </Link>
         </div>
 
@@ -179,35 +179,46 @@ const GuidedHelp = () => {
         <div className="flex-1 p-6">
           <h2 className="text-lg font-semibold mb-6">Your Business Setup Journey</h2>
           <div className="space-y-3">
-            {sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => setCurrentSection(section.order_number)}
-                className={`w-full flex items-center gap-4 p-3 rounded-lg transition-all ${
-                  currentSection === section.order_number
-                    ? 'bg-white text-[#0088cc]'
-                    : 'hover:bg-white/10'
-                }`}
-              >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold relative ${
-                  isSectionCompleted(section.id)
-                    ? 'bg-green-500 text-white'
-                    : currentSection === section.order_number
-                    ? 'bg-[#0088cc] text-white'
-                    : 'bg-white/20'
-                }`}>
-                  {isSectionCompleted(section.id) ? (
-                    <CheckCircle className="w-5 h-5" />
-                  ) : (
-                    section.order_number
-                  )}
-                </div>
-                <div className="text-left">
-                  <div className="font-medium">{section.title}</div>
-                  <div className="text-sm opacity-75">{section.description}</div>
-                </div>
-              </button>
-            ))}
+            {sections.map((section) => {
+              const isCompleted = isSectionCompleted(section.id);
+              const isCurrent = currentSection === section.order_number;
+              
+              return (
+                <button
+                  key={section.id}
+                  onClick={() => setCurrentSection(section.order_number)}
+                  className={`w-full flex items-center gap-4 p-3 rounded-lg transition-all ${
+                    isCurrent
+                      ? 'bg-white text-[#0088cc]'
+                      : isCompleted
+                      ? 'bg-white/10 text-white/70'
+                      : 'hover:bg-white/10'
+                  }`}
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold relative ${
+                    isCompleted
+                      ? 'bg-green-500 text-white'
+                      : isCurrent
+                      ? 'bg-[#0088cc] text-white'
+                      : 'bg-white/20'
+                  }`}>
+                    {isCompleted ? (
+                      <CheckCircle className="w-5 h-5" />
+                    ) : (
+                      section.order_number
+                    )}
+                  </div>
+                  <div className="text-left">
+                    <div className={`font-medium ${isCompleted ? 'line-through' : ''}`}>
+                      {section.title}
+                    </div>
+                    <div className={`text-sm ${isCompleted ? 'opacity-50' : 'opacity-75'}`}>
+                      {section.description}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

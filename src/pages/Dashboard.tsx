@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -5,11 +6,12 @@ import { Input } from "@/components/ui/input";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
-import { User, LogOut } from "lucide-react";
+import { User, LogOut, Bell } from "lucide-react";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showChatbot, setShowChatbot] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const { user, signOut } = useAuth();
   
   const handleSignOut = async () => {
@@ -19,6 +21,11 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Error signing out:', error);
     }
+  };
+
+  const handleNotificationClick = () => {
+    setShowNotifications(!showNotifications);
+    console.log('Notifications clicked');
   };
   
   return (
@@ -32,9 +39,8 @@ const Dashboard = () => {
         {/* Sidebar header */}
         <div className="flex items-center justify-between p-4 border-b">
           {isSidebarOpen ? (
-            <Link to="/dashboard" className="flex items-center gap-2">
-              <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-8" />
-              <span className="font-bold">Bizzy</span>
+            <Link to="/dashboard" className="flex items-center justify-center w-full">
+              <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-12" />
             </Link>
           ) : (
             <Link to="/dashboard" className="mx-auto">
@@ -144,31 +150,53 @@ const Dashboard = () => {
                 <span>Ask Bizzy</span>
               </Button>
               
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="relative"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-                </svg>
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0088cc] text-white text-xs rounded-full flex items-center justify-center">
-                  3
-                </span>
-              </Button>
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="relative"
+                  onClick={handleNotificationClick}
+                >
+                  <Bell className="w-5 h-5" />
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0088cc] text-white text-xs rounded-full flex items-center justify-center">
+                    3
+                  </span>
+                </Button>
+                
+                {showNotifications && (
+                  <div className="absolute right-0 top-full mt-2 w-80 bg-white border rounded-lg shadow-lg z-50">
+                    <div className="p-4 border-b bg-gray-50">
+                      <h3 className="font-medium">Notifications</h3>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      <div className="text-sm">
+                        <p className="font-medium">New guidance available</p>
+                        <p className="text-gray-600">VAT registration guide has been updated</p>
+                      </div>
+                      <div className="text-sm">
+                        <p className="font-medium">Document ready</p>
+                        <p className="text-gray-600">Your employee handbook is ready for download</p>
+                      </div>
+                      <div className="text-sm">
+                        <p className="font-medium">Consultation reminder</p>
+                        <p className="text-gray-600">Your meeting is scheduled for tomorrow at 2 PM</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Account Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-gray-700 hover:text-gray-900">
                     <User className="h-4 w-4" />
-                    <span className="hidden sm:inline">{user?.email?.split('@')[0] || 'Account'}</span>
+                    <span className="hidden sm:inline text-gray-700">{user?.email?.split('@')[0] || 'Account'}</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/settings" className="flex items-center gap-2 w-full">
+                    <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900">
                       <User className="h-4 w-4" />
                       Account Settings
                     </Link>
