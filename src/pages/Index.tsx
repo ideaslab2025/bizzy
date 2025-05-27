@@ -344,7 +344,7 @@ const Index = () => {
   // Modified pricing handlers to implement actual Stripe payment
   const handleSelectPlan = (planId: string) => {
     if (selectedPlan === planId) {
-      setSelectedPlan(null); // Deselect if already selected
+      setSelectedPlan(null);
     } else {
       setSelectedPlan(planId);
     }
@@ -365,21 +365,28 @@ const Index = () => {
     setIsLoading(true);
     
     try {
+      console.log("Creating payment session for plan:", selectedPlan);
+      
       const { data, error } = await supabase.functions.invoke('create-payment', {
         body: { planId: selectedPlan },
       });
 
-      if (error) throw error;
+      console.log("Payment response:", { data, error });
 
-      if (data.url) {
-        // Redirect to Stripe Checkout
+      if (error) {
+        console.error("Payment error:", error);
+        throw error;
+      }
+
+      if (data?.url) {
+        console.log("Redirecting to payment URL:", data.url);
         window.location.href = data.url;
       } else {
-        throw new Error("No payment URL received");
+        throw new Error("No payment URL received from server");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Payment error:", error);
-      toast.error("Failed to create payment session. Please try again.");
+      toast.error(`Failed to create payment session: ${error.message || 'Please try again'}`);
     } finally {
       setIsLoading(false);
     }
@@ -388,7 +395,6 @@ const Index = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
-      // Redirect will be handled by the auth state change
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -416,17 +422,17 @@ const Index = () => {
               <>
                 {/* Mobile Dashboard Button */}
                 <Link to="/dashboard" className="md:hidden">
-                  <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
+                  <Button variant="ghost" className="text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30">
                     Dashboard
                   </Button>
                 </Link>
                 
-                {/* Desktop Account Dropdown with proper hover */}
+                {/* Desktop Account Dropdown with proper hover - FIXED */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className="hidden md:flex">
                     <Button 
                       variant="ghost" 
-                      className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex items-center gap-2 text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[state=open]:bg-blue-900/30 data-[state=open]:text-[#60a5fa]"
                     >
                       <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-medium text-white">
                         {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || 
@@ -443,7 +449,7 @@ const Index = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
                     <DropdownMenuItem asChild>
-                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2">
+                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
                         <User className="h-4 w-4" />
                         Dashboard
                       </Link>
@@ -577,7 +583,7 @@ const Index = () => {
           <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
-            {/* Feature 1 - Step-by-Step Guidance - Fixed image positioning */}
+            {/* Feature 1 - Step-by-Step Guidance - FIXED image size and title positioning */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               {/* Professionally Assured Badge */}
               <div className="absolute top-3 right-3 z-20">
@@ -592,11 +598,11 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="w-full h-[200px] mx-auto flex items-end justify-center pt-16">
+                <div className="w-full h-[180px] mx-auto flex items-end justify-center pt-8">
                   <img 
                     src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" 
                     alt="Step-by-Step Guidance" 
-                    className="h-[170px] object-contain scale-125 translate-y-3" 
+                    className="h-[220px] object-contain scale-[1.8] translate-y-3" 
                     style={{ maxWidth: '90%' }}
                   />
                 </div>
@@ -764,15 +770,25 @@ const Index = () => {
             <div className="md:w-1/2">
               <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Meet Bizzy</h2>
               <p className="text-blue-100 mb-3 text-sm md:text-base">Your AI-powered assistant for navigating the complexities of starting a UK business. Bizzy transforms business startup administration from a chore into a breeze.</p>
-              <p className="text-blue-100 mb-3 text-sm md:text-base">Clear, up-to-date guidance on exactly what to do, every step of the way. Short video clips and a document library to boot. Chat to Bizzy if you get stuck!</p>
-              <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 text-sm md:text-base">
-                Learn More About Bizzy
-              </Button>
+              <p className="text-blue-100 mb-4 text-sm md:text-base">Think of Bizzy as your pocket business lawyer and accountant - always ready to guide you through the maze of legal requirements, financial planning, and operational setup.</p>
+              <div className="flex flex-wrap gap-4">
+                <Link to="/register">
+                  <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started with Bizzy</Button>
+                </Link>
+              </div>
             </div>
-            <div className="md:w-1/2 flex justify-center">
-              <div className="relative scale-75 md:scale-100">
-                <div className="absolute inset-0 bg-[#1d4ed8]/30 blur-3xl rounded-full"></div>
-                <img src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" alt="Bizzy Character" className="w-[600px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]" />
+            <div className="md:w-1/2 relative">
+              <div 
+                className="absolute"
+                style={{
+                  left: `${floatingPosition.x - (window.innerWidth / 2)}px`,
+                  top: `${floatingPosition.y - (window.innerHeight / 2)}px`,
+                  transform: 'translate(-50%, -50%)',
+                  transition: 'all 0.3s ease-out',
+                  zIndex: 10
+                }}
+              >
+                <BizzyCharacter />
               </div>
             </div>
           </div>
@@ -780,65 +796,62 @@ const Index = () => {
       </section>
 
       {/* FAQ Section - Using the ref for better scroll targeting */}
-      <section id="faqs" ref={faqsRef} className="py-16">
+      <section ref={faqsRef} id="faqs" className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
-          <div className="max-w-3xl mx-auto">
-            <Accordion type="single" collapsible className="space-y-4">
-              <AccordionItem value="item-1" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  How does Bizzy help with my company post-formation?
+          <h2 className="text-3xl font-bold mb-10 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
+          <div className="max-w-4xl mx-auto">
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1" className="border-b border-blue-900/30">
+                <AccordionTrigger className="text-white hover:text-[#3b82f6] text-left py-6">
+                  What makes Bizzy different from other business setup services?
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Bizzy provides step-by-step professional guidance through the post-company formation process, offering our guided help for everything you need to do across every department once starting, a full document library, and AI assistance to ensure you complete all required steps correctly.
+                <AccordionContent className="text-blue-100/80 pb-6">
+                  Bizzy goes beyond company formation to provide ongoing support for your business journey. While others stop at registration, we guide you through the crucial post-formation steps including HR setup, compliance, documentation, and operational procedures. Our AI-powered assistant provides instant, personalized guidance 24/7.
                 </AccordionContent>
               </AccordionItem>
-
-              <AccordionItem value="item-2" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Is there a recurring subscription?
+              
+              <AccordionItem value="item-2" className="border-b border-blue-900/30">
+                <AccordionTrigger className="text-white hover:text-[#3b82f6] text-left py-6">
+                  How does the step-by-step guidance work?
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  No, Bizzy operates on a one-time payment model. You pay once for the plan of your choice and get lifetime access to the features included in that plan.
+                <AccordionContent className="text-blue-100/80 pb-6">
+                  Our guidance system breaks down complex business processes into manageable steps. Each section covers specific areas like HR, finance, accounting, and compliance. You can progress at your own pace, skip sections that don't apply to your business, and return to any step whenever needed. Video explanations and document templates accompany each step.
                 </AccordionContent>
               </AccordionItem>
-
-              <AccordionItem value="item-3" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Can I upgrade my plan later?
+              
+              <AccordionItem value="item-3" className="border-b border-blue-900/30">
+                <AccordionTrigger className="text-white hover:text-[#3b82f6] text-left py-6">
+                  What documents and templates are included?
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Yes, you can upgrade to a higher-tier plan at any time by paying the difference between your current plan and the new one.
+                <AccordionContent className="text-blue-100/80 pb-6">
+                  We provide hundreds of professionally-drafted templates including employment contracts, privacy policies, terms of service, invoices, NDAs, supplier agreements, and compliance documents. All templates are automatically populated with your company details and can be customized to your specific needs.
                 </AccordionContent>
               </AccordionItem>
-
-              <AccordionItem value="item-4" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  How does the AI assistant work?
+              
+              <AccordionItem value="item-4" className="border-b border-blue-900/30">
+                <AccordionTrigger className="text-white hover:text-[#3b82f6] text-left py-6">
+                  Is my data secure and confidential?
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Bizzy's AI assistant uses advanced natural language processing to understand your questions and provide relevant guidance, document suggestions, and compliance advice specific to your business needs.
+                <AccordionContent className="text-blue-100/80 pb-6">
+                  Absolutely. We use enterprise-grade encryption and security measures to protect your data. All information is stored securely and we never share your business details with third parties. Our platform is compliant with UK data protection regulations and we undergo regular security audits.
                 </AccordionContent>
               </AccordionItem>
-
-              <AccordionItem value="item-5" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Is my data secure with Bizzy?
+              
+              <AccordionItem value="item-5" className="border-b border-blue-900/30">
+                <AccordionTrigger className="text-white hover:text-[#3b82f6] text-left py-6">
+                  What level of support do I get?
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Absolutely. We employ enterprise-grade encryption and follow strict data protection protocols to ensure your business information remains completely secure and confidential.
+                <AccordionContent className="text-blue-100/80 pb-6">
+                  Support varies by plan. All plans include access to our AI assistant for instant help. Higher-tier plans include priority email support and video consultations with business experts. Our support team consists of qualified business advisors who understand UK regulations and requirements.
                 </AccordionContent>
               </AccordionItem>
-
-              <AccordionItem value="item-6" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Is Bizzy Guidance or Advice and can I trust the information?
+              
+              <AccordionItem value="item-6" className="border-b border-blue-900/30">
+                <AccordionTrigger className="text-white hover:text-[#3b82f6] text-left py-6">
+                  Can I upgrade or downgrade my plan later?
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Your Business Guidance, Professionally Assured: Bizzy provides comprehensive step-by-step guidance across every aspect of getting your new UK business started (post formation), telling you everything you need to do across finance, payroll, tax, HR, Gov.UK services, paperwork and beyond. It has been professionally pre-checked / assured and updated, but it is guidance not advice. Please see our full disclaimer{' '}
-                  <a href="/disclaimer" className="text-[#3b82f6] hover:text-[#60a5fa] underline">
-                    here
-                  </a>.
+                <AccordionContent className="text-blue-100/80 pb-6">
+                  Currently, our plans are one-time purchases designed to provide comprehensive support for your business setup phase. Each plan is carefully structured to meet different business needs. If your requirements change, please contact our support team to discuss your options.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -847,70 +860,58 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-br from-blue-800/50 to-blue-900/30">
+      <section className="py-16 bg-gradient-to-r from-[#1d4ed8] to-[#3b82f6]">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Helping new business owners get going</h2>
-          <p className="text-xl mb-8 text-blue-100/80 max-w-2xl mx-auto">Join thousands of UK startups who are saving time, reducing stress, and ensuring compliance with Bizzy's comprehensive platform.</p>
-          <Link to="/register">
-            <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">
-              Get Started Today
+          <h2 className="text-3xl font-bold mb-6">Ready to Start Your Business Journey?</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">Join thousands of entrepreneurs who have successfully launched their businesses with Bizzy's comprehensive guidance.</p>
+          <div className="flex justify-center gap-4">
+            <Link to="/register">
+              <Button size="lg" className="bg-white text-[#1d4ed8] hover:bg-gray-100">Start Your Journey Today</Button>
+            </Link>
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10" onClick={() => scrollToSection('pricing')}>
+              View Pricing
             </Button>
-          </Link>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#071629] border-t border-blue-900/30 py-12">
+      <footer className="bg-[#0a1628] py-12 border-t border-blue-900/30">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Product</h3>
-              <ul className="space-y-2">
-                <li><a href="#features" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Features</a></li>
-                <li><a href="#pricing" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Pricing</a></li>
-                <li><a href="#faqs" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">FAQs</a></li>
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-24 mb-4" />
+              <p className="text-blue-100/60 text-sm">Your AI-powered assistant for UK business setup and compliance.</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-[#3b82f6] mb-4">Product</h3>
+              <ul className="space-y-2 text-sm text-blue-100/60">
+                <li><a href="#features" className="hover:text-[#3b82f6]">Features</a></li>
+                <li><a href="#pricing" className="hover:text-[#3b82f6]">Pricing</a></li>
+                <li><Link to="/register" className="hover:text-[#3b82f6]">Sign Up</Link></li>
+                <li><Link to="/login" className="hover:text-[#3b82f6]">Login</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Resources</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Blog</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Guides</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Support</a></li>
+              <h3 className="font-semibold text-[#3b82f6] mb-4">Support</h3>
+              <ul className="space-y-2 text-sm text-blue-100/60">
+                <li><a href="#faqs" className="hover:text-[#3b82f6]">FAQ</a></li>
+                <li><a href="#" className="hover:text-[#3b82f6]">Help Center</a></li>
+                <li><a href="#" className="hover:text-[#3b82f6]">Contact Us</a></li>
+                <li><Link to="/disclaimer" className="hover:text-[#3b82f6]">Disclaimer</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Company</h3>
-              <ul className="space-y-2">
-                <li><a href="#about" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">About Us</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Careers</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Contact</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Legal</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Terms</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Privacy</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Cookies</a></li>
-                <li><a href="/disclaimer" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Disclaimer</a></li>
+              <h3 className="font-semibold text-[#3b82f6] mb-4">Company</h3>
+              <ul className="space-y-2 text-sm text-blue-100/60">
+                <li><a href="#about" className="hover:text-[#3b82f6]">About</a></li>
+                <li><a href="#" className="hover:text-[#3b82f6]">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-[#3b82f6]">Terms of Service</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-blue-900/50 mt-12 pt-8 flex justify-between items-center">
-            <p className="text-blue-100/70">© 2025 Bizzy. All rights reserved.</p>
-            <div className="flex gap-4">
-              <a href="#" aria-label="Twitter" className="text-[#3b82f6] hover:text-[#60a5fa] transition-colors">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
-                </svg>
-              </a>
-              <a href="#" aria-label="LinkedIn" className="text-[#3b82f6] hover:text-[#60a5fa] transition-colors">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.3 1.5 4s1-2.4 2.5-2.4c1.6 0 2.5 1 2.6 2.5 0 1.4-1 2.5-2.6 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5v1.5c1-1.6 2.7-2.5 4.5-2.5 3.5 0 6 2.5 6 6.5v7.5h-5v-7c0-1-1-2-2-2h-1.5z"></path>
-                </svg>
-              </a>
-            </div>
+          <div className="border-t border-blue-900/30 mt-8 pt-8 text-center text-blue-100/60 text-sm">
+            <p>&copy; 2024 Bizzy. All rights reserved.</p>
           </div>
         </div>
       </footer>

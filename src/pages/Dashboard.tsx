@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -159,7 +160,7 @@ const Dashboard = () => {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="relative text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  className="relative text-gray-800 hover:text-gray-900 hover:bg-gray-100"
                 >
                   <Bell className="w-5 h-5" />
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0088cc] text-white text-xs rounded-full flex items-center justify-center">
@@ -190,13 +191,13 @@ const Dashboard = () => {
                 )}
               </div>
 
-              {/* Account Dropdown - Fixed hover implementation */}
+              {/* Account Dropdown - FIXED hover functionality and brighter default colors */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    className="flex items-center gap-2 text-gray-800 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 data-[state=open]:bg-gray-100 data-[state=open]:text-gray-900"
                   >
                     <User className="h-4 w-4" />
                     <span className="hidden sm:inline">

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -155,6 +154,32 @@ const GuidedHelp = () => {
     fetchProgress();
   };
 
+  const markSectionIncomplete = async (sectionId: number) => {
+    if (!user) return;
+    
+    // Remove section completion but keep step progress
+    const sectionSteps = steps.filter(step => step.section_id === sectionId);
+    for (const step of sectionSteps) {
+      await supabase
+        .from('user_guidance_progress')
+        .upsert({
+          user_id: user.id,
+          section_id: sectionId,
+          step_id: step.id,
+          completed: true,
+          section_completed: false,
+          last_visited_at: new Date().toISOString()
+        });
+    }
+    
+    setCompletedSections(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(sectionId);
+      return newSet;
+    });
+    fetchProgress();
+  };
+
   const checkAndAutoCompleteSection = async (sectionId: number) => {
     if (!user) return;
     
@@ -241,12 +266,12 @@ const GuidedHelp = () => {
 
   return (
     <div className="min-h-screen bg-white flex">
-      {/* Left Sidebar - Blue */}
+      {/* Left Sidebar - Blue - FIXED: reduced top white space and bigger logo */}
       <div className="w-80 bg-[#0088cc] text-white flex flex-col">
-        {/* Logo */}
-        <div className="p-6 bg-white">
+        {/* Logo - REDUCED padding and BIGGER logo */}
+        <div className="p-3 bg-white">
           <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-48" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-56" />
           </Link>
         </div>
 
@@ -457,7 +482,7 @@ const GuidedHelp = () => {
           )}
         </div>
 
-        {/* Bottom Navigation */}
+        {/* Bottom Navigation - FIXED: Skip section on every page, mark complete toggle */}
         <div className="bg-gray-50 p-6 flex justify-between items-center border-t">
           <Button
             variant="outline"
@@ -469,10 +494,20 @@ const GuidedHelp = () => {
           </Button>
 
           <div className="flex gap-3">
-            {/* Only show Mark Section Complete and Skip Section buttons on last step */}
+            {/* Skip Section button - NOW shows on every page */}
+            <Button
+              variant="outline"
+              onClick={skipSection}
+              disabled={currentSection === sections.length}
+            >
+              <SkipForward className="w-4 h-4 mr-2" />
+              Skip Section
+            </Button>
+
+            {/* Mark Section Complete/Incomplete toggle - FIXED: Only show on last step */}
             {isLastStepInSection() && (
               <>
-                {!isSectionCompleted(currentSection) && (
+                {!isSectionCompleted(currentSection) ? (
                   <Button
                     onClick={() => markSectionCompleted(currentSection)}
                     className="bg-green-600 hover:bg-green-700"
@@ -480,16 +515,16 @@ const GuidedHelp = () => {
                     <CheckCircle className="w-4 h-4 mr-2" />
                     Mark Section as Complete
                   </Button>
+                ) : (
+                  <Button
+                    onClick={() => markSectionIncomplete(currentSection)}
+                    variant="outline"
+                    className="text-gray-500 border-gray-300 hover:bg-gray-100"
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Mark as Incomplete
+                  </Button>
                 )}
-                
-                <Button
-                  variant="outline"
-                  onClick={skipSection}
-                  disabled={currentSection === sections.length}
-                >
-                  <SkipForward className="w-4 h-4 mr-2" />
-                  Skip Section
-                </Button>
               </>
             )}
             
