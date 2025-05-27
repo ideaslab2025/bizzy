@@ -108,6 +108,10 @@ const GuidedHelp = () => {
     fetchProgress();
   };
 
+  const isStepCompleted = (stepId: number) => {
+    return progress.some(p => p.step_id === stepId && p.completed);
+  };
+
   const isSectionCompleted = (sectionId: number) => {
     const sectionSteps = steps.filter(step => step.section_id === sectionId);
     const completedSteps = progress.filter(p => p.section_id === sectionId && p.completed);
@@ -165,10 +169,9 @@ const GuidedHelp = () => {
       {/* Left Sidebar - Blue */}
       <div className="w-80 bg-[#0088cc] text-white flex flex-col">
         {/* Logo */}
-        <div className="p-6 border-b border-white/20">
-          <Link to="/dashboard" className="flex items-center gap-2">
-            <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-8" />
-            <span className="font-bold text-xl">Bizzy</span>
+        <div className="p-6 bg-white">
+          <Link to="/dashboard" className="flex items-center justify-center">
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-16" />
           </Link>
         </div>
 
@@ -186,7 +189,7 @@ const GuidedHelp = () => {
                     : 'hover:bg-white/10'
                 }`}
               >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold relative ${
                   isSectionCompleted(section.id)
                     ? 'bg-green-500 text-white'
                     : currentSection === section.order_number
@@ -292,10 +295,15 @@ const GuidedHelp = () => {
               <div className="mb-8">
                 <Button
                   onClick={() => currentStepData && markStepCompleted(currentStepData.id)}
-                  className="bg-green-600 hover:bg-green-700"
+                  className={`${
+                    isStepCompleted(currentStepData.id)
+                      ? 'bg-green-600 hover:bg-green-700'
+                      : 'bg-green-600 hover:bg-green-700'
+                  }`}
+                  disabled={isStepCompleted(currentStepData.id)}
                 >
                   <CheckCircle className="w-4 h-4 mr-2" />
-                  Mark as Complete
+                  {isStepCompleted(currentStepData.id) ? 'Completed' : 'Mark as Complete'}
                 </Button>
               </div>
             </div>

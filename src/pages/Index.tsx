@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Menu } from "lucide-react";
+import { Menu, Star } from "lucide-react";
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
@@ -280,9 +279,10 @@ const Index = () => {
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
+  
   useEffect(() => {
+    // ... keep existing code (floating animation and scroll handling)
     const floatingAnimation = () => {
-      // Keep in bottom left area, but with some gentle floating movement
       setFloatingPosition(prev => ({
         x: window.innerWidth - 150 + Math.sin(Date.now() / 1000) * 10,
         y: window.innerHeight - 150 + Math.cos(Date.now() / 1200) * 15
@@ -291,7 +291,6 @@ const Index = () => {
     };
     const animation = requestAnimationFrame(floatingAnimation);
 
-    // Handle window resize
     const handleResize = () => {
       setFloatingPosition({
         x: window.innerWidth - 150,
@@ -300,11 +299,10 @@ const Index = () => {
     };
     window.addEventListener('resize', handleResize);
 
-    // Scroll handling for hash links
     const handleHashChange = () => {
       const hash = window.location.hash;
       if (hash === '#faqs' && faqsRef.current) {
-        const yOffset = -100; // Adjust this value to control how far above the section to scroll
+        const yOffset = -100;
         const element = faqsRef.current;
         const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({
@@ -314,10 +312,7 @@ const Index = () => {
       }
     };
 
-    // Check hash on initial load
     handleHashChange();
-
-    // Add event listener for hash changes
     window.addEventListener('hashchange', handleHashChange);
     return () => {
       cancelAnimationFrame(animation);
@@ -471,6 +466,14 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
             {/* Feature 1 - Step-by-Step Guidance */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
+              {/* Professionally Assured Badge */}
+              <div className="absolute top-3 right-3 z-10">
+                <div className="bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                  <Star className="w-3 h-3" fill="currentColor" />
+                  <span>Professionally Assured</span>
+                </div>
+              </div>
+              
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -486,6 +489,14 @@ const Index = () => {
             
             {/* Feature 2 - Document Engine */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-400/30 via-blue-600/30 to-blue-800/40 border border-blue-600/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
+              {/* Professionally Assured Badge */}
+              <div className="absolute top-3 right-3 z-10">
+                <div className="bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                  <Star className="w-3 h-3" fill="currentColor" />
+                  <span>Professionally Assured</span>
+                </div>
+              </div>
+              
               <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -534,6 +545,13 @@ const Index = () => {
                 </p>
               </div>
             </div>
+          </div>
+          
+          {/* Disclaimer Links */}
+          <div className="flex justify-center gap-8 mt-8">
+            <Link to="/disclaimer" className="text-blue-300 hover:text-blue-100 text-sm underline">
+              Read our disclaimer
+            </Link>
           </div>
         </div>
       </section>
@@ -739,6 +757,7 @@ const Index = () => {
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Terms</a></li>
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Privacy</a></li>
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Cookies</a></li>
+                <li><Link to="/disclaimer" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Disclaimer</Link></li>
               </ul>
             </div>
           </div>
