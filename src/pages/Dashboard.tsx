@@ -3,10 +3,23 @@ import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/useAuth";
+import { User, LogOut } from "lucide-react";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showChatbot, setShowChatbot] = useState(false);
+  const { user, signOut } = useAuth();
+  
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      // Redirect will be handled by the ProtectedRoute component
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
   
   return (
     <div className="min-h-screen flex bg-muted/30">
@@ -16,6 +29,7 @@ const Dashboard = () => {
           isSidebarOpen ? "w-64" : "w-0 lg:w-16 overflow-hidden"
         }`}
       >
+        {/* Sidebar header */}
         <div className="flex items-center justify-between p-4 border-b">
           {isSidebarOpen ? (
             <Link to="/dashboard" className="flex items-center gap-2">
@@ -143,6 +157,32 @@ const Dashboard = () => {
                   3
                 </span>
               </Button>
+
+              {/* Account Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    <span className="hidden sm:inline">{user?.email?.split('@')[0] || 'Account'}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/settings" className="flex items-center gap-2 w-full">
+                      <User className="h-4 w-4" />
+                      Account Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={handleSignOut}
+                    className="flex items-center gap-2 text-red-600 focus:text-red-600 cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </header>
