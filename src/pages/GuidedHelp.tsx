@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -45,6 +46,7 @@ const GuidedHelp = () => {
   const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set());
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [sectionCompleteToggled, setSectionCompleteToggled] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     fetchSections();
@@ -132,7 +134,7 @@ const GuidedHelp = () => {
       });
   };
 
-  const markSectionCompleted = async (sectionId: number) => {
+  const markSectionCompleted = async (sectionId: number, completed: boolean = true) => {
     if (!user) return;
     
     // Mark all steps in this section as completed
@@ -145,38 +147,27 @@ const GuidedHelp = () => {
           section_id: sectionId,
           step_id: step.id,
           completed: true,
-          section_completed: true,
+          section_completed: completed,
           last_visited_at: new Date().toISOString()
         });
     }
     
-    setCompletedSections(prev => new Set([...prev, sectionId]));
-    fetchProgress();
-  };
-
-  const markSectionIncomplete = async (sectionId: number) => {
-    if (!user) return;
-    
-    // Remove section completion but keep step progress
-    const sectionSteps = steps.filter(step => step.section_id === sectionId);
-    for (const step of sectionSteps) {
-      await supabase
-        .from('user_guidance_progress')
-        .upsert({
-          user_id: user.id,
-          section_id: sectionId,
-          step_id: step.id,
-          completed: true,
-          section_completed: false,
-          last_visited_at: new Date().toISOString()
-        });
+    if (completed) {
+      setCompletedSections(prev => new Set([...prev, sectionId]));
+      setSectionCompleteToggled(prev => new Set([...prev, sectionId]));
+    } else {
+      setCompletedSections(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(sectionId);
+        return newSet;
+      });
+      setSectionCompleteToggled(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(sectionId);
+        return newSet;
+      });
     }
     
-    setCompletedSections(prev => {
-      const newSet = new Set(prev);
-      newSet.delete(sectionId);
-      return newSet;
-    });
     fetchProgress();
   };
 
@@ -266,12 +257,12 @@ const GuidedHelp = () => {
 
   return (
     <div className="min-h-screen bg-white flex">
-      {/* Left Sidebar - Blue - FIXED: reduced top white space and bigger logo */}
+      {/* Left Sidebar - Blue */}
       <div className="w-80 bg-[#0088cc] text-white flex flex-col">
-        {/* Logo - REDUCED padding and BIGGER logo */}
-        <div className="p-3 bg-white">
+        {/* Logo */}
+        <div className="p-4 bg-white">
           <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-56" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-16" />
           </Link>
         </div>
 
@@ -357,7 +348,7 @@ const GuidedHelp = () => {
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="relative text-white hover:text-gray-200 hover:bg-white/20"
+                className="relative text-white hover:text-white hover:bg-white/20"
               >
                 <Bell className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
@@ -390,7 +381,11 @@ const GuidedHelp = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="flex items-center gap-2 text-white hover:text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1"
+                >
                   <User className="h-4 w-4" />
                   <span className="hidden sm:inline">
                     {user?.user_metadata?.company_name || 
@@ -482,7 +477,7 @@ const GuidedHelp = () => {
           )}
         </div>
 
-        {/* Bottom Navigation - FIXED: Skip section on every page, mark complete toggle */}
+        {/* Bottom Navigation */}
         <div className="bg-gray-50 p-6 flex justify-between items-center border-t">
           <Button
             variant="outline"
@@ -494,7 +489,7 @@ const GuidedHelp = () => {
           </Button>
 
           <div className="flex gap-3">
-            {/* Skip Section button - NOW shows on every page */}
+            {/* Skip Section - Always available */}
             <Button
               variant="outline"
               onClick={skipSection}
@@ -503,29 +498,16 @@ const GuidedHelp = () => {
               <SkipForward className="w-4 h-4 mr-2" />
               Skip Section
             </Button>
-
-            {/* Mark Section Complete/Incomplete toggle - FIXED: Only show on last step */}
+            
+            {/* Show Mark Section Complete only on last step */}
             {isLastStepInSection() && (
-              <>
-                {!isSectionCompleted(currentSection) ? (
-                  <Button
-                    onClick={() => markSectionCompleted(currentSection)}
-                    className="bg-green-600 hover:bg-green-700"
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Mark Section as Complete
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => markSectionIncomplete(currentSection)}
-                    variant="outline"
-                    className="text-gray-500 border-gray-300 hover:bg-gray-100"
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Mark as Incomplete
-                  </Button>
-                )}
-              </>
+              <Button
+                onClick={() => markSectionCompleted(currentSection, !isSectionCompleted(currentSection))}
+                className={isSectionCompleted(currentSection) ? "bg-gray-500 hover:bg-gray-600" : "bg-green-600 hover:bg-green-700"}
+              >
+                <CheckCircle className="w-4 h-4 mr-2" />
+                {isSectionCompleted(currentSection) ? "Mark as Incomplete" : "Mark Section as Complete"}
+              </Button>
             )}
             
             <Button
