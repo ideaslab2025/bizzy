@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -378,16 +377,18 @@ const GuidedHelp = () => {
                   key={section.id}
                   onClick={() => handleSidebarNavigation(section.order_number)}
                   className={`w-full flex items-center gap-4 p-3 rounded-lg transition-all ${
-                    isCurrent && !isCompleted
+                    isCurrent
                       ? 'bg-white text-[#0088cc]'
                       : isCompleted
-                      ? 'bg-white/10 text-white/70'
+                      ? 'bg-white/10 text-white/70 hover:bg-white/20'
                       : 'hover:bg-white/10'
                   }`}
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold relative ${
                     isCompleted
-                      ? 'bg-green-500 text-white'
+                      ? isCurrent 
+                        ? 'bg-green-500 text-white'
+                        : 'bg-green-500 text-white'
                       : isCurrent
                       ? 'bg-[#0088cc] text-white'
                       : 'bg-white/20'
@@ -399,14 +400,14 @@ const GuidedHelp = () => {
                     )}
                   </div>
                   <div className="text-left flex-1">
-                    <div className={`font-medium ${isCompleted ? 'line-through' : ''}`}>
+                    <div className={`font-medium ${isCompleted && !isCurrent ? 'line-through' : ''}`}>
                       {section.title}
                     </div>
-                    <div className={`text-sm ${isCompleted ? 'opacity-60 line-through' : 'opacity-75'}`}>
+                    <div className={`text-sm ${isCompleted && !isCurrent ? 'opacity-60 line-through' : 'opacity-75'}`}>
                       {section.description}
                     </div>
                   </div>
-                  {isCompleted && (
+                  {isCompleted && !isCurrent && (
                     <div className="ml-auto">
                       <CheckCircle className="w-5 h-5 text-green-400" />
                     </div>
