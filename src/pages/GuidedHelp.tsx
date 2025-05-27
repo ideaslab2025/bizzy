@@ -133,11 +133,20 @@ const GuidedHelp = () => {
       });
   };
 
-  const markSectionCompleted = async (sectionId: number) => {
+  const toggleSectionCompleted = async (sectionId: number) => {
     if (!user) return;
     
-    // Mark all steps in this section as completed
-    const sectionSteps = steps.filter(step => step.section_id === sectionId);
+    const isCurrentlyCompleted = completedSections.has(sectionId);
+    
+    // Get all steps for this section
+    const { data: sectionSteps } = await supabase
+      .from('guidance_steps')
+      .select('id')
+      .eq('section_id', sectionId);
+    
+    if (!sectionSteps) return;
+    
+    // Toggle completion status
     for (const step of sectionSteps) {
       await supabase
         .from('user_guidance_progress')
@@ -145,13 +154,23 @@ const GuidedHelp = () => {
           user_id: user.id,
           section_id: sectionId,
           step_id: step.id,
-          completed: true,
-          section_completed: true,
+          completed: !isCurrentlyCompleted,
+          section_completed: !isCurrentlyCompleted,
           last_visited_at: new Date().toISOString()
         });
     }
     
-    setCompletedSections(prev => new Set([...prev, sectionId]));
+    // Update local state
+    if (isCurrentlyCompleted) {
+      setCompletedSections(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(sectionId);
+        return newSet;
+      });
+    } else {
+      setCompletedSections(prev => new Set([...prev, sectionId]));
+    }
+    
     fetchProgress();
   };
 
@@ -170,7 +189,7 @@ const GuidedHelp = () => {
     const allStepsVisited = sectionSteps.every(step => visitedSteps.has(step.id));
     
     if (allStepsVisited && !completedSections.has(sectionId)) {
-      await markSectionCompleted(sectionId);
+      await toggleSectionCompleted(sectionId);
     }
   };
 
@@ -250,9 +269,9 @@ const GuidedHelp = () => {
           </Link>
         </div>
 
-        {/* Progress Steps */}
-        <div className="flex-1 p-6">
-          <h2 className="text-lg font-semibold mb-6">Your Business Setup Journey</h2>
+        {/* Progress Steps - moved up with reduced padding */}
+        <div className="flex-1 p-4">
+          <h2 className="text-lg font-semibold mb-4">Your Business Setup Journey</h2>
           <div className="space-y-3">
             {sections.map((section) => {
               const isCompleted = isSectionCompleted(section.id);
@@ -472,15 +491,17 @@ const GuidedHelp = () => {
             {/* Only show Mark Section Complete and Skip Section buttons on last step */}
             {isLastStepInSection() && (
               <>
-                {!isSectionCompleted(currentSection) && (
-                  <Button
-                    onClick={() => markSectionCompleted(currentSection)}
-                    className="bg-green-600 hover:bg-green-700"
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Mark Section as Complete
-                  </Button>
-                )}
+                <Button
+                  onClick={() => toggleSectionCompleted(currentSection)}
+                  className={
+                    isSectionCompleted(currentSection)
+                      ? "bg-gray-400 hover:bg-gray-500 text-white"
+                      : "bg-green-600 hover:bg-green-700 text-white"
+                  }
+                >
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  {isSectionCompleted(currentSection) ? 'Mark as Incomplete' : 'Mark Section as Complete'}
+                </Button>
                 
                 <Button
                   variant="outline"
