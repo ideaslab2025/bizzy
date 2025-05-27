@@ -350,7 +350,7 @@ const GuidedHelp = () => {
     return [];
   };
 
-  // Get current section for mark complete button
+  // Get current section for mark complete button - find by current section number
   const currentSectionData = sections.find(s => s.order_number === currentSection);
   const isCurrentSectionCompleted = currentSectionData ? isSectionCompleted(currentSectionData.id) : false;
 
@@ -514,8 +514,8 @@ const GuidedHelp = () => {
           </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 p-8">
+        {/* Content - with padding bottom for fixed footer */}
+        <div className="flex-1 p-8 pb-32">
           {currentStepData && (
             <div className="max-w-4xl">
               <h2 className="text-3xl font-bold text-gray-800 mb-6">
@@ -576,8 +576,8 @@ const GuidedHelp = () => {
           )}
         </div>
 
-        {/* Bottom Navigation */}
-        <div className="bg-gray-50 p-6 flex justify-between items-center border-t">
+        {/* Fixed Floating Bottom Navigation */}
+        <div className="fixed bottom-0 left-80 right-0 bg-white/95 backdrop-blur-sm border-t shadow-lg p-6 flex justify-between items-center z-40">
           <Button
             variant="outline"
             onClick={prevStep}
@@ -588,7 +588,7 @@ const GuidedHelp = () => {
           </Button>
 
           <div className="flex gap-3">
-            {/* Show Mark Section Complete and Skip Section buttons on last step */}
+            {/* Show Mark Section Complete and Skip Section buttons on last step of any section */}
             {isLastStepInSection() && currentSectionData && (
               <>
                 <Button
