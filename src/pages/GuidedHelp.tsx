@@ -92,6 +92,10 @@ const GuidedHelp = () => {
     if (data && !error) {
       setSteps(data);
       setCurrentStep(1);
+    } else {
+      // If no steps found, set empty array
+      setSteps([]);
+      setCurrentStep(1);
     }
   };
 
@@ -284,6 +288,8 @@ const GuidedHelp = () => {
   };
 
   const isLastStepInSection = () => {
+    // If there are no steps, consider it the last (and only) step
+    if (steps.length === 0) return true;
     return currentStep === steps.length;
   };
 
@@ -517,7 +523,24 @@ const GuidedHelp = () => {
 
         {/* Content - with padding bottom for fixed footer */}
         <div className="flex-1 p-8 pb-32">
-          {currentStepData && (
+          {steps.length === 0 ? (
+            // Show placeholder content when no steps exist
+            <div className="max-w-4xl">
+              <h2 className="text-3xl font-bold text-gray-800 mb-6">
+                {sections.find(s => s.order_number === currentSection)?.title}
+              </h2>
+              <Card className="mb-8">
+                <CardContent className="p-8">
+                  <div className="prose max-w-none">
+                    <p className="text-sm">
+                      Content for this section is coming soon. You can still mark this section as complete to track your progress.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          ) : currentStepData ? (
+            // ... keep existing code (existing step content)
             <div className="max-w-4xl">
               <h2 className="text-3xl font-bold text-gray-800 mb-6">
                 {currentStepData.title}
@@ -574,7 +597,7 @@ const GuidedHelp = () => {
                 </CardContent>
               </Card>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* Fixed Floating Bottom Navigation */}
@@ -589,7 +612,7 @@ const GuidedHelp = () => {
           </Button>
 
           <div className="flex gap-3">
-            {/* Show Mark Section Complete and Skip Section buttons on last step of any section */}
+            {/* Show Mark Section Complete and Skip Section buttons on last step of any section OR when no steps exist */}
             {isLastStepInSection() && currentSectionData && (
               <>
                 <Button
@@ -617,7 +640,7 @@ const GuidedHelp = () => {
             
             <Button
               onClick={nextStep}
-              disabled={currentSection === sections.length && currentStep === steps.length}
+              disabled={currentSection === sections.length && (steps.length === 0 || currentStep === steps.length)}
               className="bg-[#0088cc] hover:bg-[#0088cc]/90"
             >
               Next
