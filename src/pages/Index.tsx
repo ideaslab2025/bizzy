@@ -371,7 +371,7 @@ const Index = () => {
 
       if (error) throw error;
 
-      if (data.url) {
+      if (data?.url) {
         // Redirect to Stripe Checkout
         window.location.href = data.url;
       } else {
@@ -421,12 +421,12 @@ const Index = () => {
                   </Button>
                 </Link>
                 
-                {/* Desktop Account Dropdown with proper hover */}
+                {/* Desktop Account Dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className="hidden md:flex">
                     <Button 
                       variant="ghost" 
-                      className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[state=open]:bg-blue-900/30"
                     >
                       <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-medium text-white">
                         {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || 
@@ -443,7 +443,7 @@ const Index = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
                     <DropdownMenuItem asChild>
-                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2">
+                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
                         <User className="h-4 w-4" />
                         Dashboard
                       </Link>
@@ -718,7 +718,7 @@ const Index = () => {
                 color: 'white',
                 border: 'none',
                 borderRadius: '8px',
-                cursor: selectedPlan ? 'pointer' : 'not-allowed',
+                cursor: selectedPlan && !isLoading ? 'pointer' : 'not-allowed',
                 opacity: selectedPlan ? 1 : 0.5,
                 transition: 'all 0.2s',
                 transform: selectedPlan ? 'scale(1)' : 'scale(1)',
