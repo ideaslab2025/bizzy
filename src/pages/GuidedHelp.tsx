@@ -5,8 +5,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { CheckCircle, Play, ExternalLink, ChevronLeft, ChevronRight, SkipForward } from "lucide-react";
+import { CheckCircle, Play, ExternalLink, ChevronLeft, ChevronRight, SkipForward, User, LogOut, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { Json } from "@/integrations/supabase/types";
 
 interface GuidanceSection {
@@ -34,13 +35,14 @@ interface UserProgress {
 }
 
 const GuidedHelp = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [sections, setSections] = useState<GuidanceSection[]>([]);
   const [currentSection, setCurrentSection] = useState<number>(1);
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [steps, setSteps] = useState<GuidanceStep[]>([]);
   const [progress, setProgress] = useState<UserProgress[]>([]);
   const [showChatbot, setShowChatbot] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
     fetchSections();
@@ -149,6 +151,14 @@ const GuidedHelp = () => {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   const currentStepData = getCurrentStepData();
   
   // Helper function to safely parse external links
@@ -171,7 +181,7 @@ const GuidedHelp = () => {
         {/* Logo */}
         <div className="p-6 bg-white">
           <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-40" />
           </Link>
         </div>
 
@@ -191,7 +201,7 @@ const GuidedHelp = () => {
                     isCurrent
                       ? 'bg-white text-[#0088cc]'
                       : isCompleted
-                      ? 'bg-white/10 text-white/70'
+                      ? 'bg-white/10 text-white/50 opacity-60'
                       : 'hover:bg-white/10'
                   }`}
                 >
@@ -207,12 +217,17 @@ const GuidedHelp = () => {
                     ) : (
                       section.order_number
                     )}
+                    {isCompleted && (
+                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                        <CheckCircle className="w-3 h-3 text-white" />
+                      </div>
+                    )}
                   </div>
                   <div className="text-left">
-                    <div className={`font-medium ${isCompleted ? 'line-through' : ''}`}>
+                    <div className={`font-medium ${isCompleted ? 'line-through opacity-60' : ''}`}>
                       {section.title}
                     </div>
-                    <div className={`text-sm ${isCompleted ? 'opacity-50' : 'opacity-75'}`}>
+                    <div className={`text-sm ${isCompleted ? 'opacity-30' : 'opacity-75'}`}>
                       {section.description}
                     </div>
                   </div>
@@ -226,21 +241,95 @@ const GuidedHelp = () => {
       {/* Main Content Area - White */}
       <div className="flex-1 flex flex-col">
         {/* Top Bar */}
-        <div className="bg-white border-b p-4 flex justify-between items-center">
+        <div className="bg-[#0088cc] border-b p-4 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className="text-2xl font-bold text-white">
               {sections.find(s => s.order_number === currentSection)?.title}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-white/80">
               Step {currentStep} of {steps.length}
             </p>
           </div>
-          <Button 
-            onClick={() => setShowChatbot(true)}
-            className="bg-[#0088cc] hover:bg-[#0088cc]/90"
-          >
-            Talk to Bizzy
-          </Button>
+          
+          <div className="flex items-center gap-4">
+            <Button 
+              onClick={() => setShowChatbot(true)}
+              className="bg-white text-[#0088cc] hover:bg-gray-100"
+            >
+              Talk to Bizzy
+            </Button>
+            
+            <div 
+              className="relative"
+              onMouseEnter={() => setShowNotifications(true)}
+              onMouseLeave={() => setShowNotifications(false)}
+            >
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="relative text-white hover:text-gray-200"
+              >
+                <Bell className="w-5 h-5" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                  3
+                </span>
+              </Button>
+              
+              {showNotifications && (
+                <div className="absolute right-0 top-full mt-2 w-80 bg-white border rounded-lg shadow-lg z-50">
+                  <div className="p-4 border-b bg-gray-50">
+                    <h3 className="font-medium text-gray-800">Notifications</h3>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    <div className="text-sm">
+                      <p className="font-medium text-gray-800">New guidance available</p>
+                      <p className="text-gray-600">VAT registration guide has been updated</p>
+                    </div>
+                    <div className="text-sm">
+                      <p className="font-medium text-gray-800">Document ready</p>
+                      <p className="text-gray-600">Your employee handbook is ready for download</p>
+                    </div>
+                    <div className="text-sm">
+                      <p className="font-medium text-gray-800">Consultation reminder</p>
+                      <p className="text-gray-600">Your meeting is scheduled for tomorrow at 2 PM</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div
+                  onMouseEnter={(e) => {
+                    const trigger = e.currentTarget.querySelector('button');
+                    if (trigger) trigger.click();
+                  }}
+                >
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200">
+                    <User className="h-4 w-4" />
+                    <span className="hidden sm:inline">{user?.email?.split('@')[0] || 'Account'}</span>
+                  </Button>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900">
+                    <User className="h-4 w-4" />
+                    Account Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 text-red-600 focus:text-red-600 cursor-pointer"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
         {/* Content */}

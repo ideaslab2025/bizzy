@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -22,11 +21,6 @@ const Dashboard = () => {
       console.error('Error signing out:', error);
     }
   };
-
-  const handleNotificationClick = () => {
-    setShowNotifications(!showNotifications);
-    console.log('Notifications clicked');
-  };
   
   return (
     <div className="min-h-screen flex bg-muted/30">
@@ -40,11 +34,11 @@ const Dashboard = () => {
         <div className="flex items-center justify-between p-4 border-b">
           {isSidebarOpen ? (
             <Link to="/dashboard" className="flex items-center justify-center w-full">
-              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-16" />
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-20" />
             </Link>
           ) : (
             <Link to="/dashboard" className="mx-auto">
-              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-10" />
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-12" />
             </Link>
           )}
           <Button
@@ -64,6 +58,7 @@ const Dashboard = () => {
             )}
           </Button>
         </div>
+        
         
         <nav className="p-2 flex-1">
           <ul className="space-y-1">
@@ -150,12 +145,15 @@ const Dashboard = () => {
                 <span>Ask Bizzy</span>
               </Button>
               
-              <div className="relative">
+              <div 
+                className="relative"
+                onMouseEnter={() => setShowNotifications(true)}
+                onMouseLeave={() => setShowNotifications(false)}
+              >
                 <Button 
                   variant="ghost" 
                   size="sm"
                   className="relative text-white hover:text-gray-200"
-                  onClick={handleNotificationClick}
                 >
                   <Bell className="w-5 h-5" />
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0088cc] text-white text-xs rounded-full flex items-center justify-center">
@@ -189,10 +187,17 @@ const Dashboard = () => {
               {/* Account Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200">
-                    <User className="h-4 w-4" />
-                    <span className="hidden sm:inline">{user?.email?.split('@')[0] || 'Account'}</span>
-                  </Button>
+                  <div
+                    onMouseEnter={(e) => {
+                      const trigger = e.currentTarget.querySelector('button');
+                      if (trigger) trigger.click();
+                    }}
+                  >
+                    <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200">
+                      <User className="h-4 w-4" />
+                      <span className="hidden sm:inline">{user?.email?.split('@')[0] || 'Account'}</span>
+                    </Button>
+                  </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
                   <DropdownMenuItem asChild>
