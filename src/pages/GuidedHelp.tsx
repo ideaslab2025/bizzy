@@ -160,18 +160,17 @@ const GuidedHelp = () => {
         });
     }
     
-    // Update local state
+    // Update local state immediately
+    const newCompletedSections = new Set(completedSections);
     if (isCurrentlyCompleted) {
-      setCompletedSections(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(sectionId);
-        return newSet;
-      });
+      newCompletedSections.delete(sectionId);
     } else {
-      setCompletedSections(prev => new Set([...prev, sectionId]));
+      newCompletedSections.add(sectionId);
     }
+    setCompletedSections(newCompletedSections);
     
-    fetchProgress();
+    // Refresh progress from database
+    await fetchProgress();
   };
 
   const checkAndAutoCompleteSection = async (sectionId: number) => {
@@ -258,6 +257,10 @@ const GuidedHelp = () => {
     return [];
   };
 
+  // Get current section for mark complete button
+  const currentSectionData = sections.find(s => s.order_number === currentSection);
+  const isCurrentSectionCompleted = currentSectionData ? isSectionCompleted(currentSectionData.id) : false;
+
   return (
     <div className="min-h-screen bg-white flex">
       {/* Left Sidebar - Blue */}
@@ -270,7 +273,7 @@ const GuidedHelp = () => {
         </div>
 
         {/* Progress Steps - moved up with reduced padding */}
-        <div className="flex-1 p-4 pt-0">
+        <div className="flex-1 p-4 pt-2">
           <h2 className="text-lg font-semibold mb-4">Your Business Setup Journey</h2>
           <div className="space-y-3">
             {sections.map((section) => {
@@ -285,7 +288,7 @@ const GuidedHelp = () => {
                     isCurrent && !isCompleted
                       ? 'bg-white text-[#0088cc]'
                       : isCompleted
-                      ? 'bg-white/10 text-white/70 opacity-70'
+                      ? 'bg-white/10 text-white/70'
                       : 'hover:bg-white/10'
                   }`}
                 >
@@ -302,11 +305,11 @@ const GuidedHelp = () => {
                       section.order_number
                     )}
                   </div>
-                  <div className="text-left">
-                    <div className={`font-medium ${isCompleted ? 'line-through opacity-60' : ''}`}>
+                  <div className="text-left flex-1">
+                    <div className={`font-medium ${isCompleted ? 'line-through' : ''}`}>
                       {section.title}
                     </div>
-                    <div className={`text-sm ${isCompleted ? 'opacity-40' : 'opacity-75'}`}>
+                    <div className={`text-sm ${isCompleted ? 'opacity-60 line-through' : 'opacity-75'}`}>
                       {section.description}
                     </div>
                   </div>
@@ -351,7 +354,7 @@ const GuidedHelp = () => {
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="relative text-white hover:text-gray-200 hover:bg-white/20"
+                className="relative text-white hover:text-white hover:bg-white/20 font-medium"
               >
                 <Bell className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
@@ -384,7 +387,11 @@ const GuidedHelp = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200 hover:bg-white/20 data-[state=open]:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="flex items-center gap-2 text-white hover:text-white hover:bg-white/20 data-[state=open]:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 font-medium"
+                >
                   <User className="h-4 w-4" />
                   <span className="hidden sm:inline font-medium">
                     {user?.user_metadata?.company_name || 
@@ -489,18 +496,18 @@ const GuidedHelp = () => {
 
           <div className="flex gap-3">
             {/* Only show Mark Section Complete and Skip Section buttons on last step */}
-            {isLastStepInSection() && (
+            {isLastStepInSection() && currentSectionData && (
               <>
                 <Button
-                  onClick={() => toggleSectionCompleted(currentSection)}
+                  onClick={() => toggleSectionCompleted(currentSectionData.id)}
                   className={
-                    isSectionCompleted(currentSection)
+                    isCurrentSectionCompleted
                       ? "bg-gray-400 hover:bg-gray-500 text-white"
                       : "bg-green-600 hover:bg-green-700 text-white"
                   }
                 >
                   <CheckCircle className="w-4 h-4 mr-2" />
-                  {isSectionCompleted(currentSection) ? 'Mark as Incomplete' : 'Mark Section as Complete'}
+                  {isCurrentSectionCompleted ? 'Mark as Incomplete' : 'Mark Section as Complete'}
                 </Button>
                 
                 <Button
