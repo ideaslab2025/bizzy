@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -40,11 +39,11 @@ const Dashboard = () => {
         <div className="flex items-center justify-between p-4 border-b">
           {isSidebarOpen ? (
             <Link to="/dashboard" className="flex items-center justify-center w-full">
-              <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-12" />
+              <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-16" />
             </Link>
           ) : (
             <Link to="/dashboard" className="mx-auto">
-              <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-8" />
+              <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-12" />
             </Link>
           )}
           <Button
@@ -113,14 +112,14 @@ const Dashboard = () => {
       
       {/* Main content area */}
       <div className="flex-1 flex flex-col">
-        {/* Top navigation bar */}
-        <header className="bg-white border-b sticky top-0 z-20 h-16">
+        {/* Top navigation bar - Fixed white icons on blue background */}
+        <header className="bg-[#0088cc] border-b sticky top-0 z-20 h-16">
           <div className="flex items-center justify-between h-full px-4">
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="sm"
-                className="lg:hidden"
+                className="lg:hidden text-white hover:bg-white/20"
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -132,7 +131,7 @@ const Dashboard = () => {
               <div className="lg:w-72">
                 <Input 
                   placeholder="Search..." 
-                  className="max-w-xs"
+                  className="max-w-xs bg-white/20 border-white/30 text-white placeholder:text-white/70"
                 />
               </div>
             </div>
@@ -141,7 +140,7 @@ const Dashboard = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="flex items-center gap-2 hidden sm:flex"
+                className="flex items-center gap-2 hidden sm:flex bg-blue-400 text-white border-white/30 hover:bg-blue-300"
                 onClick={() => setShowChatbot(true)}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -154,11 +153,11 @@ const Dashboard = () => {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="relative"
+                  className="relative text-white hover:bg-white/20"
                   onClick={handleNotificationClick}
                 >
                   <Bell className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0088cc] text-white text-xs rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-500 text-black text-xs rounded-full flex items-center justify-center">
                     3
                   </span>
                 </Button>
@@ -186,12 +185,12 @@ const Dashboard = () => {
                 )}
               </div>
 
-              {/* Account Dropdown */}
+              {/* Account Dropdown - Fixed white icon */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-gray-700 hover:text-gray-900">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:bg-white/20">
                     <User className="h-4 w-4" />
-                    <span className="hidden sm:inline text-gray-700">{user?.email?.split('@')[0] || 'Account'}</span>
+                    <span className="hidden sm:inline text-white">{user?.email?.split('@')[0] || 'Account'}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
@@ -221,12 +220,12 @@ const Dashboard = () => {
         </main>
       </div>
       
-      {/* Bizzy AI Assistant chatbot */}
+      {/* Bizzy AI Assistant chatbot - Fixed logo */}
       {showChatbot && (
         <div className="fixed bottom-4 right-4 w-80 h-96 bg-white border rounded-lg shadow-lg flex flex-col z-40">
           <div className="flex items-center justify-between p-3 border-b bg-[#0088cc] text-white rounded-t-lg">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-white rounded-full overflow-hidden">
+              <div className="w-8 h-8 bg-white rounded-full overflow-hidden p-1">
                 <AspectRatio ratio={1}>
                   <img 
                     src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" 
@@ -252,8 +251,8 @@ const Dashboard = () => {
           
           <div className="flex-1 p-3 overflow-y-auto space-y-4">
             <div className="flex gap-2">
-              <div className="w-8 h-8 bg-[#0088cc]/20 rounded-full flex-shrink-0 flex items-center justify-center">
-                <div className="w-6 h-6 overflow-hidden rounded-full">
+              <div className="w-8 h-8 bg-[#0088cc]/20 rounded-full flex-shrink-0 flex items-center justify-center p-1">
+                <div className="w-full h-full overflow-hidden rounded-full">
                   <AspectRatio ratio={1}>
                     <img 
                       src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" 
