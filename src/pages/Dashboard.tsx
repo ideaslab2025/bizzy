@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -192,7 +191,7 @@ const Dashboard = () => {
                 )}
               </div>
 
-              {/* Account Dropdown - Added hover functionality */}
+              {/* Account Dropdown - Improved hover functionality */}
               <div 
                 className="relative"
                 onMouseEnter={() => setIsAccountDropdownOpen(true)}
@@ -203,7 +202,7 @@ const Dashboard = () => {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="flex items-center gap-2 text-gray-900 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 font-medium data-[state=open]:bg-gray-100"
+                      className="flex items-center gap-2 text-gray-900 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 font-medium"
                     >
                       <User className="h-4 w-4" />
                       <span className="hidden sm:inline">

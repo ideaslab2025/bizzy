@@ -45,6 +45,7 @@ const GuidedHelp = () => {
   const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set());
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
 
   useEffect(() => {
     fetchSections();
@@ -434,7 +435,7 @@ const GuidedHelp = () => {
               {sections.find(s => s.order_number === currentSection)?.title}
             </h1>
             <p className="text-white/80">
-              Step {currentStep} of {steps.length}
+              Step {currentStep} of {steps.length === 0 ? 1 : steps.length}
             </p>
           </div>
           
@@ -485,39 +486,46 @@ const GuidedHelp = () => {
               )}
             </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="flex items-center gap-2 text-white hover:text-white hover:bg-white/20 data-[state=open]:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 font-medium"
-                >
-                  <User className="h-4 w-4" />
-                  <span className="hidden sm:inline font-medium">
-                    {user?.user_metadata?.company_name || 
-                     (user?.user_metadata?.first_name 
-                       ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
-                       : user?.email?.split('@')[0] || 'Account')}
-                  </span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 cursor-pointer">
+            {/* Account Dropdown - Improved hover functionality */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsAccountDropdownOpen(true)}
+              onMouseLeave={() => setIsAccountDropdownOpen(false)}
+            >
+              <DropdownMenu open={isAccountDropdownOpen} onOpenChange={setIsAccountDropdownOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="flex items-center gap-2 text-white hover:text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 font-medium"
+                  >
                     <User className="h-4 w-4" />
-                    Account Settings
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem 
-                  onClick={handleSignOut}
-                  className="flex items-center gap-2 text-red-600 focus:text-red-600 cursor-pointer"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                    <span className="hidden sm:inline font-medium">
+                      {user?.user_metadata?.company_name || 
+                       (user?.user_metadata?.first_name 
+                         ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
+                         : user?.email?.split('@')[0] || 'Account')}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 cursor-pointer">
+                      <User className="h-4 w-4" />
+                      Account Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={handleSignOut}
+                    className="flex items-center gap-2 text-red-600 focus:text-red-600 cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
 
