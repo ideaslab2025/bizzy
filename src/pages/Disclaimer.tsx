@@ -2,11 +2,11 @@
 const Disclaimer = () => {
   return (
     <div className="min-h-screen bg-[#0a192f] text-white">
-      {/* Header */}
+      {/* Header - Made logo bigger to match homepage */}
       <header className="border-b border-blue-900/30 sticky top-0 z-50 bg-[#0a192f] backdrop-blur-md shadow-md">
-        <div className="container mx-auto py-4 px-4 flex justify-between items-center">
+        <div className="container mx-auto py-0 px-4 flex justify-between items-center">
           <a href="/" className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-20" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-40" />
           </a>
           
           <div className="flex gap-2">
