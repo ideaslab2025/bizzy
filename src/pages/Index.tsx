@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -283,6 +284,9 @@ const Index = () => {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Account dropdown state for smooth hover
+  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
+
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
@@ -421,43 +425,49 @@ const Index = () => {
                   </Button>
                 </Link>
                 
-                {/* Desktop Account Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild className="hidden md:flex">
-                    <Button 
-                      variant="ghost" 
-                      className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[state=open]:bg-blue-900/30"
-                    >
-                      <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-medium text-white">
-                        {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || 
-                         user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || 
-                         user?.email?.charAt(0)?.toUpperCase() || 'U'}
-                      </div>
-                      <span className="hidden lg:inline">
-                        {user?.user_metadata?.company_name || 
-                         (user?.user_metadata?.first_name 
-                           ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
-                           : user?.email?.split('@')[0] || 'Account')}
-                      </span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
-                    <DropdownMenuItem asChild>
-                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
-                        <User className="h-4 w-4" />
-                        Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem 
-                      onClick={handleSignOut}
-                      className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Sign Out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {/* Desktop Account Dropdown with smooth hover */}
+                <div 
+                  className="relative hidden md:block"
+                  onMouseEnter={() => setIsAccountDropdownOpen(true)}
+                  onMouseLeave={() => setIsAccountDropdownOpen(false)}
+                >
+                  <DropdownMenu open={isAccountDropdownOpen} onOpenChange={setIsAccountDropdownOpen}>
+                    <DropdownMenuTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 font-medium"
+                      >
+                        <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-medium text-white">
+                          {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || 
+                           user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || 
+                           user?.email?.charAt(0)?.toUpperCase() || 'U'}
+                        </div>
+                        <span className="hidden lg:inline">
+                          {user?.user_metadata?.company_name || 
+                           (user?.user_metadata?.first_name 
+                             ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
+                             : user?.email?.split('@')[0] || 'Account')}
+                        </span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
+                      <DropdownMenuItem asChild>
+                        <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
+                          <User className="h-4 w-4" />
+                          Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem 
+                        onClick={handleSignOut}
+                        className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Sign Out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </>
             ) : (
               <>
@@ -757,7 +767,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* About Section with Bizzy character - Smaller on mobile */}
       <section id="about" className="py-6 bg-blue-900/20">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
@@ -779,7 +788,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* FAQ Section - Using the ref for better scroll targeting */}
       <section id="faqs" ref={faqsRef} className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
@@ -846,7 +854,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-16 bg-gradient-to-br from-blue-800/50 to-blue-900/30">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Helping new business owners get going</h2>
@@ -859,7 +866,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-[#071629] border-t border-blue-900/30 py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
