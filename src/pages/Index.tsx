@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "next/link";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Star } from 'lucide-react';
@@ -10,7 +10,7 @@ const Index = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-[#0a192f] backdrop-blur supports-[backdrop-filter]:bg-[#0a192f]/95 border-b border-white/10">
         <div className="container max-w-7xl mx-auto py-3 px-6 flex items-center justify-between">
-          <Link href="/" className="flex items-center font-bold text-white">
+          <Link to="/" className="flex items-center font-bold text-white">
             <AspectRatio ratio={16 / 9} className="w-40">
               <img
                 src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png"
@@ -20,21 +20,21 @@ const Index = () => {
             </AspectRatio>
           </Link>
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/about" className="text-gray-300 hover:text-white transition-colors">
+            <Link to="/about" className="text-gray-300 hover:text-white transition-colors">
               About
             </Link>
-            <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors">
+            <Link to="/pricing" className="text-gray-300 hover:text-white transition-colors">
               Pricing
             </Link>
-            <Link href="/contact" className="text-gray-300 hover:text-white transition-colors">
+            <Link to="/contact" className="text-gray-300 hover:text-white transition-colors">
               Contact
             </Link>
           </nav>
           <div className="space-x-4">
-            <Link href="/login" className="hidden md:inline-block text-[#1d4ed8] hover:underline">
+            <Link to="/login" className="hidden md:inline-block text-[#1d4ed8] hover:underline">
               Log In
             </Link>
-            <Link href="/sign-up">
+            <Link to="/register">
               <Button className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white rounded-md shadow-sm transition-colors">
                 Sign Up
               </Button>
@@ -62,12 +62,12 @@ const Index = () => {
               Your all-in-one platform for business success. From initial setup to ongoing growth, Bizzy provides the tools, resources, and support you need to thrive.
             </p>
             <div className="space-x-4">
-              <Link href="/sign-up">
+              <Link to="/register">
                 <Button className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white rounded-md shadow-sm transition-colors text-lg px-8 py-3">
                   Get Started Free
                 </Button>
               </Link>
-              <Link href="/pricing">
+              <Link to="/pricing">
                 <Button variant="outline" className="text-white hover:text-blue-100 border-blue-500 hover:border-blue-400 transition-colors text-lg px-8 py-3">
                   View Pricing
                 </Button>
@@ -93,7 +93,7 @@ const Index = () => {
                   Bizzy is your AI-powered business assistant, designed to simplify the complexities of starting and running a business.
                 </p>
                 <div className="py-8">
-                  <Link href="/about">
+                  <Link to="/about">
                     <Button className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white rounded-md shadow-sm transition-colors">
                       Learn More
                     </Button>
