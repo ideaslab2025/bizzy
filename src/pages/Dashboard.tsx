@@ -160,7 +160,7 @@ const Dashboard = () => {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="relative text-white hover:text-gray-200"
+                  className="relative text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                 >
                   <Bell className="w-5 h-5" />
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0088cc] text-white text-xs rounded-full flex items-center justify-center">
@@ -171,19 +171,19 @@ const Dashboard = () => {
                 {showNotifications && (
                   <div className="absolute right-0 top-full mt-2 w-80 bg-white border rounded-lg shadow-lg z-50">
                     <div className="p-4 border-b bg-gray-50">
-                      <h3 className="font-medium">Notifications</h3>
+                      <h3 className="font-medium text-gray-900">Notifications</h3>
                     </div>
                     <div className="p-4 space-y-3">
                       <div className="text-sm">
-                        <p className="font-medium">New guidance available</p>
+                        <p className="font-medium text-gray-900">New guidance available</p>
                         <p className="text-gray-600">VAT registration guide has been updated</p>
                       </div>
                       <div className="text-sm">
-                        <p className="font-medium">Document ready</p>
+                        <p className="font-medium text-gray-900">Document ready</p>
                         <p className="text-gray-600">Your employee handbook is ready for download</p>
                       </div>
                       <div className="text-sm">
-                        <p className="font-medium">Consultation reminder</p>
+                        <p className="font-medium text-gray-900">Consultation reminder</p>
                         <p className="text-gray-600">Your meeting is scheduled for tomorrow at 2 PM</p>
                       </div>
                     </div>
@@ -194,7 +194,7 @@ const Dashboard = () => {
               {/* Account Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100">
                     <User className="h-4 w-4" />
                     <span className="hidden sm:inline">
                       {user?.user_metadata?.company_name || 
@@ -206,7 +206,7 @@ const Dashboard = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900">
+                    <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                       <User className="h-4 w-4" />
                       Account Settings
                     </Link>
@@ -214,7 +214,7 @@ const Dashboard = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={handleSignOut}
-                    className="flex items-center gap-2 text-red-600 focus:text-red-600 cursor-pointer"
+                    className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer"
                   >
                     <LogOut className="h-4 w-4" />
                     Sign Out

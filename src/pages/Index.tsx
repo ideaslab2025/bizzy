@@ -5,11 +5,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Menu, Star } from "lucide-react";
+import { Menu, Star, User, LogOut } from "lucide-react";
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { useAuth } from "@/hooks/useAuth";
 
 // Plan data from PricingNew
 const pricingPlans = [
@@ -267,6 +269,8 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect }) => {
 };
 
 const Index = () => {
+  const { user, signOut } = useAuth();
+  
   const [floatingPosition, setFloatingPosition] = useState({
     x: window.innerWidth - 150,
     y: window.innerHeight - 150
@@ -355,6 +359,15 @@ const Index = () => {
     }, 1500);
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      // Redirect will be handled by the auth state change
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
       {/* Header/Navigation */}
       <header className="border-b border-blue-900/30 sticky top-0 z-50 bg-[#0a192f] bg-opacity-100 backdrop-blur-md shadow-md">
@@ -372,12 +385,69 @@ const Index = () => {
           </nav>
           
           <div className="flex gap-2 items-center">
-            {/* Mobile Login Button - NEW ADDITION */}
-            <Link to="/login" className="md:hidden">
-              <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
-                Log in
-              </Button>
-            </Link>
+            {/* Show user account if logged in */}
+            {user ? (
+              <>
+                {/* Mobile Dashboard Button */}
+                <Link to="/dashboard" className="md:hidden">
+                  <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
+                    Dashboard
+                  </Button>
+                </Link>
+                
+                {/* Desktop Account Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild className="hidden md:flex">
+                    <Button variant="ghost" className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
+                      <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-medium text-white">
+                        {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || 
+                         user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || 
+                         user?.email?.charAt(0)?.toUpperCase() || 'U'}
+                      </div>
+                      <span className="hidden lg:inline">
+                        {user?.user_metadata?.company_name || 
+                         (user?.user_metadata?.first_name 
+                           ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
+                           : user?.email?.split('@')[0] || 'Account')}
+                      </span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
+                    <DropdownMenuItem asChild>
+                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900">
+                        <User className="h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={handleSignOut}
+                      className="flex items-center gap-2 text-red-600 focus:text-red-600 cursor-pointer"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <>
+                {/* Mobile Login Button */}
+                <Link to="/login" className="md:hidden">
+                  <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
+                    Log in
+                  </Button>
+                </Link>
+                
+                {/* Desktop Auth Buttons */}
+                <Link to="/login" className="hidden md:block">
+                  <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Log in</Button>
+                </Link>
+                <Link to="/register" className="hidden md:block">
+                  <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started</Button>
+                </Link>
+              </>
+            )}
             
             {/* Mobile Menu */}
             <Drawer>
@@ -410,23 +480,33 @@ const Index = () => {
                     </Button>
                   </DrawerClose>
                   <div className="border-t border-blue-900/30 pt-4 flex flex-col space-y-2">
-                    <Link to="/login" className="w-full">
-                      <Button variant="ghost" className="w-full text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Log in</Button>
-                    </Link>
-                    <Link to="/register" className="w-full">
-                      <Button className="w-full bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started</Button>
-                    </Link>
+                    {user ? (
+                      <>
+                        <Link to="/dashboard" className="w-full">
+                          <Button variant="ghost" className="w-full text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Dashboard</Button>
+                        </Link>
+                        <Button 
+                          variant="ghost" 
+                          className="w-full text-red-600 hover:text-red-500 hover:bg-red-900/30"
+                          onClick={handleSignOut}
+                        >
+                          Sign Out
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Link to="/login" className="w-full">
+                          <Button variant="ghost" className="w-full text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Log in</Button>
+                        </Link>
+                        <Link to="/register" className="w-full">
+                          <Button className="w-full bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started</Button>
+                        </Link>
+                      </>
+                    )}
                   </div>
                 </div>
               </DrawerContent>
             </Drawer>
-            
-            <Link to="/login" className="hidden md:block">
-              <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Log in</Button>
-            </Link>
-            <Link to="/register" className="hidden md:block">
-              <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started</Button>
-            </Link>
           </div>
         </div>
       </header>
