@@ -468,7 +468,7 @@ const Index = () => {
           <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
-            {/* Feature 1 - Step-by-Step Guidance - Modified image positioning */}
+            {/* Feature 1 - Step-by-Step Guidance - Updated image positioning */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
               {/* Professionally Assured Badge */}
               <div className="absolute top-3 right-3 z-10">
@@ -483,8 +483,8 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="w-full h-[200px] mx-auto flex items-end justify-center">
-                  <img src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" alt="Step-by-Step Guidance" className="max-w-full max-h-[190px] object-contain scale-110" />
+                <div className="w-full h-[200px] mx-auto flex items-end justify-center pt-4">
+                  <img src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" alt="Step-by-Step Guidance" className="max-w-full max-h-[170px] object-contain scale-110 translate-y-2" />
                 </div>
                 <h3 className="text-lg font-bold text-[#3b82f6] mt-4 mb-1 text-center">Step-by-Step Guidance</h3>
                 <p className="text-blue-100 text-center text-sm">Comprehensive step by step guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections </p>
@@ -669,10 +669,10 @@ const Index = () => {
             <Accordion type="single" collapsible className="space-y-4">
               <AccordionItem value="item-1" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
                 <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  How does Bizzy help with company formation?
+                  How does Bizzy help with my company post-formation?
                 </AccordionTrigger>
                 <AccordionContent className="pb-4 text-blue-100">
-                  Bizzy provides step-by-step guidance through the company formation process, offering document templates and AI assistance to ensure you complete all required legal steps correctly.
+                  Bizzy provides step-by-step professional guidance through the post-company formation process, offering our guided help for everything you need to do across every department once starting, a full document library, and AI assistance to ensure you complete all required steps correctly.
                 </AccordionContent>
               </AccordionItem>
 
@@ -718,9 +718,9 @@ const Index = () => {
                 </AccordionTrigger>
                 <AccordionContent className="pb-4 text-blue-100">
                   Your Business Guidance, Professionally Assured: Bizzy provides comprehensive step-by-step guidance across every aspect of getting your new UK business started (post formation), telling you everything you need to do across finance, payroll, tax, HR, Gov.UK services, paperwork and beyond. It has been professionally pre-checked / assured and updated, but it is guidance not advice. Please see our full disclaimer{' '}
-                  <Link to="/disclaimer" className="text-[#3b82f6] hover:text-[#60a5fa] underline">
+                  <a href="/disclaimer" className="text-[#3b82f6] hover:text-[#60a5fa] underline">
                     here
-                  </Link>.
+                  </a>.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -775,7 +775,7 @@ const Index = () => {
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Terms</a></li>
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Privacy</a></li>
                 <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Cookies</a></li>
-                <li><Link to="/disclaimer" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Disclaimer</Link></li>
+                <li><a href="/disclaimer" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Disclaimer</a></li>
               </ul>
             </div>
           </div>
