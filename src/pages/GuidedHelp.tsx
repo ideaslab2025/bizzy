@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -70,13 +71,6 @@ const GuidedHelp = () => {
       }
     }
   }, [currentStep, steps, user]);
-
-  // Auto-complete section when all steps are visited
-  useEffect(() => {
-    if (sections.length > 0 && visitedSteps.size > 0 && steps.length > 0) {
-      checkAndAutoCompleteSection(currentSection);
-    }
-  }, [visitedSteps, currentSection, sections, steps]);
 
   const fetchSections = async () => {
     const { data, error } = await supabase
@@ -298,6 +292,12 @@ const GuidedHelp = () => {
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
     } else if (currentSection < sections.length) {
+      // Only auto-complete when explicitly moving to next section via Next button
+      const currentSectionData = sections.find(s => s.order_number === currentSection);
+      if (currentSectionData) {
+        await checkAndAutoCompleteSection(currentSectionData.id);
+      }
+      
       setCurrentSection(currentSection + 1);
       setCurrentStep(1);
     }
@@ -327,6 +327,12 @@ const GuidedHelp = () => {
     } catch (error) {
       console.error('Error signing out:', error);
     }
+  };
+
+  // Handle sidebar navigation without auto-completing
+  const handleSidebarNavigation = (sectionOrderNumber: number) => {
+    setCurrentSection(sectionOrderNumber);
+    setCurrentStep(1);
   };
 
   const currentStepData = getCurrentStepData();
@@ -370,7 +376,7 @@ const GuidedHelp = () => {
               return (
                 <button
                   key={section.id}
-                  onClick={() => setCurrentSection(section.order_number)}
+                  onClick={() => handleSidebarNavigation(section.order_number)}
                   className={`w-full flex items-center gap-4 p-3 rounded-lg transition-all ${
                     isCurrent && !isCompleted
                       ? 'bg-white text-[#0088cc]'
@@ -582,7 +588,7 @@ const GuidedHelp = () => {
           </Button>
 
           <div className="flex gap-3">
-            {/* Only show Mark Section Complete and Skip Section buttons on last step */}
+            {/* Show Mark Section Complete and Skip Section buttons on last step */}
             {isLastStepInSection() && currentSectionData && (
               <>
                 <Button
