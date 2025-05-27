@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -165,16 +166,16 @@ const GuidedHelp = () => {
 
   return (
     <div className="min-h-screen bg-white flex">
-      {/* Left Sidebar - Blue - Fixed completion status display */}
+      {/* Left Sidebar - Blue */}
       <div className="w-80 bg-[#0088cc] text-white flex flex-col">
-        {/* Logo - Fixed with transparent background and bigger size */}
+        {/* Logo */}
         <div className="p-6 bg-white">
           <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-32" />
+            <img src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" alt="Bizzy Logo" className="h-24" />
           </Link>
         </div>
 
-        {/* Progress Steps - Fixed to show green ticks and grey out completed sections */}
+        {/* Progress Steps */}
         <div className="flex-1 p-6">
           <h2 className="text-lg font-semibold mb-6">Your Business Setup Journey</h2>
           <div className="space-y-3">
@@ -190,8 +191,8 @@ const GuidedHelp = () => {
                     isCurrent
                       ? 'bg-white text-[#0088cc]'
                       : isCompleted
-                      ? 'bg-white/10 text-white/50'
-                      : 'hover:bg-white/10 text-white'
+                      ? 'bg-white/10 text-white/70'
+                      : 'hover:bg-white/10'
                   }`}
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold relative ${
@@ -199,7 +200,7 @@ const GuidedHelp = () => {
                       ? 'bg-green-500 text-white'
                       : isCurrent
                       ? 'bg-[#0088cc] text-white'
-                      : 'bg-white/20 text-white'
+                      : 'bg-white/20'
                   }`}>
                     {isCompleted ? (
                       <CheckCircle className="w-5 h-5" />
@@ -208,16 +209,10 @@ const GuidedHelp = () => {
                     )}
                   </div>
                   <div className="text-left">
-                    <div className={`font-medium ${isCompleted ? 'line-through opacity-70' : ''}`}>
+                    <div className={`font-medium ${isCompleted ? 'line-through' : ''}`}>
                       {section.title}
                     </div>
-                    <div className={`text-sm ${
-                      isCompleted 
-                        ? 'opacity-40' 
-                        : isCurrent 
-                        ? 'opacity-90' 
-                        : 'opacity-75'
-                    }`}>
+                    <div className={`text-sm ${isCompleted ? 'opacity-50' : 'opacity-75'}`}>
                       {section.description}
                     </div>
                   </div>
@@ -359,13 +354,13 @@ const GuidedHelp = () => {
         </div>
       </div>
 
-      {/* Chatbot Modal - Fixed logo with transparent background */}
+      {/* Chatbot Modal */}
       {showChatbot && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg w-96 h-[500px] flex flex-col">
             <div className="flex items-center justify-between p-4 border-b bg-[#0088cc] text-white rounded-t-lg">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-white rounded-full overflow-hidden p-1">
+                <div className="w-8 h-8 bg-white rounded-full overflow-hidden">
                   <AspectRatio ratio={1}>
                     <img 
                       src="/lovable-uploads/0fe1641f-b619-4877-9023-1095fd1e0df1.png" 
