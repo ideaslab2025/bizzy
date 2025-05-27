@@ -14,14 +14,13 @@ export const PricingFooter = ({ selectedPlan, isLoading, onProceed }: PricingFoo
       <Button 
         onClick={onProceed}
         disabled={!selectedPlan || isLoading}
-        className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-700/30 px-8 py-6 text-lg transition-all duration-300"
-        size="lg"
+        className="px-8 py-3 text-lg bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
       >
         {isLoading ? "Processing..." : "Proceed to Payment"}
       </Button>
-      <p className="mt-4 text-sm text-blue-100/70">
-        Secure payment powered by Stripe. Your data is encrypted and secure.
-      </p>
+      {!selectedPlan && (
+        <p className="text-red-400 mt-4">Please select a plan to continue</p>
+      )}
     </div>
   );
 };
