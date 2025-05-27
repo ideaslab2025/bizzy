@@ -74,12 +74,18 @@ const pricingPlans = [
   }
 ];
 
-const PlanCard = ({ plan, isSelected, onSelect }) => {
+interface PlanCardProps {
+  plan: typeof pricingPlans[0];
+  isSelected: boolean;
+  onSelect: (planId: string) => void;
+}
+
+const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect }) => {
   const [isHovered, setIsHovered] = useState(false);
   
   // Card styles
-  const cardStyle = {
-    position: 'relative',
+  const cardStyle: React.CSSProperties = {
+    position: 'relative' as const,
     border: `2px solid ${isSelected ? '#1d4ed8' : plan.borderColor}`,
     borderRadius: '12px',
     padding: '0',
@@ -94,11 +100,11 @@ const PlanCard = ({ plan, isSelected, onSelect }) => {
     cursor: 'pointer',
     height: '100%',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column' as const,
     overflow: 'hidden'
   };
 
-  const buttonStyle = {
+  const buttonStyle: React.CSSProperties = {
     width: '100%',
     padding: '12px 24px',
     backgroundColor: isSelected ? '#1d4ed8' : plan.buttonBg,
@@ -113,43 +119,43 @@ const PlanCard = ({ plan, isSelected, onSelect }) => {
     transition: 'all 0.2s ease-out'
   };
 
-  const headerStyle = {
+  const headerStyle: React.CSSProperties = {
     padding: plan.recommended ? '40px 24px 24px' : '24px',
-    textAlign: 'center'
+    textAlign: 'center' as const
   };
 
-  const titleStyle = {
+  const titleStyle: React.CSSProperties = {
     fontSize: '24px',
     fontWeight: 'bold',
     color: plan.id === "platinum" ? "#1f2937" : plan.recommended ? "#3b82f6" : plan.textColor,
     marginBottom: '8px'
   };
 
-  const priceStyle = {
+  const priceStyle: React.CSSProperties = {
     fontSize: '40px',
     fontWeight: 'bold',
     color: plan.id === "platinum" ? "#1f2937" : plan.textColor,
     marginBottom: '4px'
   };
 
-  const descriptionStyle = {
+  const descriptionStyle: React.CSSProperties = {
     color: plan.id === "platinum" ? "#4b5563" : plan.textColor,
     opacity: 0.9,
     fontSize: '14px'
   };
 
-  const contentStyle = {
+  const contentStyle: React.CSSProperties = {
     padding: '0 24px 24px',
     flex: 1
   };
 
-  const featureListStyle = {
+  const featureListStyle: React.CSSProperties = {
     listStyle: 'none',
     padding: 0,
     margin: 0
   };
 
-  const featureItemStyle = {
+  const featureItemStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'flex-start',
     gap: '8px',
@@ -160,8 +166,8 @@ const PlanCard = ({ plan, isSelected, onSelect }) => {
 
   const checkIconColor = plan.id === "platinum" ? "#1f2937" : "#60a5fa";
 
-  const badgeStyle = {
-    position: 'absolute',
+  const badgeStyle: React.CSSProperties = {
+    position: 'absolute' as const,
     top: '-12px',
     left: '50%',
     transform: 'translateX(-50%)',
@@ -175,7 +181,7 @@ const PlanCard = ({ plan, isSelected, onSelect }) => {
     zIndex: 20
   };
 
-  const footerStyle = {
+  const footerStyle: React.CSSProperties = {
     padding: '24px',
     marginTop: 'auto'
   };
@@ -252,10 +258,10 @@ const PlanCard = ({ plan, isSelected, onSelect }) => {
 
 // Main Pricing Component
 export default function PricingNew() {
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   
-  const handleSelectPlan = (planId) => {
+  const handleSelectPlan = (planId: string) => {
     setSelectedPlan(planId);
   };
   
@@ -271,37 +277,37 @@ export default function PricingNew() {
     }, 1500);
   };
 
-  const containerStyle = {
+  const containerStyle: React.CSSProperties = {
     minHeight: '100vh',
     backgroundColor: '#0a192f',
     padding: '64px 16px'
   };
 
-  const innerContainerStyle = {
+  const innerContainerStyle: React.CSSProperties = {
     maxWidth: '1280px',
     margin: '0 auto'
   };
 
-  const headerStyle = {
-    textAlign: 'center',
+  const headerStyle: React.CSSProperties = {
+    textAlign: 'center' as const,
     marginBottom: '48px'
   };
 
-  const titleStyle = {
+  const titleStyle: React.CSSProperties = {
     fontSize: '40px',
     fontWeight: 'bold',
     color: 'white',
     marginBottom: '16px'
   };
 
-  const descriptionStyle = {
+  const descriptionStyle: React.CSSProperties = {
     fontSize: '18px',
     color: '#e5e7eb',
     maxWidth: '768px',
     margin: '0 auto'
   };
 
-  const gridStyle = {
+  const gridStyle: React.CSSProperties = {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
     gap: '24px',
@@ -309,12 +315,12 @@ export default function PricingNew() {
     margin: '0 auto'
   };
 
-  const footerStyle = {
+  const footerStyle: React.CSSProperties = {
     marginTop: '48px',
-    textAlign: 'center'
+    textAlign: 'center' as const
   };
 
-  const proceedButtonStyle = {
+  const proceedButtonStyle: React.CSSProperties = {
     padding: '12px 32px',
     fontSize: '18px',
     backgroundColor: selectedPlan ? '#2563eb' : '#6b7280',
@@ -327,7 +333,7 @@ export default function PricingNew() {
     transform: selectedPlan ? 'scale(1)' : 'scale(1)',
   };
 
-  const errorStyle = {
+  const errorStyle: React.CSSProperties = {
     color: '#f87171',
     marginTop: '16px',
     fontSize: '16px'
