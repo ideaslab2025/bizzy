@@ -16,8 +16,6 @@ const PLAN_PRICES = {
 };
 
 serve(async (req) => {
-  console.log("Function started, method:", req.method);
-  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -30,64 +28,40 @@ serve(async (req) => {
   );
 
   try {
-    console.log("Parsing request body...");
-    const body = await req.json();
-    console.log("Request body:", body);
-    
     // Authenticate user
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      console.error("No authorization header provided");
       throw new Error("No authorization header provided");
     }
 
     const token = authHeader.replace("Bearer ", "");
-    console.log("Getting user from token...");
     const { data } = await supabaseClient.auth.getUser(token);
     const user = data.user;
     if (!user?.email) {
-      console.error("User not authenticated or email not available");
       throw new Error("User not authenticated or email not available");
     }
-    console.log("User authenticated:", user.email);
 
     // Get plan from request body
-    const { planId } = body;
-    console.log("Plan ID received:", planId);
-    
+    const { planId } = await req.json();
     if (!planId || !PLAN_PRICES[planId as keyof typeof PLAN_PRICES]) {
-      console.error("Invalid plan selected:", planId);
       throw new Error("Invalid plan selected");
     }
 
     const amount = PLAN_PRICES[planId as keyof typeof PLAN_PRICES];
-    console.log("Plan amount:", amount);
 
     // Initialize Stripe
-    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-    if (!stripeKey) {
-      console.error("STRIPE_SECRET_KEY environment variable not set");
-      throw new Error("Payment system not configured");
-    }
-    
-    console.log("Initializing Stripe...");
-    const stripe = new Stripe(stripeKey, {
+    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2023-10-16",
     });
 
     // Check if a Stripe customer record exists for this user
-    console.log("Looking for existing customer...");
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     let customerId;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
-      console.log("Found existing customer:", customerId);
-    } else {
-      console.log("No existing customer found");
     }
 
     // Create a one-time payment session
-    console.log("Creating checkout session...");
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
@@ -113,8 +87,6 @@ serve(async (req) => {
       },
     });
 
-    console.log("Checkout session created:", session.id);
-
     // Create order record in Supabase using service role key
     const supabaseService = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
@@ -122,7 +94,6 @@ serve(async (req) => {
       { auth: { persistSession: false } }
     );
 
-    console.log("Creating order record...");
     const { error: orderError } = await supabaseService.from("orders").insert({
       user_id: user.id,
       stripe_session_id: session.id,
@@ -135,21 +106,15 @@ serve(async (req) => {
     if (orderError) {
       console.error("Error creating order:", orderError);
       // Continue anyway, the payment session is created
-    } else {
-      console.log("Order record created successfully");
     }
 
-    console.log("Returning session URL:", session.url);
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
     console.error("Payment creation error:", error);
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      details: "Check the function logs for more information"
-    }), {
+    return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });
