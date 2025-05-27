@@ -11,11 +11,270 @@ import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
+// Plan data from PricingNew
+const pricingPlans = [
+  {
+    id: "bronze",
+    title: "Bronze",
+    price: "£100",
+    gradient: "linear-gradient(to bottom, rgba(217, 119, 6, 0.8), rgba(180, 83, 9, 0.6))",
+    textColor: "#ffffff",
+    borderColor: "#d97706",
+    shadowColor: "217, 119, 6",
+    buttonBg: "#d97706",
+    buttonHoverBg: "#b45309",
+    features: [
+      "Basic company setup guidance",
+      "Essential document templates",
+      "Standard support",
+      "Basic AI assistant access"
+    ]
+  },
+  {
+    id: "silver",
+    title: "Silver",
+    price: "£200",
+    gradient: "linear-gradient(to bottom, rgba(203, 213, 225, 0.8), rgba(100, 116, 139, 0.6))",
+    textColor: "#ffffff",
+    borderColor: "#94a3b8",
+    shadowColor: "148, 163, 184",
+    buttonBg: "#64748b",
+    buttonHoverBg: "#475569",
+    features: [
+      "Everything in Bronze",
+      "Extended document library",
+      "Tax & compliance guidance",
+      "Full AI assistant access"
+    ]
+  },
+  {
+    id: "gold",
+    title: "Gold",
+    price: "£300",
+    gradient: "linear-gradient(to bottom, rgba(251, 191, 36, 0.8), rgba(217, 119, 6, 0.6))",
+    textColor: "#ffffff",
+    borderColor: "#f59e0b",
+    shadowColor: "245, 158, 11",
+    buttonBg: "#f59e0b",
+    buttonHoverBg: "#d97706",
+    features: [
+      "Everything in Silver",
+      "Complete document engine",
+      "Advanced sector-specific guidance",
+      "Priority support"
+    ],
+    recommended: true
+  },
+  {
+    id: "platinum",
+    title: "Platinum",
+    price: "£500",
+    gradient: "linear-gradient(to bottom, #f8fafc, #e2e8f0, #cbd5e1)",
+    textColor: "#1f2937",
+    borderColor: "#94a3b8",
+    shadowColor: "71, 85, 105",
+    buttonBg: "#1f2937",
+    buttonHoverBg: "#111827",
+    features: [
+      "Everything in Gold",
+      "Full access to all resources",
+      "Video consultations with experts",
+      "Custom document customization"
+    ]
+  }
+];
+
+interface PlanCardProps {
+  plan: typeof pricingPlans[0];
+  isSelected: boolean;
+  onSelect: (planId: string) => void;
+}
+
+const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  // Card styles
+  const cardStyle: React.CSSProperties = {
+    position: 'relative' as const,
+    border: `2px solid ${isSelected ? '#1d4ed8' : plan.borderColor}`,
+    borderRadius: '12px',
+    padding: '0',
+    background: plan.gradient,
+    boxShadow: isSelected 
+      ? `0 0 0 2px #1d4ed8, 0 25px 50px -12px rgba(29, 78, 216, 0.5)`
+      : isHovered 
+        ? `0 25px 50px -12px rgba(${plan.shadowColor}, 0.5)`
+        : '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+    transform: `translateY(${isSelected ? '-16px' : isHovered ? '-8px' : '0'}) scale(${isSelected || isHovered ? '1.03' : '1'})`,
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    cursor: 'pointer',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    overflow: 'hidden'
+  };
+
+  const buttonStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '12px 24px',
+    backgroundColor: isSelected ? '#1d4ed8' : plan.buttonBg,
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '16px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transform: isHovered ? 'translateY(-2px) scale(1.05)' : 'scale(1)',
+    boxShadow: isHovered ? '0 10px 20px -5px rgba(0, 0, 0, 0.3)' : '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+    transition: 'all 0.2s ease-out'
+  };
+
+  const headerStyle: React.CSSProperties = {
+    padding: plan.recommended ? '40px 24px 24px' : '24px',
+    textAlign: 'center' as const
+  };
+
+  const titleStyle: React.CSSProperties = {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    color: plan.id === "platinum" ? "#1f2937" : plan.recommended ? "#3b82f6" : plan.textColor,
+    marginBottom: '8px'
+  };
+
+  const priceStyle: React.CSSProperties = {
+    fontSize: '40px',
+    fontWeight: 'bold',
+    color: plan.id === "platinum" ? "#1f2937" : plan.textColor,
+    marginBottom: '4px'
+  };
+
+  const descriptionStyle: React.CSSProperties = {
+    color: plan.id === "platinum" ? "#4b5563" : plan.textColor,
+    opacity: 0.9,
+    fontSize: '14px'
+  };
+
+  const contentStyle: React.CSSProperties = {
+    padding: '0 24px 24px',
+    flex: 1
+  };
+
+  const featureListStyle: React.CSSProperties = {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0
+  };
+
+  const featureItemStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '8px',
+    marginBottom: '12px',
+    color: plan.id === "platinum" ? "#4b5563" : plan.textColor,
+    fontSize: '14px'
+  };
+
+  const checkIconColor = plan.id === "platinum" ? "#1f2937" : "#60a5fa";
+
+  const badgeStyle: React.CSSProperties = {
+    position: 'absolute' as const,
+    top: '-12px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    backgroundColor: '#1d4ed8',
+    color: 'white',
+    padding: '4px 24px',
+    borderRadius: '9999px',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+    zIndex: 20
+  };
+
+  const footerStyle: React.CSSProperties = {
+    padding: '24px',
+    marginTop: 'auto'
+  };
+
+  return (
+    <div 
+      style={{ position: 'relative', height: '100%' }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => onSelect(plan.id)}
+    >
+      <div style={cardStyle}>
+        {plan.recommended && (
+          <div style={badgeStyle}>
+            Recommended
+          </div>
+        )}
+        
+        <div style={headerStyle}>
+          <h3 style={titleStyle}>{plan.title}</h3>
+          <div style={priceStyle}>{plan.price}</div>
+          <p style={descriptionStyle}>One-time payment</p>
+        </div>
+        
+        <div style={contentStyle}>
+          <ul style={featureListStyle}>
+            {plan.features.map((feature, i) => (
+              <li key={i} style={featureItemStyle}>
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="20" 
+                  height="20" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke={checkIconColor}
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  style={{ flexShrink: 0, marginTop: '2px' }}
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        
+        <div style={footerStyle}>
+          <button 
+            style={buttonStyle}
+            onMouseOver={(e) => {
+              if (!isSelected) {
+                e.currentTarget.style.backgroundColor = plan.buttonHoverBg;
+              }
+            }}
+            onMouseOut={(e) => {
+              if (!isSelected) {
+                e.currentTarget.style.backgroundColor = isSelected ? '#1d4ed8' : plan.buttonBg;
+              }
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(plan.id);
+            }}
+          >
+            {isSelected ? "Selected" : "Select Plan"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Index = () => {
   const [floatingPosition, setFloatingPosition] = useState({
     x: window.innerWidth - 150,
     y: window.innerHeight - 150
   });
+
+  // Pricing state
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
@@ -78,6 +337,24 @@ const Index = () => {
       });
     }
   };
+
+  // Pricing handlers
+  const handleSelectPlan = (planId: string) => {
+    setSelectedPlan(planId);
+  };
+  
+  const handleProceedToPayment = () => {
+    if (!selectedPlan) {
+      return;
+    }
+    
+    setIsLoading(true);
+    setTimeout(() => {
+      alert(`Processing ${selectedPlan} plan payment...`);
+      setIsLoading(false);
+    }, 1500);
+  };
+
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
       {/* Header/Navigation */}
       <header className="border-b border-blue-900/30 sticky top-0 z-50 bg-[#0a192f] bg-opacity-100 backdrop-blur-md shadow-md">
@@ -260,143 +537,71 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-4 text-center text-[#3b82f6]">Simple, Transparent Pricing</h2>
-          <p className="text-xl text-center mb-12 text-blue-100/80 max-w-3xl mx-auto">One-time payment, lifetime access. No hidden fees or subscriptions.</p>
-          
-          {/* Desktop pricing grid */}
-          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[{
-            title: "Bronze",
-            price: "£100",
-            color: "bg-gradient-to-b from-amber-700/80 to-amber-900/60",
-            textColor: "text-white",
-            borderColor: "border-amber-600",
-            features: ["Basic company setup guidance", "Essential document templates", "Standard support", "Basic AI assistant access"]
-          }, {
-            title: "Silver",
-            price: "£200",
-            color: "bg-gradient-to-b from-slate-300/80 to-slate-500/60",
-            textColor: "text-white",
-            borderColor: "border-slate-400",
-            features: ["Everything in Bronze", "Extended document library", "Tax & compliance guidance", "Full AI assistant access"]
-          }, {
-            title: "Gold",
-            price: "£300",
-            color: "bg-gradient-to-b from-amber-400/80 to-amber-600/60",
-            textColor: "text-white",
-            borderColor: "border-amber-500",
-            features: ["Everything in Silver", "Complete document engine", "Advanced sector-specific guidance", "Priority support"],
-            recommended: true
-          }, {
-            title: "Platinum",
-            price: "£500",
-            color: "bg-gradient-to-b from-slate-50 via-slate-200 to-slate-300",
-            textColor: "text-gray-800",
-            borderColor: "border-slate-400",
-            features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
-          }].map((plan, index) => <Card key={index} className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden ${plan.recommended ? "pt-6" : ""} backdrop-blur-sm bg-opacity-70 flex flex-col`}>
-            {plan.recommended && <Badge className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-4 py-1.5 text-sm font-bold z-20">
-                Recommended
-              </Badge>}
-            <CardHeader>
-              <CardTitle className={plan.title === "Platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
-              <div className={`text-3xl font-bold ${plan.title === "Platinum" ? "text-gray-800" : plan.textColor}`}>{plan.price}</div>
-              <CardDescription className={plan.title === "Platinum" ? "text-gray-800" : plan.textColor}>One-time payment</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <ul className="space-y-2">
-                {plan.features.map((feature, i) => <li key={i} className={`flex items-center gap-2 ${plan.title === "Platinum" ? "text-gray-800" : plan.textColor}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={plan.title === "Platinum" ? "text-gray-800" : "text-[#3b82f6]"}>
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    {feature}
-                  </li>)}
-              </ul>
-            </CardContent>
-            <CardFooter className="mt-auto">
-              <Link to="/register" className="w-full">
-                <Button className={`w-full ${plan.title === "Platinum" ? "bg-gray-800 hover:bg-gray-700 text-white" : "bg-[#1d4ed8] hover:bg-[#1d4ed8]/80"}`}>
-                  Choose Plan
-                </Button>
-              </Link>
-            </CardFooter>
-          </Card>)}
+      {/* New Interactive Pricing Section */}
+      <section id="pricing" className="py-16" style={{ backgroundColor: '#0a192f' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 16px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <h1 style={{ fontSize: '40px', fontWeight: 'bold', color: 'white', marginBottom: '16px' }}>
+              Choose Your Plan
+            </h1>
+            <p style={{ fontSize: '18px', color: '#e5e7eb', maxWidth: '768px', margin: '0 auto' }}>
+              Select the package that best suits your business needs. All plans include a one-time payment with no recurring fees.
+            </p>
           </div>
           
-          {/* Mobile pricing carousel */}
-          <div className="md:hidden w-full">
-            <Carousel className="w-full" opts={{
-            align: "start",
-            loop: true
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+            gap: '24px', 
+            maxWidth: '1200px', 
+            margin: '0 auto' 
           }}>
-              <CarouselContent className="-ml-2">
-                {[{
-                title: "Bronze",
-                price: "£100",
-                color: "bg-gradient-to-b from-amber-700/80 to-amber-900/60",
-                textColor: "text-white",
-                borderColor: "border-amber-600",
-                features: ["Basic company setup guidance", "Essential document templates", "Standard support", "Basic AI assistant access"]
-              }, {
-                title: "Silver",
-                price: "£200",
-                color: "bg-gradient-to-b from-slate-300/80 to-slate-500/60",
-                textColor: "text-white",
-                borderColor: "border-slate-400",
-                features: ["Everything in Bronze", "Extended document library", "Tax & compliance guidance", "Full AI assistant access"]
-              }, {
-                title: "Gold",
-                price: "£300",
-                color: "bg-gradient-to-b from-amber-400/80 to-amber-600/60",
-                textColor: "text-white",
-                borderColor: "border-amber-500",
-                features: ["Everything in Silver", "Complete document engine", "Advanced sector-specific guidance", "Priority support"],
-                recommended: true
-              }, {
-                title: "Platinum",
-                price: "£500",
-                color: "bg-gradient-to-b from-slate-50 via-slate-200 to-slate-300",
-                textColor: "text-gray-800",
-                borderColor: "border-slate-400",
-                features: ["Everything in Gold", "Full access to all resources", "Video consultations with experts", "Custom document customization"]
-              }].map((plan, index) => <CarouselItem key={index} className="basis-full pl-2">
-                  <Card className={`${plan.color} ${plan.borderColor} shadow-lg relative overflow-hidden ${plan.recommended ? "pt-6" : ""} backdrop-blur-sm bg-opacity-70 flex flex-col h-full`}>
-                    {plan.recommended && <Badge className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[#1d4ed8] px-4 py-1.5 text-sm font-bold z-20">
-                      Recommended
-                    </Badge>}
-                    <CardHeader>
-                      <CardTitle className={plan.title === "Platinum" ? "text-gray-800" : plan.recommended ? "text-[#3b82f6]" : plan.textColor}>{plan.title}</CardTitle>
-                      <div className={`text-3xl font-bold ${plan.title === "Platinum" ? "text-gray-800" : plan.textColor}`}>{plan.price}</div>
-                      <CardDescription className={plan.title === "Platinum" ? "text-gray-800" : plan.textColor}>One-time payment</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                      <ul className="space-y-2">
-                        {plan.features.map((feature, i) => <li key={i} className={`flex items-center gap-2 ${plan.title === "Platinum" ? "text-gray-800" : plan.textColor}`}>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={plan.title === "Platinum" ? "text-gray-800" : "text-[#3b82f6]"}>
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                          </svg>
-                          {feature}
-                        </li>)}
-                      </ul>
-                    </CardContent>
-                    <CardFooter className="mt-auto">
-                      <Link to="/register" className="w-full">
-                        <Button className={`w-full ${plan.title === "Platinum" ? "bg-gray-800 hover:bg-gray-700 text-white" : "bg-[#1d4ed8] hover:bg-[#1d4ed8]/80"}`}>
-                          Choose Plan
-                        </Button>
-                      </Link>
-                    </CardFooter>
-                  </Card>
-                </CarouselItem>)}
-              </CarouselContent>
-              <div className="flex justify-center gap-2 mt-4">
-                <CarouselPrevious className="static transform-none mx-1 bg-white text-blue-500 border-blue-300" />
-                <CarouselNext className="static transform-none mx-1 bg-white text-blue-500 border-blue-300" />
-              </div>
-            </Carousel>
+            {pricingPlans.map((plan) => (
+              <PlanCard 
+                key={plan.id}
+                plan={plan}
+                isSelected={selectedPlan === plan.id}
+                onSelect={handleSelectPlan}
+              />
+            ))}
+          </div>
+          
+          <div style={{ marginTop: '48px', textAlign: 'center' }}>
+            <button 
+              style={{
+                padding: '12px 32px',
+                fontSize: '18px',
+                backgroundColor: selectedPlan ? '#2563eb' : '#6b7280',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: selectedPlan ? 'pointer' : 'not-allowed',
+                opacity: selectedPlan ? 1 : 0.5,
+                transition: 'all 0.2s',
+                transform: selectedPlan ? 'scale(1)' : 'scale(1)',
+              }}
+              onClick={handleProceedToPayment}
+              disabled={!selectedPlan || isLoading}
+              onMouseOver={(e) => {
+                if (selectedPlan && !isLoading) {
+                  e.currentTarget.style.backgroundColor = '#1d4ed8';
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                }
+              }}
+              onMouseOut={(e) => {
+                if (selectedPlan && !isLoading) {
+                  e.currentTarget.style.backgroundColor = '#2563eb';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }
+              }}
+            >
+              {isLoading ? "Processing..." : "Proceed to Payment"}
+            </button>
+            {!selectedPlan && (
+              <p style={{ color: '#f87171', marginTop: '16px', fontSize: '16px' }}>
+                Please select a plan to continue
+              </p>
+            )}
           </div>
         </div>
       </section>
