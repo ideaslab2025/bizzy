@@ -34,11 +34,11 @@ const Dashboard = () => {
         <div className="flex items-center justify-between p-4 border-b">
           {isSidebarOpen ? (
             <Link to="/dashboard" className="flex items-center justify-center w-full">
-              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-20" />
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
             </Link>
           ) : (
             <Link to="/dashboard" className="mx-auto">
-              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-12" />
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-16" />
             </Link>
           )}
           <Button
@@ -79,7 +79,7 @@ const Dashboard = () => {
                     {item.icon === "map" && <path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" />}
                     {item.icon === "file" && <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />}
                     {item.icon === "video" && <path d="m22 8-6 4 6 4V8Z" />}
-                    {item.icon === "settings" && <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />}
+                    {item.icon === "settings" && <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 2.73.73l.15.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />}
                   </svg>
                   {isSidebarOpen && <span>{item.name}</span>}
                 </Link>
@@ -94,12 +94,19 @@ const Dashboard = () => {
             className="flex items-center gap-2 hover:bg-muted/50 p-2 rounded-md transition-colors"
           >
             <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
-              JS
+              {user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
             </div>
             {isSidebarOpen && (
               <div>
-                <p className="text-sm font-medium">John Smith</p>
-                <p className="text-xs text-muted-foreground">Acme Ltd</p>
+                <p className="text-sm font-medium">
+                  {user?.user_metadata?.company_name || 
+                   (user?.user_metadata?.first_name && user?.user_metadata?.last_name 
+                     ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)} ${user.user_metadata.last_name.charAt(0).toUpperCase() + user.user_metadata.last_name.slice(1)}`
+                     : user?.email?.split('@')[0] || 'User')}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {user?.user_metadata?.company_name ? user.user_metadata.company_name : 'Business Owner'}
+                </p>
               </div>
             )}
           </Link>
@@ -187,17 +194,15 @@ const Dashboard = () => {
               {/* Account Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <div
-                    onMouseEnter={(e) => {
-                      const trigger = e.currentTarget.querySelector('button');
-                      if (trigger) trigger.click();
-                    }}
-                  >
-                    <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200">
-                      <User className="h-4 w-4" />
-                      <span className="hidden sm:inline">{user?.email?.split('@')[0] || 'Account'}</span>
-                    </Button>
-                  </div>
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200">
+                    <User className="h-4 w-4" />
+                    <span className="hidden sm:inline">
+                      {user?.user_metadata?.company_name || 
+                       (user?.user_metadata?.first_name 
+                         ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
+                         : user?.email?.split('@')[0] || 'Account')}
+                    </span>
+                  </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
                   <DropdownMenuItem asChild>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -484,15 +483,15 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="w-full h-[200px] mx-auto flex items-end justify-center pt-8">
+                <div className="w-full h-[200px] mx-auto flex items-end justify-center pt-12">
                   <img 
                     src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" 
                     alt="Step-by-Step Guidance" 
-                    className="h-[190px] object-contain scale-125 translate-y-3" 
+                    className="h-[190px] object-contain scale-125 translate-y-1" 
                     style={{ maxWidth: '90%' }}
                   />
                 </div>
-                <div className="mt-8 mb-4">
+                <div className="mt-6 mb-4">
                   <h3 className="text-lg font-bold text-[#3b82f6] mb-2 text-center">Step-by-Step Guidance</h3>
                   <p className="text-blue-100 text-center text-sm">Comprehensive step by step guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections </p>
                 </div>

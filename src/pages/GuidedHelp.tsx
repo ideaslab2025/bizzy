@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -116,8 +115,9 @@ const GuidedHelp = () => {
 
   const isSectionCompleted = (sectionId: number) => {
     const sectionSteps = steps.filter(step => step.section_id === sectionId);
+    if (sectionSteps.length === 0) return false;
     const completedSteps = progress.filter(p => p.section_id === sectionId && p.completed);
-    return sectionSteps.length > 0 && sectionSteps.length === completedSteps.length;
+    return sectionSteps.length === completedSteps.length;
   };
 
   const getCurrentStepData = () => {
@@ -201,7 +201,7 @@ const GuidedHelp = () => {
                     isCurrent
                       ? 'bg-white text-[#0088cc]'
                       : isCompleted
-                      ? 'bg-white/10 text-white/50 opacity-60'
+                      ? 'bg-white/10 text-white/70 opacity-70'
                       : 'hover:bg-white/10'
                   }`}
                 >
@@ -217,20 +217,20 @@ const GuidedHelp = () => {
                     ) : (
                       section.order_number
                     )}
-                    {isCompleted && (
-                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                        <CheckCircle className="w-3 h-3 text-white" />
-                      </div>
-                    )}
                   </div>
                   <div className="text-left">
                     <div className={`font-medium ${isCompleted ? 'line-through opacity-60' : ''}`}>
                       {section.title}
                     </div>
-                    <div className={`text-sm ${isCompleted ? 'opacity-30' : 'opacity-75'}`}>
+                    <div className={`text-sm ${isCompleted ? 'opacity-40' : 'opacity-75'}`}>
                       {section.description}
                     </div>
                   </div>
+                  {isCompleted && (
+                    <div className="ml-auto">
+                      <CheckCircle className="w-5 h-5 text-green-400" />
+                    </div>
+                  )}
                 </button>
               );
             })}
@@ -300,17 +300,15 @@ const GuidedHelp = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div
-                  onMouseEnter={(e) => {
-                    const trigger = e.currentTarget.querySelector('button');
-                    if (trigger) trigger.click();
-                  }}
-                >
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200">
-                    <User className="h-4 w-4" />
-                    <span className="hidden sm:inline">{user?.email?.split('@')[0] || 'Account'}</span>
-                  </Button>
-                </div>
+                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white hover:text-gray-200">
+                  <User className="h-4 w-4" />
+                  <span className="hidden sm:inline">
+                    {user?.user_metadata?.company_name || 
+                     (user?.user_metadata?.first_name 
+                       ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
+                       : user?.email?.split('@')[0] || 'Account')}
+                  </span>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
                 <DropdownMenuItem asChild>
