@@ -164,6 +164,10 @@ serve(async (req) => {
       logStep("No existing customer found, will create new one");
     }
 
+    // Get the origin from the request headers for redirect URLs
+    const origin = req.headers.get("origin") || req.headers.get("referer")?.split('/').slice(0, 3).join('/');
+    logStep("Setting up redirect URLs", { origin });
+
     // Create a one-time payment session
     let session;
     try {
@@ -184,14 +188,14 @@ serve(async (req) => {
           },
         ],
         mode: "payment",
-        success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${req.headers.get("origin")}/pricing`,
+        success_url: `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin}/payment-cancel`,
         metadata: {
           user_id: user.id,
           plan_type: planId,
         },
       });
-      logStep("Stripe checkout session created", { sessionId: session.id, url: session.url });
+      logStep("Stripe checkout session created", { sessionId: session.id, successUrl: `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`, cancelUrl: `${origin}/payment-cancel` });
     } catch (stripeError) {
       logStep("⚠️ Stripe session creation failed", { stripeError });
       return new Response(
