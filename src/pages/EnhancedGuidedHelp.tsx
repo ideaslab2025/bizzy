@@ -53,6 +53,7 @@ const EnhancedGuidedHelp = () => {
   const [progress, setProgress] = useState<UserProgress[]>([]);
   const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
   const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set());
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const [achievements, setAchievements] = useState<UserAchievement[]>([]);
   const [quickWins, setQuickWins] = useState<QuickWinStep[]>([]);
   const [totalTimeSpent, setTotalTimeSpent] = useState(0);
@@ -194,6 +195,12 @@ const EnhancedGuidedHelp = () => {
       
       const visitedStepIds = progressArray.map(item => item.step_id);
       setVisitedSteps(new Set(visitedStepIds));
+      
+      // Separate completed steps from just visited steps
+      const actuallyCompletedStepIds = progressArray
+        .filter(item => item.completed)
+        .map(item => item.step_id);
+      setCompletedSteps(new Set(actuallyCompletedStepIds));
     }
   };
 
@@ -336,6 +343,17 @@ const EnhancedGuidedHelp = () => {
       return next;
     });
     
+    // Update completed steps state
+    setCompletedSteps(prev => {
+      const next = new Set(prev);
+      if (isNowCompleted) {
+        sectionSteps.forEach(step => next.add(step.id));
+      } else {
+        sectionSteps.forEach(step => next.delete(step.id));
+      }
+      return next;
+    });
+    
     if (isNowCompleted) {
       setVisitedSteps(prev => {
         const next = new Set(prev);
@@ -441,13 +459,13 @@ const EnhancedGuidedHelp = () => {
 
   const getSectionProgress = (sectionId: number) => {
     const sectionSteps = allSteps.filter(step => step.section_id === sectionId);
-    const completedSteps = sectionSteps.filter(step => visitedSteps.has(step.id));
-    return sectionSteps.length > 0 ? (completedSteps.length / sectionSteps.length) * 100 : 0;
+    const completedSectionSteps = sectionSteps.filter(step => completedSteps.has(step.id));
+    return sectionSteps.length > 0 ? (completedSectionSteps.length / sectionSteps.length) * 100 : 0;
   };
 
   const getOverallProgress = () => {
     const totalSteps = allSteps.length;
-    return totalSteps > 0 ? (visitedSteps.size / totalSteps) * 100 : 0;
+    return totalSteps > 0 ? (completedSteps.size / totalSteps) * 100 : 0;
   };
 
   const handleNavigateToStep = (sectionId: number, stepNumber: number) => {
@@ -458,7 +476,7 @@ const EnhancedGuidedHelp = () => {
     }
   };
 
-  const completedStepIds = Array.from(visitedSteps);
+  const completedStepIds = Array.from(completedSteps);
 
   const currentStepData = getCurrentStepData();
   const currentSectionData = sections.find(s => s.order_number === currentSection);
@@ -468,12 +486,12 @@ const EnhancedGuidedHelp = () => {
   // Enhanced sections with progress data
   const enhancedSections = sections.map(section => {
     const sectionSteps = allSteps.filter(step => step.section_id === section.id);
-    const completedSteps = sectionSteps.filter(step => visitedSteps.has(step.id));
+    const sectionCompletedSteps = sectionSteps.filter(step => completedSteps.has(step.id));
     return {
       ...section,
       total_steps: sectionSteps.length,
-      completed_steps: completedSteps.length,
-      progress: sectionSteps.length > 0 ? (completedSteps.length / sectionSteps.length) : 0
+      completed_steps: sectionCompletedSteps.length,
+      progress: sectionSteps.length > 0 ? (sectionCompletedSteps.length / sectionSteps.length) : 0
     };
   });
 
