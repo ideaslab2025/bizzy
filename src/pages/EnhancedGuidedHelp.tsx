@@ -38,6 +38,10 @@ interface UserProgress {
   section_completed: boolean;
 }
 
+interface QuickWinStep extends EnhancedGuidanceStep {
+  section_title: string;
+}
+
 const EnhancedGuidedHelp = () => {
   const { user, signOut } = useAuth();
   const [sections, setSections] = useState<EnhancedGuidanceSection[]>([]);
@@ -48,7 +52,7 @@ const EnhancedGuidedHelp = () => {
   const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
   const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set());
   const [achievements, setAchievements] = useState<UserAchievement[]>([]);
-  const [quickWins, setQuickWins] = useState<EnhancedGuidanceStep[]>([]);
+  const [quickWins, setQuickWins] = useState<QuickWinStep[]>([]);
   const [totalTimeSpent, setTotalTimeSpent] = useState(0);
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [showChatbot, setShowChatbot] = useState(false);
@@ -102,7 +106,15 @@ const EnhancedGuidedHelp = () => {
       .order('order_number');
     
     if (data && !error) {
-      setSteps(data);
+      // Type assertion to handle the database nullable fields
+      const typedSteps = data.map(step => ({
+        ...step,
+        difficulty_level: step.difficulty_level as 'easy' | 'medium' | 'complex' | null,
+        step_type: step.step_type as 'action' | 'information' | 'decision' | 'external' | null,
+        prerequisites: step.prerequisites as string[] | null
+      })) as EnhancedGuidanceStep[];
+      
+      setSteps(typedSteps);
       setCurrentStep(1);
     } else {
       setSteps([]);
@@ -168,8 +180,11 @@ const EnhancedGuidedHelp = () => {
       .limit(5);
       
     if (data && !error) {
-      const quickWinsWithSection = data.map(step => ({
+      const quickWinsWithSection: QuickWinStep[] = data.map(step => ({
         ...step,
+        difficulty_level: step.difficulty_level as 'easy' | 'medium' | 'complex' | null,
+        step_type: step.step_type as 'action' | 'information' | 'decision' | 'external' | null,
+        prerequisites: step.prerequisites as string[] | null,
         section_title: (step as any).guidance_sections.title
       }));
       setQuickWins(quickWinsWithSection);

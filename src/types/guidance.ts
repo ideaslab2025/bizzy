@@ -24,10 +24,10 @@ export interface EnhancedGuidanceStep {
   external_links: Json;
   order_number: number;
   estimated_time_minutes?: number;
-  difficulty_level?: 'easy' | 'medium' | 'complex';
-  step_type?: 'action' | 'information' | 'decision' | 'external';
+  difficulty_level?: 'easy' | 'medium' | 'complex' | null;
+  step_type?: 'action' | 'information' | 'decision' | 'external' | null;
   rich_content?: Json;
-  prerequisites?: string[];
+  prerequisites?: string[] | null;
   deadline_info?: string;
   quick_win?: boolean;
   created_at: string;
