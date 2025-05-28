@@ -327,11 +327,36 @@
     box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
   }
   
-  /* Theme transition */
-  * {
-    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-    transition-duration: 300ms;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Progress bar shimmer animation */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  /* Haptic feedback visual indicator */
+  .haptic-feedback {
+    animation: haptic-pulse 0.1s ease-out;
+  }
+  
+  @keyframes haptic-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+  }
+  
+  /* Counter bounce animation */
+  .counter-complete {
+    animation: counter-bounce 0.3s ease-out;
+  }
+  
+  @keyframes counter-bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
   }
   
   /* Disable animations for users who prefer reduced motion */
@@ -349,6 +374,14 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+    }
+    
+    .haptic-feedback {
+      animation: none !important;
+    }
+    
+    .counter-complete {
+      animation: none !important;
     }
   }
   
