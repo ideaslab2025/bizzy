@@ -382,7 +382,7 @@ const Index = () => {
       }
 
       const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: JSON.stringify({ planId: selectedPlan }),
+        body: { planId: selectedPlan },
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${sessionData.session.access_token}`
