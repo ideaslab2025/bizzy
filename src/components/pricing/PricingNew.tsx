@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -88,8 +87,8 @@ const PricingNew = () => {
       }
 
       if (data?.url) {
-        // Open Stripe checkout in a new tab
-        window.open(data.url, '_blank');
+        // Redirect to Stripe checkout in the same tab
+        window.location.href = data.url;
       } else {
         throw new Error('No checkout URL received');
       }
@@ -100,7 +99,6 @@ const PricingNew = () => {
         description: "Failed to start checkout session. Please try again.",
         variant: "destructive",
       });
-    } finally {
       setLoadingPlan(null);
     }
   };
