@@ -13,7 +13,7 @@ import Testimonials from "@/components/Testimonials";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "@/hooks/use-toast";
 
 // Plan data from PricingNew
 const pricingPlans = [
@@ -352,12 +352,20 @@ const Index = () => {
   
   const handleProceedToPayment = async () => {
     if (!selectedPlan) {
-      toast.error("Please select a plan to continue");
+      toast({
+        title: "Error",
+        description: "Please select a plan to continue",
+        variant: "destructive"
+      });
       return;
     }
 
     if (!user) {
-      toast.error("Please log in to purchase a plan");
+      toast({
+        title: "Error", 
+        description: "Please log in to purchase a plan",
+        variant: "destructive"
+      });
       navigate("/login");
       return;
     }
@@ -365,21 +373,54 @@ const Index = () => {
     setIsLoading(true);
     
     try {
+      // Get session explicitly to ensure auth header
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData?.session?.access_token;
+      
+      if (!token) {
+        throw new Error("No valid session found. Please log in again.");
+      }
+
+      console.log("Invoking create-payment function with planId:", selectedPlan);
+      
       const { data, error } = await supabase.functions.invoke('create-payment', {
         body: { planId: selectedPlan },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
       });
 
-      if (error) throw error;
-
-      if (data?.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      } else {
-        throw new Error("No payment URL received");
+      if (error) {
+        console.error("Invoke error payload:", error);
+        toast({
+          title: "Payment Error",
+          description: error.message || "Payment invocation failed",
+          variant: "destructive"
+        });
+        return;
       }
-    } catch (error) {
-      console.error("Payment error:", error);
-      toast.error("Failed to create payment session. Please try again.");
+
+      if (!data?.url) {
+        console.error("No URL in response:", data);
+        toast({
+          title: "Error",
+          description: "No checkout URL received. Please contact support.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      console.log("Redirecting to Stripe checkout:", data.url);
+      // Redirect to Stripe Checkout
+      window.location.href = data.url;
+    } catch (err: any) {
+      console.error("Unexpected payment error:", err);
+      toast({
+        title: "Error",
+        description: err.message || "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
