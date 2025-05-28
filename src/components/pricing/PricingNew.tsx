@@ -21,7 +21,7 @@ const PricingNew = () => {
       description: "Perfect for solo entrepreneurs and small startups",
       icon: <Users className="w-6 h-6" />,
       badge: null,
-      priceId: "price_starter_test",
+      planId: "bronze",
       features: [
         "Basic business setup guidance",
         "Essential document templates",
@@ -39,7 +39,7 @@ const PricingNew = () => {
       description: "Ideal for growing businesses and established companies",
       icon: <Building2 className="w-6 h-6" />,
       badge: <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Most Popular</Badge>,
-      priceId: "price_professional_test",
+      planId: "silver",
       features: [
         "Everything in Starter",
         "Advanced business tools",
@@ -59,7 +59,7 @@ const PricingNew = () => {
       description: "Comprehensive solution for large organizations",
       icon: <Crown className="w-6 h-6" />,
       badge: <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">Premium</Badge>,
-      priceId: "price_enterprise_test",
+      planId: "gold",
       features: [
         "Everything in Professional",
         "Unlimited consultations",
@@ -75,7 +75,7 @@ const PricingNew = () => {
     }
   ];
 
-  const handleSubscribe = async (priceId: string, planName: string) => {
+  const handleSubscribe = async (planId: string, planName: string) => {
     console.log("Starting payment process for plan:", planName);
     
     if (!user) {
@@ -89,10 +89,10 @@ const PricingNew = () => {
 
     try {
       setLoadingPlan(planName);
-      console.log("Calling create-checkout function...");
+      console.log("Calling create-payment function...");
       
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { priceId, planName }
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: { planId }
       });
 
       console.log("Function response:", { data, error });
@@ -165,7 +165,7 @@ const PricingNew = () => {
               <CardContent className="pt-0">
                 <Button 
                   className={`w-full mb-8 py-6 text-lg font-semibold ${plan.buttonStyle}`}
-                  onClick={() => handleSubscribe(plan.priceId, plan.name)}
+                  onClick={() => handleSubscribe(plan.planId, plan.name)}
                   disabled={loadingPlan === plan.name}
                 >
                   {loadingPlan === plan.name ? (
