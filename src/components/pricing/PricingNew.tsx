@@ -91,8 +91,21 @@ const PricingNew = () => {
       setLoadingPlan(planName);
       console.log("Calling create-payment function...");
       
+      // Get the current session to ensure we have a valid token
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session?.access_token) {
+        console.error('Session error:', sessionError);
+        throw new Error('Please log in again to continue.');
+      }
+
+      console.log('Session found, calling create-payment function');
+      
       const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: { planId }
+        body: { planId },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       });
 
       console.log("Function response:", { data, error });
