@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -75,28 +76,44 @@ const PricingNew = () => {
   ];
 
   const handleSubscribe = async (priceId: string, planName: string) => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to subscribe to a plan.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setLoadingPlan(planName);
+      console.log(`Creating payment for plan: ${planName}`);
       
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { priceId, planName }
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: { planId: planName.toLowerCase() }
       });
 
+      console.log('Payment response:', { data, error });
+
       if (error) {
+        console.error('Supabase function error:', error);
         throw error;
       }
 
       if (data?.url) {
-        // Redirect to Stripe checkout in the same tab
-        window.location.href = data.url;
+        console.log('Redirecting to Stripe checkout:', data.url);
+        // Add a small delay to ensure the loading state is visible
+        setTimeout(() => {
+          window.location.href = data.url;
+        }, 500);
       } else {
-        throw new Error('No checkout URL received');
+        throw new Error('No checkout URL received from payment service');
       }
     } catch (error) {
       console.error('Error creating checkout session:', error);
       toast({
         title: "Payment Error",
-        description: "Failed to start checkout session. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to start checkout session. Please try again.",
         variant: "destructive",
       });
       setLoadingPlan(null);
@@ -152,7 +169,7 @@ const PricingNew = () => {
                   {loadingPlan === plan.name ? (
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Processing...
+                      Redirecting to payment...
                     </div>
                   ) : (
                     <>
