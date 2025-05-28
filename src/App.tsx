@@ -3,8 +3,9 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
-import Overview from "./pages/dashboard/Overview";
+import EnhancedOverview from "./pages/dashboard/EnhancedOverview";
 import Documents from "./pages/dashboard/Documents";
+import DocumentCustomizer from "./pages/dashboard/DocumentCustomizer";
 import EnhancedGuidedHelp from "./pages/EnhancedGuidedHelp";
 import Pricing from "./pages/Pricing";
 import ContentMigration from "./pages/ContentMigration";
@@ -25,8 +26,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/dashboard" element={<Dashboard />}>
-              <Route index element={<Overview />} />
+              <Route index element={<EnhancedOverview />} />
               <Route path="documents" element={<Documents />} />
+              <Route path="documents/customize/:id" element={<DocumentCustomizer />} />
               <Route path="consultations" element={<div className="p-6"><h1 className="text-2xl font-bold">Consultations</h1><p>Coming soon...</p></div>} />
               <Route path="settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Settings</h1><p>Coming soon...</p></div>} />
             </Route>
