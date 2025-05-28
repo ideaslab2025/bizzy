@@ -37,6 +37,7 @@ import type {
   StepTimeTracking 
 } from "@/types/guidance";
 import type { UserDocumentProgress } from "@/types/documents";
+import { StepContentSkeleton } from '@/components/ui/skeleton-loader';
 
 interface UserProgress {
   section_id: number;
@@ -766,95 +767,101 @@ const EnhancedGuidedHelp = () => {
             onNavigateToStep={handleNavigateToStep}
           />
 
-          {/* Step Content with Swipe Support */}
-          <SwipeableStepContent
-            onNext={nextStep}
-            onPrev={prevStep}
-            canGoNext={currentSection < sections.length || currentStep < steps.length}
-            canGoPrev={currentSection > 1 || currentStep > 1}
-            currentStep={currentStep}
-            totalSteps={steps.length || 1}
-          >
-            {steps.length === 0 ? (
-              <div className="max-w-4xl">
-                <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                  {currentSectionData?.title}
-                </h2>
-                <Card className="mb-8">
-                  <CardContent className="p-4 lg:p-8">
-                    <div className="prose max-w-none">
-                      <p className="text-base lg:text-lg text-gray-600">
-                        Content for this section is coming soon. You can still mark this section as complete to track your progress.
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            ) : currentStepData ? (
-              <motion.div 
-                key={`${currentSection}-${currentStep}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="max-w-4xl"
-              >
-                <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                  {currentStepData.title}
-                </h2>
-
-                {/* Video Section */}
-                {currentStepData.video_url && (
-                  <div className="mb-8">
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                          <Button variant="outline" size="lg" className="gap-2">
-                            <Play className="w-5 h-5" />
-                            Watch Video Guide
-                          </Button>
+          {/* Step Content */}
+          <div className="flex-1 p-8 pb-32">
+            <SwipeableStepContent
+              onNext={nextStep}
+              onPrev={prevStep}
+              canGoNext={currentSection < sections.length || currentStep < steps.length}
+              canGoPrev={currentSection > 1 || currentStep > 1}
+              currentStep={currentStep}
+              totalSteps={steps.length || 1}
+            >
+              {steps.length === 0 ? (
+                stepLoading ? (
+                  <StepContentSkeleton />
+                ) : (
+                  <div className="max-w-4xl">
+                    <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
+                      {currentSectionData?.title}
+                    </h2>
+                    <Card className="mb-8">
+                      <CardContent className="p-4 lg:p-8">
+                        <div className="prose max-w-none">
+                          <p className="text-base lg:text-lg text-gray-600">
+                            Content for this section is coming soon. You can still mark this section as complete to track your progress.
+                          </p>
                         </div>
-                        <p className="text-sm text-gray-600">
-                          30-60 second video explanation
-                        </p>
                       </CardContent>
                     </Card>
                   </div>
-                )}
+                )
+              ) : currentStepData ? (
+                <motion.div 
+                  key={`${currentSection}-${currentStep}`}
+                  className="max-w-4xl"
+                >
+                  <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
+                    {currentStepData.title}
+                  </h2>
 
-                {/* Enhanced Rich Content */}
-                <Card className="mb-8">
-                  <CardContent className="p-8">
-                    <RichContentRenderer
-                      content={currentStepData}
-                      stepId={currentStepData.id}
-                    />
+                  {/* Video Section */}
+                  {currentStepData.video_url && (
+                    <div className="mb-8">
+                      <Card>
+                        <CardContent className="p-6">
+                          <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-4">
+                            <Button variant="outline" size="lg" className="gap-2">
+                              <Play className="w-5 h-5" />
+                              Watch Video Guide
+                            </Button>
+                          </div>
+                          <p className="text-sm text-gray-600">
+                            30-60 second video explanation
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  )}
 
-                    {/* External Links */}
-                    {currentStepData.external_links && Array.isArray(currentStepData.external_links) && currentStepData.external_links.length > 0 && (
-                      <div className="mt-6 pt-6 border-t">
-                        <h3 className="font-semibold mb-3">Helpful Resources:</h3>
-                        <div className="space-y-2">
-                          {(currentStepData.external_links as any[]).map((link, index) => (
-                            <a
-                              key={index}
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-2 text-[#0088cc] hover:underline"
-                            >
-                              <ExternalLink className="w-4 h-4" />
-                              {link.title}
-                            </a>
-                          ))}
+                  {/* Enhanced Rich Content */}
+                  <Card className="mb-8">
+                    <CardContent className="p-8">
+                      <RichContentRenderer
+                        content={currentStepData}
+                        stepId={currentStepData.id}
+                      />
+
+                      {/* External Links */}
+                      {currentStepData.external_links && Array.isArray(currentStepData.external_links) && currentStepData.external_links.length > 0 && (
+                        <div className="mt-6 pt-6 border-t">
+                          <h3 className="font-semibold mb-3">Helpful Resources:</h3>
+                          <div className="space-y-2">
+                            {(currentStepData.external_links as any[]).map((link, index) => (
+                              <a
+                                key={index}
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-[#0088cc] hover:underline"
+                              >
+                                <ExternalLink className="w-4 h-4" />
+                                {link.title}
+                              </a>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ) : null}
-          </SwipeableStepContent>
-        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ) : (
+                stepLoading ? (
+                  <StepContentSkeleton />
+                ) : null
+              )}
+            </SwipeableStepContent>
+          </div>
 
         {/* Fixed Floating Bottom Navigation - Mobile responsive */}
         <div className="fixed bottom-0 left-0 lg:left-80 right-0 bg-white/95 backdrop-blur-sm border-t shadow-lg p-3 lg:p-6 flex justify-between items-center z-40">

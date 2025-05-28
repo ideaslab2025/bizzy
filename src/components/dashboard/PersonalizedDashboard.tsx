@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +14,7 @@ import { ProgressAnalyticsDashboard } from '@/components/progress/ProgressAnalyt
 import { AchievementPanel } from '@/components/achievements/AchievementPanel';
 import { SmartRecommendationsPanel } from '@/components/guidance/SmartRecommendationsPanel';
 import { useSmartRecommendations } from '@/hooks/useSmartRecommendations';
+import { DashboardCardSkeleton } from '@/components/ui/skeleton-loader';
 
 interface PersonalizedDashboardProps {
   userId: string;
@@ -106,12 +106,22 @@ export const PersonalizedDashboard: React.FC<PersonalizedDashboardProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column - Analytics and Progress */}
         <div className="lg:col-span-2 space-y-6">
-          <ProgressAnalyticsDashboard userId={userId} />
+          <React.Suspense fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <DashboardCardSkeleton key={i} />
+              ))}
+            </div>
+          }>
+            <ProgressAnalyticsDashboard userId={userId} />
+          </React.Suspense>
         </div>
 
         {/* Right Column - Achievements and Recommendations */}
         <div className="space-y-6">
-          <AchievementPanel userId={userId} compact />
+          <React.Suspense fallback={<DashboardCardSkeleton />}>
+            <AchievementPanel userId={userId} compact />
+          </React.Suspense>
           
           {topRecommendations.length > 0 && (
             <Card className="border-blue-200 bg-blue-50">

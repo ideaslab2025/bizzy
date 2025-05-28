@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { DocumentCard } from '@/components/documents/DocumentCard';
 import { DocumentFilters } from '@/components/documents/DocumentFilters';
 import { DocumentPreview } from '@/components/documents/DocumentPreview';
+import { DocumentCardSkeleton } from '@/components/ui/skeleton-loader';
 import { toast } from 'sonner';
 import type { Document, UserDocumentProgress, GuidanceStepDocument } from '@/types/documents';
 
@@ -153,10 +154,30 @@ const Documents = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0088cc] mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading documents...</p>
+      <div className="space-y-4 lg:space-y-6">
+        <div className="px-4 lg:px-0">
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Document Library</h1>
+          <p className="text-gray-600 mt-2 text-sm lg:text-base">
+            Access templates, forms, and guides to help set up your business
+          </p>
+        </div>
+
+        <div className="px-4 lg:px-0">
+          <DocumentFilters
+            searchQuery={searchQuery}
+            selectedCategory={selectedCategory}
+            onSearchChange={setSearchQuery}
+            onCategoryChange={setSelectedCategory}
+            documentCount={0}
+          />
+        </div>
+
+        <div className="px-4 lg:px-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <DocumentCardSkeleton key={index} />
+            ))}
+          </div>
         </div>
       </div>
     );

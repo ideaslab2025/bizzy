@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -12,6 +11,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { useProgressAnalytics } from '@/hooks/useProgressAnalytics';
+import { DashboardCardSkeleton } from '@/components/ui/skeleton-loader';
 
 interface ProgressAnalyticsDashboardProps {
   userId: string;
@@ -24,14 +24,19 @@ export const ProgressAnalyticsDashboard: React.FC<ProgressAnalyticsDashboardProp
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Card key={i} className="animate-pulse">
-            <CardContent className="p-6">
-              <div className="h-20 bg-gray-200 rounded"></div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="space-y-6">
+        {/* Key Metrics Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <DashboardCardSkeleton key={i} />
+          ))}
+        </div>
+
+        {/* Section Progress Skeleton */}
+        <DashboardCardSkeleton />
+
+        {/* Activity Chart Skeleton */}
+        <DashboardCardSkeleton />
       </div>
     );
   }
