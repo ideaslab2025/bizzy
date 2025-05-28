@@ -353,18 +353,18 @@ const Index = () => {
   const handleProceedToPayment = async () => {
     if (!selectedPlan) {
       toast({
-        title: "Error",
+        title: "No Plan Selected",
         description: "Please select a plan to continue",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     if (!user) {
       toast({
-        title: "Error", 
+        title: "Authentication Required",
         description: "Please log in to purchase a plan",
-        variant: "destructive"
+        variant: "destructive",
       });
       navigate("/login");
       return;
@@ -373,53 +373,58 @@ const Index = () => {
     setIsLoading(true);
     
     try {
-      // Get session explicitly to ensure auth header
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData?.session?.access_token;
+      console.log('Creating payment for plan:', selectedPlan);
       
-      if (!token) {
+      // Get current session to ensure we have a valid token
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
         throw new Error("No valid session found. Please log in again.");
       }
 
-      console.log("Invoking create-payment function with planId:", selectedPlan);
-      
       const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: { planId: selectedPlan },
+        body: JSON.stringify({ planId: selectedPlan }),
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionData.session.access_token}`
         }
       });
 
+      console.log('Payment response:', { data, error });
+
       if (error) {
-        console.error("Invoke error payload:", error);
-        toast({
-          title: "Payment Error",
-          description: error.message || "Payment invocation failed",
-          variant: "destructive"
-        });
-        return;
+        console.error("Payment function error:", error);
+        throw new Error(error.message || "Payment processing failed");
       }
 
       if (!data?.url) {
-        console.error("No URL in response:", data);
-        toast({
-          title: "Error",
-          description: "No checkout URL received. Please contact support.",
-          variant: "destructive"
-        });
-        return;
+        console.error("No URL in payment response:", data);
+        throw new Error("No checkout URL received from payment processor");
       }
 
-      console.log("Redirecting to Stripe checkout:", data.url);
+      console.log('Redirecting to:', data.url);
+      
       // Redirect to Stripe Checkout
       window.location.href = data.url;
-    } catch (err: any) {
-      console.error("Unexpected payment error:", err);
+      
+    } catch (error: any) {
+      console.error("Payment error details:", error);
+      
+      let errorMessage = "Failed to create payment session. Please try again.";
+      
+      if (error.message) {
+        if (error.message.includes("Authentication")) {
+          errorMessage = "Please log in again to continue with payment.";
+        } else if (error.message.includes("misconfigured")) {
+          errorMessage = "Payment system is temporarily unavailable. Please try again later.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
-        title: "Error",
-        description: err.message || "Something went wrong. Please try again.",
-        variant: "destructive"
+        title: "Payment Error",
+        description: errorMessage,
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
