@@ -1,5 +1,3 @@
-
-
 export interface Document {
   id: string;
   title: string;
@@ -7,6 +5,7 @@ export interface Document {
   category: string; // Changed from union type to string to match Supabase
   subcategory?: string;
   file_type?: string; // Changed from union type to string to match Supabase
+  file_size?: number; // Added file_size property
   template_url?: string;
   is_required: boolean;
   customizable_fields?: any; // Using any instead of CustomField[] to match Json type
