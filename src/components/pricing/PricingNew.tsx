@@ -104,8 +104,13 @@ const PricingNew = () => {
 
       if (data?.url) {
         console.log("Redirecting to Stripe checkout:", data.url);
-        // Redirect to Stripe checkout in the same tab
-        window.location.href = data.url;
+        
+        // If we're in an iframe, jump the top window
+        if (window.self !== window.top) {
+          window.top!.location.href = data.url;
+        } else {
+          window.location.href = data.url;
+        }
       } else {
         console.error("No checkout URL received:", data);
         throw new Error('No checkout URL received');

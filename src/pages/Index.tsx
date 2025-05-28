@@ -282,6 +282,7 @@ const Index = () => {
   // Pricing state - Modified to allow deselection
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
@@ -351,27 +352,27 @@ const Index = () => {
   };
   
   const handleProceedToPayment = async () => {
-    if (!selectedPlan) {
-      toast({
-        title: "No Plan Selected",
-        description: "Please select a plan to continue",
-        variant: "destructive",
-      });
-      return;
-    }
-
     if (!user) {
       toast({
         title: "Authentication Required",
-        description: "Please log in to purchase a plan",
+        description: "Please log in to proceed with payment.",
         variant: "destructive",
       });
       navigate("/login");
       return;
     }
-    
-    setIsLoading(true);
-    
+
+    if (!selectedPlan) {
+      toast({
+        title: "Plan Selection Required",
+        description: "Please select a plan before proceeding.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsProcessingPayment(true);
+
     try {
       console.log('Creating payment for plan:', selectedPlan);
       
@@ -387,37 +388,26 @@ const Index = () => {
       }
 
       if (!data?.url) {
-        console.error("No URL in payment response:", data);
-        throw new Error("No checkout URL received from payment processor");
+        throw new Error("No checkout URL received");
       }
 
-      console.log('Redirecting to:', data.url);
+      console.log('Redirecting to checkout:', data.url);
       
-      // Redirect to Stripe Checkout
-      window.location.href = data.url;
-      
-    } catch (error: any) {
-      console.error("Payment error details:", error);
-      
-      let errorMessage = "Failed to create payment session. Please try again.";
-      
-      if (error.message) {
-        if (error.message.includes("Authentication") || error.message.includes("session")) {
-          errorMessage = "Please log in again to continue with payment.";
-        } else if (error.message.includes("misconfigured")) {
-          errorMessage = "Payment system is temporarily unavailable. Please try again later.";
-        } else {
-          errorMessage = error.message;
-        }
+      // If we're in an iframe, jump the top window
+      if (window.self !== window.top) {
+        window.top!.location.href = data.url;
+      } else {
+        window.location.href = data.url;
       }
-      
+    } catch (error) {
+      console.error('Payment error:', error);
       toast({
         title: "Payment Error",
-        description: errorMessage,
+        description: error instanceof Error ? error.message : "Failed to process payment. Please try again.",
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      setIsProcessingPayment(false);
     }
   };
 
