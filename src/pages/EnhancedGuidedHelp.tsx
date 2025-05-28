@@ -196,9 +196,9 @@ const EnhancedGuidedHelp = () => {
       const visitedStepIds = progressArray.map(item => item.step_id);
       setVisitedSteps(new Set(visitedStepIds));
       
-      // Separate completed steps from just visited steps
+      // Only set steps as completed if they are actually marked as completed in the database
       const actuallyCompletedStepIds = progressArray
-        .filter(item => item.completed)
+        .filter(item => item.completed === true)
         .map(item => item.step_id);
       setCompletedSteps(new Set(actuallyCompletedStepIds));
     }
@@ -271,7 +271,7 @@ const EnhancedGuidedHelp = () => {
       await supabase
         .from('user_guidance_progress')
         .update({
-          completed: true,
+          completed: false, // Only mark as visited, not completed
           last_visited_at: new Date().toISOString()
         })
         .eq('id', existingProgress.id);
@@ -282,7 +282,7 @@ const EnhancedGuidedHelp = () => {
           user_id: user.id,
           section_id: sectionId,
           step_id: stepId,
-          completed: true,
+          completed: false, // Only mark as visited, not completed
           section_completed: false,
           last_visited_at: new Date().toISOString()
         });
@@ -457,15 +457,19 @@ const EnhancedGuidedHelp = () => {
     return steps.find(step => step.order_number === currentStep);
   };
 
+  // Calculate section progress (for current section header)
   const getSectionProgress = (sectionId: number) => {
     const sectionSteps = allSteps.filter(step => step.section_id === sectionId);
     const completedSectionSteps = sectionSteps.filter(step => completedSteps.has(step.id));
     return sectionSteps.length > 0 ? (completedSectionSteps.length / sectionSteps.length) * 100 : 0;
   };
 
+  // Calculate overall progress (across all sections)
   const getOverallProgress = () => {
     const totalSteps = allSteps.length;
-    return totalSteps > 0 ? (completedSteps.size / totalSteps) * 100 : 0;
+    const totalCompletedSteps = completedSteps.size;
+    console.log('Overall progress calculation:', { totalSteps, totalCompletedSteps, completedSteps: Array.from(completedSteps) });
+    return totalSteps > 0 ? (totalCompletedSteps / totalSteps) * 100 : 0;
   };
 
   const handleNavigateToStep = (sectionId: number, stepNumber: number) => {
@@ -483,7 +487,7 @@ const EnhancedGuidedHelp = () => {
   const sectionProgress = currentSectionData ? getSectionProgress(currentSectionData.id) : 0;
   const overallProgress = Math.round(getOverallProgress());
 
-  // Enhanced sections with progress data
+  // Enhanced sections with progress data for sidebar
   const enhancedSections = sections.map(section => {
     const sectionSteps = allSteps.filter(step => step.section_id === section.id);
     const sectionCompletedSteps = sectionSteps.filter(step => completedSteps.has(step.id));
@@ -554,8 +558,8 @@ const EnhancedGuidedHelp = () => {
 
         {/* Content with Smart Recommendations */}
         <div className="flex-1 p-8 pb-32">
-          {/* Smart Recommendations Panel */}
-          {user && (
+          {/* Smart Recommendations Panel - Only show if we have valid data */}
+          {user && completedStepIds.length >= 0 && (
             <div className="mb-6">
               <SmartRecommendationsPanel
                 userId={user.id}
