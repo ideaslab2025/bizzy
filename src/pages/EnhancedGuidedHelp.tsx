@@ -23,6 +23,7 @@ import { SidebarSection } from "@/components/guidance/SidebarSection";
 import { RichContentRenderer } from "@/components/guidance/RichContentRenderer";
 import { ProgressHeader } from "@/components/guidance/ProgressHeader";
 import { QuickWinsPanel } from "@/components/guidance/QuickWinsPanel";
+import { SmartRecommendationsPanel } from "@/components/guidance/SmartRecommendationsPanel";
 import type { 
   EnhancedGuidanceSection, 
   EnhancedGuidanceStep, 
@@ -58,6 +59,7 @@ const EnhancedGuidedHelp = () => {
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
+  const [companyAge, setCompanyAge] = useState(0);
 
   useEffect(() => {
     fetchSections();
@@ -67,6 +69,7 @@ const EnhancedGuidedHelp = () => {
       fetchQuickWins();
       fetchTimeSpent();
       setSessionStartTime(new Date());
+      calculateCompanyAge();
     }
   }, [user]);
 
@@ -418,6 +421,8 @@ const EnhancedGuidedHelp = () => {
     }
   };
 
+  const completedStepIds = Array.from(visitedSteps);
+
   const currentStepData = getCurrentStepData();
   const currentSectionData = sections.find(s => s.order_number === currentSection);
   const sectionProgress = currentSectionData ? getSectionProgress(currentSectionData.id) : 0;
@@ -492,8 +497,21 @@ const EnhancedGuidedHelp = () => {
           />
         )}
 
-        {/* Content with Quick Wins */}
+        {/* Content with Smart Recommendations */}
         <div className="flex-1 p-8 pb-32">
+          {/* Smart Recommendations Panel */}
+          {user && (
+            <div className="mb-6">
+              <SmartRecommendationsPanel
+                userId={user.id}
+                completedStepIds={completedStepIds}
+                currentSectionCategory={currentSectionData?.color_theme || ''}
+                companyAge={companyAge}
+                onNavigateToStep={handleNavigateToStep}
+              />
+            </div>
+          )}
+
           {/* Quick Wins Panel */}
           <QuickWinsPanel
             quickWins={quickWins}
