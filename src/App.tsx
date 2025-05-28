@@ -3,6 +3,8 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import Overview from "./pages/dashboard/Overview";
+import Documents from "./pages/dashboard/Documents";
 import EnhancedGuidedHelp from "./pages/EnhancedGuidedHelp";
 import Pricing from "./pages/Pricing";
 import ContentMigration from "./pages/ContentMigration";
@@ -22,7 +24,12 @@ function App() {
         <div className="min-h-screen bg-background">
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />}>
+              <Route index element={<Overview />} />
+              <Route path="documents" element={<Documents />} />
+              <Route path="consultations" element={<div className="p-6"><h1 className="text-2xl font-bold">Consultations</h1><p>Coming soon...</p></div>} />
+              <Route path="settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Settings</h1><p>Coming soon...</p></div>} />
+            </Route>
             <Route path="/guided-help" element={<EnhancedGuidedHelp />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/content-migration" element={<ContentMigration />} />
