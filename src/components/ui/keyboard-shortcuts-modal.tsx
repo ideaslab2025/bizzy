@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -119,6 +119,9 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
               {isMac ? 'macOS' : 'Windows'}
             </Badge>
           </DialogTitle>
+          <DialogDescription>
+            View and search through all available keyboard shortcuts to navigate the application faster.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex-shrink-0 relative mb-4">
