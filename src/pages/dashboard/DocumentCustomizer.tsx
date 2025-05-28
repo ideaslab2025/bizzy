@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -20,7 +19,7 @@ const DocumentCustomizer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [document, setDocument] = useState<Document | null>(null);
+  const [documentData, setDocumentData] = useState<Document | null>(null);
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -45,7 +44,7 @@ const DocumentCustomizer: React.FC = () => {
   // Auto-save functionality
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (Object.keys(formData).length > 0 && user && document) {
+      if (Object.keys(formData).length > 0 && user && documentData) {
         saveDraft();
       }
     }, 2000);
@@ -61,7 +60,7 @@ const DocumentCustomizer: React.FC = () => {
         .single();
 
       if (error) throw error;
-      setDocument(data);
+      setDocumentData(data);
       
       // Pre-fill with user profile data
       await prefillFromProfile();
@@ -122,7 +121,7 @@ const DocumentCustomizer: React.FC = () => {
   };
 
   const saveDraft = async () => {
-    if (!user || !document || saving) return;
+    if (!user || !documentData || saving) return;
 
     setSaving(true);
     try {
@@ -130,7 +129,7 @@ const DocumentCustomizer: React.FC = () => {
         .from('user_documents')
         .select('id')
         .eq('user_id', user.id)
-        .eq('document_id', document.id)
+        .eq('document_id', documentData.id)
         .eq('status', 'draft')
         .single();
 
@@ -147,7 +146,7 @@ const DocumentCustomizer: React.FC = () => {
           .from('user_documents')
           .insert({
             user_id: user.id,
-            document_id: document.id,
+            document_id: documentData.id,
             customized_data: formData,
             status: 'draft'
           });
@@ -176,9 +175,9 @@ const DocumentCustomizer: React.FC = () => {
   };
 
   const validateForm = () => {
-    if (!document?.customizable_fields) return true;
+    if (!documentData?.customizable_fields) return true;
 
-    const fields = document.customizable_fields as CustomField[];
+    const fields = documentData.customizable_fields as CustomField[];
     const newErrors: Record<string, string> = {};
 
     for (const field of fields) {
@@ -199,9 +198,9 @@ const DocumentCustomizer: React.FC = () => {
     }
 
     // Simple template replacement
-    let previewContent = `${document?.title}\n\n${document?.description}\n\n`;
+    let previewContent = `${documentData?.title}\n\n${documentData?.description}\n\n`;
     
-    const fields = (document?.customizable_fields as CustomField[]) || [];
+    const fields = (documentData?.customizable_fields as CustomField[]) || [];
     fields.forEach(field => {
       const value = formData[field.id] || '[Not provided]';
       previewContent += `${field.label}: ${value}\n`;
@@ -212,7 +211,7 @@ const DocumentCustomizer: React.FC = () => {
   };
 
   const handleFinalize = async () => {
-    if (!user || !document) return;
+    if (!user || !documentData) return;
 
     setSaving(true);
     try {
@@ -221,7 +220,7 @@ const DocumentCustomizer: React.FC = () => {
         .from('user_documents')
         .select('id')
         .eq('user_id', user.id)
-        .eq('document_id', document.id)
+        .eq('document_id', documentData.id)
         .single();
 
       if (existing) {
@@ -238,7 +237,7 @@ const DocumentCustomizer: React.FC = () => {
           .from('user_documents')
           .insert({
             user_id: user.id,
-            document_id: document.id,
+            document_id: documentData.id,
             customized_data: formData,
             status: 'completed'
           });
@@ -249,7 +248,7 @@ const DocumentCustomizer: React.FC = () => {
         .from('user_document_progress')
         .upsert({
           user_id: user.id,
-          document_id: document.id,
+          document_id: documentData.id,
           customized: true,
           completed_at: new Date().toISOString()
         });
@@ -257,10 +256,10 @@ const DocumentCustomizer: React.FC = () => {
       // Download document
       const blob = new Blob([preview], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${document.title.replace(/\s+/g, '_')}_customized.txt`;
-      a.click();
+      const downloadLink = window.document.createElement('a');
+      downloadLink.href = url;
+      downloadLink.download = `${documentData.title.replace(/\s+/g, '_')}_customized.txt`;
+      downloadLink.click();
       URL.revokeObjectURL(url);
 
       toast.success('Document customized successfully!');
@@ -406,7 +405,7 @@ const DocumentCustomizer: React.FC = () => {
     );
   }
 
-  if (!document) {
+  if (!documentData) {
     return (
       <div className="max-w-4xl mx-auto p-8 text-center">
         <h1 className="text-2xl font-bold mb-4">Document not found</h1>
@@ -417,7 +416,7 @@ const DocumentCustomizer: React.FC = () => {
     );
   }
 
-  const customFields = (document.customizable_fields as CustomField[]) || [];
+  const customFields = (documentData.customizable_fields as CustomField[]) || [];
 
   return (
     <div className="max-w-4xl mx-auto p-8">
@@ -434,13 +433,13 @@ const DocumentCustomizer: React.FC = () => {
         
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">{document.title}</h1>
-            <p className="text-gray-600 mt-1">{document.description}</p>
+            <h1 className="text-3xl font-bold">{documentData.title}</h1>
+            <p className="text-gray-600 mt-1">{documentData.description}</p>
           </div>
           
           <div className="flex items-center gap-2">
             {saving && <Badge variant="secondary">Saving...</Badge>}
-            {document.is_required && <Badge variant="destructive">Required</Badge>}
+            {documentData.is_required && <Badge variant="destructive">Required</Badge>}
           </div>
         </div>
       </div>
@@ -480,12 +479,12 @@ const DocumentCustomizer: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label>Category</Label>
-                    <p className="text-sm text-gray-600 mt-1 capitalize">{document.category}</p>
+                    <p className="text-sm text-gray-600 mt-1 capitalize">{documentData.category}</p>
                   </div>
                   <div>
                     <Label>Required</Label>
                     <p className="text-sm text-gray-600 mt-1">
-                      {document.is_required ? 'Yes' : 'No'}
+                      {documentData.is_required ? 'Yes' : 'No'}
                     </p>
                   </div>
                   {customFields.length > 0 && (
