@@ -7,7 +7,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { User, LogOut, Bell, Menu, X } from "lucide-react";
+import { User, LogOut, Bell, Menu, X, Keyboard } from "lucide-react";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import KeyboardShortcutsModal from "@/components/ui/keyboard-shortcuts-modal";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -15,6 +17,17 @@ const Dashboard = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const { user, signOut } = useAuth();
   const isMobile = useIsMobile();
+  
+  // Keyboard shortcuts integration
+  const { showShortcuts, setShowShortcuts } = useKeyboardShortcuts({
+    onToggleChat: () => setShowChatbot(prev => !prev),
+    onFocusSearch: () => {
+      const searchInput = document.querySelector('input[placeholder="Search..."]') as HTMLInputElement;
+      if (searchInput) {
+        searchInput.focus();
+      }
+    }
+  });
   
   const handleSignOut = async () => {
     try {
@@ -265,6 +278,27 @@ const Dashboard = () => {
         <main className="flex-1 p-4 lg:p-6">
           <Outlet />
         </main>
+        
+        {/* Footer with keyboard shortcut icon */}
+        <footer className="bg-white border-t px-4 py-2 flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center gap-4">
+            <span>© 2024 Bizzy</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 px-2 text-xs hover:text-gray-700"
+              onClick={() => setShowShortcuts(true)}
+            >
+              <Keyboard className="w-3 h-3 mr-1" />
+              Shortcuts
+            </Button>
+          </div>
+          <div className="hidden sm:flex items-center gap-2">
+            <span>Press</span>
+            <kbd className="px-1.5 py-0.5 text-xs bg-gray-100 rounded border">?</kbd>
+            <span>for keyboard shortcuts</span>
+          </div>
+        </footer>
       </div>
       
       {/* Bizzy AI Assistant chatbot - Mobile responsive */}
@@ -332,6 +366,12 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+      
+      {/* Keyboard Shortcuts Modal */}
+      <KeyboardShortcutsModal
+        open={showShortcuts}
+        onOpenChange={setShowShortcuts}
+      />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -10,6 +9,7 @@ import { DocumentPreview } from '@/components/documents/DocumentPreview';
 import { DocumentCardSkeleton } from '@/components/ui/skeleton-loader';
 import { toast } from 'sonner';
 import type { Document, UserDocumentProgress, GuidanceStepDocument } from '@/types/documents';
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 const Documents = () => {
   const { user } = useAuth();
@@ -22,6 +22,20 @@ const Documents = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [previewDocument, setPreviewDocument] = useState<Document | null>(null);
   const [relatedSteps, setRelatedSteps] = useState<GuidanceStepDocument[]>([]);
+
+  // Keyboard shortcuts for documents page
+  const { showShortcuts, setShowShortcuts } = useKeyboardShortcuts({
+    onFocusSearch: () => {
+      const searchInput = document.querySelector('input[placeholder*="search"]') as HTMLInputElement;
+      if (searchInput) {
+        searchInput.focus();
+      }
+    },
+    onNew: () => {
+      // Focus on first document or open creation flow
+      console.log('New document shortcut triggered');
+    }
+  });
 
   useEffect(() => {
     fetchDocuments();
@@ -154,7 +168,7 @@ const Documents = () => {
 
   if (loading) {
     return (
-      <div className="space-y-4 lg:space-y-6">
+      <div className="space-y-6">
         <div className="px-4 lg:px-0">
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Document Library</h1>
           <p className="text-gray-600 mt-2 text-sm lg:text-base">
@@ -184,7 +198,7 @@ const Documents = () => {
   }
 
   return (
-    <div className="space-y-4 lg:space-y-6">
+    <div className="space-y-6">
       <div className="px-4 lg:px-0">
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Document Library</h1>
         <p className="text-gray-600 mt-2 text-sm lg:text-base">
