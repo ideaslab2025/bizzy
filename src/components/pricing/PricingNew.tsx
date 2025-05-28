@@ -21,7 +21,7 @@ const PricingNew = () => {
       description: "Perfect for solo entrepreneurs and small startups",
       icon: <Users className="w-6 h-6" />,
       badge: null,
-      priceId: "price_starter_test", // Replace with your actual Stripe price ID
+      priceId: "price_starter_test",
       features: [
         "Basic business setup guidance",
         "Essential document templates",
@@ -39,7 +39,7 @@ const PricingNew = () => {
       description: "Ideal for growing businesses and established companies",
       icon: <Building2 className="w-6 h-6" />,
       badge: <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Most Popular</Badge>,
-      priceId: "price_professional_test", // Replace with your actual Stripe price ID
+      priceId: "price_professional_test",
       features: [
         "Everything in Starter",
         "Advanced business tools",
@@ -59,7 +59,7 @@ const PricingNew = () => {
       description: "Comprehensive solution for large organizations",
       icon: <Crown className="w-6 h-6" />,
       badge: <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">Premium</Badge>,
-      priceId: "price_enterprise_test", // Replace with your actual Stripe price ID
+      priceId: "price_enterprise_test",
       features: [
         "Everything in Professional",
         "Unlimited consultations",
@@ -76,21 +76,38 @@ const PricingNew = () => {
   ];
 
   const handleSubscribe = async (priceId: string, planName: string) => {
+    console.log("Starting payment process for plan:", planName);
+    
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to subscribe to a plan.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setLoadingPlan(planName);
+      console.log("Calling create-checkout function...");
       
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: { priceId, planName }
       });
 
+      console.log("Function response:", { data, error });
+
       if (error) {
+        console.error("Function error:", error);
         throw error;
       }
 
       if (data?.url) {
-        // Open Stripe checkout in a new tab
-        window.open(data.url, '_blank');
+        console.log("Redirecting to Stripe checkout:", data.url);
+        // Redirect to Stripe checkout in the same tab
+        window.location.href = data.url;
       } else {
+        console.error("No checkout URL received:", data);
         throw new Error('No checkout URL received');
       }
     } catch (error) {
