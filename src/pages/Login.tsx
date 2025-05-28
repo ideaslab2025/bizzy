@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/sonner";
-import { AnimatedGradient } from "@/components/ui/animated-gradient";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
@@ -52,7 +51,7 @@ const Login = () => {
   };
   
   return (
-    <AnimatedGradient variant="subtle" className="flex min-h-screen items-center justify-center p-4">
+    <div className="flex min-h-screen bg-muted/30 items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
           <Link to="/">
@@ -116,7 +115,7 @@ const Login = () => {
           </form>
         </Card>
       </div>
-    </AnimatedGradient>
+    </div>
   );
 };
 
