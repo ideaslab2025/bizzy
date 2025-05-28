@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useNavigate } from 'react-router-dom';
 import { DocumentCard } from '@/components/documents/DocumentCard';
 import { DocumentFilters } from '@/components/documents/DocumentFilters';
 import { DocumentPreview } from '@/components/documents/DocumentPreview';
@@ -11,6 +13,7 @@ import type { Document, UserDocumentProgress, GuidanceStepDocument } from '@/typ
 const Documents = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [progress, setProgress] = useState<UserDocumentProgress[]>([]);
   const [loading, setLoading] = useState(true);
@@ -114,8 +117,8 @@ const Documents = () => {
   };
 
   const handleCustomize = (document: Document) => {
-    // TODO: Navigate to customization page
-    toast.info('Document customization coming soon!');
+    // Navigate to document customizer page
+    navigate(`/dashboard/documents/customize/${document.id}`);
   };
 
   const handleDownload = async (document: Document) => {

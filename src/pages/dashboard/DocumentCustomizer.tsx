@@ -11,9 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, ChevronRight, Download, Save, FileText } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download, Save, FileText, CheckCircle, Eye, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Document, CustomField } from '@/types/documents';
+import { cn } from '@/lib/utils';
 
 const DocumentCustomizer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,10 +25,12 @@ const DocumentCustomizer: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [preview, setPreview] = useState('');
 
   const steps = [
     { title: 'Document Info', description: 'Review document details' },
-    { title: 'Customize', description: 'Fill in your information' },
+    { title: 'Fill Details', description: 'Customize your information' },
     { title: 'Preview', description: 'Review your document' },
     { title: 'Download', description: 'Save and download' }
   ];
@@ -156,123 +159,19 @@ const DocumentCustomizer: React.FC = () => {
     }
   };
 
-  const updateField = (fieldId: string, value: any) => {
-    setFormData(prev => ({ ...prev, [fieldId]: value }));
+  const validateField = (field: CustomField, value: any) => {
+    if (field.required && (!value || value === '')) {
+      return `${field.label} is required`;
+    }
+    return null;
   };
 
-  const renderCustomField = (field: CustomField) => {
-    const value = formData[field.id] || field.default_value || '';
-
-    switch (field.type) {
-      case 'text':
-        return (
-          <div key={field.id} className="space-y-2">
-            <Label htmlFor={field.id}>
-              {field.label}
-              {field.required && <span className="text-red-500 ml-1">*</span>}
-            </Label>
-            <Input
-              id={field.id}
-              value={value}
-              onChange={(e) => updateField(field.id, e.target.value)}
-              placeholder={field.placeholder}
-              required={field.required}
-            />
-            {field.help_text && (
-              <p className="text-sm text-gray-500">{field.help_text}</p>
-            )}
-          </div>
-        );
-
-      case 'textarea':
-        return (
-          <div key={field.id} className="space-y-2">
-            <Label htmlFor={field.id}>
-              {field.label}
-              {field.required && <span className="text-red-500 ml-1">*</span>}
-            </Label>
-            <Textarea
-              id={field.id}
-              value={value}
-              onChange={(e) => updateField(field.id, e.target.value)}
-              placeholder={field.placeholder}
-              required={field.required}
-              rows={4}
-            />
-            {field.help_text && (
-              <p className="text-sm text-gray-500">{field.help_text}</p>
-            )}
-          </div>
-        );
-
-      case 'select':
-        return (
-          <div key={field.id} className="space-y-2">
-            <Label htmlFor={field.id}>
-              {field.label}
-              {field.required && <span className="text-red-500 ml-1">*</span>}
-            </Label>
-            <Select value={value} onValueChange={(val) => updateField(field.id, val)}>
-              <SelectTrigger>
-                <SelectValue placeholder={field.placeholder || `Select ${field.label}`} />
-              </SelectTrigger>
-              <SelectContent>
-                {field.options?.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {field.help_text && (
-              <p className="text-sm text-gray-500">{field.help_text}</p>
-            )}
-          </div>
-        );
-
-      case 'number':
-        return (
-          <div key={field.id} className="space-y-2">
-            <Label htmlFor={field.id}>
-              {field.label}
-              {field.required && <span className="text-red-500 ml-1">*</span>}
-            </Label>
-            <Input
-              id={field.id}
-              type="number"
-              value={value}
-              onChange={(e) => updateField(field.id, parseFloat(e.target.value) || '')}
-              placeholder={field.placeholder}
-              required={field.required}
-            />
-            {field.help_text && (
-              <p className="text-sm text-gray-500">{field.help_text}</p>
-            )}
-          </div>
-        );
-
-      case 'date':
-        return (
-          <div key={field.id} className="space-y-2">
-            <Label htmlFor={field.id}>
-              {field.label}
-              {field.required && <span className="text-red-500 ml-1">*</span>}
-            </Label>
-            <Input
-              id={field.id}
-              type="date"
-              value={value}
-              onChange={(e) => updateField(field.id, e.target.value)}
-              required={field.required}
-            />
-            {field.help_text && (
-              <p className="text-sm text-gray-500">{field.help_text}</p>
-            )}
-          </div>
-        );
-
-      default:
-        return null;
+  const updateField = (fieldId: string, value: any) => {
+    setFormData(prev => ({ ...prev, [fieldId]: value }));
+    
+    // Clear error when user starts typing
+    if (errors[fieldId]) {
+      setErrors(prev => ({ ...prev, [fieldId]: '' }));
     }
   };
 
@@ -280,23 +179,36 @@ const DocumentCustomizer: React.FC = () => {
     if (!document?.customizable_fields) return true;
 
     const fields = document.customizable_fields as CustomField[];
-    const requiredFields = fields.filter(field => field.required);
+    const newErrors: Record<string, string> = {};
 
-    for (const field of requiredFields) {
-      if (!formData[field.id] || formData[field.id] === '') {
-        toast.error(`Please fill in the required field: ${field.label}`);
-        return false;
+    for (const field of fields) {
+      const error = validateField(field, formData[field.id]);
+      if (error) {
+        newErrors[field.id] = error;
       }
     }
 
-    return true;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
-    if (currentStep === 1 && !validateForm()) return;
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+  const generatePreview = () => {
+    if (!validateForm()) {
+      toast.error('Please fix the errors before previewing');
+      return;
     }
+
+    // Simple template replacement
+    let previewContent = `${document?.title}\n\n${document?.description}\n\n`;
+    
+    const fields = (document?.customizable_fields as CustomField[]) || [];
+    fields.forEach(field => {
+      const value = formData[field.id] || '[Not provided]';
+      previewContent += `${field.label}: ${value}\n`;
+    });
+
+    setPreview(previewContent);
+    setCurrentStep(2);
   };
 
   const handleFinalize = async () => {
@@ -342,13 +254,144 @@ const DocumentCustomizer: React.FC = () => {
           completed_at: new Date().toISOString()
         });
 
+      // Download document
+      const blob = new Blob([preview], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${document.title.replace(/\s+/g, '_')}_customized.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+
       toast.success('Document customized successfully!');
-      navigate('/dashboard/documents');
+      setCurrentStep(3);
     } catch (error) {
       console.error('Error finalizing document:', error);
       toast.error('Failed to save document');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const renderCustomField = (field: CustomField) => {
+    const value = formData[field.id] || field.default_value || '';
+    const error = errors[field.id];
+
+    switch (field.type) {
+      case 'text':
+        return (
+          <div key={field.id} className="space-y-2">
+            <Label htmlFor={field.id}>
+              {field.label}
+              {field.required && <span className="text-red-500 ml-1">*</span>}
+            </Label>
+            <Input
+              id={field.id}
+              value={value}
+              onChange={(e) => updateField(field.id, e.target.value)}
+              placeholder={field.placeholder}
+              className={error ? 'border-red-500' : ''}
+            />
+            {field.help_text && (
+              <p className="text-sm text-gray-500">{field.help_text}</p>
+            )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
+          </div>
+        );
+
+      case 'textarea':
+        return (
+          <div key={field.id} className="space-y-2">
+            <Label htmlFor={field.id}>
+              {field.label}
+              {field.required && <span className="text-red-500 ml-1">*</span>}
+            </Label>
+            <Textarea
+              id={field.id}
+              value={value}
+              onChange={(e) => updateField(field.id, e.target.value)}
+              placeholder={field.placeholder}
+              rows={4}
+              className={error ? 'border-red-500' : ''}
+            />
+            {field.help_text && (
+              <p className="text-sm text-gray-500">{field.help_text}</p>
+            )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
+          </div>
+        );
+
+      case 'select':
+        return (
+          <div key={field.id} className="space-y-2">
+            <Label htmlFor={field.id}>
+              {field.label}
+              {field.required && <span className="text-red-500 ml-1">*</span>}
+            </Label>
+            <Select value={value} onValueChange={(val) => updateField(field.id, val)}>
+              <SelectTrigger className={error ? 'border-red-500' : ''}>
+                <SelectValue placeholder={field.placeholder || `Select ${field.label}`} />
+              </SelectTrigger>
+              <SelectContent>
+                {field.options?.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {field.help_text && (
+              <p className="text-sm text-gray-500">{field.help_text}</p>
+            )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
+          </div>
+        );
+
+      case 'number':
+        return (
+          <div key={field.id} className="space-y-2">
+            <Label htmlFor={field.id}>
+              {field.label}
+              {field.required && <span className="text-red-500 ml-1">*</span>}
+            </Label>
+            <Input
+              id={field.id}
+              type="number"
+              value={value}
+              onChange={(e) => updateField(field.id, parseFloat(e.target.value) || '')}
+              placeholder={field.placeholder}
+              className={error ? 'border-red-500' : ''}
+            />
+            {field.help_text && (
+              <p className="text-sm text-gray-500">{field.help_text}</p>
+            )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
+          </div>
+        );
+
+      case 'date':
+        return (
+          <div key={field.id} className="space-y-2">
+            <Label htmlFor={field.id}>
+              {field.label}
+              {field.required && <span className="text-red-500 ml-1">*</span>}
+            </Label>
+            <Input
+              id={field.id}
+              type="date"
+              value={value}
+              onChange={(e) => updateField(field.id, e.target.value)}
+              className={error ? 'border-red-500' : ''}
+            />
+            {field.help_text && (
+              <p className="text-sm text-gray-500">{field.help_text}</p>
+            )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
+          </div>
+        );
+
+      default:
+        return null;
     }
   };
 
@@ -493,22 +536,7 @@ const DocumentCustomizer: React.FC = () => {
               
               <div className="border rounded-lg p-6 bg-gray-50">
                 <h3 className="font-medium mb-4">Document Preview</h3>
-                
-                {Object.keys(formData).length > 0 ? (
-                  <div className="space-y-3">
-                    {Object.entries(formData).map(([key, value]) => {
-                      const field = customFields.find(f => f.id === key);
-                      return (
-                        <div key={key} className="flex justify-between">
-                          <span className="font-medium">{field?.label || key}:</span>
-                          <span className="text-gray-600">{value || 'Not specified'}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-gray-500">No customizations made</p>
-                )}
+                <pre className="whitespace-pre-wrap font-sans text-sm">{preview}</pre>
               </div>
               
               <div className="p-4 bg-yellow-50 rounded-lg">
@@ -553,8 +581,14 @@ const DocumentCustomizer: React.FC = () => {
             </Button>
 
             {currentStep < steps.length - 1 ? (
-              <Button onClick={handleNext}>
-                Next
+              <Button onClick={() => {
+                if (currentStep === 1) {
+                  generatePreview();
+                } else {
+                  setCurrentStep(currentStep + 1);
+                }
+              }}>
+                {currentStep === 1 ? 'Preview' : 'Next'}
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             ) : (

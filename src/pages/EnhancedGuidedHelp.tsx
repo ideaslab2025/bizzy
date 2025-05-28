@@ -27,6 +27,9 @@ import { RichContentRenderer } from "@/components/guidance/RichContentRenderer";
 import { ProgressHeader } from "@/components/guidance/ProgressHeader";
 import { QuickWinsPanel } from "@/components/guidance/QuickWinsPanel";
 import { SmartRecommendationsPanel } from "@/components/guidance/SmartRecommendationsPanel";
+import { SwipeableStepContent } from "@/components/guidance/SwipeableStepContent";
+import { MilestoneReached } from "@/components/celebrations/MilestoneReached";
+import { AchievementNotification } from "@/components/celebrations/AchievementNotification";
 import type { 
   EnhancedGuidanceSection, 
   EnhancedGuidanceStep, 
@@ -66,6 +69,10 @@ const EnhancedGuidedHelp = () => {
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [companyAge, setCompanyAge] = useState(0);
+  
+  // Celebration states
+  const [showMilestone, setShowMilestone] = useState<any>(null);
+  const [achievementQueue, setAchievementQueue] = useState<any[]>([]);
 
   const calculateCompanyAge = async () => {
     if (!user) return;
@@ -107,7 +114,6 @@ const EnhancedGuidedHelp = () => {
     }
   }, [currentSection]);
 
-  // Track step visits and time
   useEffect(() => {
     if (steps.length > 0 && currentStep && user) {
       const currentStepData = steps.find(step => step.order_number === currentStep);
@@ -155,7 +161,6 @@ const EnhancedGuidedHelp = () => {
       .order('order_number');
     
     if (data && !error) {
-      // Type assertion to handle the database nullable fields
       const typedSteps = data.map(step => ({
         ...step,
         difficulty_level: step.difficulty_level as 'easy' | 'medium' | 'complex' | null,
@@ -200,7 +205,6 @@ const EnhancedGuidedHelp = () => {
       const visitedStepIds = progressArray.map(item => item.step_id);
       setVisitedSteps(new Set(visitedStepIds));
       
-      // Only set steps as completed if they are actually marked as completed in the database
       const actuallyCompletedStepIds = progressArray
         .filter(item => item.completed === true)
         .map(item => item.step_id);
@@ -275,7 +279,7 @@ const EnhancedGuidedHelp = () => {
       await supabase
         .from('user_guidance_progress')
         .update({
-          completed: false, // Only mark as visited, not completed
+          completed: false,
           last_visited_at: new Date().toISOString()
         })
         .eq('id', existingProgress.id);
@@ -286,10 +290,69 @@ const EnhancedGuidedHelp = () => {
           user_id: user.id,
           section_id: sectionId,
           step_id: stepId,
-          completed: false, // Only mark as visited, not completed
+          completed: false,
           section_completed: false,
           last_visited_at: new Date().toISOString()
         });
+    }
+  };
+
+  const saveAchievement = async (achievementType: string) => {
+    if (!user) return;
+    
+    try {
+      await supabase
+        .from('user_achievements')
+        .insert({
+          user_id: user.id,
+          achievement_type: achievementType
+        });
+    } catch (error) {
+      console.error('Error saving achievement:', error);
+    }
+  };
+
+  const checkForAchievements = async () => {
+    if (!user) return;
+
+    // Check for first section completion
+    if (completedSteps.size === 1) {
+      const achievement = {
+        type: 'first_section',
+        title: 'First Steps!',
+        description: 'You\'ve completed your first step in the journey!'
+      };
+      setShowMilestone(achievement);
+      await saveAchievement('first_steps');
+    }
+    
+    // Check for section completion
+    const currentSectionData = sections.find(s => s.order_number === currentSection);
+    if (currentSectionData) {
+      const currentSectionSteps = steps.filter(s => s.section_id === currentSectionData?.id);
+      const sectionCompletedSteps = currentSectionSteps.filter(s => completedSteps.has(s.id));
+      
+      if (sectionCompletedSteps.length === currentSectionSteps.length && currentSectionSteps.length > 0) {
+        const achievement = {
+          type: 'section_complete',
+          title: `${currentSectionData.title} Complete!`,
+          description: 'You\'ve mastered this entire section!'
+        };
+        setShowMilestone(achievement);
+        await saveAchievement(`section_${currentSectionData.id}_complete`);
+      }
+    }
+    
+    // Check for halfway point
+    const totalProgress = getOverallProgress();
+    if (totalProgress >= 50 && totalProgress < 55) {
+      const achievement = {
+        type: 'halfway',
+        title: 'Halfway There!',
+        description: 'You\'re 50% through your business setup journey!'
+      };
+      setShowMilestone(achievement);
+      await saveAchievement('halfway_complete');
     }
   };
 
@@ -347,7 +410,6 @@ const EnhancedGuidedHelp = () => {
       return next;
     });
     
-    // Update completed steps state
     setCompletedSteps(prev => {
       const next = new Set(prev);
       if (isNowCompleted) {
@@ -364,6 +426,9 @@ const EnhancedGuidedHelp = () => {
         sectionSteps.forEach(step => next.add(step.id));
         return next;
       });
+      
+      // Check for achievements after completing section
+      setTimeout(() => checkForAchievements(), 500);
     }
   };
 
@@ -461,18 +526,15 @@ const EnhancedGuidedHelp = () => {
     return steps.find(step => step.order_number === currentStep);
   };
 
-  // Calculate section progress (for current section header)
   const getSectionProgress = (sectionId: number) => {
     const sectionSteps = allSteps.filter(step => step.section_id === sectionId);
     const completedSectionSteps = sectionSteps.filter(step => completedSteps.has(step.id));
     return sectionSteps.length > 0 ? (completedSectionSteps.length / sectionSteps.length) * 100 : 0;
   };
 
-  // Calculate overall progress (across all sections)
   const getOverallProgress = () => {
     const totalSteps = allSteps.length;
     const totalCompletedSteps = completedSteps.size;
-    console.log('Overall progress calculation:', { totalSteps, totalCompletedSteps, completedSteps: Array.from(completedSteps) });
     return totalSteps > 0 ? (totalCompletedSteps / totalSteps) * 100 : 0;
   };
 
@@ -491,7 +553,6 @@ const EnhancedGuidedHelp = () => {
   const sectionProgress = currentSectionData ? getSectionProgress(currentSectionData.id) : 0;
   const overallProgress = Math.round(getOverallProgress());
 
-  // Enhanced sections with progress data for sidebar
   const enhancedSections = sections.map(section => {
     const sectionSteps = allSteps.filter(step => step.section_id === section.id);
     const sectionCompletedSteps = sectionSteps.filter(step => completedSteps.has(step.id));
@@ -686,7 +747,7 @@ const EnhancedGuidedHelp = () => {
 
         {/* Content with Smart Recommendations */}
         <div className="flex-1 p-4 lg:p-8 pb-20 lg:pb-32">
-          {/* Smart Recommendations Panel - Only show if we have valid data */}
+          {/* Smart Recommendations Panel */}
           {user && completedStepIds.length >= 0 && (
             <div className="mb-6">
               <SmartRecommendationsPanel
@@ -705,85 +766,94 @@ const EnhancedGuidedHelp = () => {
             onNavigateToStep={handleNavigateToStep}
           />
 
-          {/* Step Content - Mobile optimized */}
-          {steps.length === 0 ? (
-            <div className="max-w-4xl">
-              <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                {currentSectionData?.title}
-              </h2>
-              <Card className="mb-8">
-                <CardContent className="p-4 lg:p-8">
-                  <div className="prose max-w-none">
-                    <p className="text-base lg:text-lg text-gray-600">
-                      Content for this section is coming soon. You can still mark this section as complete to track your progress.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          ) : currentStepData ? (
-            <motion.div 
-              key={`${currentSection}-${currentStep}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="max-w-4xl"
-            >
-              <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                {currentStepData.title}
-              </h2>
-
-              {/* Video Section */}
-              {currentStepData.video_url && (
-                <div className="mb-8">
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                        <Button variant="outline" size="lg" className="gap-2">
-                          <Play className="w-5 h-5" />
-                          Watch Video Guide
-                        </Button>
-                      </div>
-                      <p className="text-sm text-gray-600">
-                        30-60 second video explanation
+          {/* Step Content with Swipe Support */}
+          <SwipeableStepContent
+            onNext={nextStep}
+            onPrev={prevStep}
+            canGoNext={currentSection < sections.length || currentStep < steps.length}
+            canGoPrev={currentSection > 1 || currentStep > 1}
+            currentStep={currentStep}
+            totalSteps={steps.length || 1}
+          >
+            {steps.length === 0 ? (
+              <div className="max-w-4xl">
+                <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
+                  {currentSectionData?.title}
+                </h2>
+                <Card className="mb-8">
+                  <CardContent className="p-4 lg:p-8">
+                    <div className="prose max-w-none">
+                      <p className="text-base lg:text-lg text-gray-600">
+                        Content for this section is coming soon. You can still mark this section as complete to track your progress.
                       </p>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* Enhanced Rich Content */}
-              <Card className="mb-8">
-                <CardContent className="p-8">
-                  <RichContentRenderer
-                    content={currentStepData}
-                    stepId={currentStepData.id}
-                  />
-
-                  {/* External Links */}
-                  {currentStepData.external_links && Array.isArray(currentStepData.external_links) && currentStepData.external_links.length > 0 && (
-                    <div className="mt-6 pt-6 border-t">
-                      <h3 className="font-semibold mb-3">Helpful Resources:</h3>
-                      <div className="space-y-2">
-                        {(currentStepData.external_links as any[]).map((link, index) => (
-                          <a
-                            key={index}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-[#0088cc] hover:underline"
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                            {link.title}
-                          </a>
-                        ))}
-                      </div>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
-          ) : null}
+                  </CardContent>
+                </Card>
+              </div>
+            ) : currentStepData ? (
+              <motion.div 
+                key={`${currentSection}-${currentStep}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="max-w-4xl"
+              >
+                <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
+                  {currentStepData.title}
+                </h2>
+
+                {/* Video Section */}
+                {currentStepData.video_url && (
+                  <div className="mb-8">
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-4">
+                          <Button variant="outline" size="lg" className="gap-2">
+                            <Play className="w-5 h-5" />
+                            Watch Video Guide
+                          </Button>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          30-60 second video explanation
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
+                {/* Enhanced Rich Content */}
+                <Card className="mb-8">
+                  <CardContent className="p-8">
+                    <RichContentRenderer
+                      content={currentStepData}
+                      stepId={currentStepData.id}
+                    />
+
+                    {/* External Links */}
+                    {currentStepData.external_links && Array.isArray(currentStepData.external_links) && currentStepData.external_links.length > 0 && (
+                      <div className="mt-6 pt-6 border-t">
+                        <h3 className="font-semibold mb-3">Helpful Resources:</h3>
+                        <div className="space-y-2">
+                          {(currentStepData.external_links as any[]).map((link, index) => (
+                            <a
+                              key={index}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 text-[#0088cc] hover:underline"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                              {link.title}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ) : null}
+          </SwipeableStepContent>
         </div>
 
         {/* Fixed Floating Bottom Navigation - Mobile responsive */}
@@ -799,7 +869,6 @@ const EnhancedGuidedHelp = () => {
           </Button>
 
           <div className="flex gap-2 lg:gap-3">
-            {/* Show Mark Section Complete and Skip Section buttons on last step of any section OR when no steps exist */}
             {isLastStepInSection() && currentSectionData && (
               <>
                 <Button
@@ -842,6 +911,22 @@ const EnhancedGuidedHelp = () => {
           </div>
         </div>
       </div>
+
+      {/* Celebration Components */}
+      {showMilestone && (
+        <MilestoneReached
+          milestone={showMilestone}
+          onClose={() => setShowMilestone(null)}
+        />
+      )}
+
+      {achievementQueue.map((achievement, index) => (
+        <AchievementNotification
+          key={achievement.id}
+          achievement={achievement}
+          onClose={() => setAchievementQueue(prev => prev.filter((_, i) => i !== index))}
+        />
+      ))}
 
       {/* Chatbot Modal - Mobile responsive */}
       {showChatbot && (
