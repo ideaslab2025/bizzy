@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { PullToRefresh } from "@/components/ui/pull-to-refresh";
+import { GradientBackground } from "@/components/ui/gradient-background";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -166,8 +168,8 @@ const Dashboard = () => {
       
       {/* Main content area */}
       <div className="flex-1 flex flex-col">
-        {/* Top navigation bar */}
-        <header className="bg-white border-b sticky top-0 z-20 h-14 lg:h-16">
+        {/* Top navigation bar with gradient */}
+        <GradientBackground type="minimal" className="bg-white border-b sticky top-0 z-20 h-14 lg:h-16">
           <div className="flex items-center justify-between h-full px-4">
             <div className="flex items-center gap-2">
               <Button
@@ -279,7 +281,7 @@ const Dashboard = () => {
               </DropdownMenu>
             </div>
           </div>
-        </header>
+        </GradientBackground>
         
         {/* Main content with pull-to-refresh */}
         <PullToRefresh 

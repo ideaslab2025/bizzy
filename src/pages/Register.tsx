@@ -9,6 +9,7 @@ import { toast } from "@/components/ui/sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Check, X } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { AnimatedGradient } from "@/components/ui/animated-gradient";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -105,7 +106,7 @@ const Register = () => {
   };
   
   return (
-    <div className="flex min-h-screen bg-muted/30 items-center justify-center p-4">
+    <AnimatedGradient variant="subtle" className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
           <Link to="/">
@@ -238,7 +239,7 @@ const Register = () => {
           </form>
         </Card>
       </div>
-    </div>
+    </AnimatedGradient>
   );
 };
 
