@@ -49,6 +49,7 @@ const EnhancedGuidedHelp = () => {
   const [currentSection, setCurrentSection] = useState<number>(1);
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [steps, setSteps] = useState<EnhancedGuidanceStep[]>([]);
+  const [allSteps, setAllSteps] = useState<EnhancedGuidanceStep[]>([]);
   const [progress, setProgress] = useState<UserProgress[]>([]);
   const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
   const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set());
@@ -84,6 +85,7 @@ const EnhancedGuidedHelp = () => {
 
   useEffect(() => {
     fetchSections();
+    fetchAllSteps();
     if (user) {
       fetchProgress();
       fetchAchievements();
@@ -119,6 +121,24 @@ const EnhancedGuidedHelp = () => {
     
     if (data && !error) {
       setSections(data);
+    }
+  };
+
+  const fetchAllSteps = async () => {
+    const { data, error } = await supabase
+      .from('guidance_steps')
+      .select('*')
+      .order('section_id, order_number');
+    
+    if (data && !error) {
+      const typedSteps = data.map(step => ({
+        ...step,
+        difficulty_level: step.difficulty_level as 'easy' | 'medium' | 'complex' | null,
+        step_type: step.step_type as 'action' | 'information' | 'decision' | 'external' | null,
+        prerequisites: step.prerequisites as string[] | null
+      })) as EnhancedGuidanceStep[];
+      
+      setAllSteps(typedSteps);
     }
   };
 
@@ -420,17 +440,13 @@ const EnhancedGuidedHelp = () => {
   };
 
   const getSectionProgress = (sectionId: number) => {
-    const sectionSteps = steps.filter(step => step.section_id === sectionId);
+    const sectionSteps = allSteps.filter(step => step.section_id === sectionId);
     const completedSteps = sectionSteps.filter(step => visitedSteps.has(step.id));
     return sectionSteps.length > 0 ? (completedSteps.length / sectionSteps.length) * 100 : 0;
   };
 
   const getOverallProgress = () => {
-    const totalSteps = sections.reduce((total, section) => {
-      const sectionSteps = steps.filter(step => step.section_id === section.id);
-      return total + sectionSteps.length;
-    }, 0);
-    
+    const totalSteps = allSteps.length;
     return totalSteps > 0 ? (visitedSteps.size / totalSteps) * 100 : 0;
   };
 
@@ -451,7 +467,7 @@ const EnhancedGuidedHelp = () => {
 
   // Enhanced sections with progress data
   const enhancedSections = sections.map(section => {
-    const sectionSteps = steps.filter(step => step.section_id === section.id);
+    const sectionSteps = allSteps.filter(step => step.section_id === section.id);
     const completedSteps = sectionSteps.filter(step => visitedSteps.has(step.id));
     return {
       ...section,
