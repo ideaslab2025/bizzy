@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -75,46 +76,31 @@ const PricingNew = () => {
   ];
 
   const handleSubscribe = async (priceId: string, planName: string) => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to subscribe to a plan.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     try {
       setLoadingPlan(planName);
-      console.log(`Creating payment for plan: ${planName}`);
       
-      const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: { planId: planName.toLowerCase() }
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { priceId, planName }
       });
 
-      console.log('Payment response:', { data, error });
-
       if (error) {
-        console.error('Supabase function error:', error);
         throw error;
       }
 
       if (data?.url) {
-        console.log('Redirecting to Stripe checkout:', data.url);
-        // Add a small delay to ensure the loading state is visible
-        setTimeout(() => {
-          window.location.href = data.url;
-        }, 500);
+        // Open Stripe checkout in a new tab
+        window.open(data.url, '_blank');
       } else {
-        throw new Error('No checkout URL received from payment service');
+        throw new Error('No checkout URL received');
       }
     } catch (error) {
       console.error('Error creating checkout session:', error);
       toast({
         title: "Payment Error",
-        description: error instanceof Error ? error.message : "Failed to start checkout session. Please try again.",
+        description: "Failed to start checkout session. Please try again.",
         variant: "destructive",
       });
+    } finally {
       setLoadingPlan(null);
     }
   };
@@ -168,7 +154,7 @@ const PricingNew = () => {
                   {loadingPlan === plan.name ? (
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Redirecting to payment...
+                      Processing...
                     </div>
                   ) : (
                     <>
