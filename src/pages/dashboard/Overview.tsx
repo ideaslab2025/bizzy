@@ -1,136 +1,240 @@
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { CheckCircle, Clock, FileText, Users, TrendingUp, ArrowRight, Play, Download } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useDocuments } from "@/hooks/useDocuments";
+import { supabase } from "@/integrations/supabase/client";
+
+interface GuidanceSection {
+  id: number;
+  title: string;
+  description: string;
+  order_number: number;
+}
+
+interface UserProgress {
+  section_id: number;
+  section_completed: boolean;
+}
 
 const Overview = () => {
+  const { user } = useAuth();
+  const { documents, stats: documentStats, loading: documentsLoading } = useDocuments();
+  const [sections, setSections] = useState<GuidanceSection[]>([]);
+  const [progress, setProgress] = useState<UserProgress[]>([]);
+  const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    fetchSections();
+    if (user) {
+      fetchProgress();
+    }
+  }, [user]);
+
+  const fetchSections = async () => {
+    const { data, error } = await supabase
+      .from('guidance_sections')
+      .select('*')
+      .order('order_number');
+    
+    if (data && !error) {
+      setSections(data);
+    }
+  };
+
+  const fetchProgress = async () => {
+    if (!user) return;
+    
+    const { data, error } = await supabase
+      .from('user_guidance_progress')
+      .select('section_id, section_completed')
+      .eq('user_id', user.id)
+      .eq('section_completed', true);
+    
+    if (data && !error) {
+      setProgress(data);
+      const completedSectionIds = data.map(item => item.section_id);
+      setCompletedSections(new Set(completedSectionIds));
+    }
+  };
+
+  const completionPercentage = sections.length > 0 ? Math.round((completedSections.size / sections.length) * 100) : 0;
+  
+  // Get popular documents (required ones)
+  const popularDocuments = documents.filter(doc => doc.is_required).slice(0, 3);
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Welcome to your Bizzy Dashboard</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Welcome back!</h1>
+        <p className="text-gray-600 mt-2">Here's what's happening with your business setup</p>
+      </div>
+
+      {/* Progress Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Setup Progress</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Setup Progress</CardTitle>
+            <CheckCircle className="h-4 w-4 text-[#0088cc]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">45%</div>
-            <div className="mt-4 h-2 w-full bg-muted rounded-full overflow-hidden">
-              <div className="h-full bg-[#0088cc] w-[45%]"></div>
+            <div className="text-2xl font-bold">{completionPercentage}%</div>
+            <Progress value={completionPercentage} className="mt-2" />
+            <p className="text-xs text-muted-foreground mt-2">
+              {completedSections.size} of {sections.length} sections completed
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Documents</CardTitle>
+            <FileText className="h-4 w-4 text-[#0088cc]" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{documentStats.completed}</div>
+            <p className="text-xs text-muted-foreground">
+              of {documentStats.required} required completed
+            </p>
+            <Progress value={documentStats.completionRate} className="mt-2" />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Next Steps</CardTitle>
+            <Clock className="h-4 w-4 text-[#0088cc]" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {sections.length - completedSections.size}
             </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              12 of 28 tasks completed
-            </p>
+            <p className="text-xs text-muted-foreground">sections remaining</p>
           </CardContent>
         </Card>
-        
+
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Documents</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
+            <TrendingUp className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground mt-2">
-              Documents available based on your business profile
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Subscription</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">Gold</div>
-            <p className="text-xs text-muted-foreground mt-2">
-              Access to 85% of platform features
+            <div className="text-2xl font-bold text-green-600">
+              {completionPercentage > 50 ? 'On Track' : 'Getting Started'}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {completionPercentage > 50 ? 'Great progress!' : 'Keep going!'}
             </p>
           </CardContent>
         </Card>
       </div>
-      
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Continue Setup</h2>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardContent className="p-0">
-            <div className="divide-y">
-              {[
-                { 
-                  title: "Complete your company profile", 
-                  description: "Add company logo, mission statement and other important details",
-                  completion: 75
-                },
-                { 
-                  title: "Set up your tax information", 
-                  description: "Provide tax registration details to generate appropriate documentation",
-                  completion: 30
-                },
-                { 
-                  title: "Review HR policies", 
-                  description: "Ensure your business has all required HR documentation in place",
-                  completion: 0
-                },
-                { 
-                  title: "Set up banking information", 
-                  description: "Add your business bank account details for a complete profile",
-                  completion: 0
-                }
-              ].map((task, index) => (
-                <div key={index} className="flex items-center gap-4 p-4">
-                  <div className="w-8 h-8 rounded-full bg-[#0088cc]/20 flex items-center justify-center">
-                    {task.completion === 100 ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0088cc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20 6 9 17l-5-5" />
-                      </svg>
-                    ) : (
-                      <span className="text-xs font-bold text-[#0088cc]">{task.completion}%</span>
-                    )}
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Play className="h-5 w-5 text-[#0088cc]" />
+              Continue Your Journey
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-gray-600">Pick up where you left off with your business setup guide.</p>
+            <div className="space-y-2">
+              {sections.slice(0, 3).map((section) => {
+                const isCompleted = completedSections.has(section.id);
+                return (
+                  <div key={section.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm ${
+                        isCompleted ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'
+                      }`}>
+                        {isCompleted ? <CheckCircle className="w-4 h-4" /> : section.order_number}
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">{section.title}</p>
+                        <p className="text-xs text-gray-500">{section.description}</p>
+                      </div>
+                    </div>
+                    {isCompleted && <CheckCircle className="w-5 h-5 text-green-500" />}
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-medium">{task.title}</h3>
-                    <p className="text-sm text-muted-foreground">{task.description}</p>
+                );
+              })}
+            </div>
+            <Button asChild className="w-full">
+              <Link to="/guided-help">
+                Continue Guide <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-[#0088cc]" />
+              Essential Documents
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-gray-600">Get started with these important business documents.</p>
+            <div className="space-y-2">
+              {!documentsLoading && popularDocuments.map((document) => (
+                <div key={document.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-sm">{document.title}</p>
+                    <p className="text-xs text-gray-500">{document.description?.substring(0, 60)}...</p>
                   </div>
-                  <button className="text-[#0088cc] text-sm font-medium hover:underline">
-                    {task.completion > 0 && task.completion < 100 ? "Continue" : "Start"}
-                  </button>
+                  <Download className="w-4 h-4 text-gray-400" />
                 </div>
               ))}
+              {documentsLoading && (
+                <div className="space-y-2">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="h-12 bg-gray-100 rounded-lg animate-pulse" />
+                  ))}
+                </div>
+              )}
             </div>
+            <Button asChild variant="outline" className="w-full">
+              <Link to="/dashboard/documents">
+                View All Documents <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </CardContent>
         </Card>
       </div>
-      
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Recommended Resources</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              title: "VAT Registration Guide",
-              type: "Guide",
-              description: "Step-by-step process for UK VAT registration"
-            },
-            {
-              title: "Employee Handbook Template",
-              type: "Document",
-              description: "Customizable template for company policies"
-            },
-            {
-              title: "Year-End Tax Filing",
-              type: "Video",
-              description: "How to prepare for your first tax return"
-            }
-          ].map((resource, index) => (
-            <Card key={index} className="overflow-hidden">
-              <div className="h-2 bg-[#0088cc]"></div>
-              <CardHeader>
-                <CardTitle>{resource.title}</CardTitle>
-                <CardDescription>{resource.type}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm">{resource.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
+
+      {/* Recent Activity */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center gap-4 p-4 bg-green-50 rounded-lg">
+              <CheckCircle className="w-8 h-8 text-green-500" />
+              <div>
+                <p className="font-medium">Account Created Successfully</p>
+                <p className="text-sm text-gray-600">You've joined Bizzy and can now access all features</p>
+              </div>
+            </div>
+            {completedSections.size > 0 && (
+              <div className="flex items-center gap-4 p-4 bg-blue-50 rounded-lg">
+                <Play className="w-8 h-8 text-[#0088cc]" />
+                <div>
+                  <p className="font-medium">Started Business Setup Guide</p>
+                  <p className="text-sm text-gray-600">You've completed {completedSections.size} section{completedSections.size !== 1 ? 's' : ''}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

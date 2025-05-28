@@ -9,6 +9,51 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      documents: {
+        Row: {
+          category: string
+          created_at: string | null
+          customizable_fields: Json | null
+          description: string | null
+          file_type: string | null
+          id: string
+          is_required: boolean | null
+          keywords: string[] | null
+          subcategory: string | null
+          template_url: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          customizable_fields?: Json | null
+          description?: string | null
+          file_type?: string | null
+          id?: string
+          is_required?: boolean | null
+          keywords?: string[] | null
+          subcategory?: string | null
+          template_url?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          customizable_fields?: Json | null
+          description?: string | null
+          file_type?: string | null
+          id?: string
+          is_required?: boolean | null
+          keywords?: string[] | null
+          subcategory?: string | null
+          template_url?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       guidance_sections: {
         Row: {
           created_at: string
@@ -35,6 +80,51 @@ export type Database = {
           title?: string
         }
         Relationships: []
+      }
+      guidance_step_documents: {
+        Row: {
+          context: string | null
+          created_at: string | null
+          display_order: number | null
+          document_id: string | null
+          guidance_step_id: number | null
+          id: string
+          is_primary: boolean | null
+        }
+        Insert: {
+          context?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          document_id?: string | null
+          guidance_step_id?: number | null
+          id?: string
+          is_primary?: boolean | null
+        }
+        Update: {
+          context?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          document_id?: string | null
+          guidance_step_id?: number | null
+          id?: string
+          is_primary?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guidance_step_documents_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "guidance_step_documents_guidance_step_id_fkey"
+            columns: ["guidance_step_id"]
+            isOneToOne: false
+            referencedRelation: "guidance_steps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       guidance_steps: {
         Row: {
@@ -154,6 +244,88 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      user_document_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          customized: boolean | null
+          document_id: string | null
+          downloaded: boolean | null
+          id: string
+          user_id: string
+          viewed: boolean | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          customized?: boolean | null
+          document_id?: string | null
+          downloaded?: boolean | null
+          id?: string
+          user_id: string
+          viewed?: boolean | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          customized?: boolean | null
+          document_id?: string | null
+          downloaded?: boolean | null
+          id?: string
+          user_id?: string
+          viewed?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_document_progress_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_documents: {
+        Row: {
+          created_at: string | null
+          customized_data: Json | null
+          document_id: string | null
+          file_url: string | null
+          id: string
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          customized_data?: Json | null
+          document_id?: string | null
+          file_url?: string | null
+          id?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          customized_data?: Json | null
+          document_id?: string | null
+          file_url?: string | null
+          id?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_documents_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_guidance_progress: {
         Row: {
