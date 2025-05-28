@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { FileText, Download, Edit, Eye, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { DocumentHoverCard } from './DocumentHoverCard';
 import type { Document, UserDocumentProgress } from '@/types/documents';
 
 interface DocumentCardProps {
@@ -47,7 +47,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   const isCompleted = progress?.completed_at;
   const hasProgress = progress?.viewed || progress?.downloaded || progress?.customized;
 
-  return (
+  const cardContent = (
     <Card className={cn("h-full flex flex-col hover:shadow-md transition-shadow", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
@@ -145,5 +145,16 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
         </div>
       </CardContent>
     </Card>
+  );
+
+  // On mobile, show without hover card. On desktop, wrap with hover card
+  if (isMobile) {
+    return cardContent;
+  }
+
+  return (
+    <DocumentHoverCard document={document} side="top">
+      {cardContent}
+    </DocumentHoverCard>
   );
 };

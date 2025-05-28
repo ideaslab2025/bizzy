@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -7,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FileText, ExternalLink, Download, Edit } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { DocumentHoverCard } from './DocumentHoverCard';
 import type { GuidanceStepDocument } from '@/types/documents';
 
 interface DocumentsBlockProps {
@@ -17,6 +18,7 @@ interface DocumentsBlockProps {
 export const DocumentsBlock: React.FC<DocumentsBlockProps> = ({ stepId, linkedDocIds = [] }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [documents, setDocuments] = useState<GuidanceStepDocument[]>([]);
   const [userProgress, setUserProgress] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
@@ -149,7 +151,7 @@ export const DocumentsBlock: React.FC<DocumentsBlockProps> = ({ stepId, linkedDo
           const isCustomized = progress?.customized;
           const isCompleted = progress?.completed_at;
 
-          return (
+          const documentItem = (
             <div
               key={stepDoc.id}
               className="flex items-start gap-3 p-3 bg-white rounded-lg border hover:shadow-sm transition-all"
@@ -220,6 +222,17 @@ export const DocumentsBlock: React.FC<DocumentsBlockProps> = ({ stepId, linkedDo
                 </div>
               </div>
             </div>
+          );
+
+          // On mobile, show without hover card. On desktop, wrap with hover card
+          if (isMobile) {
+            return documentItem;
+          }
+
+          return (
+            <DocumentHoverCard key={stepDoc.id} document={doc} side="right">
+              {documentItem}
+            </DocumentHoverCard>
           );
         })}
 
