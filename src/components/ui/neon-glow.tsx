@@ -67,11 +67,14 @@ export const withNeonGlow = <P extends object>(
   Component: React.ComponentType<P>,
   glowProps?: Omit<NeonGlowProps, 'children'>
 ) => {
-  return React.forwardRef<any, P>((props, ref) => (
+  const WrappedComponent = React.forwardRef<any, P>((props, ref) => (
     <NeonGlow {...glowProps}>
       <Component {...props} ref={ref} />
     </NeonGlow>
   ));
+  
+  WrappedComponent.displayName = `withNeonGlow(${Component.displayName || Component.name})`;
+  return WrappedComponent;
 };
 
 // Neon Button wrapper
@@ -79,7 +82,7 @@ export const NeonButton: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement> & 
   Pick<NeonGlowProps, 'color' | 'intensity' | 'pulse'>
 > = ({ children, color = 'blue', intensity = 'medium', pulse = false, className, ...props }) => (
-  <NeonGlow color={color} intensity={intensity} pulse={pulse} hover active={className}>
+  <NeonGlow color={color} intensity={intensity} pulse={pulse} hover active>
     <button
       className={cn(
         'relative px-6 py-3 rounded-lg font-medium',

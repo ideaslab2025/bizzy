@@ -1,8 +1,8 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/ui/app-sidebar";
 import { CommandPalette } from "@/components/ui/command-palette";
 import { RecentlyViewed } from "@/components/ui/recently-viewed";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -11,6 +11,21 @@ import { SpotlightEffect } from "@/components/ui/spotlight-effect";
 import { NeonGlow } from "@/components/ui/neon-glow";
 
 const Dashboard = () => {
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+
+  // Listen for keyboard shortcut to open command palette
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setCommandPaletteOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <CursorProvider>
       <SidebarProvider>
@@ -53,7 +68,10 @@ const Dashboard = () => {
             </SpotlightEffect>
           </main>
         </div>
-        <CommandPalette />
+        <CommandPalette 
+          open={commandPaletteOpen} 
+          onOpenChange={setCommandPaletteOpen}
+        />
       </SidebarProvider>
     </CursorProvider>
   );
