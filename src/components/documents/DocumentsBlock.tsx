@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { CopyableText } from '@/components/ui/copyable-text';
 import { FileText, ExternalLink, Download, Edit } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -140,6 +142,13 @@ export const DocumentsBlock: React.FC<DocumentsBlockProps> = ({ stepId, linkedDo
           <FileText className="w-5 h-5 text-blue-600" />
           Related Documents
         </CardTitle>
+        {/* Step reference information */}
+        <div className="text-sm text-gray-600">
+          Step Reference: 
+          <CopyableText textToCopy={`STEP-${stepId}`} className="ml-2">
+            <code className="bg-blue-100 px-2 py-1 rounded text-xs font-mono">STEP-{stepId}</code>
+          </CopyableText>
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         {documents.map((stepDoc) => {
@@ -165,11 +174,20 @@ export const DocumentsBlock: React.FC<DocumentsBlockProps> = ({ stepId, linkedDo
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <h4 className="font-medium text-sm">{doc.title}</h4>
+                    <CopyableText textToCopy={doc.title}>
+                      <h4 className="font-medium text-sm cursor-pointer">{doc.title}</h4>
+                    </CopyableText>
                     <p className="text-xs text-gray-600 mt-1">{stepDoc.context}</p>
                     {doc.description && (
                       <p className="text-xs text-gray-500 mt-1">{doc.description}</p>
                     )}
+                    {/* Document reference ID */}
+                    <div className="mt-2">
+                      <CopyableText textToCopy={doc.id} className="text-xs text-gray-500">
+                        <span>ID: </span>
+                        <code className="bg-gray-100 px-1 rounded">{doc.id.slice(0, 8)}...</code>
+                      </CopyableText>
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-1">

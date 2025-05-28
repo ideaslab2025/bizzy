@@ -3,6 +3,7 @@ import React from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { CopyableText } from '@/components/ui/copyable-text';
 import { Download, Edit, ExternalLink } from 'lucide-react';
 import type { Document, GuidanceStepDocument } from '@/types/documents';
 
@@ -55,6 +56,24 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
               </Badge>
             )}
           </div>
+
+          {/* Document ID and reference information */}
+          <div className="bg-gray-50 p-3 rounded-lg space-y-2">
+            <div className="text-sm">
+              <span className="text-gray-600">Document ID: </span>
+              <CopyableText textToCopy={document.id} className="ml-1">
+                <code className="bg-gray-200 px-2 py-1 rounded text-xs font-mono">{document.id}</code>
+              </CopyableText>
+            </div>
+            {document.template_url && (
+              <div className="text-sm">
+                <span className="text-gray-600">Template URL: </span>
+                <CopyableText textToCopy={document.template_url} className="ml-1">
+                  <span className="text-blue-600 break-all">{document.template_url}</span>
+                </CopyableText>
+              </div>
+            )}
+          </div>
           
           {document.description && (
             <div>
@@ -70,9 +89,11 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
               <h3 className="font-medium mb-2">Keywords</h3>
               <div className="flex flex-wrap gap-1">
                 {document.keywords.map((keyword, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs">
-                    {keyword}
-                  </Badge>
+                  <CopyableText key={index} textToCopy={keyword}>
+                    <Badge variant="secondary" className="text-xs cursor-pointer">
+                      {keyword}
+                    </Badge>
+                  </CopyableText>
                 ))}
               </div>
             </div>
@@ -85,7 +106,9 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
                 {relatedSteps.map((stepDoc) => (
                   <div key={stepDoc.id} className="p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Step {stepDoc.guidance_step_id}</span>
+                      <CopyableText textToCopy={`Step ${stepDoc.guidance_step_id}`}>
+                        <span className="text-sm font-medium">Step {stepDoc.guidance_step_id}</span>
+                      </CopyableText>
                       <Button variant="ghost" size="sm">
                         <ExternalLink className="w-4 h-4" />
                       </Button>

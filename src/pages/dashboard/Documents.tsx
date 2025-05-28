@@ -7,6 +7,7 @@ import { DocumentCard } from '@/components/documents/DocumentCard';
 import { DocumentFilters } from '@/components/documents/DocumentFilters';
 import { DocumentPreview } from '@/components/documents/DocumentPreview';
 import { DocumentCardSkeleton } from '@/components/ui/skeleton-loader';
+import { CopyableText } from '@/components/ui/copyable-text';
 import { toast } from 'sonner';
 import type { Document, UserDocumentProgress, GuidanceStepDocument } from '@/types/documents';
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -204,6 +205,25 @@ const Documents = () => {
         <p className="text-gray-600 mt-2 text-sm lg:text-base">
           Access templates, forms, and guides to help set up your business
         </p>
+        
+        {/* Example copyable reference information */}
+        <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <h3 className="font-medium text-blue-900 mb-2">Quick Reference</h3>
+          <div className="space-y-2 text-sm">
+            <div>
+              Document Library ID: 
+              <CopyableText textToCopy="DOC-LIB-001" className="ml-2">
+                <code className="bg-blue-100 px-2 py-1 rounded font-mono">DOC-LIB-001</code>
+              </CopyableText>
+            </div>
+            <div>
+              Support Email: 
+              <CopyableText textToCopy="support@bizzy.app" className="ml-2">
+                <span className="text-blue-700">support@bizzy.app</span>
+              </CopyableText>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="px-4 lg:px-0">
