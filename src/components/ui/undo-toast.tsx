@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { undo } from 'lucide-react';
+import { Undo } from 'lucide-react';
 
 interface UndoAction {
   id: string;

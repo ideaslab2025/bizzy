@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { check, undo } from 'lucide-react';
+import { Check, Undo } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AutoSaveIndicatorProps {
@@ -37,7 +37,7 @@ export const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
       
       {status === 'saved' && (
         <>
-          <check className="w-3 h-3 text-green-600" />
+          <Check className="w-3 h-3 text-green-600" />
           <span className="text-green-600">Saved</span>
           {lastSaved && (
             <span className="text-gray-500">• {formatTime(lastSaved)}</span>
