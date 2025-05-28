@@ -1,935 +1,567 @@
-
-import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Badge } from "@/components/ui/badge";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Menu, Star, User, LogOut } from "lucide-react";
-import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Check, ArrowRight, Star, Users, Building, Award, Menu, X, User, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import BizzyCharacter from "@/components/BizzyCharacter";
+import BizzyChat from "@/components/BizzyChat";
 import Testimonials from "@/components/Testimonials";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/components/ui/sonner";
-
-// Plan data from PricingNew
-const pricingPlans = [
-  {
-    id: "bronze",
-    title: "Bronze",
-    price: "£100",
-    gradient: "linear-gradient(to bottom, rgba(217, 119, 6, 0.8), rgba(180, 83, 9, 0.6))",
-    textColor: "#ffffff",
-    borderColor: "#d97706",
-    shadowColor: "217, 119, 6",
-    buttonBg: "#d97706",
-    buttonHoverBg: "#b45309",
-    features: [
-      "Basic company setup guidance",
-      "Essential document templates",
-      "Standard support",
-      "Basic AI assistant access"
-    ]
-  },
-  {
-    id: "silver",
-    title: "Silver",
-    price: "£200",
-    gradient: "linear-gradient(to bottom, rgba(203, 213, 225, 0.8), rgba(100, 116, 139, 0.6))",
-    textColor: "#ffffff",
-    borderColor: "#94a3b8",
-    shadowColor: "148, 163, 184",
-    buttonBg: "#64748b",
-    buttonHoverBg: "#475569",
-    features: [
-      "Everything in Bronze",
-      "Extended document library",
-      "Tax & compliance guidance",
-      "Full AI assistant access"
-    ]
-  },
-  {
-    id: "gold",
-    title: "Gold",
-    price: "£300",
-    gradient: "linear-gradient(to bottom, rgba(251, 191, 36, 0.8), rgba(217, 119, 6, 0.6))",
-    textColor: "#ffffff",
-    borderColor: "#f59e0b",
-    shadowColor: "245, 158, 11",
-    buttonBg: "#f59e0b",
-    buttonHoverBg: "#d97706",
-    features: [
-      "Everything in Silver",
-      "Complete document engine",
-      "Advanced sector-specific guidance",
-      "Priority support"
-    ],
-    recommended: true
-  },
-  {
-    id: "platinum",
-    title: "Platinum",
-    price: "£500",
-    gradient: "linear-gradient(to bottom, #f8fafc, #e2e8f0, #cbd5e1)",
-    textColor: "#1f2937",
-    borderColor: "#94a3b8",
-    shadowColor: "71, 85, 105",
-    buttonBg: "#1f2937",
-    buttonHoverBg: "#111827",
-    features: [
-      "Everything in Gold",
-      "Full access to all resources",
-      "Video consultations with experts",
-      "Custom document customization"
-    ]
-  }
-];
-
-interface PlanCardProps {
-  plan: typeof pricingPlans[0];
-  isSelected: boolean;
-  onSelect: (planId: string) => void;
-}
-
-const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  // Card styles
-  const cardStyle: React.CSSProperties = {
-    position: 'relative' as const,
-    border: `2px solid ${isSelected ? '#1d4ed8' : plan.borderColor}`,
-    borderRadius: '12px',
-    padding: '0',
-    background: plan.gradient,
-    boxShadow: isSelected 
-      ? `0 0 0 2px #1d4ed8, 0 25px 50px -12px rgba(29, 78, 216, 0.5)`
-      : isHovered 
-        ? `0 25px 50px -12px rgba(${plan.shadowColor}, 0.5)`
-        : '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-    transform: `translateY(${isSelected ? '-16px' : isHovered ? '-8px' : '0'}) scale(${isSelected || isHovered ? '1.03' : '1'})`,
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    cursor: 'pointer',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    overflow: 'hidden'
-  };
-
-  const buttonStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '12px 24px',
-    backgroundColor: isSelected ? '#1d4ed8' : plan.buttonBg,
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transform: isHovered ? 'translateY(-2px) scale(1.05)' : 'scale(1)',
-    boxShadow: isHovered ? '0 10px 20px -5px rgba(0, 0, 0, 0.3)' : '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    transition: 'all 0.2s ease-out'
-  };
-
-  const headerStyle: React.CSSProperties = {
-    padding: plan.recommended ? '40px 24px 24px' : '24px',
-    textAlign: 'center' as const
-  };
-
-  const titleStyle: React.CSSProperties = {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    color: plan.id === "platinum" ? "#1f2937" : plan.recommended ? "#3b82f6" : plan.textColor,
-    marginBottom: '8px'
-  };
-
-  const priceStyle: React.CSSProperties = {
-    fontSize: '40px',
-    fontWeight: 'bold',
-    color: plan.id === "platinum" ? "#1f2937" : plan.textColor,
-    marginBottom: '4px'
-  };
-
-  const descriptionStyle: React.CSSProperties = {
-    color: plan.id === "platinum" ? "#4b5563" : plan.textColor,
-    opacity: 0.9,
-    fontSize: '14px'
-  };
-
-  const contentStyle: React.CSSProperties = {
-    padding: '0 24px 24px',
-    flex: 1
-  };
-
-  const featureListStyle: React.CSSProperties = {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0
-  };
-
-  const featureItemStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '8px',
-    marginBottom: '12px',
-    color: plan.id === "platinum" ? "#4b5563" : plan.textColor,
-    fontSize: '14px'
-  };
-
-  const checkIconColor = plan.id === "platinum" ? "#1f2937" : "#60a5fa";
-
-  const badgeStyle: React.CSSProperties = {
-    position: 'absolute' as const,
-    top: '-8px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    backgroundColor: '#1d4ed8',
-    color: 'white',
-    padding: '6px 28px',
-    borderRadius: '9999px',
-    fontSize: '15px',
-    fontWeight: 'bold',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    zIndex: 20
-  };
-
-  const footerStyle: React.CSSProperties = {
-    padding: '24px',
-    marginTop: 'auto'
-  };
-
-  return (
-    <div 
-      style={{ position: 'relative', height: '100%' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={() => onSelect(plan.id)}
-    >
-      <div style={cardStyle}>
-        {plan.recommended && (
-          <div style={badgeStyle}>
-            Recommended
-          </div>
-        )}
-        
-        <div style={headerStyle}>
-          <h3 style={titleStyle}>{plan.title}</h3>
-          <div style={priceStyle}>{plan.price}</div>
-          <p style={descriptionStyle}>One-time payment</p>
-        </div>
-        
-        <div style={contentStyle}>
-          <ul style={featureListStyle}>
-            {plan.features.map((feature, i) => (
-              <li key={i} style={featureItemStyle}>
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="20" 
-                  height="20" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke={checkIconColor}
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  style={{ flexShrink: 0, marginTop: '2px' }}
-                >
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        
-        <div style={footerStyle}>
-          <button 
-            style={buttonStyle}
-            onMouseOver={(e) => {
-              if (!isSelected) {
-                e.currentTarget.style.backgroundColor = plan.buttonHoverBg;
-              }
-            }}
-            onMouseOut={(e) => {
-              if (!isSelected) {
-                e.currentTarget.style.backgroundColor = isSelected ? '#1d4ed8' : plan.buttonBg;
-              }
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect(plan.id);
-            }}
-          >
-            {isSelected ? "Selected" : "Select Plan"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const Index = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  
-  const [floatingPosition, setFloatingPosition] = useState({
-    x: window.innerWidth - 150,
-    y: window.innerHeight - 150
-  });
-
-  // Pricing state - Modified to allow deselection
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Account dropdown state for smooth hover
-  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
-
-  // Add refs for scroll targets
-  const faqsRef = useRef<HTMLElement>(null);
-  const featuresRef = useRef<HTMLElement>(null);
-  
-  // ... keep existing code (useEffect for floating animation and scroll handling)
-  useEffect(() => {
-    const floatingAnimation = () => {
-      setFloatingPosition(prev => ({
-        x: window.innerWidth - 150 + Math.sin(Date.now() / 1000) * 10,
-        y: window.innerHeight - 150 + Math.cos(Date.now() / 1200) * 15
-      }));
-      requestAnimationFrame(floatingAnimation);
-    };
-    const animation = requestAnimationFrame(floatingAnimation);
-
-    const handleResize = () => {
-      setFloatingPosition({
-        x: window.innerWidth - 150,
-        y: window.innerHeight - 150
-      });
-    };
-    window.addEventListener('resize', handleResize);
-
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      if (hash === '#faqs' && faqsRef.current) {
-        const yOffset = -100;
-        const element = faqsRef.current;
-        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({
-          top: y,
-          behavior: 'smooth'
-        });
-      }
-    };
-
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => {
-      cancelAnimationFrame(animation);
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('hashchange', handleHashChange);
-    };
-  }, []);
-
-  // Function to handle scroll to sections
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const yOffset = -100;
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({
-        top: y,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  // Modified pricing handlers to implement actual Stripe payment
-  const handleSelectPlan = (planId: string) => {
-    if (selectedPlan === planId) {
-      setSelectedPlan(null); // Deselect if already selected
-    } else {
-      setSelectedPlan(planId);
-    }
-  };
-  
-  const handleProceedToPayment = async () => {
-    if (!selectedPlan) {
-      toast.error("Please select a plan to continue");
-      return;
-    }
-
-    if (!user) {
-      toast.error("Please log in to purchase a plan");
-      navigate("/login");
-      return;
-    }
-    
-    setIsLoading(true);
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: { planId: selectedPlan },
-      });
-
-      if (error) throw error;
-
-      if (data?.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      } else {
-        throw new Error("No payment URL received");
-      }
-    } catch (error) {
-      console.error("Payment error:", error);
-      toast.error("Failed to create payment session. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      // Redirect will be handled by the auth state change
+      navigate('/');
     } catch (error) {
       console.error('Error signing out:', error);
     }
   };
 
-  return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
-      {/* Header/Navigation */}
-      <header className="border-b border-blue-900/30 sticky top-0 z-50 bg-[#0a192f] bg-opacity-100 backdrop-blur-md shadow-md">
-        <div className="container mx-auto py-0 flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-40" />
-          </Link>
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-6">
-            <a href="#about" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">About</a>
-            <a href="#features" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">Features</a>
-            <a href="#pricing" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">Pricing</a>
-            <a href="#faqs" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">FAQs</a>
-          </nav>
-          
-          <div className="flex gap-2 items-center">
-            {/* Show user account if logged in */}
-            {user ? (
-              <>
-                {/* Mobile Dashboard Button */}
-                <Link to="/dashboard" className="md:hidden">
-                  <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
-                    Dashboard
-                  </Button>
-                </Link>
-                
-                {/* Desktop Account Dropdown with smooth hover */}
-                <div 
-                  className="relative hidden md:block"
-                  onMouseEnter={() => setIsAccountDropdownOpen(true)}
-                  onMouseLeave={() => setIsAccountDropdownOpen(false)}
-                >
-                  <DropdownMenu open={isAccountDropdownOpen} onOpenChange={setIsAccountDropdownOpen}>
-                    <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 font-medium"
-                      >
-                        <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-medium text-white">
-                          {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || 
-                           user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || 
-                           user?.email?.charAt(0)?.toUpperCase() || 'U'}
-                        </div>
-                        <span className="hidden lg:inline">
-                          {user?.user_metadata?.company_name || 
-                           (user?.user_metadata?.first_name 
-                             ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
-                             : user?.email?.split('@')[0] || 'Account')}
-                        </span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
-                      <DropdownMenuItem asChild>
-                        <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
-                          <User className="h-4 w-4" />
-                          Dashboard
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem 
-                        onClick={handleSignOut}
-                        className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        Sign Out
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </>
-            ) : (
-              <>
-                {/* Mobile Login Button */}
-                <Link to="/login" className="md:hidden">
-                  <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
-                    Log in
-                  </Button>
-                </Link>
-                
-                {/* Desktop Auth Buttons */}
-                <Link to="/login" className="hidden md:block">
-                  <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Log in</Button>
-                </Link>
-                <Link to="/register" className="hidden md:block">
-                  <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started</Button>
-                </Link>
-              </>
-            )}
-            
-            {/* Mobile Menu */}
-            <Drawer>
-              <DrawerTrigger asChild className="md:hidden mr-2">
-                <Button variant="ghost" size="icon" className="text-[#3b82f6]">
-                  <Menu size={24} />
-                  <span className="sr-only">Menu</span>
-                </Button>
-              </DrawerTrigger>
-              <DrawerContent className="bg-[#0a192f] border-t border-blue-900/30">
-                <div className="flex flex-col p-4 space-y-4">
-                  <DrawerClose asChild>
-                    <Button variant="ghost" className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold" onClick={() => scrollToSection('about')}>
-                      About
+  const testimonials = [
+    {
+      name: "Sarah Thompson",
+      title: "Founder, GreenTech Innovations",
+      quote: "Bizzy has been a game-changer for our startup. The AI-driven legal guidance is incredibly accurate and has saved us countless hours and legal fees.",
+      image: "/placeholder-user.jpg",
+      rating: 5
+    },
+    {
+      name: "David Miller",
+      title: "CEO, Millennial Marketing",
+      quote: "As a fast-growing marketing agency, staying compliant with employment law is critical. Bizzy's HR tools and templates have made it easy to manage our team effectively.",
+      image: "/placeholder-user.jpg",
+      rating: 4
+    },
+    {
+      name: "Emily Chen",
+      title: "Owner, Chen & Co. Accountants",
+      quote: "I recommend Bizzy to all my small business clients. The VAT and tax support is top-notch, and the document generation feature is a lifesaver during tax season.",
+      image: "/placeholder-user.jpg",
+      rating: 5
+    }
+  ];
+
+  const pricingPlans = [
+    {
+      name: "Startup",
+      price: "£29",
+      period: "per month",
+      description: "Perfect for new businesses just getting started",
+      features: [
+        "Business registration guidance",
+        "Essential legal documents (10)",
+        "Basic tax guidance",
+        "Email support",
+        "Startup checklist"
+      ],
+      cta: "Start Free Trial",
+      popular: false,
+      color: "from-blue-50 to-indigo-50"
+    },
+    {
+      name: "Growth",
+      price: "£59",
+      period: "per month",
+      description: "For growing businesses with expanding needs",
+      features: [
+        "Everything in Startup",
+        "Advanced legal documents (25)",
+        "HR policies & templates",
+        "VAT registration assistance", 
+        "Priority email support",
+        "Monthly compliance reminders"
+      ],
+      cta: "Choose Growth",
+      popular: true,
+      color: "from-purple-50 to-pink-50"
+    },
+    {
+      name: "Scale",
+      price: "£99",
+      period: "per month", 
+      description: "For established businesses scaling operations",
+      features: [
+        "Everything in Growth",
+        "Unlimited legal documents",
+        "Employment law guidance",
+        "Contract templates & review",
+        "Phone + email support",
+        "Quarterly business reviews"
+      ],
+      cta: "Choose Scale",
+      popular: false,
+      color: "from-green-50 to-emerald-50"
+    },
+    {
+      name: "Enterprise",
+      price: "Custom",
+      period: "pricing",
+      description: "Tailored solutions for large organizations",
+      features: [
+        "Everything in Scale",
+        "Dedicated account manager",
+        "Custom legal document creation",
+        "Priority phone support",
+        "On-site consultations",
+        "Custom integrations"
+      ],
+      cta: "Contact Sales",
+      popular: false,
+      color: "from-slate-50 to-gray-50"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 bg-[#0a192f]/95 backdrop-blur-sm border-b border-blue-900/20">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-2">
+              <img 
+                src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
+                alt="Bizzy Logo" 
+                className="h-12 w-auto"
+              />
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <Link to="/pricing" className="text-gray-300 hover:text-white transition-colors">
+                Pricing
+              </Link>
+              
+              {user ? (
+                <div className="flex items-center gap-4">
+                  <Link to="/dashboard">
+                    <Button className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white">
+                      Dashboard
                     </Button>
-                  </DrawerClose>
-                  <DrawerClose asChild>
-                    <Button variant="ghost" className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold" onClick={() => scrollToSection('features')}>
-                      Features
-                    </Button>
-                  </DrawerClose>
-                  <DrawerClose asChild>
-                    <Button variant="ghost" className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold" onClick={() => scrollToSection('pricing')}>
-                      Pricing
-                    </Button>
-                  </DrawerClose>
-                  <DrawerClose asChild>
-                    <Button variant="ghost" className="w-full justify-start text-[#3b82f6] hover:text-[#60a5fa] hover:bg-blue-900/30 text-xl font-bold" onClick={() => scrollToSection('faqs')}>
-                      FAQs
-                    </Button>
-                  </DrawerClose>
-                  <div className="border-t border-blue-900/30 pt-4 flex flex-col space-y-2">
-                    {user ? (
-                      <>
-                        <Link to="/dashboard" className="w-full">
-                          <Button variant="ghost" className="w-full text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Dashboard</Button>
-                        </Link>
+                  </Link>
+                  
+                  {/* Account Dropdown */}
+                  <div 
+                    className="relative"
+                    onMouseEnter={() => setIsAccountDropdownOpen(true)}
+                    onMouseLeave={() => setIsAccountDropdownOpen(false)}
+                  >
+                    <DropdownMenu open={isAccountDropdownOpen} onOpenChange={setIsAccountDropdownOpen}>
+                      <DropdownMenuTrigger asChild>
                         <Button 
                           variant="ghost" 
-                          className="w-full text-red-600 hover:text-red-500 hover:bg-red-900/30"
-                          onClick={handleSignOut}
+                          size="sm" 
+                          className="flex items-center gap-2 text-gray-300 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 font-medium"
                         >
-                          Sign Out
+                          <User className="h-4 w-4" />
+                          <span>
+                            {user?.user_metadata?.company_name || 
+                             (user?.user_metadata?.first_name 
+                               ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
+                               : user?.email?.split('@')[0] || 'Account')}
+                          </span>
                         </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Link to="/login" className="w-full">
-                          <Button variant="ghost" className="w-full text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Log in</Button>
-                        </Link>
-                        <Link to="/register" className="w-full">
-                          <Button className="w-full bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started</Button>
-                        </Link>
-                      </>
-                    )}
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
+                        <DropdownMenuItem asChild>
+                          <Link to="/dashboard/settings" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
+                            <User className="h-4 w-4" />
+                            Account Settings
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          onClick={handleSignOut}
+                          className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Sign Out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </div>
-              </DrawerContent>
-            </Drawer>
+              ) : (
+                <div className="flex items-center space-x-4">
+                  <Link to="/login" className="text-[#1d4ed8] hover:text-[#1e40af] font-medium">
+                    Sign In
+                  </Link>
+                  <Link to="/register">
+                    <Button className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white">
+                      Get Started
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden text-gray-300 hover:text-white"
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X className="h-10 w-10" /> : <Menu className="h-10 w-10" />}
+            </button>
           </div>
+
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="md:hidden py-4 border-t border-blue-900/20">
+              <div className="flex flex-col space-y-4">
+                <Link 
+                  to="/pricing" 
+                  className="text-gray-300 hover:text-white transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Pricing
+                </Link>
+                
+                {user ? (
+                  <div className="flex flex-col space-y-4">
+                    <Link 
+                      to="/dashboard"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Button className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white w-full">
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="outline"
+                      onClick={() => {
+                        handleSignOut();
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full text-lg py-2 px-4 border-gray-300 text-gray-300 hover:text-white hover:border-white"
+                    >
+                      Sign Out
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col space-y-4">
+                    <Link 
+                      to="/login" 
+                      className="text-[#1d4ed8] hover:text-[#1e40af] font-medium text-lg py-2 px-4"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Sign In
+                    </Link>
+                    <Link 
+                      to="/register"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Button className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white w-full text-lg py-2 px-4">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
-      </header>
+      </nav>
 
       {/* Hero Section */}
-      <section className="py-2 md:py-6 pb-40 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1d4ed8]/10 to-transparent z-0"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="text-left">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                Business without the<br />
-                <span className="text-[#3b82f6]">busyness</span>
-              </h1>
-              <p className="text-xl mb-8 text-blue-100/80 max-w-2xl">All the steps for helping you after company setup, with personalised document templates, step-by-step process guidance and AI assistance</p>
-              <div className="flex flex-wrap gap-4">
-                <Link to="/register">
-                  <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Start Your Journey</Button>
-                </Link>
-                <Button size="lg" variant="outline" className="border-[#1d4ed8] text-[#3b82f6] hover:bg-blue-900/50 hover:text-[#60a5fa] hover:border-[#60a5fa]" onClick={() => scrollToSection('features')}>
-                  See How It Works
-                </Button>
-              </div>
-            </div>
-            <div className="relative h-[500px] md:h-[600px] flex items-center justify-center -mt-32 overflow-visible">
-              <img src="/lovable-uploads/642ffc5f-5961-48bc-84b1-0546760e70a3.png" alt="Business owners with paperwork" className="w-[160%] h-full object-contain hero-image" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Added spacer div for better separation */}
-      <div className="h-16 md:h-24"></div>
-
-      {/* Features Section */}
-      <section id="features" ref={featuresRef} className="pt-24 pb-12">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Everything You Need After Forming Your Company</h2>
-          <p className="text-xl mb-10 text-center text-blue-100/80 max-w-3xl mx-auto">Bizzy provides all the tools and guidance you need to navigate the complex world of business set-up administration</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
-            {/* Feature 1 - Step-by-Step Guidance - Fixed image positioning */}
-            <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
-              {/* Professionally Assured Badge */}
-              <div className="absolute top-3 right-3 z-20">
-                <div className="bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                  <Star className="w-3 h-3" fill="currentColor" />
-                  <span>Professionally Assured</span>
-                </div>
-              </div>
-              
-              <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
-              <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="w-full h-[200px] mx-auto flex items-end justify-center pt-16">
-                  <img 
-                    src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" 
-                    alt="Step-by-Step Guidance" 
-                    className="h-[170px] object-contain scale-125 translate-y-3" 
-                    style={{ maxWidth: '90%' }}
-                  />
-                </div>
-                <div className="mt-6 mb-4">
-                  <h3 className="text-lg font-bold text-[#3b82f6] mb-2 text-center">Step-by-Step Guidance</h3>
-                  <p className="text-blue-100 text-center text-sm">Comprehensive step by step guidance across HR, Finance, Accounting, Payroll, Compliance and more, with skippable sections </p>
-                </div>
-              </div>
-            </div>
-            
-            {/* Feature 2 - Document Engine */}
-            <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-400/30 via-blue-600/30 to-blue-800/40 border border-blue-600/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
-              {/* Professionally Assured Badge */}
-              <div className="absolute top-3 right-3 z-20">
-                <div className="bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                  <Star className="w-3 h-3" fill="currentColor" />
-                  <span>Professionally Assured</span>
-                </div>
-              </div>
-              
-              <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
-              <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="w-full h-[240px] mx-auto flex items-center justify-center translate-y-4">
-                  <img src="/lovable-uploads/90f74494-efee-4fb1-9e17-f1398ff68008.png" alt="Document Engine" className="max-w-full max-h-[230px] object-contain" />
-                </div>
-                <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Document Engine</h3>
-                <p className="text-blue-100 text-center text-sm">
-                  Access hundreds of pre-approved templates for every business need, automatically populated with your company details.
-                </p>
-              </div>
-            </div>
-            
-            {/* Feature 3 - Bizzy AI Assistant */}
-            <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-500/30 via-blue-700/30 to-blue-900/40 border border-blue-700/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
-              <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
-              <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="w-full h-[240px] mx-auto flex items-center justify-center">
-                  <img src="/lovable-uploads/a4589c72-9113-4641-a8bd-1d23e740ac0d.png" alt="Bizzy AI Assistant" className="max-w-full max-h-[230px] object-contain" />
-                </div>
-                <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Bizzy AI Assistant</h3>
-                <p className="text-blue-100 text-center text-sm">
-                  Get real-time help from our AI assistant, pointing you to resources and answering your questions instantly.
-                </p>
-              </div>
-            </div>
-            
-            {/* Feature 4 - Video Explainers */}
-            <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-blue-400/30 via-blue-600/30 to-blue-800/40 border border-blue-600/50 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/20 hover:shadow-xl group">
-              <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/10 rounded-bl-full"></div>
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/5 rounded-full"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
-              <div className="p-3 z-10 relative flex flex-col h-full">
-                <div className="w-full h-[240px] mx-auto flex items-center justify-center">
-                  <img src="/lovable-uploads/13ddab9c-cf4d-4451-99b7-a0e7c8d24062.png" alt="Video Explainers" className="max-w-full max-h-[230px] object-contain" />
-                </div>
-                <h3 className="text-lg font-bold text-[#3b82f6] mb-1 text-center">Video Explainers</h3>
-                <p className="text-blue-100 text-center text-sm">
-                  Watch short 30-60 second video explainers on key process steps to quickly understand complex business procedures.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          {/* Disclaimer Links - Positioned to straddle under first two boxes */}
-          <div className="flex justify-start max-w-5xl mx-auto mt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
-              <div className="md:col-span-2 lg:col-span-2 flex justify-center">
-                <a href="/disclaimer" className="text-blue-300 hover:text-blue-100 text-sm underline">
-                  Read our disclaimer
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* New Interactive Pricing Section */}
-      <section id="pricing" className="py-16" style={{ backgroundColor: '#0a192f' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 16px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <h1 style={{ fontSize: '40px', fontWeight: 'bold', color: 'white', marginBottom: '16px' }}>
-              Choose Your Plan
+      <section className="py-20 px-4">
+        <div className="container mx-auto text-center">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+              Your AI Business{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Assistant
+              </span>
             </h1>
-            <p style={{ fontSize: '18px', color: '#e5e7eb', maxWidth: '768px', margin: '0 auto' }}>
-              Select the package that best suits your business needs. All plans include a one-time payment with no recurring fees.
+            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              Meet Bizzy - the AI that helps UK businesses navigate legal requirements, 
+              generate documents, and stay compliant. From startup to scale-up.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+              {user ? (
+                <Link to="/dashboard">
+                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    Go to Dashboard
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link to="/register">
+                    <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                      Get Started Free
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </Link>
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-4 text-lg transition-all duration-300 hover:-translate-y-1"
+                    onClick={() => setIsChatOpen(true)}
+                  >
+                    Talk to Bizzy
+                  </Button>
+                </>
+              )}
+            </div>
+            
+            <div className="relative max-w-4xl mx-auto">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-400/20 blur-3xl"></div>
+              <img 
+                src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png"
+                alt="Bizzy AI Assistant"
+                className="relative hero-image mx-auto max-w-md md:max-w-lg lg:max-w-xl"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Meet Bizzy Section */}
+      <section id="meet-bizzy" className="py-6 px-4 bg-white/50">
+        <div className="container max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Meet Bizzy</h2>
+          <div className="grid md:grid-cols-2 gap-2 items-center">
+            <div className="py-4">
+              <BizzyCharacter className="mx-auto" />
+            </div>
+            <div className="py-2">
+              <p className="text-lg text-gray-600 mb-2">
+                Bizzy is your AI business assistant, specially trained on UK business law and regulations. 
+                Get instant answers, generate documents, and stay compliant - all in plain English.
+              </p>
+              {!user && (
+                <Button 
+                  onClick={() => setIsChatOpen(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white my-2"
+                >
+                  Chat with Bizzy Now
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Everything You Need Section */}
+      <section id="features" className="pt-12 pb-8 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Everything You Need to{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Succeed
+              </span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              From business registration to ongoing compliance, Bizzy provides comprehensive support 
+              for UK businesses at every stage of growth.
             </p>
           </div>
-          
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-            gap: '24px', 
-            maxWidth: '1200px', 
-            margin: '0 auto' 
-          }}>
-            {pricingPlans.map((plan) => (
-              <PlanCard 
-                key={plan.id}
-                plan={plan}
-                isSelected={selectedPlan === plan.id}
-                onSelect={handleSelectPlan}
-              />
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {[
+              {
+                icon: <Building className="h-8 w-8 text-blue-600" />,
+                title: "Business Setup",
+                description: "Register your company, understand legal structures, and get started the right way with step-by-step guidance.",
+                color: "from-blue-50 to-indigo-50"
+              },
+              {
+                icon: <Users className="h-8 w-8 text-purple-600" />,
+                title: "HR & Employment",
+                description: "Create employment contracts, understand your obligations, and build compliant HR policies for your team.",
+                color: "from-purple-50 to-pink-50"
+              },
+              {
+                icon: <Award className="h-8 w-8 text-green-600" />,
+                title: "Legal Compliance",
+                description: "Stay on top of changing regulations, generate required documents, and avoid costly compliance mistakes.",
+                color: "from-green-50 to-emerald-50"
+              }
+            ].map((feature, index) => (
+              <Card key={index} className={`relative overflow-hidden bg-gradient-to-br ${feature.color} border-0 shadow-xl transition-all hover:-translate-y-1 hover:shadow-blue-500/30`}>
+                <CardHeader>
+                  <div className="flex items-center gap-3 mb-4">
+                    {feature.icon}
+                    <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-gray-700 text-base leading-relaxed">
+                    {feature.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
             ))}
           </div>
-          
-          <div style={{ marginTop: '48px', textAlign: 'center' }}>
-            <button 
-              style={{
-                padding: '12px 32px',
-                fontSize: '18px',
-                backgroundColor: selectedPlan ? '#2563eb' : '#6b7280',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: selectedPlan && !isLoading ? 'pointer' : 'not-allowed',
-                opacity: selectedPlan ? 1 : 0.5,
-                transition: 'all 0.2s',
-                transform: selectedPlan ? 'scale(1)' : 'scale(1)',
-              }}
-              onClick={handleProceedToPayment}
-              disabled={!selectedPlan || isLoading}
-              onMouseOver={(e) => {
-                if (selectedPlan && !isLoading) {
-                  e.currentTarget.style.backgroundColor = '#1d4ed8';
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                }
-              }}
-              onMouseOut={(e) => {
-                if (selectedPlan && !isLoading) {
-                  e.currentTarget.style.backgroundColor = '#2563eb';
-                  e.currentTarget.style.transform = 'scale(1)';
-                }
-              }}
-            >
-              {isLoading ? "Processing..." : "Proceed to Payment"}
-            </button>
-            {!selectedPlan && (
-              <p style={{ color: '#f87171', marginTop: '16px', fontSize: '16px' }}>
-                Please select a plan to continue
-              </p>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <Testimonials />
+
+      {/* Pricing Section */}
+      <section className="py-20 px-4 bg-white/50">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Simple, Transparent{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Pricing
+              </span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Choose the plan that fits your business size and needs. All plans include access to Bizzy AI and core features.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 perspective-1000">
+            {pricingPlans.map((plan, index) => (
+              <Card 
+                key={index} 
+                className={`pricing-card relative overflow-hidden bg-gradient-to-br ${plan.color} border-0 shadow-xl ${plan.popular ? 'ring-2 ring-purple-500 scale-105' : ''}`}
+              >
+                {plan.popular && (
+                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-center py-2 text-sm font-medium">
+                    Most Popular
+                  </div>
+                )}
+                <CardHeader className={plan.popular ? 'pt-8' : ''}>
+                  <CardTitle className="text-2xl font-bold text-gray-900">{plan.name}</CardTitle>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                    <span className="text-gray-600">/{plan.period}</span>
+                  </div>
+                  <CardDescription className="text-gray-700">{plan.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <ul className="space-y-3">
+                    {plan.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-start gap-3">
+                        <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                        <span className="text-gray-700">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link to="/pricing">
+                    <Button 
+                      className={`w-full pricing-button ${
+                        plan.popular 
+                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white' 
+                          : 'bg-gray-900 hover:bg-gray-800 text-white'
+                      }`}
+                    >
+                      {plan.cta}
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="container mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Ready to Transform Your Business?
+          </h2>
+          <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+            Join thousands of UK businesses that trust Bizzy to handle their legal and compliance needs. 
+            Get started today with a free consultation.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {user ? (
+              <Link to="/dashboard">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg shadow-xl">
+                  Go to Dashboard
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link to="/register">
+                  <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg shadow-xl">
+                    Start Free Trial
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 text-lg"
+                  onClick={() => setIsChatOpen(true)}
+                >
+                  Talk to Bizzy
+                </Button>
+              </>
             )}
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section id="testimonials" className="py-16 bg-blue-900/10">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-10 text-center text-[#3b82f6]">What Our Customers Say</h2>
-          <Testimonials />
-        </div>
-      </section>
-
-      <section id="about" className="py-6 bg-blue-900/20">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="md:w-1/2">
-              <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Meet Bizzy</h2>
-              <p className="text-blue-100 mb-3 text-sm md:text-base">Your AI-powered assistant for navigating the complexities of starting a UK business. Bizzy transforms business startup administration from a chore into a breeze.</p>
-              <p className="text-blue-100 mb-3 text-sm md:text-base">Clear, up-to-date guidance on exactly what to do, every step of the way. Short video clips and a document library to boot. Chat to Bizzy if you get stuck!</p>
-              <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 text-sm md:text-base">
-                Learn More About Bizzy
-              </Button>
-            </div>
-            <div className="md:w-1/2 flex justify-center">
-              <div className="relative scale-75 md:scale-100">
-                <div className="absolute inset-0 bg-[#1d4ed8]/30 blur-3xl rounded-full"></div>
-                <img src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" alt="Bizzy Character" className="w-[600px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="faqs" ref={faqsRef} className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
-          <div className="max-w-3xl mx-auto">
-            <Accordion type="single" collapsible className="space-y-4">
-              <AccordionItem value="item-1" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  How does Bizzy help with my company post-formation?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Bizzy provides step-by-step professional guidance through the post-company formation process, offering our guided help for everything you need to do across every department once starting, a full document library, and AI assistance to ensure you complete all required steps correctly.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-2" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Is there a recurring subscription?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  No, Bizzy operates on a one-time payment model. You pay once for the plan of your choice and get lifetime access to the features included in that plan.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-3" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Can I upgrade my plan later?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Yes, you can upgrade to a higher-tier plan at any time by paying the difference between your current plan and the new one.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-4" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  How does the AI assistant work?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Bizzy's AI assistant uses advanced natural language processing to understand your questions and provide relevant guidance, document suggestions, and compliance advice specific to your business needs.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-5" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Is my data secure with Bizzy?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Absolutely. We employ enterprise-grade encryption and follow strict data protection protocols to ensure your business information remains completely secure and confidential.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-6" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Is Bizzy Guidance or Advice and can I trust the information?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Your Business Guidance, Professionally Assured: Bizzy provides comprehensive step-by-step guidance across every aspect of getting your new UK business started (post formation), telling you everything you need to do across finance, payroll, tax, HR, Gov.UK services, paperwork and beyond. It has been professionally pre-checked / assured and updated, but it is guidance not advice. Please see our full disclaimer{' '}
-                  <a href="/disclaimer" className="text-[#3b82f6] hover:text-[#60a5fa] underline">
-                    here
-                  </a>.
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gradient-to-br from-blue-800/50 to-blue-900/30">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Helping new business owners get going</h2>
-          <p className="text-xl mb-8 text-blue-100/80 max-w-2xl mx-auto">Join thousands of UK startups who are saving time, reducing stress, and ensuring compliance with Bizzy's comprehensive platform.</p>
-          <Link to="/register">
-            <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">
-              Get Started Today
-            </Button>
-          </Link>
-        </div>
-      </section>
-
-      <footer className="bg-[#071629] border-t border-blue-900/30 py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      {/* Footer */}
+      <footer className="bg-[#0a192f] text-gray-300 py-12 px-4">
+        <div className="container mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Product</h3>
+              <img 
+                src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
+                alt="Bizzy Logo" 
+                className="h-12 w-auto mb-4"
+              />
+              <p className="text-gray-400">
+                AI-powered business assistant for UK companies. Legal guidance, document generation, and compliance made simple.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-white mb-4">Product</h3>
               <ul className="space-y-2">
-                <li><a href="#features" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Features</a></li>
-                <li><a href="#pricing" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Pricing</a></li>
-                <li><a href="#faqs" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">FAQs</a></li>
+                <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Integrations</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Resources</h3>
+              <h3 className="font-semibold text-white mb-4">Support</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Blog</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Guides</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Support</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Company</h3>
+              <h3 className="font-semibold text-white mb-4">Legal</h3>
               <ul className="space-y-2">
-                <li><a href="#about" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">About Us</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Careers</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Contact</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Legal</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Terms</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Privacy</a></li>
-                <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Cookies</a></li>
-                <li><a href="/disclaimer" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Disclaimer</a></li>
+                <li><Link to="/disclaimer" className="hover:text-white transition-colors">Disclaimer</Link></li>
+                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-blue-900/50 mt-12 pt-8 flex justify-between items-center">
-            <p className="text-blue-100/70">© 2025 Bizzy. All rights reserved.</p>
-            <div className="flex gap-4">
-              <a href="#" aria-label="Twitter" className="text-[#3b82f6] hover:text-[#60a5fa] transition-colors">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
-                </svg>
-              </a>
-              <a href="#" aria-label="LinkedIn" className="text-[#3b82f6] hover:text-[#60a5fa] transition-colors">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.3 1.5 4s1-2.4 2.5-2.4c1.6 0 2.5 1 2.6 2.5 0 1.4-1 2.5-2.6 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5v1.5c1-1.6 2.7-2.5 4.5-2.5 3.5 0 6 2.5 6 6.5v7.5h-5v-7c0-1-1-2-2-2h-1.5z"></path>
-                </svg>
-              </a>
-            </div>
+          <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 Bizzy AI. All rights reserved.</p>
           </div>
         </div>
       </footer>
 
-      {/* Floating Bizzy character */}
-      <div className="fixed z-50" style={{
-      left: `${floatingPosition.x}px`,
-      top: `${floatingPosition.y}px`,
-      transition: 'all 0.5s ease-out'
-    }}>
-        <BizzyCharacter />
-      </div>
-    </div>;
+      {/* Chat Component */}
+      <BizzyChat 
+        isOpen={isChatOpen} 
+        onClose={() => setIsChatOpen(false)} 
+      />
+    </div>
+  );
 };
 
 export default Index;

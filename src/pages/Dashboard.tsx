@@ -191,7 +191,7 @@ const Dashboard = () => {
                 )}
               </div>
 
-              {/* Account Dropdown with smooth hover */}
+              {/* Account Dropdown with smooth hover and bright text */}
               <div 
                 className="relative"
                 onMouseEnter={() => setIsAccountDropdownOpen(true)}
