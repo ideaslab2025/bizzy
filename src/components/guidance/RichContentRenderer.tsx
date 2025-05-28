@@ -23,17 +23,11 @@ interface RichContentRendererProps {
   onChecklistComplete?: (stepId: number, itemId: string, completed: boolean) => void;
 }
 
-export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
-  content,
-  stepId,
-  onChecklistComplete
-}) => {
-  console.log('RichContentRenderer received content:', content);
-  
-  // Parse rich_content JSONB field with proper error handling
-  let blocks: RichContentBlock[] = [];
-  
+// Add safety check for blocks parsing
+const parseRichContent = (content: any): RichContentBlock[] => {
   try {
+    if (!content) return [{ type: 'text', content: 'No content available' }];
+    
     if (content?.rich_content) {
       // Handle if rich_content is already parsed or needs parsing
       const richContent = typeof content.rich_content === 'string' 
@@ -42,25 +36,35 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
       
       // Check if it has a blocks array (new format)
       if (richContent?.blocks && Array.isArray(richContent.blocks)) {
-        blocks = richContent.blocks;
+        return richContent.blocks;
       } 
       // Check if it's directly an array (alternative format)
       else if (Array.isArray(richContent)) {
-        blocks = richContent;
+        return richContent;
       }
       // Fallback to simple text block
       else {
-        blocks = [{ type: 'text', content: content?.content || 'No content available' }];
+        return [{ type: 'text', content: content?.content || 'No content available' }];
       }
     } else {
       // Fallback to simple text from content field
-      blocks = [{ type: 'text', content: content?.content || 'No content available' }];
+      return [{ type: 'text', content: content?.content || 'No content available' }];
     }
   } catch (error) {
     console.error('Error parsing rich content:', error);
-    // Fallback to simple text block on parse error
-    blocks = [{ type: 'text', content: content?.content || 'Error loading content' }];
+    return [{ type: 'text', content: 'Error loading content' }];
   }
+};
+
+export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
+  content,
+  stepId,
+  onChecklistComplete
+}) => {
+  console.log('RichContentRenderer received content:', content);
+  
+  // Parse rich_content JSONB field with proper error handling
+  const blocks = parseRichContent(content);
 
   console.log('Parsed blocks:', blocks);
 

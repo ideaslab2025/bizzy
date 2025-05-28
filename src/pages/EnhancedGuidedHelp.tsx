@@ -60,7 +60,6 @@ const EnhancedGuidedHelp = () => {
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const [companyAge, setCompanyAge] = useState(0);
 
   const calculateCompanyAge = async () => {
@@ -555,6 +554,99 @@ const EnhancedGuidedHelp = () => {
             sectionProgress={sectionProgress}
           />
         )}
+
+        {/* Top Bar - Fixed text colors */}
+        <div className="bg-[#0088cc] border-b p-4 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-white">
+              {sections.find(s => s.order_number === currentSection)?.title}
+            </h1>
+            <p className="text-white/90">
+              Step {currentStep} of {steps.length === 0 ? 1 : steps.length}
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <Button 
+              onClick={() => setShowChatbot(true)}
+              className="bg-white text-[#0088cc] hover:bg-gray-100"
+            >
+              Talk to Bizzy
+            </Button>
+            
+            {/* Notifications - Better contrast */}
+            <div
+              className="relative"
+              onMouseEnter={() => setShowNotifications(true)}
+              onMouseLeave={() => setShowNotifications(false)}
+            >
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="relative text-white hover:bg-white/20"
+              >
+                <Bell className="w-5 h-5" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                  3
+                </span>
+              </Button>
+
+              {showNotifications && (
+                <div className="absolute right-0 top-full mt-2 w-80 bg-white border rounded-lg shadow-lg z-50">
+                  <div className="p-4 border-b bg-gray-50">
+                    <h3 className="font-medium text-gray-900">Notifications</h3>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    <div className="text-sm">
+                      <p className="font-medium text-gray-900">New guidance available</p>
+                      <p className="text-gray-600">VAT registration guide has been updated</p>
+                    </div>
+                    <div className="text-sm">
+                      <p className="font-medium text-gray-900">Document ready</p>
+                      <p className="text-gray-600">Your employee handbook is ready for download</p>
+                    </div>
+                    <div className="text-sm">
+                      <p className="font-medium text-gray-900">Consultation reminder</p>
+                      <p className="text-gray-600">Your meeting is scheduled for tomorrow at 2 PM</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Account button with white text */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="flex items-center gap-2 text-white hover:bg-white/20"
+                >
+                  <User className="h-4 w-4" />
+                  <span className="hidden sm:inline">
+                    {user?.email?.split('@')[0] || 'Account'}
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard/settings" className="flex items-center gap-2 w-full cursor-pointer">
+                    <User className="h-4 w-4" />
+                    Account Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 text-red-600 hover:text-red-600 cursor-pointer"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
 
         {/* Content with Smart Recommendations */}
         <div className="flex-1 p-8 pb-32">
