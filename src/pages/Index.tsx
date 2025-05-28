@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -376,33 +375,15 @@ const Index = () => {
     try {
       console.log('Creating payment for plan:', selectedPlan);
       
-      // Get current session to ensure we have a valid token
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError || !sessionData.session) {
-        throw new Error("No valid session found. Please log in again.");
-      }
-
-      console.log('Session verified, calling edge function...');
-
-      // Use direct fetch to have full control over the request
-      const response = await fetch(`https://seaohhvghqynuzdwsylg.supabase.co/functions/v1/create-payment`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${sessionData.session.access_token}`,
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlYW9oaHZnaHF5bnV6ZHdzeWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzNTkwMjksImV4cCI6MjA2MzkzNTAyOX0.Vs9hWXmhBUPhEFhxmwQzHj-_tPPaPVcnlDCDRt5Myv0'
-        },
-        body: JSON.stringify({ planId: selectedPlan })
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: { planId: selectedPlan }
       });
 
-      console.log('Response status:', response.status);
-      
-      const data = await response.json();
-      console.log('Response data:', data);
+      console.log('Function response:', { data, error });
 
-      if (!response.ok) {
+      if (error) {
         console.error("Payment function error:", data);
-        throw new Error(data.error || "Payment processing failed");
+        throw new Error(error.message || "Payment processing failed");
       }
 
       if (!data?.url) {
