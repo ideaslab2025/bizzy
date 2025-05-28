@@ -48,7 +48,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   const hasProgress = progress?.viewed || progress?.downloaded || progress?.customized;
 
   const cardContent = (
-    <Card className={cn("h-full flex flex-col hover:shadow-md transition-shadow", className)}>
+    <Card glass className={cn("h-full flex flex-col hover:shadow-md transition-shadow", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1">

@@ -182,3 +182,96 @@
     @apply transform scale-105 -translate-y-1 shadow-lg;
   }
 }
+
+@layer utilities {
+  /* Glassmorphism utilities */
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  }
+  
+  .glass-dark {
+    background: rgba(17, 25, 40, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+  }
+  
+  .glass-blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .glass-card {
+    @apply glass glass-blur rounded-lg;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.2);
+    transform: translateY(-2px);
+  }
+  
+  .glass-modal {
+    @apply glass glass-blur;
+    animation: glass-appear 0.3s ease-out;
+  }
+  
+  .glass-dropdown {
+    @apply glass glass-blur rounded-md;
+    animation: glass-scale-in 0.2s ease-out;
+  }
+  
+  .glass-navbar {
+    background: rgba(255, 255, 255, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+  }
+  
+  /* Fallbacks for browsers without backdrop-filter support */
+  @supports not (backdrop-filter: blur(10px)) {
+    .glass {
+      background: rgba(255, 255, 255, 0.9);
+    }
+    
+    .glass-dark {
+      background: rgba(17, 25, 40, 0.9);
+    }
+  }
+  
+  /* Glass animations */
+  @keyframes glass-appear {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  @keyframes glass-scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Enhanced card hover with glass effect */
+  .card-glass-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .card-glass-hover:hover {
+    @apply glass-card;
+  }
+}
