@@ -8,6 +8,7 @@ interface SmartRecommendation extends EnhancedGuidanceStep {
   category: string;
   prerequisites_met: boolean;
   urgency_score: number;
+  deadline_days: number | null;
 }
 
 interface RecommendationCategories {
@@ -78,18 +79,22 @@ export const useSmartRecommendations = (
         if (rec.category === currentSectionCategory) urgencyScore += 10;
 
         return {
-          ...rec,
+          id: rec.step_id,
+          section_id: rec.section_id,
+          title: rec.title,
           section_title: section?.title || 'Unknown Section',
           category: section?.color_theme || rec.category,
           urgency_score: urgencyScore,
+          deadline_days: rec.deadline_days,
+          prerequisites_met: rec.prerequisites_met,
           // Type assertions for proper typing
           difficulty_level: rec.difficulty_level as 'easy' | 'medium' | 'complex' | null,
-          step_type: rec.step_type as 'action' | 'information' | 'decision' | 'external' | null,
+          step_type: 'action' as 'action' | 'information' | 'decision' | 'external' | null,
           estimated_time_minutes: rec.estimated_time_minutes || 15,
-          external_links: rec.external_links || [],
-          rich_content: rec.rich_content || null,
-          prerequisites: rec.prerequisites || null,
-          deadline_info: rec.deadline_info || null,
+          external_links: [],
+          rich_content: null,
+          prerequisites: null,
+          deadline_info: null,
           quick_win: rec.quick_win || false,
           created_at: new Date().toISOString(),
           content: '',
