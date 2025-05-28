@@ -8,6 +8,7 @@ import { DocumentFilters } from '@/components/documents/DocumentFilters';
 import { DocumentPreview } from '@/components/documents/DocumentPreview';
 import { DocumentCardSkeleton } from '@/components/ui/skeleton-loader';
 import { CopyableText } from '@/components/ui/copyable-text';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 import { toast } from 'sonner';
 import type { Document, UserDocumentProgress, GuidanceStepDocument } from '@/types/documents';
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -167,6 +168,14 @@ const Documents = () => {
     }
   };
 
+  const handleRefresh = async () => {
+    await fetchDocuments();
+    if (user) {
+      await fetchProgress();
+    }
+    toast.success('Documents refreshed');
+  };
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -198,7 +207,7 @@ const Documents = () => {
     );
   }
 
-  return (
+  const documentsContent = (
     <div className="space-y-6">
       <div className="px-4 lg:px-0">
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Document Library</h1>
@@ -270,6 +279,12 @@ const Documents = () => {
         relatedSteps={relatedSteps}
       />
     </div>
+  );
+
+  return (
+    <PullToRefresh onRefresh={handleRefresh}>
+      {documentsContent}
+    </PullToRefresh>
   );
 };
 

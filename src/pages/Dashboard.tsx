@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { PullToRefresh } from "@/components/ui/pull-to-refresh";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -36,6 +37,12 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Error signing out:', error);
     }
+  };
+  
+  const handleDashboardRefresh = async () => {
+    // Simulate refresh of dashboard data
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log('Dashboard refreshed');
   };
   
   return (
@@ -274,10 +281,15 @@ const Dashboard = () => {
           </div>
         </header>
         
-        {/* Main content */}
-        <main className="flex-1 p-4 lg:p-6">
-          <Outlet />
-        </main>
+        {/* Main content with pull-to-refresh */}
+        <PullToRefresh 
+          onRefresh={handleDashboardRefresh}
+          className="flex-1"
+        >
+          <main className="flex-1 p-4 lg:p-6">
+            <Outlet />
+          </main>
+        </PullToRefresh>
         
         {/* Footer with keyboard shortcut icon */}
         <footer className="bg-white border-t px-4 py-2 flex items-center justify-between text-xs text-gray-500">

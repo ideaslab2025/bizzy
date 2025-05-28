@@ -2,7 +2,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { PersonalizedDashboard } from "@/components/dashboard/PersonalizedDashboard";
+import { PullToRefresh } from "@/components/ui/pull-to-refresh";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 const Overview = () => {
   const navigate = useNavigate();
@@ -24,20 +26,28 @@ const Overview = () => {
     navigate('/guided-help');
   };
 
+  const handleOverviewRefresh = async () => {
+    // Simulate refresh of overview data
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    toast.success('Overview updated');
+  };
+
   // Mock data for now - in a real app this would come from user profile
   const completedStepIds = [1, 2, 3]; // Example completed steps
   const currentSectionCategory = "foundation"; // Example category
   const companyAge = 30; // Example company age in days
 
   return (
-    <PersonalizedDashboard
-      userId={user.id}
-      completedStepIds={completedStepIds}
-      currentSectionCategory={currentSectionCategory}
-      companyAge={companyAge}
-      onNavigateToStep={handleNavigateToStep}
-      onNavigateToGuidedHelp={handleNavigateToGuidedHelp}
-    />
+    <PullToRefresh onRefresh={handleOverviewRefresh}>
+      <PersonalizedDashboard
+        userId={user.id}
+        completedStepIds={completedStepIds}
+        currentSectionCategory={currentSectionCategory}
+        companyAge={companyAge}
+        onNavigateToStep={handleNavigateToStep}
+        onNavigateToGuidedHelp={handleNavigateToGuidedHelp}
+      />
+    </PullToRefresh>
   );
 };
 
