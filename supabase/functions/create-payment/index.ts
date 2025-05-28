@@ -94,14 +94,22 @@ serve(async (req) => {
     const user = userData.user;
     logStep("User authenticated", { userId: user.id, email: user.email });
 
-    // Get plan from request body
+    // Get plan from request body - improved JSON parsing
     let requestBody;
     try {
-      requestBody = await req.json();
+      const rawBody = await req.text();
+      logStep("Raw request body received", { body: rawBody });
+      
+      if (!rawBody || rawBody.trim() === '') {
+        throw new Error("Empty request body");
+      }
+      
+      requestBody = JSON.parse(rawBody);
+      logStep("Request body parsed successfully", { requestBody });
     } catch (error) {
-      logStep("⚠️ Invalid JSON in request body", { error });
+      logStep("⚠️ Invalid JSON in request body", { error: error.message });
       return new Response(
-        JSON.stringify({ error: "Invalid request format" }),
+        JSON.stringify({ error: "Invalid request format - unable to parse JSON" }),
         {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" }
