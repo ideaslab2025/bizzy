@@ -56,27 +56,42 @@ export type Database = {
       }
       guidance_sections: {
         Row: {
+          color_theme: string | null
           created_at: string
+          deadline_days: number | null
           description: string | null
+          emoji: string | null
+          estimated_time_minutes: number | null
           icon: string | null
           id: number
           order_number: number
+          priority_order: number | null
           title: string
         }
         Insert: {
+          color_theme?: string | null
           created_at?: string
+          deadline_days?: number | null
           description?: string | null
+          emoji?: string | null
+          estimated_time_minutes?: number | null
           icon?: string | null
           id?: number
           order_number: number
+          priority_order?: number | null
           title: string
         }
         Update: {
+          color_theme?: string | null
           created_at?: string
+          deadline_days?: number | null
           description?: string | null
+          emoji?: string | null
+          estimated_time_minutes?: number | null
           icon?: string | null
           id?: number
           order_number?: number
+          priority_order?: number | null
           title?: string
         }
         Relationships: []
@@ -130,30 +145,51 @@ export type Database = {
         Row: {
           content: string | null
           created_at: string
+          deadline_info: string | null
+          difficulty_level: string | null
+          estimated_time_minutes: number | null
           external_links: Json | null
           id: number
           order_number: number
+          prerequisites: string[] | null
+          quick_win: boolean | null
+          rich_content: Json | null
           section_id: number | null
+          step_type: string | null
           title: string
           video_url: string | null
         }
         Insert: {
           content?: string | null
           created_at?: string
+          deadline_info?: string | null
+          difficulty_level?: string | null
+          estimated_time_minutes?: number | null
           external_links?: Json | null
           id?: number
           order_number: number
+          prerequisites?: string[] | null
+          quick_win?: boolean | null
+          rich_content?: Json | null
           section_id?: number | null
+          step_type?: string | null
           title: string
           video_url?: string | null
         }
         Update: {
           content?: string | null
           created_at?: string
+          deadline_info?: string | null
+          difficulty_level?: string | null
+          estimated_time_minutes?: number | null
           external_links?: Json | null
           id?: number
           order_number?: number
+          prerequisites?: string[] | null
+          quick_win?: boolean | null
+          rich_content?: Json | null
           section_id?: number | null
+          step_type?: string | null
           title?: string
           video_url?: string | null
         }
@@ -242,6 +278,91 @@ export type Database = {
           purchase_date?: string | null
           purchased_plan?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      step_time_tracking: {
+        Row: {
+          completed_at: string | null
+          id: string
+          step_id: number | null
+          time_spent_seconds: number
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          step_id?: number | null
+          time_spent_seconds: number
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          step_id?: number | null
+          time_spent_seconds?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "step_time_tracking_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "guidance_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      step_tips: {
+        Row: {
+          content: string
+          display_order: number | null
+          id: string
+          step_id: number | null
+          tip_type: string
+        }
+        Insert: {
+          content: string
+          display_order?: number | null
+          id?: string
+          step_id?: number | null
+          tip_type: string
+        }
+        Update: {
+          content?: string
+          display_order?: number | null
+          id?: string
+          step_id?: number | null
+          tip_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "step_tips_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "guidance_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_achievements: {
+        Row: {
+          achieved_at: string | null
+          achievement_type: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          achieved_at?: string | null
+          achievement_type: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          achieved_at?: string | null
+          achievement_type?: string
+          id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -380,7 +501,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_smart_recommendations: {
+        Args: {
+          p_user_id: string
+          p_company_age_days: number
+          p_completed_steps: number[]
+          p_current_category: string
+        }
+        Returns: {
+          step_id: number
+          section_id: number
+          title: string
+          estimated_time_minutes: number
+          difficulty_level: string
+          deadline_days: number
+          quick_win: boolean
+          prerequisites_met: boolean
+          category: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

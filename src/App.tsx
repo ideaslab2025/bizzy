@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Overview from "./pages/dashboard/Overview";
 import Documents from "./pages/dashboard/Documents";
 import GuidedHelp from "./pages/GuidedHelp";
+import EnhancedGuidedHelp from "./pages/EnhancedGuidedHelp";
 import Onboarding from "./pages/Onboarding";
 import Pricing from "./pages/Pricing";
 import PaymentSuccess from "./pages/PaymentSuccess";
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/payment-cancel" element={<PaymentCancel />} />
           <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
           <Route path="/guided-help" element={<ProtectedRoute><GuidedHelp /></ProtectedRoute>} />
+          <Route path="/enhanced-guided-help" element={<ProtectedRoute><EnhancedGuidedHelp /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
             <Route index element={<Overview />} />
             <Route path="documents" element={<Documents />} />
