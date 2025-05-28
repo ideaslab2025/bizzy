@@ -56,7 +56,7 @@ export const EnhancedBizzyAssistant: React.FC<EnhancedBizzyAssistantProps> = ({
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [quickWins, setQuickWins] = useState<EnhancedGuidanceStep[]>([]);
-  const [upcomingDeadlines, setUpcomingDeadlines] = useState<any[]>([]);
+  const [upcomingDeadlines, setUpcomingDeadlines] = useState<EnhancedGuidanceStep[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -85,25 +85,65 @@ export const EnhancedBizzyAssistant: React.FC<EnhancedBizzyAssistantProps> = ({
     if (!user) return;
 
     try {
-      // Fetch quick wins
-      const { data: quickWinSteps } = await supabase
+      // Fetch quick wins with proper type casting
+      const { data: quickWinData } = await supabase
         .from('guidance_steps')
         .select('*, guidance_sections(*)')
         .eq('quick_win', true)
         .not('id', 'in', `(${userProgress.completedSteps.join(',') || '0'})`)
         .limit(3);
 
-      if (quickWinSteps) setQuickWins(quickWinSteps);
+      if (quickWinData) {
+        // Transform the data to match our interface
+        const transformedQuickWins: EnhancedGuidanceStep[] = quickWinData.map(step => ({
+          id: step.id,
+          section_id: step.section_id,
+          title: step.title,
+          content: step.content || '',
+          video_url: step.video_url,
+          external_links: step.external_links,
+          order_number: step.order_number,
+          estimated_time_minutes: step.estimated_time_minutes,
+          difficulty_level: step.difficulty_level as 'easy' | 'medium' | 'complex' | null,
+          step_type: step.step_type as 'action' | 'information' | 'decision' | 'external' | null,
+          rich_content: step.rich_content,
+          prerequisites: step.prerequisites,
+          deadline_info: step.deadline_info,
+          quick_win: step.quick_win,
+          created_at: step.created_at
+        }));
+        setQuickWins(transformedQuickWins);
+      }
 
-      // Fetch upcoming deadlines
-      const { data: deadlineSteps } = await supabase
+      // Fetch upcoming deadlines with proper type casting
+      const { data: deadlineData } = await supabase
         .from('guidance_steps')
         .select('*, guidance_sections(*)')
         .not('deadline_info', 'is', null)
         .not('id', 'in', `(${userProgress.completedSteps.join(',') || '0'})`)
         .limit(5);
 
-      if (deadlineSteps) setUpcomingDeadlines(deadlineSteps);
+      if (deadlineData) {
+        // Transform the data to match our interface
+        const transformedDeadlines: EnhancedGuidanceStep[] = deadlineData.map(step => ({
+          id: step.id,
+          section_id: step.section_id,
+          title: step.title,
+          content: step.content || '',
+          video_url: step.video_url,
+          external_links: step.external_links,
+          order_number: step.order_number,
+          estimated_time_minutes: step.estimated_time_minutes,
+          difficulty_level: step.difficulty_level as 'easy' | 'medium' | 'complex' | null,
+          step_type: step.step_type as 'action' | 'information' | 'decision' | 'external' | null,
+          rich_content: step.rich_content,
+          prerequisites: step.prerequisites,
+          deadline_info: step.deadline_info,
+          quick_win: step.quick_win,
+          created_at: step.created_at
+        }));
+        setUpcomingDeadlines(transformedDeadlines);
+      }
     } catch (error) {
       console.error('Error fetching context data:', error);
     }
@@ -222,7 +262,7 @@ export const EnhancedBizzyAssistant: React.FC<EnhancedBizzyAssistantProps> = ({
         break;
 
       case 'deadlines':
-        response = `Here are your upcoming deadlines:\n\n${upcomingDeadlines.map((step: any) => 
+        response = `Here are your upcoming deadlines:\n\n${upcomingDeadlines.map((step) => 
           `• ${step.title}: ${step.deadline_info}`
         ).join('\n')}`;
         break;
