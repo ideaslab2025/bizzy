@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,10 @@ import { Input } from "@/components/ui/input";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { PullToRefresh } from "@/components/ui/pull-to-refresh";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { CommandPalette } from "@/components/ui/command-palette";
+import { RecentlyViewed } from "@/components/ui/recently-viewed";
+import { UndoKeyboardHandler } from "@/components/ui/undo-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -16,6 +21,7 @@ const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
   const { user, signOut } = useAuth();
   const isMobile = useIsMobile();
   
@@ -28,6 +34,19 @@ const Dashboard = () => {
         searchInput.focus();
       }
     }
+  });
+
+  // Command palette keyboard shortcut
+  useState(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowCommandPalette(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   });
   
   const handleSignOut = async () => {
@@ -47,6 +66,8 @@ const Dashboard = () => {
   
   return (
     <div className="min-h-screen flex bg-muted/30">
+      <UndoKeyboardHandler />
+      
       {/* Mobile Overlay */}
       {isMobile && isSidebarOpen && (
         <div 
@@ -137,6 +158,13 @@ const Dashboard = () => {
               </li>
             ))}
           </ul>
+          
+          {/* Recently Viewed Section */}
+          {isSidebarOpen && (
+            <div className="mt-6">
+              <RecentlyViewed collapsed={true} />
+            </div>
+          )}
         </nav>
         
         <div className={`border-t p-4 ${isSidebarOpen ? '' : 'hidden lg:block'}`}>
@@ -181,13 +209,17 @@ const Dashboard = () => {
               
               <div className="hidden sm:block lg:w-72">
                 <Input 
-                  placeholder="Search..." 
+                  placeholder="Search... (⌘K)" 
                   className="max-w-xs"
+                  onClick={() => setShowCommandPalette(true)}
+                  readOnly
                 />
               </div>
             </div>
             
             <div className="flex items-center gap-2 lg:gap-4">
+              <ThemeToggle />
+              
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -219,7 +251,7 @@ const Dashboard = () => {
                 
                 {showNotifications && (
                   <div className={cn(
-                    "absolute right-0 top-full mt-2 bg-white border rounded-lg shadow-lg z-50",
+                    "absolute right-0 top-full mt-2 bg-white border rounded-lg shadow-lg z-50 glass-dropdown",
                     isMobile ? "w-72 max-w-[90vw]" : "w-80"
                   )}>
                     <div className="p-4 border-b bg-gray-50">
@@ -260,7 +292,7 @@ const Dashboard = () => {
                     </span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuContent align="end" className="w-48 glass-dropdown">
                   <DropdownMenuItem asChild>
                     <Link to="/dashboard/settings" className="flex items-center gap-2 w-full cursor-pointer">
                       <User className="h-4 w-4" />
@@ -307,8 +339,8 @@ const Dashboard = () => {
           </div>
           <div className="hidden sm:flex items-center gap-2">
             <span>Press</span>
-            <kbd className="px-1.5 py-0.5 text-xs bg-gray-100 rounded border">?</kbd>
-            <span>for keyboard shortcuts</span>
+            <kbd className="px-1.5 py-0.5 text-xs bg-gray-100 rounded border">⌘K</kbd>
+            <span>for command palette</span>
           </div>
         </footer>
       </div>
@@ -316,7 +348,7 @@ const Dashboard = () => {
       {/* Bizzy AI Assistant chatbot - Mobile responsive */}
       {showChatbot && (
         <div className={cn(
-          "fixed z-40 bg-white border rounded-lg shadow-lg flex flex-col",
+          "fixed z-40 bg-white border rounded-lg shadow-lg flex flex-col glass-modal",
           isMobile 
             ? "inset-4 rounded-lg" 
             : "bottom-4 right-4 w-80 h-96"
@@ -378,6 +410,12 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+      
+      {/* Command Palette */}
+      <CommandPalette 
+        open={showCommandPalette} 
+        onOpenChange={setShowCommandPalette} 
+      />
       
       {/* Keyboard Shortcuts Modal */}
       <KeyboardShortcutsModal

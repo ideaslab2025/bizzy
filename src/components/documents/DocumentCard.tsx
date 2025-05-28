@@ -1,8 +1,11 @@
+
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { TiltCard } from '@/components/ui/3d-tilt-card';
+import { SmartTooltip } from '@/components/ui/smart-tooltip';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useRecentlyViewed } from '@/components/ui/recently-viewed';
 import { FileText, Download, Edit, Eye, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DocumentHoverCard } from './DocumentHoverCard';
@@ -44,25 +47,46 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   className
 }) => {
   const isMobile = useIsMobile();
+  const { addItem } = useRecentlyViewed();
   const isCompleted = progress?.completed_at;
   const hasProgress = progress?.viewed || progress?.downloaded || progress?.customized;
 
+  const handleViewDetails = () => {
+    addItem({
+      id: document.id,
+      title: document.title,
+      type: 'document',
+      url: `/dashboard/documents?doc=${document.id}`,
+    });
+    onViewDetails(document);
+  };
+
   const cardContent = (
-    <Card glass className={cn("h-full flex flex-col hover:shadow-md transition-shadow", className)}>
-      <CardHeader className="pb-3">
+    <div className="h-full flex flex-col">
+      <div className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1">
-            <CardTitle className={`line-clamp-2 ${isMobile ? 'text-base' : 'text-lg'}`}>
+            <h3 className={`line-clamp-2 font-semibold ${isMobile ? 'text-base' : 'text-lg'}`}>
               {document.title}
-            </CardTitle>
+            </h3>
             <div className="flex items-center gap-2 mt-2 flex-wrap">
-              <Badge className={`${categoryColors[document.category]} text-xs`}>
-                {categoryLabels[document.category]}
-              </Badge>
-              {document.is_required && (
-                <Badge variant="outline" className="text-red-600 border-red-200 text-xs">
-                  Required
+              <SmartTooltip
+                id={`category-${document.category}`}
+                content={`This document is categorized under ${categoryLabels[document.category]}`}
+              >
+                <Badge className={`${categoryColors[document.category]} text-xs`}>
+                  {categoryLabels[document.category]}
                 </Badge>
+              </SmartTooltip>
+              {document.is_required && (
+                <SmartTooltip
+                  id="required-doc"
+                  content="This document is required for your business setup"
+                >
+                  <Badge variant="outline" className="text-red-600 border-red-200 text-xs">
+                    Required
+                  </Badge>
+                </SmartTooltip>
               )}
               {document.file_type && (
                 <Badge variant="outline" className="text-xs">
@@ -78,9 +102,9 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
             )}
           </div>
         </div>
-      </CardHeader>
+      </div>
       
-      <CardContent className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col">
         <p className={`text-gray-600 line-clamp-3 mb-4 ${isMobile ? 'text-sm' : 'text-sm'}`}>
           {document.description}
         </p>
@@ -112,7 +136,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => onViewDetails(document)}
+            onClick={handleViewDetails}
             className={isMobile ? 'w-full' : 'flex-1'}
           >
             <Eye className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
@@ -143,18 +167,30 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
             </Button>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
+  );
+
+  const wrappedContent = (
+    <TiltCard 
+      glass 
+      className={cn("h-full flex flex-col hover:shadow-md transition-shadow", className)}
+      disabled={isMobile}
+    >
+      <div className="p-6">
+        {cardContent}
+      </div>
+    </TiltCard>
   );
 
   // On mobile, show without hover card. On desktop, wrap with hover card
   if (isMobile) {
-    return cardContent;
+    return wrappedContent;
   }
 
   return (
     <DocumentHoverCard document={document} side="top">
-      {cardContent}
+      {wrappedContent}
     </DocumentHoverCard>
   );
 };
