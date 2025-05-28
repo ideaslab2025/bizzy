@@ -5,7 +5,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Overview from "./pages/dashboard/Overview";
 import Documents from "./pages/dashboard/Documents";
-import EnhancedGuidedHelp from "./pages/EnhancedGuidedHelp";
+import GuidedHelp from "./pages/GuidedHelp";
 import Pricing from "./pages/Pricing";
 import ContentMigration from "./pages/ContentMigration";
 import Login from "./pages/Login";
@@ -30,7 +30,7 @@ function App() {
               <Route path="consultations" element={<div className="p-6"><h1 className="text-2xl font-bold">Consultations</h1><p>Coming soon...</p></div>} />
               <Route path="settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Settings</h1><p>Coming soon...</p></div>} />
             </Route>
-            <Route path="/guided-help" element={<EnhancedGuidedHelp />} />
+            <Route path="/guided-help" element={<GuidedHelp />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/content-migration" element={<ContentMigration />} />
             <Route path="/login" element={<Login />} />
