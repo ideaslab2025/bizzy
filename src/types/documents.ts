@@ -1,14 +1,15 @@
 
+
 export interface Document {
   id: string;
   title: string;
   description?: string;
-  category: 'company-setup' | 'employment' | 'tax-vat' | 'legal-compliance' | 'finance' | 'data-protection';
+  category: string; // Changed from union type to string to match Supabase
   subcategory?: string;
-  file_type?: 'template' | 'guide' | 'form' | 'policy';
+  file_type?: string; // Changed from union type to string to match Supabase
   template_url?: string;
   is_required: boolean;
-  customizable_fields?: CustomField[];
+  customizable_fields?: any; // Using any instead of CustomField[] to match Json type
   keywords?: string[];
   created_at: string;
   updated_at: string;
