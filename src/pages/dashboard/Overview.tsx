@@ -3,6 +3,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { PersonalizedDashboard } from "@/components/dashboard/PersonalizedDashboard";
 import { PullToRefresh } from "@/components/ui/pull-to-refresh";
+import { NeonGlow } from "@/components/ui/neon-glow";
+import { AnimatedCounter, CurrencyCounter, PercentageCounter } from "@/components/ui/animated-counter";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
@@ -39,14 +41,86 @@ const Overview = () => {
 
   return (
     <PullToRefresh onRefresh={handleOverviewRefresh}>
-      <PersonalizedDashboard
-        userId={user.id}
-        completedStepIds={completedStepIds}
-        currentSectionCategory={currentSectionCategory}
-        companyAge={companyAge}
-        onNavigateToStep={handleNavigateToStep}
-        onNavigateToGuidedHelp={handleNavigateToGuidedHelp}
-      />
+      <div className="space-y-8">
+        {/* Stats Section with Neon Glow */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <NeonGlow color="blue" hover>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Tasks Completed</h3>
+              <div className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
+                <AnimatedCounter value={42} />
+              </div>
+            </div>
+          </NeonGlow>
+          
+          <NeonGlow color="green" hover>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Progress</h3>
+              <div className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
+                <PercentageCounter value={78.5} />
+              </div>
+            </div>
+          </NeonGlow>
+          
+          <NeonGlow color="purple" hover>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Time Saved</h3>
+              <div className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
+                <AnimatedCounter value={125} suffix=" hrs" />
+              </div>
+            </div>
+          </NeonGlow>
+          
+          <NeonGlow color="pink" hover>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Money Saved</h3>
+              <div className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
+                <CurrencyCounter value={2450} />
+              </div>
+            </div>
+          </NeonGlow>
+        </div>
+
+        {/* Main Dashboard */}
+        <PersonalizedDashboard
+          userId={user.id}
+          completedStepIds={completedStepIds}
+          currentSectionCategory={currentSectionCategory}
+          companyAge={companyAge}
+          onNavigateToStep={handleNavigateToStep}
+          onNavigateToGuidedHelp={handleNavigateToGuidedHelp}
+        />
+
+        {/* Action Buttons with Neon Effects */}
+        <div className="flex flex-wrap gap-4 mt-8">
+          <NeonGlow color="blue" pulse hover>
+            <button 
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium transition-all duration-300"
+              onClick={handleNavigateToGuidedHelp}
+              data-cursor="help"
+            >
+              Continue Journey
+            </button>
+          </NeonGlow>
+          
+          <NeonGlow color="green" hover>
+            <button 
+              className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium transition-all duration-300"
+              data-cursor="grab"
+            >
+              Download Documents
+            </button>
+          </NeonGlow>
+          
+          <NeonGlow color="rainbow" hover>
+            <button 
+              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium transition-all duration-300"
+            >
+              Premium Features
+            </button>
+          </NeonGlow>
+        </div>
+      </div>
     </PullToRefresh>
   );
 };
