@@ -5,13 +5,16 @@ import { Input } from "@/components/ui/input";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
-import { User, LogOut, Bell } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
+import { User, LogOut, Bell, Menu, X } from "lucide-react";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const { user, signOut } = useAuth();
+  const isMobile = useIsMobile();
   
   const handleSignOut = async () => {
     try {
@@ -24,39 +27,67 @@ const Dashboard = () => {
   
   return (
     <div className="min-h-screen flex bg-muted/30">
+      {/* Mobile Overlay */}
+      {isMobile && isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
-        className={`fixed lg:relative lg:flex bg-white border-r h-full z-30 flex-col transition-all duration-300 ${
-          isSidebarOpen ? "w-64" : "w-0 lg:w-16 overflow-hidden"
-        }`}
+        className={cn(
+          "bg-white border-r h-full z-30 flex-col transition-all duration-300",
+          isMobile 
+            ? `fixed ${isSidebarOpen ? "w-64" : "w-0 overflow-hidden"}`
+            : `${isSidebarOpen ? "w-64" : "w-16"} relative flex`
+        )}
       >
         {/* Sidebar header */}
         <div className="flex items-center justify-between p-4 border-b">
           {isSidebarOpen ? (
             <Link to="/dashboard" className="flex items-center justify-center w-full">
-              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-40" />
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className={isMobile ? "h-32" : "h-40"} />
             </Link>
           ) : (
             <Link to="/dashboard" className="mx-auto">
               <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-20" />
             </Link>
           )}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:flex hidden"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          >
-            {isSidebarOpen ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m15 18-6-6 6-6" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6" />
-              </svg>
-            )}
-          </Button>
+          
+          {/* Close button for mobile */}
+          {isMobile && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsSidebarOpen(false)}
+              className="lg:hidden"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          )}
+          
+          {/* Desktop toggle */}
+          {!isMobile && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            >
+              {isSidebarOpen ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="4" x2="20" y1="12" y2="12" />
+                  <line x1="4" x2="20" y1="6" y2="6" />
+                  <line x1="4" x2="20" y1="18" y2="18" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              )}
+            </Button>
+          )}
         </div>
         
         <nav className="p-2 flex-1">
@@ -72,6 +103,7 @@ const Dashboard = () => {
                 <Link
                   to={item.path}
                   className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-muted/50 transition-colors"
+                  onClick={() => isMobile && setIsSidebarOpen(false)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     {item.icon === "home" && <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />}
@@ -80,7 +112,7 @@ const Dashboard = () => {
                     {item.icon === "video" && <path d="m22 8-6 4 6 4V8Z" />}
                     {item.icon === "settings" && <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 2.73.73l.15.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />}
                   </svg>
-                  {isSidebarOpen && <span>{item.name}</span>}
+                  {isSidebarOpen && <span className={isMobile ? "text-sm" : ""}>{item.name}</span>}
                 </Link>
               </li>
             ))}
@@ -115,22 +147,19 @@ const Dashboard = () => {
       {/* Main content area */}
       <div className="flex-1 flex flex-col">
         {/* Top navigation bar */}
-        <header className="bg-white border-b sticky top-0 z-20 h-16">
+        <header className="bg-white border-b sticky top-0 z-20 h-14 lg:h-16">
           <div className="flex items-center justify-between h-full px-4">
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="sm"
-                className="lg:hidden"
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="lg:hidden"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="4" x2="20" y1="12" y2="12" />
-                  <line x1="4" x2="20" y1="6" y2="6" />
-                  <line x1="4" x2="20" y1="18" y2="18" />
-                </svg>
+                <Menu className="w-4 h-4" />
               </Button>
-              <div className="lg:w-72">
+              
+              <div className="hidden sm:block lg:w-72">
                 <Input 
                   placeholder="Search..." 
                   className="max-w-xs"
@@ -138,37 +167,41 @@ const Dashboard = () => {
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 lg:gap-4">
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="flex items-center gap-2 hidden sm:flex bg-blue-100 text-blue-600 border-blue-200 hover:bg-blue-200"
+                className="hidden sm:flex items-center gap-2 bg-blue-100 text-blue-600 border-blue-200 hover:bg-blue-200 text-xs lg:text-sm px-2 lg:px-4"
                 onClick={() => setShowChatbot(true)}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
-                <span>Ask Bizzy</span>
+                <span>{isMobile ? "Bizzy" : "Ask Bizzy"}</span>
               </Button>
               
               <div 
                 className="relative"
-                onMouseEnter={() => setShowNotifications(true)}
-                onMouseLeave={() => setShowNotifications(false)}
+                onMouseEnter={() => !isMobile && setShowNotifications(true)}
+                onMouseLeave={() => !isMobile && setShowNotifications(false)}
+                onClick={() => isMobile && setShowNotifications(!showNotifications)}
               >
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="relative text-gray-700 hover:text-gray-900 hover:bg-gray-100 font-medium"
+                  className="relative text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                 >
-                  <Bell className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0088cc] text-white text-xs rounded-full flex items-center justify-center">
+                  <Bell className="w-4 h-4 lg:w-5 lg:h-5" />
+                  <span className="absolute -top-1 -right-1 w-3 h-3 lg:w-4 lg:h-4 bg-[#0088cc] text-white text-xs rounded-full flex items-center justify-center">
                     3
                   </span>
                 </Button>
                 
                 {showNotifications && (
-                  <div className="absolute right-0 top-full mt-2 w-80 bg-white border rounded-lg shadow-lg z-50">
+                  <div className={cn(
+                    "absolute right-0 top-full mt-2 bg-white border rounded-lg shadow-lg z-50",
+                    isMobile ? "w-72 max-w-[90vw]" : "w-80"
+                  )}>
                     <div className="p-4 border-b bg-gray-50">
                       <h3 className="font-medium text-gray-900">Notifications</h3>
                     </div>
@@ -190,16 +223,16 @@ const Dashboard = () => {
                 )}
               </div>
 
-              {/* Account Dropdown - Fixed hover functionality */}
+              {/* Account Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 font-medium"
+                    className="flex items-center gap-1 lg:gap-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                   >
-                    <User className="h-4 w-4" />
-                    <span className="hidden sm:inline font-medium">
+                    <User className="h-3 w-3 lg:h-4 lg:w-4" />
+                    <span className="hidden sm:inline text-xs lg:text-sm font-medium">
                       {user?.user_metadata?.company_name || 
                        (user?.user_metadata?.first_name 
                          ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
@@ -229,17 +262,22 @@ const Dashboard = () => {
         </header>
         
         {/* Main content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 lg:p-6">
           <Outlet />
         </main>
       </div>
       
-      {/* Bizzy AI Assistant chatbot */}
+      {/* Bizzy AI Assistant chatbot - Mobile responsive */}
       {showChatbot && (
-        <div className="fixed bottom-4 right-4 w-80 h-96 bg-white border rounded-lg shadow-lg flex flex-col z-40">
+        <div className={cn(
+          "fixed z-40 bg-white border rounded-lg shadow-lg flex flex-col",
+          isMobile 
+            ? "inset-4 rounded-lg" 
+            : "bottom-4 right-4 w-80 h-96"
+        )}>
           <div className="flex items-center justify-between p-3 border-b bg-[#0088cc] text-white rounded-t-lg">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-white rounded-full overflow-hidden">
+              <div className="w-6 h-6 lg:w-8 lg:h-8 bg-white rounded-full overflow-hidden">
                 <AspectRatio ratio={1}>
                   <img 
                     src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
@@ -248,7 +286,7 @@ const Dashboard = () => {
                   />
                 </AspectRatio>
               </div>
-              <span className="font-medium">Bizzy Assistant</span>
+              <span className="font-medium text-sm lg:text-base">Bizzy Assistant</span>
             </div>
             <Button 
               variant="ghost" 
@@ -256,10 +294,7 @@ const Dashboard = () => {
               className="h-6 w-6 p-0 text-white hover:bg-white/20"
               onClick={() => setShowChatbot(false)}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
+              <X className="w-4 h-4" />
             </Button>
           </div>
           

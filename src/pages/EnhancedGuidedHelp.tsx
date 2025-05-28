@@ -5,6 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { 
   CheckCircle, 
   Play, 
@@ -15,7 +17,8 @@ import {
   User, 
   LogOut, 
   Bell,
-  Trophy
+  Trophy,
+  Menu
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -45,6 +48,8 @@ interface QuickWinStep extends EnhancedGuidanceStep {
 
 const EnhancedGuidedHelp = () => {
   const { user, signOut } = useAuth();
+  const isMobile = useIsMobile();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sections, setSections] = useState<EnhancedGuidanceSection[]>([]);
   const [currentSection, setCurrentSection] = useState<number>(1);
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -498,46 +503,76 @@ const EnhancedGuidedHelp = () => {
     };
   });
 
-  return (
-    <div className="min-h-screen bg-white flex">
-      {/* Enhanced Left Sidebar */}
-      <div className="w-80 bg-[#0088cc] text-white flex flex-col">
-        {/* Logo */}
-        <div className="p-4 bg-white">
-          <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-48" />
-          </Link>
-        </div>
+  const sidebarContent = (
+    <div className="bg-[#0088cc] h-full text-white flex flex-col">
+      {/* Logo */}
+      <div className="p-4 bg-white">
+        <Link to="/dashboard" className="flex items-center justify-center">
+          <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-48" />
+        </Link>
+      </div>
 
-        {/* Progress Overview */}
-        <div className="p-4 bg-white/10 border-b border-white/20">
-          <div className="text-center">
-            <div className="text-3xl font-bold">{overallProgress}%</div>
-            <div className="text-sm opacity-80">Overall Progress</div>
-          </div>
-        </div>
-
-        {/* Enhanced Progress Steps */}
-        <div className="flex-1 p-4 pt-2 overflow-y-auto">
-          <h2 className="text-lg font-semibold mb-4">Your Business Setup Journey</h2>
-          <div className="space-y-3">
-            {enhancedSections.map((section) => {
-              const isCompleted = completedSections.has(section.id);
-              const isCurrent = currentSection === section.order_number;
-              
-              return (
-                <SidebarSection
-                  key={section.id}
-                  section={section}
-                  isActive={isCurrent}
-                  isCompleted={isCompleted}
-                  onClick={() => setCurrentSection(section.order_number)}
-                />
-              );
-            })}
-          </div>
+      {/* Progress Overview */}
+      <div className="p-4 bg-white/10 border-b border-white/20">
+        <div className="text-center">
+          <div className="text-3xl font-bold">{overallProgress}%</div>
+          <div className="text-sm opacity-80">Overall Progress</div>
         </div>
       </div>
+
+      {/* Enhanced Progress Steps */}
+      <div className="flex-1 p-4 pt-2 overflow-y-auto">
+        <h2 className="text-lg font-semibold mb-4">Your Business Setup Journey</h2>
+        <div className="space-y-3">
+          {enhancedSections.map((section) => {
+            const isCompleted = completedSections.has(section.id);
+            const isCurrent = currentSection === section.order_number;
+            
+            return (
+              <SidebarSection
+                key={section.id}
+                section={section}
+                isActive={isCurrent}
+                isCompleted={isCompleted}
+                onClick={() => {
+                  setCurrentSection(section.order_number);
+                  setMobileMenuOpen(false);
+                }}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-white flex">
+      {/* Mobile Menu Button */}
+      {isMobile && (
+        <div className="fixed top-4 left-4 z-50">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="bg-white shadow-md"
+          >
+            <Menu className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+
+      {/* Sidebar - Desktop */}
+      <div className="hidden lg:flex w-80">
+        {sidebarContent}
+      </div>
+
+      {/* Sidebar - Mobile Drawer */}
+      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+        <SheetContent side="left" className="w-80 p-0">
+          {sidebarContent}
+        </SheetContent>
+      </Sheet>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
@@ -555,26 +590,27 @@ const EnhancedGuidedHelp = () => {
           />
         )}
 
-        {/* Top Bar - Fixed text colors */}
+        {/* Top Bar - Mobile responsive */}
         <div className="bg-[#0088cc] border-b p-4 flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-white">
+          <div className="flex-1">
+            <h1 className="text-xl lg:text-2xl font-bold text-white">
               {sections.find(s => s.order_number === currentSection)?.title}
             </h1>
-            <p className="text-white/90">
+            <p className="text-white/90 text-sm lg:text-base">
               Step {currentStep} of {steps.length === 0 ? 1 : steps.length}
             </p>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 lg:gap-4">
             <Button 
               onClick={() => setShowChatbot(true)}
-              className="bg-white text-[#0088cc] hover:bg-gray-100"
+              className="bg-white text-[#0088cc] hover:bg-gray-100 text-xs lg:text-sm px-2 lg:px-4"
+              size={isMobile ? "sm" : "default"}
             >
-              Talk to Bizzy
+              {isMobile ? "Bizzy" : "Talk to Bizzy"}
             </Button>
             
-            {/* Notifications - Better contrast */}
+            {/* Notifications - Mobile optimized */}
             <div
               className="relative"
               onMouseEnter={() => setShowNotifications(true)}
@@ -585,13 +621,13 @@ const EnhancedGuidedHelp = () => {
                 size="sm"
                 className="relative text-white hover:bg-white/20"
               >
-                <Bell className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                <Bell className="w-4 h-4 lg:w-5 lg:h-5" />
+                <span className="absolute -top-1 -right-1 w-3 h-3 lg:w-4 lg:h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                   3
                 </span>
               </Button>
 
-              {showNotifications && (
+              {showNotifications && !isMobile && (
                 <div className="absolute right-0 top-full mt-2 w-80 bg-white border rounded-lg shadow-lg z-50">
                   <div className="p-4 border-b bg-gray-50">
                     <h3 className="font-medium text-gray-900">Notifications</h3>
@@ -614,16 +650,16 @@ const EnhancedGuidedHelp = () => {
               )}
             </div>
 
-            {/* Account button with white text */}
+            {/* Account button */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="flex items-center gap-2 text-white hover:bg-white/20"
+                  className="flex items-center gap-1 lg:gap-2 text-white hover:bg-white/20"
                 >
-                  <User className="h-4 w-4" />
-                  <span className="hidden sm:inline">
+                  <User className="h-3 w-3 lg:h-4 lg:w-4" />
+                  <span className="hidden sm:inline text-xs lg:text-sm">
                     {user?.email?.split('@')[0] || 'Account'}
                   </span>
                 </Button>
@@ -649,7 +685,7 @@ const EnhancedGuidedHelp = () => {
         </div>
 
         {/* Content with Smart Recommendations */}
-        <div className="flex-1 p-8 pb-32">
+        <div className="flex-1 p-4 lg:p-8 pb-20 lg:pb-32">
           {/* Smart Recommendations Panel - Only show if we have valid data */}
           {user && completedStepIds.length >= 0 && (
             <div className="mb-6">
@@ -669,16 +705,16 @@ const EnhancedGuidedHelp = () => {
             onNavigateToStep={handleNavigateToStep}
           />
 
-          {/* Step Content */}
+          {/* Step Content - Mobile optimized */}
           {steps.length === 0 ? (
             <div className="max-w-4xl">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">
+              <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
                 {currentSectionData?.title}
               </h2>
               <Card className="mb-8">
-                <CardContent className="p-8">
+                <CardContent className="p-4 lg:p-8">
                   <div className="prose max-w-none">
-                    <p className="text-lg text-gray-600">
+                    <p className="text-base lg:text-lg text-gray-600">
                       Content for this section is coming soon. You can still mark this section as complete to track your progress.
                     </p>
                   </div>
@@ -693,7 +729,7 @@ const EnhancedGuidedHelp = () => {
               transition={{ duration: 0.3 }}
               className="max-w-4xl"
             >
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">
+              <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
                 {currentStepData.title}
               </h2>
 
@@ -750,18 +786,19 @@ const EnhancedGuidedHelp = () => {
           ) : null}
         </div>
 
-        {/* Fixed Floating Bottom Navigation */}
-        <div className="fixed bottom-0 left-80 right-0 bg-white/95 backdrop-blur-sm border-t shadow-lg p-6 flex justify-between items-center z-40">
+        {/* Fixed Floating Bottom Navigation - Mobile responsive */}
+        <div className="fixed bottom-0 left-0 lg:left-80 right-0 bg-white/95 backdrop-blur-sm border-t shadow-lg p-3 lg:p-6 flex justify-between items-center z-40">
           <Button
             variant="outline"
             onClick={prevStep}
             disabled={currentSection === 1 && currentStep === 1}
+            size={isMobile ? "sm" : "default"}
           >
-            <ChevronLeft className="w-4 h-4 mr-2" />
-            Back
+            <ChevronLeft className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+            <span className="text-xs lg:text-sm">Back</span>
           </Button>
 
-          <div className="flex gap-3">
+          <div className="flex gap-2 lg:gap-3">
             {/* Show Mark Section Complete and Skip Section buttons on last step of any section OR when no steps exist */}
             {isLastStepInSection() && currentSectionData && (
               <>
@@ -769,21 +806,26 @@ const EnhancedGuidedHelp = () => {
                   onClick={() => toggleSectionCompleted(currentSectionData.id)}
                   className={
                     isSectionCompleted(currentSectionData.id)
-                      ? "bg-gray-400 hover:bg-gray-500 text-white"
-                      : "bg-green-600 hover:bg-green-700 text-white"
+                      ? "bg-gray-400 hover:bg-gray-500 text-white text-xs lg:text-sm px-2 lg:px-4"
+                      : "bg-green-600 hover:bg-green-700 text-white text-xs lg:text-sm px-2 lg:px-4"
                   }
+                  size={isMobile ? "sm" : "default"}
                 >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  {isSectionCompleted(currentSectionData.id) ? 'Mark as Incomplete' : 'Mark Section as Complete'}
+                  <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                  {isMobile ? 
+                    (isSectionCompleted(currentSectionData.id) ? 'Incomplete' : 'Complete') :
+                    (isSectionCompleted(currentSectionData.id) ? 'Mark as Incomplete' : 'Mark Section as Complete')
+                  }
                 </Button>
                 
                 <Button
                   variant="outline"
                   onClick={skipSection}
                   disabled={currentSection === sections.length}
+                  size={isMobile ? "sm" : "default"}
                 >
-                  <SkipForward className="w-4 h-4 mr-2" />
-                  Skip Section
+                  <SkipForward className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                  <span className="text-xs lg:text-sm">{isMobile ? 'Skip' : 'Skip Section'}</span>
                 </Button>
               </>
             )}
@@ -791,19 +833,20 @@ const EnhancedGuidedHelp = () => {
             <Button
               onClick={nextStep}
               disabled={currentSection === sections.length && (steps.length === 0 || currentStep === steps.length)}
-              className="bg-[#0088cc] hover:bg-[#0088cc]/90"
+              className="bg-[#0088cc] hover:bg-[#0088cc]/90 text-xs lg:text-sm px-2 lg:px-4"
+              size={isMobile ? "sm" : "default"}
             >
-              Next
-              <ChevronRight className="w-4 h-4 ml-2" />
+              <span className="text-xs lg:text-sm">Next</span>
+              <ChevronRight className="w-3 h-3 lg:w-4 lg:h-4 ml-1 lg:ml-2" />
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Chatbot Modal */}
+      {/* Chatbot Modal - Mobile responsive */}
       {showChatbot && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg w-96 h-[500px] flex flex-col">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 lg:p-0">
+          <div className={`bg-white rounded-lg flex flex-col ${isMobile ? 'w-full h-full max-w-md' : 'w-96 h-[500px]'}`}>
             <div className="flex items-center justify-between p-4 border-b bg-[#0088cc] text-white rounded-t-lg">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-white rounded-full overflow-hidden">

@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { DocumentCard } from '@/components/documents/DocumentCard';
 import { DocumentFilters } from '@/components/documents/DocumentFilters';
 import { DocumentPreview } from '@/components/documents/DocumentPreview';
@@ -10,6 +10,7 @@ import type { Document, UserDocumentProgress, GuidanceStepDocument } from '@/typ
 
 const Documents = () => {
   const { user } = useAuth();
+  const isMobile = useIsMobile();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [progress, setProgress] = useState<UserDocumentProgress[]>([]);
   const [loading, setLoading] = useState(true);
@@ -159,36 +160,41 @@ const Documents = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Document Library</h1>
-        <p className="text-gray-600 mt-2">
+    <div className="space-y-4 lg:space-y-6">
+      <div className="px-4 lg:px-0">
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Document Library</h1>
+        <p className="text-gray-600 mt-2 text-sm lg:text-base">
           Access templates, forms, and guides to help set up your business
         </p>
       </div>
 
-      <DocumentFilters
-        searchQuery={searchQuery}
-        selectedCategory={selectedCategory}
-        onSearchChange={setSearchQuery}
-        onCategoryChange={setSelectedCategory}
-        documentCount={filteredDocuments.length}
-      />
+      <div className="px-4 lg:px-0">
+        <DocumentFilters
+          searchQuery={searchQuery}
+          selectedCategory={selectedCategory}
+          onSearchChange={setSearchQuery}
+          onCategoryChange={setSelectedCategory}
+          documentCount={filteredDocuments.length}
+        />
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredDocuments.map((document) => {
-          const documentProgress = progress.find(p => p.document_id === document.id);
-          return (
-            <DocumentCard
-              key={document.id}
-              document={document}
-              progress={documentProgress}
-              onViewDetails={handleViewDetails}
-              onCustomize={handleCustomize}
-              onDownload={handleDownload}
-            />
-          );
-        })}
+      <div className="px-4 lg:px-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+          {filteredDocuments.map((document) => {
+            const documentProgress = progress.find(p => p.document_id === document.id);
+            return (
+              <DocumentCard
+                key={document.id}
+                document={document}
+                progress={documentProgress}
+                onViewDetails={handleViewDetails}
+                onCustomize={handleCustomize}
+                onDownload={handleDownload}
+                className="flex flex-col h-full"
+              />
+            );
+          })}
+        </div>
       </div>
 
       {filteredDocuments.length === 0 && (
