@@ -62,21 +62,6 @@ export const NeonGlow: React.FC<NeonGlowProps> = ({
   );
 };
 
-// Higher-order component for easy wrapping
-export const withNeonGlow = <P extends object>(
-  Component: React.ComponentType<P>,
-  glowProps?: Omit<NeonGlowProps, 'children'>
-) => {
-  const WrappedComponent = React.forwardRef<any, P>((props, ref) => (
-    <NeonGlow {...glowProps}>
-      <Component {...props} ref={ref} />
-    </NeonGlow>
-  ));
-  
-  WrappedComponent.displayName = `withNeonGlow(${Component.displayName || Component.name})`;
-  return WrappedComponent;
-};
-
 // Neon Button wrapper
 export const NeonButton: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement> & 
