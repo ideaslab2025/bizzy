@@ -29,6 +29,13 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
   const businessSection = businessSections.find(bs => bs.id === section.id);
   const IconComponent = businessSection?.icon;
 
+  // Debug logging to identify missing icons
+  console.log(`Section ${section.id} (${section.title}):`, {
+    hasBusinessSection: !!businessSection,
+    hasIcon: !!IconComponent,
+    iconColor: businessSection?.iconColor
+  });
+
   return (
     <motion.button
       whileHover={{ scale: 1.02 }}
@@ -84,9 +91,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
                     "w-6 h-6 relative z-10 drop-shadow-sm",
                     isActive 
                       ? "text-[#0088cc]" 
-                      : businessSection?.iconColor 
-                        ? businessSection.iconColor.replace('text-', 'text-').replace('-600', '-700')
-                        : "text-gray-700"
+                      : businessSection?.iconColor || "text-gray-700"
                   )}
                   fill="none"
                   strokeWidth={2}
