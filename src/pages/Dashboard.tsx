@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Bell, Search, User, ChevronDown, Settings, LogOut, X, HelpCircle } from "lucide-react";
+import { Bell, Search, User, ChevronDown, Settings, LogOut, X, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
@@ -19,11 +19,13 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import BizzyChat from "@/components/BizzyChat";
+import { useAuth } from "@/hooks/useAuth";
 
 const Dashboard = () => {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [bizzyOpen, setBizzyOpen] = useState(false);
   const [hasNotifications] = useState(true);
+  const { user } = useAuth();
 
   // Listen for keyboard shortcut to open command palette
   React.useEffect(() => {
@@ -37,6 +39,17 @@ const Dashboard = () => {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // Get user display name
+  const getUserDisplayName = () => {
+    if (user?.user_metadata?.full_name) {
+      return user.user_metadata.full_name;
+    }
+    if (user?.user_metadata?.first_name && user?.user_metadata?.last_name) {
+      return `${user.user_metadata.first_name} ${user.user_metadata.last_name}`;
+    }
+    return user?.email?.split('@')[0] || 'User';
+  };
 
   return (
     <SidebarProvider>
@@ -76,7 +89,7 @@ const Dashboard = () => {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="relative rounded-lg p-2 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
+                      className="relative rounded-lg p-2 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 hover:scale-105"
                     >
                       <Bell className="w-5 h-5" />
                       {hasNotifications && (
@@ -109,12 +122,12 @@ const Dashboard = () => {
                   <DropdownMenuTrigger asChild>
                     <Button 
                       variant="ghost" 
-                      className="flex items-center gap-2 rounded-lg p-2 hover:bg-gray-100 hover:text-gray-900 hover:ring-2 hover:ring-gray-200 transition-all duration-200"
+                      className="flex items-center gap-2 rounded-lg p-2 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 hover:scale-105"
                     >
                       <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                         <User className="w-4 h-4 text-white" />
                       </div>
-                      <span className="font-medium hidden md:inline-block">John Doe</span>
+                      <span className="font-medium hidden md:inline-block">{getUserDisplayName()}</span>
                       <ChevronDown className="w-4 h-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -135,13 +148,13 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced Get Help Button with consistent hover */}
+                {/* Enhanced Talk to Bizzy Button with consistent styling */}
                 <Button
                   onClick={() => setBizzyOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium shadow-sm hover:shadow-md"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hover:scale-105 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
                 >
-                  <HelpCircle className="w-4 h-4" />
-                  <span>Get Help</span>
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Talk to Bizzy</span>
                 </Button>
               </div>
             </div>
