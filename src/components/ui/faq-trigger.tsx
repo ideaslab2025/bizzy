@@ -22,7 +22,7 @@ export const FAQTrigger: React.FC<FAQTriggerProps> = ({ onClick }) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <motion.div
-            className="fixed right-4 bottom-20 z-40"
+            className="fixed right-4 bottom-4 z-40"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onHoverStart={() => setIsHovered(true)}
