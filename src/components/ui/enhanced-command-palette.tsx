@@ -156,10 +156,10 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 max-w-xl mx-auto mt-8 border shadow-2xl fixed top-8 left-1/2 transform -translate-x-1/2">
-        <div className="flex flex-col">
+      <DialogContent className="p-0 max-w-xl mx-auto mt-20 mb-8 border shadow-2xl fixed top-20 left-1/2 transform -translate-x-1/2 max-h-[70vh] overflow-hidden">
+        <div className="flex flex-col h-full">
           {/* Search Input */}
-          <div className="flex items-center border-b px-4 py-3">
+          <div className="flex items-center border-b px-4 py-3 bg-white">
             <Search className="w-4 h-4 text-gray-400 mr-3 flex-shrink-0" />
             <Input
               ref={inputRef}
@@ -167,7 +167,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search for documents, guides, or get help..."
-              className="border-0 bg-transparent focus:ring-0 text-base focus-visible:ring-0 shadow-none"
+              className="border-0 bg-transparent focus:ring-0 text-base focus-visible:ring-0 shadow-none p-0"
             />
             {query && (
               <Badge variant="secondary" className="ml-2">
@@ -178,7 +178,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           </div>
 
           {/* Results */}
-          <div className="max-h-80 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto">
             {Object.keys(groupedCommands).length === 0 ? (
               <div className="p-6 text-center text-gray-500">
                 <Search className="w-10 h-10 mx-auto mb-3 text-gray-300" />
@@ -235,7 +235,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="border-t p-3 text-xs text-gray-500 flex items-center justify-between">
+          <div className="border-t p-3 text-xs text-gray-500 flex items-center justify-between bg-gray-50">
             <div className="flex items-center gap-4">
               <span>↑↓ Navigate</span>
               <span>↵ Select</span>

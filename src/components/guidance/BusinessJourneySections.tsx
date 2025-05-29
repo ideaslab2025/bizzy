@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -184,7 +183,7 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
             {businessSections.slice(3, 6).reverse().map((section, reverseIndex) => {
               const status = getSectionStatus(section);
               const IconComponent = section.icon;
-              const index = 2 - reverseIndex; // Convert back to original index for delays
+              const index = 2 - reverseIndex;
               
               return (
                 <div key={section.id} className="relative">
@@ -310,7 +309,7 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
             </div>
           </div>
 
-          {/* Third Row - Left to Right */}
+          {/* Third Row - Left to Right with proper arrows and final line */}
           <div className="grid grid-cols-3 gap-8 relative">
             {businessSections.slice(6).map((section, index) => {
               const status = getSectionStatus(section);
@@ -423,22 +422,20 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                   </motion.div>
 
                   {/* Right Arrow for third row (except for last section) */}
-                  {index < 2 && (
+                  {!isLastSection && (
                     <div className="absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
                       <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                         <ChevronRight className="w-5 h-5 text-white" strokeWidth={2} />
                       </div>
                     </div>
                   )}
-
-                  {/* Bottom line for the last section */}
-                  {isLastSection && (
-                    <div className="absolute -bottom-4 left-0 right-0 h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full"></div>
-                  )}
                 </div>
               );
             })}
           </div>
+
+          {/* Bottom completion line spanning the full width */}
+          <div className="mt-8 w-full h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full"></div>
         </div>
 
         {/* Mobile/Tablet - Simple Grid */}
