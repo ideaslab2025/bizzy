@@ -110,8 +110,8 @@ export function AppSidebar() {
   return (
     <Sidebar className="bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200">
       <SidebarHeader className="p-6 border-b border-gray-200">
-        {/* Bizzy Logo */}
-        <div className="flex items-center h-16 mb-4">
+        {/* Enhanced Bizzy Logo - Much Bigger */}
+        <div className="flex items-center justify-center h-24 mb-6">
           <motion.a
             href="/"
             className="flex items-center gap-3 group cursor-pointer transition-all duration-200"
@@ -125,7 +125,7 @@ export function AppSidebar() {
               <img 
                 src="/lovable-uploads/aa4b1538-01d2-4242-8776-815bd99470d9.png" 
                 alt="Bizzy" 
-                className="h-8 w-auto"
+                className="h-16 w-auto"
               />
             </div>
           </motion.a>
