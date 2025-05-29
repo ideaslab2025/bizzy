@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
@@ -149,6 +150,7 @@ const EnhancedGuidedHelp = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
+  // Use the shared progress hook
   const { 
     completedSections, 
     completedSteps, 
@@ -158,6 +160,7 @@ const EnhancedGuidedHelp = () => {
     loading: progressLoading 
   } = useGuidanceProgress();
 
+  // Local state for component-specific data
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sections, setSections] = useState<EnhancedGuidanceSection[]>([]);
   const [currentSection, setCurrentSection] = useState<number>(1);
@@ -165,9 +168,7 @@ const EnhancedGuidedHelp = () => {
   const [steps, setSteps] = useState<EnhancedGuidanceStep[]>([]);
   const [allSteps, setAllSteps] = useState<EnhancedGuidanceStep[]>([]);
   const [progress, setProgress] = useState<UserProgress[]>([]);
-  const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
   const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set());
-  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const [achievements, setAchievements] = useState<UserAchievement[]>([]);
   const [quickWins, setQuickWins] = useState<QuickWinStep[]>([]);
   const [totalTimeSpent, setTotalTimeSpent] = useState(0);
@@ -180,6 +181,29 @@ const EnhancedGuidedHelp = () => {
   // Celebration states
   const [showMilestone, setShowMilestone] = useState<any>(null);
   const [achievementQueue, setAchievementQueue] = useState<any[]>([]);
+
+  // URL parameter handling for navigation
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const sectionParam = searchParams.get('section');
+    const stepParam = searchParams.get('step');
+    
+    if (sectionParam) {
+      const sectionNumber = parseInt(sectionParam);
+      if (sectionNumber >= 1 && sectionNumber <= 10) {
+        setCurrentSection(sectionNumber);
+        
+        if (stepParam) {
+          const stepNumber = parseInt(stepParam);
+          if (stepNumber >= 1) {
+            setCurrentStep(stepNumber);
+          }
+        } else {
+          setCurrentStep(1);
+        }
+      }
+    }
+  }, [location.search]);
 
   const calculateCompanyAge = async () => {
     if (!user) return;
@@ -206,7 +230,6 @@ const EnhancedGuidedHelp = () => {
     fetchSections();
     fetchAllSteps();
     if (user) {
-      fetchProgress();
       fetchAchievements();
       fetchQuickWins();
       fetchTimeSpent();
@@ -280,42 +303,6 @@ const EnhancedGuidedHelp = () => {
     } else {
       setSteps([]);
       setCurrentStep(1);
-    }
-  };
-
-  const fetchProgress = async () => {
-    if (!user) return;
-    
-    const { data, error } = await supabase
-      .from('user_guidance_progress')
-      .select('section_id, step_id, completed, section_completed, last_visited_at')
-      .eq('user_id', user.id)
-      .order('last_visited_at', { ascending: false });
-    
-    if (data && !error) {
-      const uniqueProgress = data.reduce((acc, item) => {
-        const key = `${item.section_id}-${item.step_id}`;
-        if (!acc[key]) {
-          acc[key] = item;
-        }
-        return acc;
-      }, {} as Record<string, typeof data[0]>);
-      
-      const progressArray = Object.values(uniqueProgress);
-      setProgress(progressArray);
-      
-      const completedSectionIds = progressArray
-        .filter(item => item.section_completed)
-        .map(item => item.section_id);
-      setCompletedSections(new Set(completedSectionIds));
-      
-      const visitedStepIds = progressArray.map(item => item.step_id);
-      setVisitedSteps(new Set(visitedStepIds));
-      
-      const actuallyCompletedStepIds = progressArray
-        .filter(item => item.completed === true)
-        .map(item => item.step_id);
-      setCompletedSteps(new Set(actuallyCompletedStepIds));
     }
   };
 
@@ -463,82 +450,6 @@ const EnhancedGuidedHelp = () => {
     }
   };
 
-  const toggleSectionCompleted = async (sectionId: number) => {
-    if (!user) return;
-    
-    const isNowCompleted = !completedSections.has(sectionId);
-    
-    const { data: sectionSteps, error } = await supabase
-      .from('guidance_steps')
-      .select('id')
-      .eq('section_id', sectionId);
-    
-    if (error || !sectionSteps) return;
-    
-    for (const step of sectionSteps) {
-      const { data: existingProgress } = await supabase
-        .from('user_guidance_progress')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('section_id', sectionId)
-        .eq('step_id', step.id)
-        .single();
-
-      if (existingProgress) {
-        await supabase
-          .from('user_guidance_progress')
-          .update({
-            completed: isNowCompleted,
-            section_completed: isNowCompleted,
-            last_visited_at: new Date().toISOString()
-          })
-          .eq('id', existingProgress.id);
-      } else {
-        await supabase
-          .from('user_guidance_progress')
-          .insert({
-            user_id: user.id,
-            section_id: sectionId,
-            step_id: step.id,
-            completed: isNowCompleted,
-            section_completed: isNowCompleted,
-            last_visited_at: new Date().toISOString()
-          });
-      }
-    }
-    
-    setCompletedSections(prev => {
-      const next = new Set(prev);
-      if (isNowCompleted) {
-        next.add(sectionId);
-      } else {
-        next.delete(sectionId);
-      }
-      return next;
-    });
-    
-    setCompletedSteps(prev => {
-      const next = new Set(prev);
-      if (isNowCompleted) {
-        sectionSteps.forEach(step => next.add(step.id));
-      } else {
-        sectionSteps.forEach(step => next.delete(step.id));
-      }
-      return next;
-    });
-    
-    if (isNowCompleted) {
-      setVisitedSteps(prev => {
-        const next = new Set(prev);
-        sectionSteps.forEach(step => next.add(step.id));
-        return next;
-      });
-      
-      // Check for achievements after completing section
-      setTimeout(() => checkForAchievements(), 500);
-    }
-  };
-
   const checkAndAutoCompleteSection = async (sectionId: number) => {
     if (!user || completedSections.has(sectionId)) return;
     
@@ -571,13 +482,7 @@ const EnhancedGuidedHelp = () => {
             .eq('id', existingProgress.id);
         }
       }
-      
-      setCompletedSections(prev => new Set([...prev, sectionId]));
     }
-  };
-
-  const isSectionCompleted = (sectionId: number) => {
-    return completedSections.has(sectionId);
   };
 
   const isLastStepInSection = () => {
@@ -639,12 +544,6 @@ const EnhancedGuidedHelp = () => {
     return sectionSteps.length > 0 ? (completedSectionSteps.length / sectionSteps.length) * 100 : 0;
   };
 
-  const getOverallProgress = () => {
-    const totalSteps = allSteps.length;
-    const totalCompletedSteps = completedSteps.size;
-    return totalSteps > 0 ? (totalCompletedSteps / totalSteps) * 100 : 0;
-  };
-
   const handleNavigateToStep = (sectionId: number, stepNumber: number) => {
     const section = sections.find(s => s.id === sectionId);
     if (section) {
@@ -657,7 +556,7 @@ const EnhancedGuidedHelp = () => {
 
   const currentStepData = getCurrentStepData();
   const currentSectionData = sections.find(s => s.order_number === currentSection);
-  const sectionProgress = currentSectionData ? getSectionProgress(currentSectionData.id) : 0;
+  const currentSectionProgress = currentSectionData ? getSectionProgress(currentSectionData.id) : 0;
   const overallProgress = Math.round(getOverallProgress());
 
   const enhancedSections = sections.map(section => {
@@ -770,7 +669,7 @@ const EnhancedGuidedHelp = () => {
             overallProgress={overallProgress}
             totalTimeSpent={totalTimeSpent}
             achievementCount={achievements.length}
-            sectionProgress={sectionProgress}
+            sectionProgress={currentSectionProgress}
           />
         )}
 
@@ -1009,7 +908,7 @@ const EnhancedGuidedHelp = () => {
             {isLastStepInSection() && currentSectionData && (
               <>
                 <Button
-                  onClick={() => handleToggleSectionCompleted(currentSectionData.id)}
+                  onClick={() => toggleSectionCompleted(currentSectionData.id)}
                   className={
                     completedSections.has(currentSectionData.id)
                       ? "bg-gray-400 hover:bg-gray-500 text-white text-xs lg:text-sm px-2 lg:px-4"
