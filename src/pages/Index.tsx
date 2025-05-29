@@ -476,7 +476,7 @@ const Index = () => {
                   <Zap className="w-8 h-8 text-purple-600" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-white">Fast Setup</h3>
-                <p className="text-blue-100/80">Get your business running in days, not weeks, with every</p>
+                <p className="text-blue-100/80">Get your business running in days, not weeks, with everything in on</p>
               </div>
             </div>
           </div>
