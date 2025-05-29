@@ -204,7 +204,7 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Visual Journey Map - Compressed horizontal layout with arrow connectors */}
+      {/* Visual Journey Map - Compact layout with solid arrow lines */}
       <Card className="p-6">
         <CardHeader className="px-0 pt-0">
           <CardTitle className="flex items-center gap-2">
@@ -213,8 +213,8 @@ const EnhancedOverview: React.FC = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="px-0">
-          <div className="relative">
-            <div className="flex items-center gap-1 overflow-x-auto pb-4 relative w-full">
+          <div className="w-full">
+            <div className="grid grid-cols-5 gap-2 lg:gap-4">
               {businessSections.map((section, index) => {
                 const IconComponent = section.icon;
                 const completion = analytics?.completionBySection[section.id] || 0;
@@ -224,9 +224,9 @@ const EnhancedOverview: React.FC = () => {
                 
                 return (
                   <React.Fragment key={section.id}>
-                    <div className="flex-shrink-0">
+                    <div className="flex flex-col items-center">
                       <motion.div
-                        className="flex flex-col items-center cursor-pointer min-w-[100px]"
+                        className="flex flex-col items-center cursor-pointer w-full"
                         whileHover={{ scale: 1.05 }}
                         onClick={() => navigateToSection(section.id)}
                       >
@@ -252,24 +252,31 @@ const EnhancedOverview: React.FC = () => {
                           )}
                         </div>
                         
-                        <p className="text-sm text-center font-medium">{section.title}</p>
+                        <p className="text-xs lg:text-sm text-center font-medium leading-tight">{section.title}</p>
                         <p className="text-xs text-gray-500">
                           {Math.round(completion)}%
                         </p>
                       </motion.div>
-                    </div>
 
-                    {/* Compressed connecting arrow to next section */}
-                    {isNext && (
-                      <div className="flex items-center justify-center px-1">
-                        <div className={cn(
-                          "text-lg font-bold",
-                          isCompleted ? "text-green-500" : "text-gray-300"
-                        )}>
-                          →
+                      {/* Solid arrow line underneath each section except the last */}
+                      {isNext && (
+                        <div className="mt-4 w-full flex justify-center">
+                          <div className={cn(
+                            "h-1 w-full bg-gradient-to-r relative",
+                            isCompleted ? 
+                              "from-green-500 to-green-400" : 
+                              "from-gray-300 to-gray-200"
+                          )}>
+                            {/* Arrow head */}
+                            <div className={cn(
+                              "absolute -right-1 top-1/2 -translate-y-1/2 w-0 h-0",
+                              "border-l-4 border-t-2 border-b-2 border-t-transparent border-b-transparent",
+                              isCompleted ? "border-l-green-400" : "border-l-gray-200"
+                            )} />
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </React.Fragment>
                 );
               })}
