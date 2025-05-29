@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, X, HelpCircle } from "lucide-react";
@@ -11,6 +12,7 @@ import { FirstViewSpotlight } from "@/components/ui/first-view-spotlight";
 import { NeonGlow } from "@/components/ui/neon-glow";
 import { CloudSyncIndicator } from "@/components/ui/cloud-sync-indicator";
 import { ContextualFAQ } from "@/components/ui/contextual-faq";
+import { FAQTrigger } from "@/components/ui/faq-trigger";
 import { UndoKeyboardHandler } from "@/components/ui/undo-toast";
 import { Button } from "@/components/ui/button";
 import {
