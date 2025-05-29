@@ -10,11 +10,10 @@ import { motion } from 'framer-motion';
 import { 
   TrendingUp, Clock, FileText, Calendar, Award, 
   Zap, ArrowRight, CheckCircle, AlertTriangle,
-  Target, PlayCircle, BookOpen, Shield, Umbrella,
-  Monitor, Briefcase, Rocket, Banknote, Users,
-  Scale, RefreshCw
+  Target, PlayCircle, BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { businessSections } from '@/data/businessSections';
 
 interface DashboardAnalytics {
   overallProgress: number;
@@ -162,19 +161,6 @@ const EnhancedOverview: React.FC = () => {
   };
 
   // Extended sections data with icons for the visual journey map
-  const journeySections = [
-    { id: 1, title: "Launch Essentials", icon: Rocket, iconColor: "text-blue-500" },
-    { id: 2, title: "Financial Setup", icon: Banknote, iconColor: "text-green-500" },
-    { id: 3, title: "Employment & HR", icon: Users, iconColor: "text-orange-500" },
-    { id: 4, title: "Legal & Compliance", icon: Scale, iconColor: "text-red-500" },
-    { id: 5, title: "Ongoing Operations", icon: RefreshCw, iconColor: "text-purple-500" },
-    { id: 6, title: "Data Protection", icon: Shield, iconColor: "text-indigo-500" },
-    { id: 7, title: "Insurance", icon: Umbrella, iconColor: "text-amber-500" },
-    { id: 8, title: "Growth", icon: TrendingUp, iconColor: "text-emerald-500" },
-    { id: 9, title: "Technology", icon: Monitor, iconColor: "text-sky-500" },
-    { id: 10, title: "Sector-Specific", icon: Briefcase, iconColor: "text-rose-500" }
-  ];
-
   const navigateToSection = (sectionOrderNumber: number) => {
     navigate(`/guided-help?section=${sectionOrderNumber}`);
   };
@@ -213,7 +199,7 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Visual Journey Map - Updated with connecting lines */}
+      {/* Visual Journey Map - Updated with shared data and proper connecting lines */}
       <Card className="p-6">
         <CardHeader className="px-0 pt-0">
           <CardTitle className="flex items-center gap-2">
@@ -224,19 +210,19 @@ const EnhancedOverview: React.FC = () => {
         <CardContent className="px-0">
           <div className="relative">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4 relative">
-              {journeySections.map((section, index) => {
+              {businessSections.map((section, index) => {
                 const IconComponent = section.icon;
                 const completion = analytics?.completionBySection[section.id] || 0;
                 const isCompleted = completion === 100;
                 const isCurrent = section.id === analytics?.currentSection?.id;
-                const isNext = index < journeySections.length - 1;
+                const isNext = index < businessSections.length - 1;
                 
                 return (
                   <div key={section.id} className="relative">
                     <motion.div
                       className="flex flex-col items-center cursor-pointer"
                       whileHover={{ scale: 1.05 }}
-                      onClick={() => navigateToSection(section.id)}
+                      onClick={() => navigateToSection(section.order_number)}
                     >
                       {/* Section node */}
                       <div className={cn(
@@ -267,7 +253,7 @@ const EnhancedOverview: React.FC = () => {
                     </motion.div>
 
                     {/* Connecting line to next section */}
-                    {isNext && (
+                    {isNext && index % 5 !== 4 && (
                       <div className={cn(
                         "absolute top-6 left-full w-full h-0.5 -translate-y-1/2 z-0 hidden md:block",
                         isCompleted ? "bg-green-500" : "bg-gray-300"

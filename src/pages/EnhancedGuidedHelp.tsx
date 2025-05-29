@@ -48,6 +48,7 @@ import type {
 } from "@/types/guidance";
 import type { UserDocumentProgress } from "@/types/documents";
 import { StepContentSkeleton } from '@/components/ui/skeleton-loader';
+import { businessSections } from '@/data/businessSections';
 
 interface UserProgress {
   section_id: number;
@@ -529,6 +530,10 @@ const EnhancedGuidedHelp = () => {
     }
   };
 
+  const navigateToSection = (sectionOrderNumber: number) => {
+    navigate(`/guided-help?section=${sectionOrderNumber}`);
+  };
+
   const handleSidebarNavigation = (sectionOrderNumber: number) => {
     setCurrentSection(sectionOrderNumber);
     setCurrentStep(1);
@@ -597,14 +602,20 @@ const EnhancedGuidedHelp = () => {
       <div className="flex-1 p-4 pt-2 overflow-y-auto">
         <h2 className="text-lg font-semibold mb-4">Your Business Setup Journey</h2>
         <div className="space-y-3">
-          {enhancedSections.map((section) => {
+          {businessSections.map((section) => {
             const isCompleted = completedSections.has(section.id);
             const isCurrent = currentSection === section.order_number;
+            const IconComponent = section.icon;
             
             return (
               <SidebarSection
                 key={section.id}
-                section={section}
+                section={{
+                  ...section,
+                  total_steps: allSteps.filter(step => step.section_id === section.id).length,
+                  completed_steps: allSteps.filter(step => step.section_id === section.id && completedSteps.has(step.id)).length,
+                  progress: getSectionProgress(section.id)
+                }}
                 isActive={isCurrent}
                 isCompleted={isCompleted}
                 onClick={() => {
@@ -667,7 +678,7 @@ const EnhancedGuidedHelp = () => {
         <div className="bg-[#0088cc] border-b p-4 flex justify-between items-center">
           <div className="flex-1">
             <h1 className="text-xl lg:text-2xl font-bold text-white">
-              {sections.find(s => s.order_number === currentSection)?.title}
+              {businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup'}
             </h1>
             <p className="text-white/90 text-sm lg:text-base">
               Step {currentStep} of {steps.length === 0 ? 1 : steps.length}
@@ -762,13 +773,15 @@ const EnhancedGuidedHelp = () => {
           {/* Smart Recommendations Panel */}
           {user && completedStepIds.length >= 0 && (
             <div className="mb-6">
-              <SmartRecommendationsPanel
-                userId={user.id}
-                completedStepIds={completedStepIds}
-                currentSectionCategory={currentSectionData?.color_theme || ''}
-                companyAge={companyAge}
-                onNavigateToStep={handleNavigateToStep}
-              />
+              <React.Suspense fallback={<div className="animate-pulse h-32 bg-gray-200 rounded"></div>}>
+                <SmartRecommendationsPanel
+                  userId={user.id}
+                  completedStepIds={completedStepIds}
+                  currentSectionCategory={currentSectionData?.color_theme || ''}
+                  companyAge={companyAge}
+                  onNavigateToStep={handleNavigateToStep}
+                />
+              </React.Suspense>
             </div>
           )}
 
@@ -793,13 +806,13 @@ const EnhancedGuidedHelp = () => {
               ) : (
                 <div className="max-w-4xl">
                   <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                    {currentSectionData?.title}
+                    {businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup'}
                   </h2>
                   <Card className="mb-8">
                     <CardContent className="p-4 lg:p-8">
                       <div className="prose max-w-none">
                         <p className="text-base lg:text-lg text-gray-600">
-                          Content for this section is coming soon. You can still mark this section as complete to track your progress.
+                          {businessSections.find(s => s.order_number === currentSection)?.description || 'Content for this section is coming soon. You can still mark this section as complete to track your progress.'}
                         </p>
                       </div>
                     </CardContent>

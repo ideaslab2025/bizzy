@@ -8,188 +8,21 @@ import { motion } from 'framer-motion';
 import { 
   CheckCircle, 
   Clock, 
-  ArrowRight,
-  Shield,
-  Umbrella,
-  TrendingUp,
-  Monitor,
-  Briefcase,
-  Rocket,
-  Banknote,
-  Users,
-  Scale,
-  RefreshCw
+  ArrowRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-interface Section {
-  id: number;
-  title: string;
-  description: string;
-  icon: React.ComponentType<any>;
-  iconColor: string;
-  bgColor: string;
-  borderColor: string;
-  estimatedTime: string;
-  deadline?: string;
-  progress: number;
-  isCompleted: boolean;
-  subcategories: string[];
-}
+import { businessSections, BusinessSection } from '@/data/businessSections';
 
 interface BusinessJourneySectionsProps {
   onSectionClick: (sectionId: number) => void;
   sectionsProgress: Record<number, number>;
 }
 
-const businessSections: Section[] = [
-  {
-    id: 1,
-    title: "Launch Essentials",
-    description: "Get your company officially registered and set up with all government requirements.",
-    icon: Rocket,
-    iconColor: "text-blue-500",
-    bgColor: "bg-blue-50",
-    borderColor: "border-blue-200",
-    estimatedTime: "2-3 hours",
-    deadline: "Week 1",
-    progress: 0,
-    isCompleted: false,
-    subcategories: ["Business structure", "Company registration", "Legal requirements"]
-  },
-  {
-    id: 2,
-    title: "Financial Setup",
-    description: "Open business accounts, register for taxes, and establish your financial foundation.",
-    icon: Banknote,
-    iconColor: "text-green-500",
-    bgColor: "bg-green-50",
-    borderColor: "border-green-200",
-    estimatedTime: "1-2 hours",
-    deadline: "Week 2",
-    progress: 0,
-    isCompleted: false,
-    subcategories: ["HMRC registration", "VAT setup", "Tax obligations"]
-  },
-  {
-    id: 3,
-    title: "Employment & HR",
-    description: "Register as an employer, set up payroll, and create essential HR policies.",
-    icon: Users,
-    iconColor: "text-orange-500",
-    bgColor: "bg-orange-50",
-    borderColor: "border-orange-200",
-    estimatedTime: "1 hour",
-    deadline: "Week 2",
-    progress: 0,
-    isCompleted: false,
-    subcategories: ["Business bank account", "Payment processing", "Financial planning"]
-  },
-  {
-    id: 4,
-    title: "Legal & Compliance",
-    description: "Ensure legal compliance with contracts, terms of service, and regulatory requirements.",
-    icon: Scale,
-    iconColor: "text-red-500",
-    bgColor: "bg-red-50",
-    borderColor: "border-red-200",
-    estimatedTime: "2 hours",
-    deadline: "Week 3",
-    progress: 0,
-    isCompleted: false,
-    subcategories: ["Workplace setup", "Equipment", "Operational procedures"]
-  },
-  {
-    id: 5,
-    title: "Ongoing Operations",
-    description: "Establish systems for smooth daily operations and long-term business management.",
-    icon: RefreshCw,
-    iconColor: "text-purple-500",
-    bgColor: "bg-purple-50",
-    borderColor: "border-purple-200",
-    estimatedTime: "1-2 hours",
-    deadline: "As needed",
-    progress: 0,
-    isCompleted: false,
-    subcategories: ["Employment law", "Payroll setup", "HR policies"]
-  },
-  {
-    id: 6,
-    title: "Data Protection & GDPR",
-    description: "Register with ICO, create privacy policies, and ensure GDPR compliance for your business data handling.",
-    icon: Shield,
-    iconColor: "text-indigo-500",
-    bgColor: "bg-indigo-50",
-    borderColor: "border-indigo-200",
-    estimatedTime: "2-3 hours",
-    deadline: "Week 4",
-    progress: 0,
-    isCompleted: false,
-    subcategories: ["ICO registration", "Privacy policies", "Data handling procedures"]
-  },
-  {
-    id: 7,
-    title: "Insurance & Risk Management",
-    description: "Set up essential business insurance including employers' liability, public liability, and professional indemnity.",
-    icon: Umbrella,
-    iconColor: "text-amber-500",
-    bgColor: "bg-amber-50",
-    borderColor: "border-amber-200",
-    estimatedTime: "1-2 hours",
-    deadline: "Week 4",
-    progress: 0,
-    isCompleted: false,
-    subcategories: ["Employers' liability", "Public liability", "Professional indemnity"]
-  },
-  {
-    id: 8,
-    title: "Business Growth & Scaling",
-    description: "Plan for expansion, hiring strategies, and prepare your business for investment and scaling opportunities.",
-    icon: TrendingUp,
-    iconColor: "text-emerald-500",
-    bgColor: "bg-emerald-50",
-    borderColor: "border-emerald-200",
-    estimatedTime: "3-4 hours",
-    deadline: "Month 2-3",
-    progress: 0,
-    isCompleted: false,
-    subcategories: ["Hiring plans", "Business expansion", "Investment readiness"]
-  },
-  {
-    id: 9,
-    title: "Technology & Systems",
-    description: "Implement essential software, digital tools, and cybersecurity measures for efficient operations.",
-    icon: Monitor,
-    iconColor: "text-sky-500",
-    bgColor: "bg-sky-50",
-    borderColor: "border-sky-200",
-    estimatedTime: "2-3 hours",
-    deadline: "Month 2",
-    progress: 0,
-    isCompleted: false,
-    subcategories: ["Software setup", "Digital tools", "Cybersecurity measures"]
-  },
-  {
-    id: 10,
-    title: "Sector-Specific Requirements",
-    description: "Complete industry-specific registrations, licenses, and compliance requirements for your business sector.",
-    icon: Briefcase,
-    iconColor: "text-rose-500",
-    bgColor: "bg-rose-50",
-    borderColor: "border-rose-200",
-    estimatedTime: "Variable",
-    deadline: "As required",
-    progress: 0,
-    isCompleted: false,
-    subcategories: ["Industry licenses", "Professional registrations", "Special compliance"]
-  }
-];
-
 export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = ({
   onSectionClick,
   sectionsProgress
 }) => {
-  const getSectionStatus = (section: Section) => {
+  const getSectionStatus = (section: BusinessSection) => {
     const progress = sectionsProgress[section.id] || 0;
     const isCompleted = progress >= 100;
     const isInProgress = progress > 0 && progress < 100;
