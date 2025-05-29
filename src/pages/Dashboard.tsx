@@ -47,7 +47,7 @@ const Dashboard = () => {
           <header className="sticky top-0 z-40 h-16 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-b border-gray-200 shadow-sm">
             <div className="h-full px-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200" />
+                <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200 rounded-lg" />
                 <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
                   Dashboard
                 </h1>
@@ -60,7 +60,7 @@ const Dashboard = () => {
                   <input
                     type="text"
                     placeholder="Search documents, guides..."
-                    className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:bg-gray-50 cursor-pointer"
                     onClick={() => setCommandPaletteOpen(true)}
                   />
                 </div>
@@ -70,7 +70,7 @@ const Dashboard = () => {
               <div className="flex items-center gap-3">
                 <ThemeToggle />
                 
-                {/* Enhanced Notifications with proper hover */}
+                {/* Enhanced Notifications with consistent hover */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -80,7 +80,7 @@ const Dashboard = () => {
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="relative rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 hover:text-gray-900 hover:scale-105 transform"
+                        className="relative rounded-lg p-2 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 text-gray-700 cursor-pointer"
                       >
                         <Bell className="w-5 h-5" />
                         {hasNotifications && (
@@ -109,7 +109,7 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced User Menu with proper hover */}
+                {/* Enhanced User Menu with consistent hover */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -118,7 +118,7 @@ const Dashboard = () => {
                     >
                       <Button 
                         variant="ghost" 
-                        className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-md text-gray-700 hover:text-gray-900"
+                        className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 hover:ring-2 hover:ring-gray-200 text-gray-700 cursor-pointer"
                       >
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                           <User className="w-4 h-4 text-white" />
@@ -145,12 +145,12 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced Get Help Button */}
+                {/* Enhanced Get Help Button with consistent hover */}
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setBizzyOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium shadow-sm hover:shadow-md cursor-pointer"
                 >
                   <HelpCircle className="w-4 h-4" />
                   <span>Get Help</span>
