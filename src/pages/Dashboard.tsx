@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, X, HelpCircle } from "lucide-react";
@@ -138,7 +137,7 @@ const Dashboard = () => {
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                           <User className="w-4 h-4 text-white" />
                         </div>
-                        <span className="font-medium hidden md:inline-block">John Doe</span>
+                        <span className="font-medium hidden md:inline-block">Account</span>
                         <ChevronDown className="w-4 h-4" />
                       </Button>
                     </motion.div>

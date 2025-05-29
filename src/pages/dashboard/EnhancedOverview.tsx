@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -205,7 +204,7 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Visual Journey Map - Fixed horizontal layout with connecting lines */}
+      {/* Visual Journey Map - Compressed horizontal layout with arrow connectors */}
       <Card className="p-6">
         <CardHeader className="px-0 pt-0">
           <CardTitle className="flex items-center gap-2">
@@ -215,7 +214,7 @@ const EnhancedOverview: React.FC = () => {
         </CardHeader>
         <CardContent className="px-0">
           <div className="relative">
-            <div className="flex gap-4 overflow-x-auto pb-4 relative">
+            <div className="flex items-center gap-1 overflow-x-auto pb-4 relative w-full">
               {businessSections.map((section, index) => {
                 const IconComponent = section.icon;
                 const completion = analytics?.completionBySection[section.id] || 0;
@@ -224,48 +223,54 @@ const EnhancedOverview: React.FC = () => {
                 const isNext = index < businessSections.length - 1;
                 
                 return (
-                  <div key={section.id} className="relative flex-shrink-0">
-                    <motion.div
-                      className="flex flex-col items-center cursor-pointer min-w-[120px]"
-                      whileHover={{ scale: 1.05 }}
-                      onClick={() => navigateToSection(section.id)}
-                    >
-                      {/* Section node */}
-                      <div className={cn(
-                        "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all mb-2 relative z-10 bg-white",
-                        isCompleted ? 
-                          "border-green-500" :
-                        isCurrent ? 
-                          "border-blue-500" : 
-                          "border-gray-300"
-                      )}>
-                        {isCompleted ? (
-                          <CheckCircle className="w-6 h-6 text-green-500" strokeWidth={2} />
-                        ) : (
-                          <IconComponent 
-                            className={cn(
-                              "w-6 h-6",
-                              isCurrent ? "text-blue-500" : section.iconColor
-                            )} 
-                            strokeWidth={2} 
-                          />
-                        )}
-                      </div>
-                      
-                      <p className="text-sm text-center font-medium">{section.title}</p>
-                      <p className="text-xs text-gray-500">
-                        {Math.round(completion)}%
-                      </p>
-                    </motion.div>
+                  <React.Fragment key={section.id}>
+                    <div className="flex-shrink-0">
+                      <motion.div
+                        className="flex flex-col items-center cursor-pointer min-w-[100px]"
+                        whileHover={{ scale: 1.05 }}
+                        onClick={() => navigateToSection(section.id)}
+                      >
+                        {/* Section node */}
+                        <div className={cn(
+                          "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all mb-2 relative z-10 bg-white",
+                          isCompleted ? 
+                            "border-green-500" :
+                          isCurrent ? 
+                            "border-blue-500" : 
+                            "border-gray-300"
+                        )}>
+                          {isCompleted ? (
+                            <CheckCircle className="w-6 h-6 text-green-500" strokeWidth={2} />
+                          ) : (
+                            <IconComponent 
+                              className={cn(
+                                "w-6 h-6",
+                                isCurrent ? "text-blue-500" : section.iconColor
+                              )} 
+                              strokeWidth={2} 
+                            />
+                          )}
+                        </div>
+                        
+                        <p className="text-sm text-center font-medium">{section.title}</p>
+                        <p className="text-xs text-gray-500">
+                          {Math.round(completion)}%
+                        </p>
+                      </motion.div>
+                    </div>
 
-                    {/* Connecting line to next section */}
+                    {/* Compressed connecting arrow to next section */}
                     {isNext && (
-                      <div className={cn(
-                        "absolute top-6 left-full w-4 h-0.5 -translate-y-1/2 z-0",
-                        isCompleted ? "bg-green-500" : "bg-gray-300"
-                      )} />
+                      <div className="flex items-center justify-center px-1">
+                        <div className={cn(
+                          "text-lg font-bold",
+                          isCompleted ? "text-green-500" : "text-gray-300"
+                        )}>
+                          →
+                        </div>
+                      </div>
                     )}
-                  </div>
+                  </React.Fragment>
                 );
               })}
             </div>

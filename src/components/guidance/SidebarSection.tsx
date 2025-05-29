@@ -43,7 +43,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
       )}
     >
       <div className="flex items-start gap-3">
-        {/* Animated progress ring */}
+        {/* Animated progress ring with enhanced icon background */}
         <div className="relative">
           <svg className="w-12 h-12 -rotate-90">
             <circle
@@ -71,12 +71,15 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
             {isCompleted ? (
               <CheckCircle className="w-6 h-6 text-green-500" />
             ) : IconComponent ? (
-              <IconComponent 
-                className={cn(
-                  "w-6 h-6",
-                  isActive ? "text-[#0088cc]" : businessSection?.iconColor || "text-white"
-                )} 
-              />
+              <div className="relative">
+                <div className="absolute inset-0 bg-white/15 rounded-lg transform scale-110" />
+                <IconComponent 
+                  className={cn(
+                    "w-6 h-6 relative z-10",
+                    isActive ? "text-[#0088cc]" : businessSection?.iconColor || "text-white"
+                  )} 
+                />
+              </div>
             ) : (
               <span className="text-lg font-bold">{section.order_number}</span>
             )}

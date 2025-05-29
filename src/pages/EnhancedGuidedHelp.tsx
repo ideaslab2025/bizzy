@@ -801,7 +801,7 @@ const EnhancedGuidedHelp = () => {
                       <User className="w-4 h-4 text-white" />
                     </div>
                     <span className="font-medium hidden md:inline-block">
-                      {user?.email?.split('@')[0] || 'Account'}
+                      Account
                     </span>
                   </Button>
                 </motion.div>
