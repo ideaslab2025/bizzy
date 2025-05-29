@@ -11,7 +11,9 @@ import { motion } from 'framer-motion';
 import { 
   TrendingUp, Clock, FileText, Calendar, Award, 
   Zap, ArrowRight, CheckCircle, AlertTriangle,
-  Target, PlayCircle, BookOpen
+  Target, PlayCircle, BookOpen, Shield, Lock,
+  ShieldCheck, Umbrella, ShieldAlert, Rocket,
+  Monitor, Cpu, Briefcase, Building2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -38,6 +40,20 @@ interface QuickWin {
   order_number: number;
   estimated_time_minutes: number;
 }
+
+// Section configuration with enhanced metadata
+const sectionConfig = {
+  1: { icon: FileText, color: 'text-blue-600 bg-blue-100', emoji: '📄' },
+  2: { icon: Building2, color: 'text-green-600 bg-green-100', emoji: '🏢' },
+  3: { icon: Calculator, color: 'text-purple-600 bg-purple-100', emoji: '💰' },
+  4: { icon: Users, color: 'text-orange-600 bg-orange-100', emoji: '👥' },
+  5: { icon: FileText, color: 'text-red-600 bg-red-100', emoji: '📋' },
+  6: { icon: Shield, color: 'text-purple-600 bg-purple-100', emoji: '🛡️', title: 'Data Protection & GDPR' },
+  7: { icon: Umbrella, color: 'text-orange-600 bg-orange-100', emoji: '☂️', title: 'Insurance & Risk Management' },
+  8: { icon: TrendingUp, color: 'text-green-600 bg-green-100', emoji: '📈', title: 'Business Growth & Scaling' },
+  9: { icon: Monitor, color: 'text-blue-600 bg-blue-100', emoji: '💻', title: 'Technology & Systems' },
+  10: { icon: Briefcase, color: 'text-indigo-600 bg-indigo-100', emoji: '💼', title: 'Sector-Specific Requirements' }
+};
 
 const EnhancedOverview: React.FC = () => {
   const { user } = useAuth();
@@ -94,9 +110,21 @@ const EnhancedOverview: React.FC = () => {
         .not('id', 'in', completedStepIds.length > 0 ? `(${completedStepIds.join(',')})` : '(0)')
         .limit(3);
 
+      // Enhance sections with configuration data
+      const enhancedSections = sections?.map(section => {
+        const config = sectionConfig[section.order_number as keyof typeof sectionConfig];
+        return {
+          ...section,
+          title: config?.title || section.title,
+          emoji: config?.emoji || section.emoji || section.order_number.toString(),
+          icon: config?.icon,
+          colorClass: config?.color
+        };
+      });
+
       // Process data
       const completionBySection: Record<number, number> = {};
-      sections?.forEach(section => {
+      enhancedSections?.forEach(section => {
         const sectionSteps = allSteps?.filter(step => step.section_id === section.id) || [];
         const completedSectionSteps = sectionSteps.filter(step => 
           completedStepIds.includes(step.id)
@@ -111,9 +139,9 @@ const EnhancedOverview: React.FC = () => {
       const overallProgress = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
 
       // Find current section (first incomplete section)
-      const currentSection = sections?.find(section => 
+      const currentSection = enhancedSections?.find(section => 
         completionBySection[section.id] < 100
-      ) || sections?.[0];
+      ) || enhancedSections?.[0];
 
       // Recent activities
       const recentActivities = progress
@@ -137,7 +165,7 @@ const EnhancedOverview: React.FC = () => {
         totalDocuments: documents?.length || 0,
         totalHours: Math.round((completedSteps * 45) / 60), // Estimate 45 min per step
         currentSection,
-        sections: sections || [],
+        sections: enhancedSections || [],
         completionBySection,
         recentActivities,
         achievements: [], // TODO: Implement achievements
@@ -169,6 +197,15 @@ const EnhancedOverview: React.FC = () => {
     if (section) {
       navigate(`/guided-help?section=${section.order_number}&step=${stepNumber}`);
     }
+  };
+
+  const getSectionIcon = (section: any) => {
+    const config = sectionConfig[section.order_number as keyof typeof sectionConfig];
+    if (config?.icon) {
+      const IconComponent = config.icon;
+      return <IconComponent className="w-6 h-6" />;
+    }
+    return null;
   };
 
   if (loading || !analytics) {
@@ -234,10 +271,12 @@ const EnhancedOverview: React.FC = () => {
                       {analytics.completionBySection[section.id] === 100 ? (
                         <CheckCircle className="w-6 h-6" />
                       ) : (
-                        section.emoji || section.order_number
+                        getSectionIcon(section) || section.emoji || section.order_number
                       )}
                     </div>
-                    <p className="text-sm mt-2 text-center font-medium">{section.title}</p>
+                    <p className="text-sm mt-2 text-center font-medium max-w-20">
+                      {sectionConfig[section.order_number as keyof typeof sectionConfig]?.title || section.title}
+                    </p>
                     <p className="text-xs text-gray-500">
                       {Math.round(analytics.completionBySection[section.id])}% • {section.estimated_time_minutes}min
                     </p>
@@ -341,7 +380,9 @@ const EnhancedOverview: React.FC = () => {
             {analytics.currentSection ? (
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-semibold text-lg">{analytics.currentSection.title}</h3>
+                  <h3 className="font-semibold text-lg">
+                    {sectionConfig[analytics.currentSection.order_number as keyof typeof sectionConfig]?.title || analytics.currentSection.title}
+                  </h3>
                   <p className="text-sm text-gray-600 mt-1">{analytics.currentSection.description}</p>
                   
                   <div className="mt-3">

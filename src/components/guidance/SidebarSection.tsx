@@ -1,7 +1,10 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, Clock } from 'lucide-react';
+import { 
+  CheckCircle, Clock, FileText, Building2, Calculator, Users,
+  Shield, Umbrella, TrendingUp, Monitor, Briefcase
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { EnhancedGuidanceSection } from '@/types/guidance';
 
@@ -16,6 +19,20 @@ interface SidebarSectionProps {
   onClick: () => void;
 }
 
+// Section configuration matching the dashboard
+const sectionConfig = {
+  1: { icon: FileText, title: 'Foundation Setup' },
+  2: { icon: Building2, title: 'Legal Structure' },
+  3: { icon: Calculator, title: 'Financial Setup' },
+  4: { icon: Users, title: 'Team & Operations' },
+  5: { icon: FileText, title: 'Compliance' },
+  6: { icon: Shield, title: 'Data Protection & GDPR' },
+  7: { icon: Umbrella, title: 'Insurance & Risk Management' },
+  8: { icon: TrendingUp, title: 'Business Growth & Scaling' },
+  9: { icon: Monitor, title: 'Technology & Systems' },
+  10: { icon: Briefcase, title: 'Sector-Specific Requirements' }
+};
+
 export const SidebarSection: React.FC<SidebarSectionProps> = ({
   section,
   isActive,
@@ -23,6 +40,9 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
   onClick
 }) => {
   const progress = section.total_steps > 0 ? (section.completed_steps / section.total_steps) : 0;
+  const config = sectionConfig[section.order_number as keyof typeof sectionConfig];
+  const displayTitle = config?.title || section.title;
+  const IconComponent = config?.icon;
 
   return (
     <motion.button
@@ -62,17 +82,23 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
               className="transition-all duration-500"
             />
           </svg>
-          <div className="absolute inset-0 flex items-center justify-center text-2xl">
-            {isCompleted ? "✓" : section.emoji || section.order_number}
+          <div className="absolute inset-0 flex items-center justify-center">
+            {isCompleted ? (
+              <CheckCircle className="w-6 h-6" />
+            ) : IconComponent ? (
+              <IconComponent className="w-6 h-6" />
+            ) : (
+              <span className="text-lg">{section.emoji || section.order_number}</span>
+            )}
           </div>
         </div>
         
         <div className="flex-1 text-left">
           <h3 className={cn(
-            "font-semibold",
+            "font-semibold text-sm",
             isCompleted && !isActive && "line-through opacity-70"
           )}>
-            {section.title}
+            {displayTitle}
           </h3>
           <p className="text-xs opacity-75 mt-1">
             {section.completed_steps}/{section.total_steps} steps • {section.estimated_time_minutes || 0} min
