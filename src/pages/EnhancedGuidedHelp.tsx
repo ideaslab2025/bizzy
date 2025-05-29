@@ -18,7 +18,17 @@ import {
   LogOut, 
   Bell,
   Trophy,
-  Menu
+  Menu,
+  Rocket,
+  Banknote,
+  Users,
+  Scale,
+  RefreshCw,
+  Shield,
+  Umbrella,
+  TrendingUp,
+  Monitor,
+  Briefcase
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";

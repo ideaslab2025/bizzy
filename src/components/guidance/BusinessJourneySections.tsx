@@ -13,7 +13,12 @@ import {
   Umbrella,
   TrendingUp,
   Monitor,
-  Briefcase
+  Briefcase,
+  Rocket,
+  Banknote,
+  Users,
+  Scale,
+  RefreshCw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -22,7 +27,7 @@ interface Section {
   title: string;
   description: string;
   icon: React.ComponentType<any>;
-  color: string;
+  iconColor: string;
   bgColor: string;
   borderColor: string;
   estimatedTime: string;
@@ -40,10 +45,10 @@ interface BusinessJourneySectionsProps {
 const businessSections: Section[] = [
   {
     id: 1,
-    title: "Foundation",
-    description: "Business structure and legal setup",
-    icon: CheckCircle,
-    color: "blue",
+    title: "Launch Essentials",
+    description: "Get your company officially registered and set up with all government requirements.",
+    icon: Rocket,
+    iconColor: "text-blue-500",
     bgColor: "bg-blue-50",
     borderColor: "border-blue-200",
     estimatedTime: "2-3 hours",
@@ -54,10 +59,10 @@ const businessSections: Section[] = [
   },
   {
     id: 2,
-    title: "Compliance",
-    description: "Tax registration and regulatory compliance",
-    icon: CheckCircle,
-    color: "green",
+    title: "Financial Setup",
+    description: "Open business accounts, register for taxes, and establish your financial foundation.",
+    icon: Banknote,
+    iconColor: "text-green-500",
     bgColor: "bg-green-50",
     borderColor: "border-green-200",
     estimatedTime: "1-2 hours",
@@ -68,12 +73,12 @@ const businessSections: Section[] = [
   },
   {
     id: 3,
-    title: "Banking",
-    description: "Business banking and financial setup",
-    icon: CheckCircle,
-    color: "purple",
-    bgColor: "bg-purple-50",
-    borderColor: "border-purple-200",
+    title: "Employment & HR",
+    description: "Register as an employer, set up payroll, and create essential HR policies.",
+    icon: Users,
+    iconColor: "text-orange-500",
+    bgColor: "bg-orange-50",
+    borderColor: "border-orange-200",
     estimatedTime: "1 hour",
     deadline: "Week 2",
     progress: 0,
@@ -82,12 +87,12 @@ const businessSections: Section[] = [
   },
   {
     id: 4,
-    title: "Operations",
-    description: "Day-to-day business operations setup",
-    icon: CheckCircle,
-    color: "orange",
-    bgColor: "bg-orange-50",
-    borderColor: "border-orange-200",
+    title: "Legal & Compliance",
+    description: "Ensure legal compliance with contracts, terms of service, and regulatory requirements.",
+    icon: Scale,
+    iconColor: "text-red-500",
+    bgColor: "bg-red-50",
+    borderColor: "border-red-200",
     estimatedTime: "2 hours",
     deadline: "Week 3",
     progress: 0,
@@ -96,12 +101,12 @@ const businessSections: Section[] = [
   },
   {
     id: 5,
-    title: "Employment",
-    description: "HR setup and employment considerations",
-    icon: CheckCircle,
-    color: "indigo",
-    bgColor: "bg-indigo-50",
-    borderColor: "border-indigo-200",
+    title: "Ongoing Operations",
+    description: "Establish systems for smooth daily operations and long-term business management.",
+    icon: RefreshCw,
+    iconColor: "text-purple-500",
+    bgColor: "bg-purple-50",
+    borderColor: "border-purple-200",
     estimatedTime: "1-2 hours",
     deadline: "As needed",
     progress: 0,
@@ -111,11 +116,11 @@ const businessSections: Section[] = [
   {
     id: 6,
     title: "Data Protection & GDPR",
-    description: "Privacy policies and data handling compliance",
+    description: "Register with ICO, create privacy policies, and ensure GDPR compliance for your business data handling.",
     icon: Shield,
-    color: "purple",
-    bgColor: "bg-purple-50",
-    borderColor: "border-purple-200",
+    iconColor: "text-indigo-500",
+    bgColor: "bg-indigo-50",
+    borderColor: "border-indigo-200",
     estimatedTime: "2-3 hours",
     deadline: "Week 4",
     progress: 0,
@@ -125,11 +130,11 @@ const businessSections: Section[] = [
   {
     id: 7,
     title: "Insurance & Risk Management",
-    description: "Business protection and liability coverage",
+    description: "Set up essential business insurance including employers' liability, public liability, and professional indemnity.",
     icon: Umbrella,
-    color: "orange",
-    bgColor: "bg-orange-50",
-    borderColor: "border-orange-200",
+    iconColor: "text-amber-500",
+    bgColor: "bg-amber-50",
+    borderColor: "border-amber-200",
     estimatedTime: "1-2 hours",
     deadline: "Week 4",
     progress: 0,
@@ -139,11 +144,11 @@ const businessSections: Section[] = [
   {
     id: 8,
     title: "Business Growth & Scaling",
-    description: "Expansion planning and investment readiness",
+    description: "Plan for expansion, hiring strategies, and prepare your business for investment and scaling opportunities.",
     icon: TrendingUp,
-    color: "green",
-    bgColor: "bg-green-50",
-    borderColor: "border-green-200",
+    iconColor: "text-emerald-500",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-200",
     estimatedTime: "3-4 hours",
     deadline: "Month 2-3",
     progress: 0,
@@ -153,11 +158,11 @@ const businessSections: Section[] = [
   {
     id: 9,
     title: "Technology & Systems",
-    description: "Digital infrastructure and cybersecurity",
+    description: "Implement essential software, digital tools, and cybersecurity measures for efficient operations.",
     icon: Monitor,
-    color: "blue",
-    bgColor: "bg-blue-50",
-    borderColor: "border-blue-200",
+    iconColor: "text-sky-500",
+    bgColor: "bg-sky-50",
+    borderColor: "border-sky-200",
     estimatedTime: "2-3 hours",
     deadline: "Month 2",
     progress: 0,
@@ -167,11 +172,11 @@ const businessSections: Section[] = [
   {
     id: 10,
     title: "Sector-Specific Requirements",
-    description: "Industry licenses and specialized compliance",
+    description: "Complete industry-specific registrations, licenses, and compliance requirements for your business sector.",
     icon: Briefcase,
-    color: "indigo",
-    bgColor: "bg-indigo-50",
-    borderColor: "border-indigo-200",
+    iconColor: "text-rose-500",
+    bgColor: "bg-rose-50",
+    borderColor: "border-rose-200",
     estimatedTime: "Variable",
     deadline: "As required",
     progress: 0,
@@ -223,14 +228,12 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                   <div className="flex items-center gap-3">
                     <div className={cn(
                       "w-10 h-10 rounded-lg flex items-center justify-center",
-                      status.isCompleted ? "bg-green-100 text-green-600" : 
-                      status.isInProgress ? `bg-${section.color}-100 text-${section.color}-600` :
-                      "bg-gray-100 text-gray-500"
+                      status.isCompleted ? "bg-green-100" : section.bgColor
                     )}>
                       {status.isCompleted ? (
-                        <CheckCircle className="w-5 h-5" />
+                        <CheckCircle className="w-6 h-6 text-green-600" strokeWidth={2} />
                       ) : (
-                        <IconComponent className="w-5 h-5" />
+                        <IconComponent className={cn("w-6 h-6", section.iconColor)} strokeWidth={2} />
                       )}
                     </div>
                     <div>
@@ -285,7 +288,7 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                   {/* Timeline */}
                   <div className="flex items-center justify-between text-sm text-gray-600">
                     <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
+                      <Clock className="w-4 h-4" strokeWidth={2} />
                       <span>{section.estimatedTime}</span>
                     </div>
                     {section.deadline && (
@@ -301,12 +304,12 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                       "w-full mt-4",
                       status.isCompleted 
                         ? "bg-green-600 hover:bg-green-700" 
-                        : `bg-${section.color}-600 hover:bg-${section.color}-700`
+                        : "bg-blue-600 hover:bg-blue-700"
                     )}
                     disabled={status.isCompleted}
                   >
                     {status.buttonText}
-                    {!status.isCompleted && <ArrowRight className="w-4 h-4 ml-2" />}
+                    {!status.isCompleted && <ArrowRight className="w-4 h-4 ml-2" strokeWidth={2} />}
                   </Button>
                 </div>
               </CardContent>

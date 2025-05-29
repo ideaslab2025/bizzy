@@ -11,7 +11,7 @@ import {
   TrendingUp, Clock, FileText, Calendar, Award, 
   Zap, ArrowRight, CheckCircle, AlertTriangle,
   Target, PlayCircle, BookOpen, Shield, Umbrella,
-  Monitor, Briefcase
+  Monitor, Briefcase, Rocket
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { BusinessJourneySections } from '@/components/guidance/BusinessJourneySections';
@@ -163,16 +163,16 @@ const EnhancedOverview: React.FC = () => {
 
   // Extended sections data with icons for the visual journey map
   const journeySections = [
-    { id: 1, title: "Foundation", emoji: "🏗️", icon: CheckCircle },
-    { id: 2, title: "Compliance", emoji: "📋", icon: CheckCircle },
-    { id: 3, title: "Banking", emoji: "🏦", icon: CheckCircle },
-    { id: 4, title: "Operations", emoji: "⚙️", icon: CheckCircle },
-    { id: 5, title: "Employment", emoji: "👥", icon: CheckCircle },
-    { id: 6, title: "Data Protection", emoji: "🛡️", icon: Shield },
-    { id: 7, title: "Insurance", emoji: "☂️", icon: Umbrella },
-    { id: 8, title: "Growth", emoji: "📈", icon: TrendingUp },
-    { id: 9, title: "Technology", emoji: "💻", icon: Monitor },
-    { id: 10, title: "Sector-Specific", emoji: "💼", icon: Briefcase }
+    { id: 1, title: "Launch Essentials", emoji: "🚀", icon: Rocket, iconColor: "text-blue-500" },
+    { id: 2, title: "Financial Setup", emoji: "💰", icon: CheckCircle, iconColor: "text-green-500" },
+    { id: 3, title: "Employment & HR", emoji: "👥", icon: CheckCircle, iconColor: "text-orange-500" },
+    { id: 4, title: "Legal & Compliance", emoji: "⚖️", icon: CheckCircle, iconColor: "text-red-500" },
+    { id: 5, title: "Ongoing Operations", emoji: "⚙️", icon: CheckCircle, iconColor: "text-purple-500" },
+    { id: 6, title: "Data Protection", emoji: "🛡️", icon: Shield, iconColor: "text-indigo-500" },
+    { id: 7, title: "Insurance", emoji: "☂️", icon: Umbrella, iconColor: "text-amber-500" },
+    { id: 8, title: "Growth", emoji: "📈", icon: TrendingUp, iconColor: "text-emerald-500" },
+    { id: 9, title: "Technology", emoji: "💻", icon: Monitor, iconColor: "text-sky-500" },
+    { id: 10, title: "Sector-Specific", emoji: "💼", icon: Briefcase, iconColor: "text-rose-500" }
   ];
 
   const navigateToSection = (sectionOrderNumber: number) => {
@@ -239,17 +239,23 @@ const EnhancedOverview: React.FC = () => {
                   >
                     {/* Section node */}
                     <div className={cn(
-                      "w-12 h-12 rounded-full flex items-center justify-center text-2xl border-4 transition-all mb-2",
+                      "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all mb-2",
                       isCompleted ? 
-                        "bg-green-500 border-green-500 text-white" :
+                        "bg-green-500 border-green-500" :
                       isCurrent ? 
-                        "bg-blue-500 border-blue-500 text-white" : 
-                        "bg-white border-gray-300 text-gray-500"
+                        "bg-white border-blue-500" : 
+                        "bg-white border-gray-300"
                     )}>
                       {isCompleted ? (
-                        <CheckCircle className="w-6 h-6" />
+                        <CheckCircle className="w-6 h-6 text-white" strokeWidth={2} />
                       ) : (
-                        <IconComponent className="w-6 h-6" />
+                        <IconComponent 
+                          className={cn(
+                            "w-6 h-6",
+                            isCurrent ? "text-blue-500" : section.iconColor
+                          )} 
+                          strokeWidth={2} 
+                        />
                       )}
                     </div>
                     
@@ -289,28 +295,28 @@ const EnhancedOverview: React.FC = () => {
         <StatCard
           title="Overall Progress"
           value={`${Math.round(analytics.overallProgress)}%`}
-          icon={<TrendingUp className="w-5 h-5" />}
+          icon={<TrendingUp className="w-5 h-5" strokeWidth={2} />}
           trend={analytics.completedSteps > 0 ? `${analytics.completedSteps} steps completed` : undefined}
           color="blue"
         />
         <StatCard
           title="Documents"
           value={`${analytics.documentsCompleted}/${analytics.totalDocuments}`}
-          icon={<FileText className="w-5 h-5" />}
+          icon={<FileText className="w-5 h-5" strokeWidth={2} />}
           trend={analytics.documentsCompleted > 0 ? `${Math.round((analytics.documentsCompleted / analytics.totalDocuments) * 100)}% complete` : undefined}
           color="green"
         />
         <StatCard
           title="Time Invested"
           value={`${analytics.totalHours}h`}
-          icon={<Clock className="w-5 h-5" />}
+          icon={<Clock className="w-5 h-5" strokeWidth={2} />}
           trend="Estimated time saved: 20h"
           color="purple"
         />
         <StatCard
           title="Next Milestone"
           value={analytics.currentSection?.title || 'Complete!'}
-          icon={<Target className="w-5 h-5" />}
+          icon={<Target className="w-5 h-5" strokeWidth={2} />}
           trend={analytics.currentSection ? `${analytics.currentSection.estimated_time_minutes} min remaining` : undefined}
           color="orange"
         />
@@ -322,7 +328,7 @@ const EnhancedOverview: React.FC = () => {
         <Card className="border-green-200 bg-green-50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-green-800">
-              <Zap className="w-5 h-5" />
+              <Zap className="w-5 h-5" strokeWidth={2} />
               Quick Wins Available
               <Badge variant="secondary" className="ml-auto">
                 {quickWins.length}
@@ -349,7 +355,7 @@ const EnhancedOverview: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-500">{task.estimated_time_minutes}min</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-4 h-4" strokeWidth={2} />
                     </div>
                   </Button>
                 ))}
@@ -362,7 +368,7 @@ const EnhancedOverview: React.FC = () => {
         <Card className="border-blue-200 bg-blue-50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-blue-800">
-              <PlayCircle className="w-5 h-5" />
+              <PlayCircle className="w-5 h-5" strokeWidth={2} />
               Continue Your Journey
             </CardTitle>
           </CardHeader>
@@ -387,12 +393,12 @@ const EnhancedOverview: React.FC = () => {
                   onClick={() => navigateToSection(analytics.currentSection.order_number)}
                 >
                   Continue Section
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <ArrowRight className="w-4 h-4 ml-2" strokeWidth={2} />
                 </Button>
               </div>
             ) : (
               <div className="text-center py-4">
-                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-2" />
+                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-2" strokeWidth={2} />
                 <p className="font-semibold">Congratulations!</p>
                 <p className="text-sm text-gray-600">You've completed all sections</p>
               </div>
@@ -407,7 +413,7 @@ const EnhancedOverview: React.FC = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Clock className="w-5 h-5" />
+              <Clock className="w-5 h-5" strokeWidth={2} />
               Recent Activity
             </CardTitle>
           </CardHeader>
@@ -420,7 +426,7 @@ const EnhancedOverview: React.FC = () => {
               <div className="space-y-3">
                 {analytics.recentActivities.map((activity, index) => (
                   <div key={index} className="flex items-center gap-3 p-2 rounded hover:bg-gray-50">
-                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" strokeWidth={2} />
                     <div className="flex-1">
                       <p className="font-medium text-sm">{activity.title}</p>
                       <p className="text-xs text-gray-500">{activity.section}</p>
@@ -439,7 +445,7 @@ const EnhancedOverview: React.FC = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <BookOpen className="w-5 h-5" />
+              <BookOpen className="w-5 h-5" strokeWidth={2} />
               Quick Actions
             </CardTitle>
           </CardHeader>
@@ -450,7 +456,7 @@ const EnhancedOverview: React.FC = () => {
                 className="h-20 flex-col gap-2"
                 onClick={() => navigate('/dashboard/documents')}
               >
-                <FileText className="w-5 h-5" />
+                <FileText className="w-5 h-5" strokeWidth={2} />
                 <span className="text-sm">Documents</span>
               </Button>
               
@@ -459,7 +465,7 @@ const EnhancedOverview: React.FC = () => {
                 className="h-20 flex-col gap-2"
                 onClick={() => navigate('/guided-help')}
               >
-                <Target className="w-5 h-5" />
+                <Target className="w-5 h-5" strokeWidth={2} />
                 <span className="text-sm">Guide</span>
               </Button>
               
@@ -468,7 +474,7 @@ const EnhancedOverview: React.FC = () => {
                 className="h-20 flex-col gap-2"
                 onClick={() => {/* TODO: Navigate to achievements */}}
               >
-                <Award className="w-5 h-5" />
+                <Award className="w-5 h-5" strokeWidth={2} />
                 <span className="text-sm">Achievements</span>
               </Button>
               
@@ -477,7 +483,7 @@ const EnhancedOverview: React.FC = () => {
                 className="h-20 flex-col gap-2"
                 onClick={() => {/* TODO: Navigate to help */}}
               >
-                <AlertTriangle className="w-5 h-5" />
+                <AlertTriangle className="w-5 h-5" strokeWidth={2} />
                 <span className="text-sm">Get Help</span>
               </Button>
             </div>
