@@ -50,6 +50,20 @@ interface QuickWinStep extends EnhancedGuidanceStep {
   section_title: string;
 }
 
+// Section configuration with enhanced metadata
+const sectionConfig = {
+  1: { icon: FileText, color: 'text-blue-600 bg-blue-100', emoji: '📄', title: 'Foundation Setup' },
+  2: { icon: Building2, color: 'text-green-600 bg-green-100', emoji: '🏢', title: 'Legal Structure' },
+  3: { icon: Calculator, color: 'text-purple-600 bg-purple-100', emoji: '💰', title: 'Financial Setup' },
+  4: { icon: Users, color: 'text-orange-600 bg-orange-100', emoji: '👥', title: 'Team & Operations' },
+  5: { icon: FileText, color: 'text-red-600 bg-red-100', emoji: '📋', title: 'Compliance' },
+  6: { icon: Shield, color: 'text-purple-600 bg-purple-100', emoji: '🛡️', title: 'Data Protection & GDPR' },
+  7: { icon: Umbrella, color: 'text-orange-600 bg-orange-100', emoji: '☂️', title: 'Insurance & Risk Management' },
+  8: { icon: TrendingUp, color: 'text-green-600 bg-green-100', emoji: '📈', title: 'Business Growth & Scaling' },
+  9: { icon: Monitor, color: 'text-blue-600 bg-blue-100', emoji: '💻', title: 'Technology & Systems' },
+  10: { icon: Briefcase, color: 'text-indigo-600 bg-indigo-100', emoji: '💼', title: 'Sector-Specific Requirements' }
+};
+
 const EnhancedGuidedHelp = () => {
   const { user, signOut } = useAuth();
   const isMobile = useIsMobile();
@@ -609,6 +623,15 @@ const EnhancedGuidedHelp = () => {
     </div>
   );
 
+  const getSectionIcon = (section: any) => {
+    const config = sectionConfig[section.order_number as keyof typeof sectionConfig];
+    if (config?.icon) {
+      const IconComponent = config.icon;
+      return <IconComponent className="w-6 h-6" fill="currentColor" />;
+    }
+    return null;
+  };
+
   return (
     <div className="min-h-screen bg-white flex">
       {/* Mobile Menu Button */}
@@ -657,7 +680,10 @@ const EnhancedGuidedHelp = () => {
         <div className="bg-[#0088cc] border-b p-4 flex justify-between items-center">
           <div className="flex-1">
             <h1 className="text-xl lg:text-2xl font-bold text-white">
-              {sections.find(s => s.order_number === currentSection)?.title}
+              {currentSectionData ? 
+                (sectionConfig[currentSectionData.order_number as keyof typeof sectionConfig]?.title || currentSectionData.title) :
+                'Business Setup Journey'
+              }
             </h1>
             <p className="text-white/90 text-sm lg:text-base">
               Step {currentStep} of {steps.length === 0 ? 1 : steps.length}

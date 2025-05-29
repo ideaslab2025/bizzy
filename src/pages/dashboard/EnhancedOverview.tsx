@@ -203,7 +203,7 @@ const EnhancedOverview: React.FC = () => {
     const config = sectionConfig[section.order_number as keyof typeof sectionConfig];
     if (config?.icon) {
       const IconComponent = config.icon;
-      return <IconComponent className="w-6 h-6" />;
+      return <IconComponent className="w-6 h-6" fill="currentColor" />;
     }
     return null;
   };

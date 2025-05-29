@@ -84,9 +84,9 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
             {isCompleted ? (
-              <CheckCircle className="w-6 h-6" />
+              <CheckCircle className="w-6 h-6" fill="currentColor" />
             ) : IconComponent ? (
-              <IconComponent className="w-6 h-6" />
+              <IconComponent className="w-6 h-6" fill="currentColor" />
             ) : (
               <span className="text-lg">{section.emoji || section.order_number}</span>
             )}
