@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -5,7 +6,6 @@ import { ArrowLeft, Bell, User, ChevronDown, Settings, LogOut, MessageCircle } f
 import { useAuth } from "@/hooks/useAuth";
 import { useGuidanceProgress } from "@/hooks/useGuidanceProgress";
 import { SidebarSection } from "@/components/guidance/SidebarSection";
-import { GuidanceStep } from "@/components/guidance/GuidanceStep";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -239,15 +239,11 @@ const EnhancedGuidedHelp = () => {
 
         {/* Main Content Area */}
         <main className="flex-1 p-6">
-          {activeSection && activeStep ? (
-            <GuidanceStep 
-              section={activeSection}
-              step={activeStep}
-              onStepClick={handleStepClick}
-              isStepCompleted={isStepCompleted(activeSection.id, activeStep.step)}
-              isSectionCompleted={isSectionCompleted(activeSection.id)}
-              toggleComplete={() => toggleComplete(activeSection.id)}
-            />
+          {activeSection ? (
+            <div className="text-center text-gray-600 mt-12">
+              <h2 className="text-2xl font-semibold mb-4">Section: {activeSection.title}</h2>
+              <p>Content for this section will be displayed here.</p>
+            </div>
           ) : (
             <div className="text-center text-gray-600 mt-12">
               {progressLoading ? (
@@ -280,13 +276,13 @@ const EnhancedGuidedHelp = () => {
             <div className="flex justify-between items-center p-4 border-b">
               <h2 className="text-lg font-semibold">Talk to Bizzy</h2>
               <Button variant="ghost" onClick={() => setShowChatbot(false)}>
-                <X className="w-5 h-5" />
+                ×
               </Button>
             </div>
             <div className="p-4">
               <BizzyChat isOpen={showChatbot} onClose={() => setShowChatbot(false)} />
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       )}
     </div>
