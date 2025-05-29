@@ -73,28 +73,23 @@ const Dashboard = () => {
                 {/* Enhanced Notifications with consistent hover */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="relative rounded-lg p-2 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
                     >
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="relative rounded-lg p-2 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 text-gray-700 cursor-pointer"
-                      >
-                        <Bell className="w-5 h-5" />
-                        {hasNotifications && (
-                          <motion.span
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute top-1 right-1 flex h-3 w-3"
-                          >
-                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                            <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
-                          </motion.span>
-                        )}
-                      </Button>
-                    </motion.div>
+                      <Bell className="w-5 h-5" />
+                      {hasNotifications && (
+                        <motion.span
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute top-1 right-1 flex h-3 w-3"
+                        >
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                          <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
+                        </motion.span>
+                      )}
+                    </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
                     <div className="p-4 border-b border-gray-100">
@@ -112,21 +107,16 @@ const Dashboard = () => {
                 {/* Enhanced User Menu with consistent hover */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+                    <Button 
+                      variant="ghost" 
+                      className="flex items-center gap-2 rounded-lg p-2 hover:bg-gray-100 hover:text-gray-900 hover:ring-2 hover:ring-gray-200 transition-all duration-200"
                     >
-                      <Button 
-                        variant="ghost" 
-                        className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 hover:ring-2 hover:ring-gray-200 text-gray-700 cursor-pointer"
-                      >
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                          <User className="w-4 h-4 text-white" />
-                        </div>
-                        <span className="font-medium hidden md:inline-block">John Doe</span>
-                        <ChevronDown className="w-4 h-4" />
-                      </Button>
-                    </motion.div>
+                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                        <User className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="font-medium hidden md:inline-block">John Doe</span>
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
                     <DropdownMenuItem className="hover:bg-gray-50">
@@ -146,15 +136,13 @@ const Dashboard = () => {
                 </DropdownMenu>
 
                 {/* Enhanced Get Help Button with consistent hover */}
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <Button
                   onClick={() => setBizzyOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium shadow-sm hover:shadow-md cursor-pointer"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium shadow-sm hover:shadow-md"
                 >
                   <HelpCircle className="w-4 h-4" />
                   <span>Get Help</span>
-                </motion.button>
+                </Button>
               </div>
             </div>
           </header>
