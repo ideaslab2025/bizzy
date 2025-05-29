@@ -72,16 +72,25 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
               <CheckCircle className="w-6 h-6 text-green-500" />
             ) : IconComponent ? (
               <div className="relative">
-                <div className="absolute inset-0 bg-white/15 rounded-lg transform scale-110" />
+                {/* Enhanced white background with stronger contrast */}
+                <div className="absolute inset-0 bg-white rounded-lg shadow-sm transform scale-125" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 rounded-lg transform scale-125" />
                 <IconComponent 
                   className={cn(
-                    "w-6 h-6 relative z-10",
-                    isActive ? "text-[#0088cc]" : businessSection?.iconColor || "text-white"
+                    "w-6 h-6 relative z-10 drop-shadow-sm",
+                    isActive 
+                      ? "text-[#0088cc]" 
+                      : businessSection?.iconColor 
+                        ? businessSection.iconColor.replace('text-', 'text-').replace('-600', '-700')
+                        : "text-gray-700"
                   )} 
                 />
               </div>
             ) : (
-              <span className="text-lg font-bold">{section.order_number}</span>
+              <div className="relative">
+                <div className="absolute inset-0 bg-white rounded-lg shadow-sm transform scale-125" />
+                <span className="text-lg font-bold relative z-10 text-gray-700">{section.order_number}</span>
+              </div>
             )}
           </div>
         </div>
