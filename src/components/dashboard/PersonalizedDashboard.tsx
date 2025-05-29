@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -44,18 +45,13 @@ export const PersonalizedDashboard: React.FC<PersonalizedDashboardProps> = ({
 
   return (
     <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="text-center py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome back! 👋
-        </h1>
-        <p className="text-gray-600">
-          Let's continue building your business together
-        </p>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Quick Actions with First-View Spotlight */}
+      <div 
+        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        data-spotlight-first-view="true"
+        data-spotlight-id="quick-actions"
+        data-spotlight-message="These quick actions help you navigate to the most important tasks. Try clicking one!"
+      >
         <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50 hover:shadow-lg transition-shadow cursor-pointer" onClick={onNavigateToGuidedHelp}>
           <CardContent className="p-6">
             <div className="flex items-center gap-3">
@@ -124,7 +120,12 @@ export const PersonalizedDashboard: React.FC<PersonalizedDashboardProps> = ({
           </React.Suspense>
           
           {topRecommendations.length > 0 && (
-            <Card className="border-blue-200 bg-blue-50">
+            <Card 
+              className="border-blue-200 bg-blue-50"
+              data-spotlight-first-view="true"
+              data-spotlight-id="next-steps"
+              data-spotlight-message="Your personalized next steps based on your progress. These are tailored just for you!"
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-blue-800">
                   <TrendingUp className="w-5 h-5" />

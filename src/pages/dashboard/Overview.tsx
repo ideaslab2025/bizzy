@@ -42,6 +42,21 @@ const Overview = () => {
   return (
     <PullToRefresh onRefresh={handleOverviewRefresh}>
       <div className="space-y-8">
+        {/* Welcome Section with First-View Spotlight */}
+        <section 
+          className="text-center py-8"
+          data-spotlight-first-view="true"
+          data-spotlight-id="dashboard-welcome"
+          data-spotlight-message="Welcome to Bizzy! This is your command center. Start exploring your business journey here."
+        >
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Welcome back! 👋
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Let's continue building your business together
+          </p>
+        </section>
+
         {/* Stats Section with Neon Glow */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <NeonGlow color="blue" hover>
@@ -91,8 +106,13 @@ const Overview = () => {
           onNavigateToGuidedHelp={handleNavigateToGuidedHelp}
         />
 
-        {/* Action Buttons with Neon Effects */}
-        <div className="flex flex-wrap gap-4 mt-8">
+        {/* Action Buttons with Neon Effects and First-View Spotlight */}
+        <div 
+          className="flex flex-wrap gap-4 mt-8"
+          data-spotlight-first-view="true"
+          data-spotlight-id="dashboard-cta"
+          data-spotlight-message="Ready to start? Click 'Continue Journey' to begin your next step!"
+        >
           <NeonGlow color="blue" pulse hover>
             <button 
               className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium transition-all duration-300"
