@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -92,8 +93,8 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
 
   // Initialize speech recognition
   useEffect(() => {
-    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-      const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      const SpeechRecognitionClass = window.webkitSpeechRecognition || window.SpeechRecognition;
       if (SpeechRecognitionClass) {
         recognition.current = new SpeechRecognitionClass();
         recognition.current.continuous = false;
