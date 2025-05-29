@@ -1,7 +1,9 @@
+
 import React, { useState } from 'react';
 import { Home, FileText, BookOpen, Settings, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Badge } from '@/components/ui/badge';
 import {
   Sidebar,
   SidebarContent,
