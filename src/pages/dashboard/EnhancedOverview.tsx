@@ -11,10 +11,10 @@ import {
   TrendingUp, Clock, FileText, Calendar, Award, 
   Zap, ArrowRight, CheckCircle, AlertTriangle,
   Target, PlayCircle, BookOpen, Shield, Umbrella,
-  Monitor, Briefcase, Rocket
+  Monitor, Briefcase, Rocket, Banknote, Users,
+  Scale, RefreshCw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { BusinessJourneySections } from '@/components/guidance/BusinessJourneySections';
 
 interface DashboardAnalytics {
   overallProgress: number;
@@ -163,16 +163,16 @@ const EnhancedOverview: React.FC = () => {
 
   // Extended sections data with icons for the visual journey map
   const journeySections = [
-    { id: 1, title: "Launch Essentials", emoji: "🚀", icon: Rocket, iconColor: "text-blue-500" },
-    { id: 2, title: "Financial Setup", emoji: "💰", icon: CheckCircle, iconColor: "text-green-500" },
-    { id: 3, title: "Employment & HR", emoji: "👥", icon: CheckCircle, iconColor: "text-orange-500" },
-    { id: 4, title: "Legal & Compliance", emoji: "⚖️", icon: CheckCircle, iconColor: "text-red-500" },
-    { id: 5, title: "Ongoing Operations", emoji: "⚙️", icon: CheckCircle, iconColor: "text-purple-500" },
-    { id: 6, title: "Data Protection", emoji: "🛡️", icon: Shield, iconColor: "text-indigo-500" },
-    { id: 7, title: "Insurance", emoji: "☂️", icon: Umbrella, iconColor: "text-amber-500" },
-    { id: 8, title: "Growth", emoji: "📈", icon: TrendingUp, iconColor: "text-emerald-500" },
-    { id: 9, title: "Technology", emoji: "💻", icon: Monitor, iconColor: "text-sky-500" },
-    { id: 10, title: "Sector-Specific", emoji: "💼", icon: Briefcase, iconColor: "text-rose-500" }
+    { id: 1, title: "Launch Essentials", icon: Rocket, iconColor: "text-blue-500" },
+    { id: 2, title: "Financial Setup", icon: Banknote, iconColor: "text-green-500" },
+    { id: 3, title: "Employment & HR", icon: Users, iconColor: "text-orange-500" },
+    { id: 4, title: "Legal & Compliance", icon: Scale, iconColor: "text-red-500" },
+    { id: 5, title: "Ongoing Operations", icon: RefreshCw, iconColor: "text-purple-500" },
+    { id: 6, title: "Data Protection", icon: Shield, iconColor: "text-indigo-500" },
+    { id: 7, title: "Insurance", icon: Umbrella, iconColor: "text-amber-500" },
+    { id: 8, title: "Growth", icon: TrendingUp, iconColor: "text-emerald-500" },
+    { id: 9, title: "Technology", icon: Monitor, iconColor: "text-sky-500" },
+    { id: 10, title: "Sector-Specific", icon: Briefcase, iconColor: "text-rose-500" }
   ];
 
   const navigateToSection = (sectionOrderNumber: number) => {
@@ -213,7 +213,7 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Visual Journey Map - Updated with all 10 sections */}
+      {/* Visual Journey Map - Updated with connecting lines */}
       <Card className="p-6">
         <CardHeader className="px-0 pt-0">
           <CardTitle className="flex items-center gap-2">
@@ -223,70 +223,61 @@ const EnhancedOverview: React.FC = () => {
         </CardHeader>
         <CardContent className="px-0">
           <div className="relative">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4 relative">
               {journeySections.map((section, index) => {
                 const IconComponent = section.icon;
                 const completion = analytics?.completionBySection[section.id] || 0;
                 const isCompleted = completion === 100;
                 const isCurrent = section.id === analytics?.currentSection?.id;
+                const isNext = index < journeySections.length - 1;
                 
                 return (
-                  <motion.div
-                    key={section.id}
-                    className="flex flex-col items-center cursor-pointer"
-                    whileHover={{ scale: 1.05 }}
-                    onClick={() => navigateToSection(section.id)}
-                  >
-                    {/* Section node */}
-                    <div className={cn(
-                      "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all mb-2",
-                      isCompleted ? 
-                        "bg-green-500 border-green-500" :
-                      isCurrent ? 
-                        "bg-white border-blue-500" : 
-                        "bg-white border-gray-300"
-                    )}>
-                      {isCompleted ? (
-                        <CheckCircle className="w-6 h-6 text-white" strokeWidth={2} />
-                      ) : (
-                        <IconComponent 
-                          className={cn(
-                            "w-6 h-6",
-                            isCurrent ? "text-blue-500" : section.iconColor
-                          )} 
-                          strokeWidth={2} 
-                        />
-                      )}
-                    </div>
-                    
-                    <p className="text-sm text-center font-medium">{section.title}</p>
-                    <p className="text-xs text-gray-500">
-                      {Math.round(completion)}%
-                    </p>
-                  </motion.div>
+                  <div key={section.id} className="relative">
+                    <motion.div
+                      className="flex flex-col items-center cursor-pointer"
+                      whileHover={{ scale: 1.05 }}
+                      onClick={() => navigateToSection(section.id)}
+                    >
+                      {/* Section node */}
+                      <div className={cn(
+                        "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all mb-2 relative z-10 bg-white",
+                        isCompleted ? 
+                          "border-green-500" :
+                        isCurrent ? 
+                          "border-blue-500" : 
+                          "border-gray-300"
+                      )}>
+                        {isCompleted ? (
+                          <CheckCircle className="w-6 h-6 text-green-500" strokeWidth={2} />
+                        ) : (
+                          <IconComponent 
+                            className={cn(
+                              "w-6 h-6",
+                              isCurrent ? "text-blue-500" : section.iconColor
+                            )} 
+                            strokeWidth={2} 
+                          />
+                        )}
+                      </div>
+                      
+                      <p className="text-sm text-center font-medium">{section.title}</p>
+                      <p className="text-xs text-gray-500">
+                        {Math.round(completion)}%
+                      </p>
+                    </motion.div>
+
+                    {/* Connecting line to next section */}
+                    {isNext && (
+                      <div className={cn(
+                        "absolute top-6 left-full w-full h-0.5 -translate-y-1/2 z-0 hidden md:block",
+                        isCompleted ? "bg-green-500" : "bg-gray-300"
+                      )} />
+                    )}
+                  </div>
                 );
               })}
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Business Journey Sections - New comprehensive view */}
-      <Card className="p-6">
-        <CardHeader className="px-0 pt-0">
-          <CardTitle className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5" />
-            Complete Business Setup Guide
-          </CardTitle>
-          <p className="text-gray-600 mt-2">
-            Navigate through all aspects of setting up your business, from foundation to specialized requirements.
-          </p>
-        </CardHeader>
-        <CardContent className="px-0">
-          <BusinessJourneySections 
-            onSectionClick={navigateToSection}
-            sectionsProgress={analytics?.completionBySection || {}}
-          />
         </CardContent>
       </Card>
 
