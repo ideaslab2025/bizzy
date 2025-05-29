@@ -116,7 +116,7 @@ export function AppSidebar() {
               <img 
                 src="/lovable-uploads/aa4b1538-01d2-4242-8776-815bd99470d9.png" 
                 alt="Bizzy" 
-                className="h-24 w-auto"
+                className="h-28 w-auto"
               />
             </div>
           </motion.a>
@@ -138,7 +138,7 @@ export function AppSidebar() {
       
       <SidebarContent className="px-3 pt-1 flex-1 overflow-y-auto">
         {/* Main Menu Section - minimized spacing */}
-        <div className="-mb-1">
+        <div className="-mb-2">
           <motion.button
             onClick={() => toggleSection('main')}
             className="flex w-full items-center justify-between mb-1 px-2 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
@@ -161,7 +161,7 @@ export function AppSidebar() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <SidebarMenu className="flex flex-col space-y-0.5">
+                <SidebarMenu className="flex flex-col space-y-0">
                   {menuItems.map((item) => (
                     <SidebarMenuItem key={item.title} className="block">
                       <SidebarMenuButton 
