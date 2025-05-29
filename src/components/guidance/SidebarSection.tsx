@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -21,16 +20,16 @@ interface SidebarSectionProps {
 
 // Section configuration matching the dashboard
 const sectionConfig = {
-  1: { icon: FileText, title: 'Foundation Setup' },
-  2: { icon: Building2, title: 'Legal Structure' },
-  3: { icon: Calculator, title: 'Financial Setup' },
-  4: { icon: Users, title: 'Team & Operations' },
-  5: { icon: FileText, title: 'Compliance' },
-  6: { icon: Shield, title: 'Data Protection & GDPR' },
-  7: { icon: Umbrella, title: 'Insurance & Risk Management' },
-  8: { icon: TrendingUp, title: 'Business Growth & Scaling' },
-  9: { icon: Monitor, title: 'Technology & Systems' },
-  10: { icon: Briefcase, title: 'Sector-Specific Requirements' }
+  1: { icon: FileText, title: 'Foundation Setup', iconColor: '#2563eb' },
+  2: { icon: Building2, title: 'Legal Structure', iconColor: '#16a34a' },
+  3: { icon: Calculator, title: 'Financial Setup', iconColor: '#9333ea' },
+  4: { icon: Users, title: 'Team & Operations', iconColor: '#ea580c' },
+  5: { icon: FileText, title: 'Compliance', iconColor: '#dc2626' },
+  6: { icon: Shield, title: 'Data Protection & GDPR', iconColor: '#9333ea' },
+  7: { icon: Umbrella, title: 'Insurance & Risk Management', iconColor: '#ea580c' },
+  8: { icon: TrendingUp, title: 'Business Growth & Scaling', iconColor: '#16a34a' },
+  9: { icon: Monitor, title: 'Technology & Systems', iconColor: '#2563eb' },
+  10: { icon: Briefcase, title: 'Sector-Specific Requirements', iconColor: '#4f46e5' }
 };
 
 export const SidebarSection: React.FC<SidebarSectionProps> = ({
@@ -84,9 +83,13 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
             {isCompleted ? (
-              <CheckCircle className="w-6 h-6" fill="currentColor" />
+              <CheckCircle className="w-6 h-6" style={{ color: '#10b981' }} fill="currentColor" />
             ) : IconComponent ? (
-              <IconComponent className="w-6 h-6" fill="currentColor" />
+              <IconComponent 
+                className="w-6 h-6" 
+                style={{ color: config?.iconColor || 'currentColor' }} 
+                fill="currentColor" 
+              />
             ) : (
               <span className="text-lg">{section.emoji || section.order_number}</span>
             )}

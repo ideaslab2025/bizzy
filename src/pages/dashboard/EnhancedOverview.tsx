@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -43,16 +42,16 @@ interface QuickWin {
 
 // Section configuration with enhanced metadata
 const sectionConfig = {
-  1: { icon: FileText, color: 'text-blue-600 bg-blue-100', emoji: '📄', title: 'Foundation Setup' },
-  2: { icon: Building2, color: 'text-green-600 bg-green-100', emoji: '🏢', title: 'Legal Structure' },
-  3: { icon: Calculator, color: 'text-purple-600 bg-purple-100', emoji: '💰', title: 'Financial Setup' },
-  4: { icon: Users, color: 'text-orange-600 bg-orange-100', emoji: '👥', title: 'Team & Operations' },
-  5: { icon: FileText, color: 'text-red-600 bg-red-100', emoji: '📋', title: 'Compliance' },
-  6: { icon: Shield, color: 'text-purple-600 bg-purple-100', emoji: '🛡️', title: 'Data Protection & GDPR' },
-  7: { icon: Umbrella, color: 'text-orange-600 bg-orange-100', emoji: '☂️', title: 'Insurance & Risk Management' },
-  8: { icon: TrendingUp, color: 'text-green-600 bg-green-100', emoji: '📈', title: 'Business Growth & Scaling' },
-  9: { icon: Monitor, color: 'text-blue-600 bg-blue-100', emoji: '💻', title: 'Technology & Systems' },
-  10: { icon: Briefcase, color: 'text-indigo-600 bg-indigo-100', emoji: '💼', title: 'Sector-Specific Requirements' }
+  1: { icon: FileText, color: 'text-blue-600 bg-blue-100', emoji: '📄', title: 'Foundation Setup', iconColor: '#2563eb' },
+  2: { icon: Building2, color: 'text-green-600 bg-green-100', emoji: '🏢', title: 'Legal Structure', iconColor: '#16a34a' },
+  3: { icon: Calculator, color: 'text-purple-600 bg-purple-100', emoji: '💰', title: 'Financial Setup', iconColor: '#9333ea' },
+  4: { icon: Users, color: 'text-orange-600 bg-orange-100', emoji: '👥', title: 'Team & Operations', iconColor: '#ea580c' },
+  5: { icon: FileText, color: 'text-red-600 bg-red-100', emoji: '📋', title: 'Compliance', iconColor: '#dc2626' },
+  6: { icon: Shield, color: 'text-purple-600 bg-purple-100', emoji: '🛡️', title: 'Data Protection & GDPR', iconColor: '#9333ea' },
+  7: { icon: Umbrella, color: 'text-orange-600 bg-orange-100', emoji: '☂️', title: 'Insurance & Risk Management', iconColor: '#ea580c' },
+  8: { icon: TrendingUp, color: 'text-green-600 bg-green-100', emoji: '📈', title: 'Business Growth & Scaling', iconColor: '#16a34a' },
+  9: { icon: Monitor, color: 'text-blue-600 bg-blue-100', emoji: '💻', title: 'Technology & Systems', iconColor: '#2563eb' },
+  10: { icon: Briefcase, color: 'text-indigo-600 bg-indigo-100', emoji: '💼', title: 'Sector-Specific Requirements', iconColor: '#4f46e5' }
 };
 
 const EnhancedOverview: React.FC = () => {
@@ -118,7 +117,8 @@ const EnhancedOverview: React.FC = () => {
           title: config?.title || section.title,
           emoji: config?.emoji || section.emoji || section.order_number.toString(),
           icon: config?.icon,
-          colorClass: config?.color
+          colorClass: config?.color,
+          iconColor: config?.iconColor
         };
       });
 
@@ -203,7 +203,7 @@ const EnhancedOverview: React.FC = () => {
     const config = sectionConfig[section.order_number as keyof typeof sectionConfig];
     if (config?.icon) {
       const IconComponent = config.icon;
-      return <IconComponent className="w-6 h-6" fill="currentColor" />;
+      return <IconComponent className="w-6 h-6" style={{ color: config.iconColor }} fill="currentColor" />;
     }
     return null;
   };
@@ -266,12 +266,14 @@ const EnhancedOverview: React.FC = () => {
                         "bg-green-500 border-green-500 text-white" :
                       section.id === analytics.currentSection?.id ? 
                         "bg-blue-500 border-blue-500 text-white" : 
-                        "bg-white border-gray-300 text-gray-500"
+                        "bg-white border-gray-300"
                     )}>
                       {analytics.completionBySection[section.id] === 100 ? (
-                        <CheckCircle className="w-6 h-6" />
+                        <CheckCircle className="w-6 h-6" style={{ color: 'white' }} />
                       ) : (
-                        getSectionIcon(section) || section.emoji || section.order_number
+                        <div style={{ color: sectionConfig[section.order_number as keyof typeof sectionConfig]?.iconColor || '#6b7280' }}>
+                          {getSectionIcon(section) || section.emoji || section.order_number}
+                        </div>
                       )}
                     </div>
                     <p className="text-sm mt-2 text-center font-medium max-w-20">
