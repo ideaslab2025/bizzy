@@ -111,7 +111,7 @@ export function AppSidebar() {
     <Sidebar className="bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200">
       <SidebarHeader className="p-6 border-b border-gray-200">
         {/* Enhanced Bizzy Logo - Even Bigger */}
-        <div className="flex items-center justify-center h-40 mb-6">
+        <div className="flex items-center justify-center h-40 mb-4">
           <motion.a
             href="/"
             className="flex items-center gap-3 group cursor-pointer transition-all duration-200"
@@ -145,12 +145,12 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="px-4 py-6">
-        {/* Main Menu Section - Fixed spacing */}
+      <SidebarContent className="px-4 py-8">
+        {/* Main Menu Section - Increased top padding */}
         <div className="mb-8">
           <motion.button
             onClick={() => toggleSection('main')}
-            className="flex w-full items-center justify-between mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex w-full items-center justify-between mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
           >
             <span>Main Menu</span>
             <motion.div
@@ -232,7 +232,7 @@ export function AppSidebar() {
         <div className="mb-8">
           <motion.button
             onClick={() => toggleSection('support')}
-            className="flex w-full items-center justify-between mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex w-full items-center justify-between mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
           >
             <span>Support</span>
             <motion.div
