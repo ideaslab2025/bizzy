@@ -309,7 +309,7 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
             </div>
           </div>
 
-          {/* Third Row - Left to Right with proper arrows and final line */}
+          {/* Third Row - Left to Right */}
           <div className="grid grid-cols-3 gap-8 relative">
             {businessSections.slice(6).map((section, index) => {
               const status = getSectionStatus(section);
