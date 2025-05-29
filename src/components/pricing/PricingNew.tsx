@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,27 @@ const PricingNew = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+
+  // Check for plan parameter in URL and scroll to it
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const planParam = urlParams.get('plan');
+    if (planParam) {
+      setSelectedPlan(planParam);
+      
+      // Scroll to the specific plan card
+      setTimeout(() => {
+        const planElement = document.getElementById(`plan-${planParam}`);
+        if (planElement) {
+          planElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }, 100);
+    }
+  }, []);
 
   const plans = [
     {
@@ -100,6 +121,7 @@ const PricingNew = () => {
     }
   ];
 
+  // Moved payment functionality from homepage
   const handleSubscribe = async (planId: string, planName: string) => {
     console.log("Starting payment process for plan:", planName);
     
@@ -182,7 +204,13 @@ const PricingNew = () => {
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-8xl mx-auto">
           {plans.map((plan, index) => (
-            <Card key={plan.name} className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300`}>
+            <Card 
+              key={plan.name} 
+              id={`plan-${plan.planId}`}
+              className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300 ${
+                selectedPlan === plan.planId ? 'ring-2 ring-blue-500 shadow-2xl transform scale-105' : ''
+              }`}
+            >
               {plan.badge && (
                 <div className="absolute top-4 right-4">
                   {plan.badge}
@@ -221,7 +249,7 @@ const PricingNew = () => {
                   ) : (
                     <>
                       <Zap className="w-5 h-5 mr-2" />
-                      Get Started
+                      Select Plan
                     </>
                   )}
                 </Button>

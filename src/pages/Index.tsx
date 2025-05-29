@@ -1,274 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Menu, Star, User, LogOut } from "lucide-react";
+import { Menu, Star, User, LogOut, Check, Sparkles, Zap, Shield } from "lucide-react";
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-
-// Plan data from PricingNew
-const pricingPlans = [
-  {
-    id: "bronze",
-    title: "Bronze",
-    price: "£100",
-    gradient: "linear-gradient(to bottom, rgba(217, 119, 6, 0.8), rgba(180, 83, 9, 0.6))",
-    textColor: "#ffffff",
-    borderColor: "#d97706",
-    shadowColor: "217, 119, 6",
-    buttonBg: "#d97706",
-    buttonHoverBg: "#b45309",
-    features: [
-      "Basic company setup guidance",
-      "Essential document templates",
-      "Standard support",
-      "Basic AI assistant access"
-    ]
-  },
-  {
-    id: "silver",
-    title: "Silver",
-    price: "£200",
-    gradient: "linear-gradient(to bottom, rgba(203, 213, 225, 0.8), rgba(100, 116, 139, 0.6))",
-    textColor: "#ffffff",
-    borderColor: "#94a3b8",
-    shadowColor: "148, 163, 184",
-    buttonBg: "#64748b",
-    buttonHoverBg: "#475569",
-    features: [
-      "Everything in Bronze",
-      "Extended document library",
-      "Tax & compliance guidance",
-      "Full AI assistant access"
-    ]
-  },
-  {
-    id: "gold",
-    title: "Gold",
-    price: "£300",
-    gradient: "linear-gradient(to bottom, rgba(251, 191, 36, 0.8), rgba(217, 119, 6, 0.6))",
-    textColor: "#ffffff",
-    borderColor: "#f59e0b",
-    shadowColor: "245, 158, 11",
-    buttonBg: "#f59e0b",
-    buttonHoverBg: "#d97706",
-    features: [
-      "Everything in Silver",
-      "Complete document engine",
-      "Advanced sector-specific guidance",
-      "Priority support"
-    ],
-    recommended: true
-  },
-  {
-    id: "platinum",
-    title: "Platinum",
-    price: "£500",
-    gradient: "linear-gradient(to bottom, #f8fafc, #e2e8f0, #cbd5e1)",
-    textColor: "#1f2937",
-    borderColor: "#94a3b8",
-    shadowColor: "71, 85, 105",
-    buttonBg: "#1f2937",
-    buttonHoverBg: "#111827",
-    features: [
-      "Everything in Gold",
-      "Full access to all resources",
-      "Video consultations with experts",
-      "Custom document customization"
-    ]
-  }
-];
-
-interface PlanCardProps {
-  plan: typeof pricingPlans[0];
-  isSelected: boolean;
-  onSelect: (planId: string) => void;
-}
-
-const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onSelect }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  // Card styles
-  const cardStyle: React.CSSProperties = {
-    position: 'relative' as const,
-    border: `2px solid ${isSelected ? '#1d4ed8' : plan.borderColor}`,
-    borderRadius: '12px',
-    padding: '0',
-    background: plan.gradient,
-    boxShadow: isSelected 
-      ? `0 0 0 2px #1d4ed8, 0 25px 50px -12px rgba(29, 78, 216, 0.5)`
-      : isHovered 
-        ? `0 25px 50px -12px rgba(${plan.shadowColor}, 0.5)`
-        : '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-    transform: `translateY(${isSelected ? '-16px' : isHovered ? '-8px' : '0'}) scale(${isSelected || isHovered ? '1.03' : '1'})`,
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    cursor: 'pointer',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    overflow: 'hidden'
-  };
-
-  const buttonStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '12px 24px',
-    backgroundColor: isSelected ? '#1d4ed8' : plan.buttonBg,
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transform: isHovered ? 'translateY(-2px) scale(1.05)' : 'scale(1)',
-    boxShadow: isHovered ? '0 10px 20px -5px rgba(0, 0, 0, 0.3)' : '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    transition: 'all 0.2s ease-out'
-  };
-
-  const headerStyle: React.CSSProperties = {
-    padding: plan.recommended ? '40px 24px 24px' : '24px',
-    textAlign: 'center' as const
-  };
-
-  const titleStyle: React.CSSProperties = {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    color: plan.id === "platinum" ? "#1f2937" : plan.recommended ? "#3b82f6" : plan.textColor,
-    marginBottom: '8px'
-  };
-
-  const priceStyle: React.CSSProperties = {
-    fontSize: '40px',
-    fontWeight: 'bold',
-    color: plan.id === "platinum" ? "#1f2937" : plan.textColor,
-    marginBottom: '4px'
-  };
-
-  const descriptionStyle: React.CSSProperties = {
-    color: plan.id === "platinum" ? "#4b5563" : plan.textColor,
-    opacity: 0.9,
-    fontSize: '14px'
-  };
-
-  const contentStyle: React.CSSProperties = {
-    padding: '0 24px 24px',
-    flex: 1
-  };
-
-  const featureListStyle: React.CSSProperties = {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0
-  };
-
-  const featureItemStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '8px',
-    marginBottom: '12px',
-    color: plan.id === "platinum" ? "#4b5563" : plan.textColor,
-    fontSize: '14px'
-  };
-
-  const checkIconColor = plan.id === "platinum" ? "#1f2937" : "#60a5fa";
-
-  const badgeStyle: React.CSSProperties = {
-    position: 'absolute' as const,
-    top: '-8px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    backgroundColor: '#1d4ed8',
-    color: 'white',
-    padding: '6px 28px',
-    borderRadius: '9999px',
-    fontSize: '15px',
-    fontWeight: 'bold',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    zIndex: 20
-  };
-
-  const footerStyle: React.CSSProperties = {
-    padding: '24px',
-    marginTop: 'auto'
-  };
-
-  return (
-    <div 
-      style={{ position: 'relative', height: '100%' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={() => onSelect(plan.id)}
-    >
-      <div style={cardStyle}>
-        {plan.recommended && (
-          <div style={badgeStyle}>
-            Recommended
-          </div>
-        )}
-        
-        <div style={headerStyle}>
-          <h3 style={titleStyle}>{plan.title}</h3>
-          <div style={priceStyle}>{plan.price}</div>
-          <p style={descriptionStyle}>One-time payment</p>
-        </div>
-        
-        <div style={contentStyle}>
-          <ul style={featureListStyle}>
-            {plan.features.map((feature, i) => (
-              <li key={i} style={featureItemStyle}>
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="20" 
-                  height="20" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke={checkIconColor}
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  style={{ flexShrink: 0, marginTop: '2px' }}
-                >
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        
-        <div style={footerStyle}>
-          <button 
-            style={buttonStyle}
-            onMouseOver={(e) => {
-              if (!isSelected) {
-                e.currentTarget.style.backgroundColor = plan.buttonHoverBg;
-              }
-            }}
-            onMouseOut={(e) => {
-              if (!isSelected) {
-                e.currentTarget.style.backgroundColor = isSelected ? '#1d4ed8' : plan.buttonBg;
-              }
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect(plan.id);
-            }}
-          >
-            {isSelected ? "Selected" : "Select Plan"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const Index = () => {
   const { user, signOut } = useAuth();
@@ -279,16 +23,10 @@ const Index = () => {
     y: window.innerHeight - 150
   });
 
-  // Pricing state - Modified to allow deselection
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
   
-  // ... keep existing code (useEffect for floating animation and scroll handling)
   useEffect(() => {
     const floatingAnimation = () => {
       setFloatingPosition(prev => ({
@@ -342,88 +80,6 @@ const Index = () => {
     }
   };
 
-  // Modified pricing handlers to implement actual Stripe payment
-  const handleSelectPlan = (planId: string) => {
-    if (selectedPlan === planId) {
-      setSelectedPlan(null); // Deselect if already selected
-    } else {
-      setSelectedPlan(planId);
-    }
-  };
-  
-  const handleProceedToPayment = async () => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to proceed with payment.",
-        variant: "destructive",
-      });
-      navigate("/login");
-      return;
-    }
-
-    if (!selectedPlan) {
-      toast({
-        title: "Plan Selection Required",
-        description: "Please select a plan before proceeding.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsProcessingPayment(true);
-
-    try {
-      console.log('Creating payment for plan:', selectedPlan);
-      
-      // Get the current session to ensure we have a valid token
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError || !session?.access_token) {
-        console.error('Session error:', sessionError);
-        throw new Error('Please log in again to continue.');
-      }
-
-      console.log('Session found, calling create-payment function');
-      
-      const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: { planId: selectedPlan },
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
-
-      console.log('Function response:', { data, error });
-
-      if (error) {
-        console.error("Payment function error:", error);
-        throw new Error(error.message || "Payment processing failed");
-      }
-
-      if (!data?.url) {
-        throw new Error("No checkout URL received");
-      }
-
-      console.log('Redirecting to checkout:', data.url);
-      
-      // If we're in an iframe, jump the top window
-      if (window.self !== window.top) {
-        window.top!.location.href = data.url;
-      } else {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Payment error:', error);
-      toast({
-        title: "Payment Error",
-        description: error instanceof Error ? error.message : "Failed to process payment. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsProcessingPayment(false);
-    }
-  };
-
   const handleSignOut = async () => {
     try {
       await signOut();
@@ -432,6 +88,84 @@ const Index = () => {
       console.error('Error signing out:', error);
     }
   };
+
+  // Pricing plans for homepage display only
+  const plans = [
+    {
+      name: "Bronze",
+      price: "£97",
+      description: "Perfect for solo entrepreneurs and small startups",
+      planId: "bronze",
+      features: [
+        "Basic business setup guidance",
+        "Essential document templates",
+        "Email support",
+        "Basic compliance checking",
+        "1 consultation session"
+      ],
+      color: "border-amber-200 bg-amber-50",
+      buttonStyle: "bg-amber-600 hover:bg-amber-700 text-white",
+      textColor: "text-amber-700"
+    },
+    {
+      name: "Silver", 
+      price: "£197",
+      description: "Ideal for growing businesses and established companies",
+      planId: "silver",
+      badge: <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Most Popular</Badge>,
+      features: [
+        "Everything in Bronze",
+        "Advanced business tools",
+        "Priority email & chat support",
+        "Custom document generation",
+        "3 consultation sessions",
+        "Advanced compliance monitoring",
+        "Team collaboration tools"
+      ],
+      color: "border-gray-200 bg-gray-50 shadow-lg",
+      buttonStyle: "bg-gray-600 hover:bg-gray-700 text-white",
+      textColor: "text-gray-700"
+    },
+    {
+      name: "Gold",
+      price: "£297", 
+      description: "Advanced solution for established businesses",
+      planId: "gold",
+      features: [
+        "Everything in Silver",
+        "Premium business tools",
+        "Priority phone support",
+        "Advanced integrations",
+        "5 consultation sessions",
+        "Custom branding options",
+        "Advanced analytics",
+        "Dedicated support"
+      ],
+      color: "border-yellow-200 bg-yellow-50",
+      buttonStyle: "bg-yellow-600 hover:bg-yellow-700 text-white",
+      textColor: "text-yellow-700"
+    },
+    {
+      name: "Platinum",
+      price: "£497",
+      description: "Comprehensive solution for large organizations",
+      planId: "platinum",
+      badge: <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">Premium</Badge>,
+      features: [
+        "Everything in Gold",
+        "Unlimited consultations",
+        "Dedicated account manager",
+        "Custom integrations",
+        "White-label options",
+        "24/7 phone support",
+        "Legal review services",
+        "Priority development requests"
+      ],
+      color: "border-purple-200 bg-purple-50",
+      buttonStyle: "bg-purple-600 hover:bg-purple-700 text-white",
+      textColor: "text-purple-700"
+    }
+  ];
 
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
       {/* Header/Navigation */}
@@ -715,172 +449,6 @@ const Index = () => {
                 </a>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* New Interactive Pricing Section */}
-      <section id="pricing" className="py-16" style={{ backgroundColor: '#0a192f' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 16px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <h1 style={{ fontSize: '40px', fontWeight: 'bold', color: 'white', marginBottom: '16px' }}>
-              Choose Your Plan
-            </h1>
-            <p style={{ fontSize: '18px', color: '#e5e7eb', maxWidth: '768px', margin: '0 auto' }}>
-              Select the package that best suits your business needs. All plans include a one-time payment with no recurring fees.
-            </p>
-          </div>
-          
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-            gap: '24px', 
-            maxWidth: '1200px', 
-            margin: '0 auto' 
-          }}>
-            {pricingPlans.map((plan) => (
-              <PlanCard 
-                key={plan.id}
-                plan={plan}
-                isSelected={selectedPlan === plan.id}
-                onSelect={handleSelectPlan}
-              />
-            ))}
-          </div>
-          
-          <div style={{ marginTop: '48px', textAlign: 'center' }}>
-            <button 
-              style={{
-                padding: '12px 32px',
-                fontSize: '18px',
-                backgroundColor: selectedPlan ? '#2563eb' : '#6b7280',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: selectedPlan && !isLoading ? 'pointer' : 'not-allowed',
-                opacity: selectedPlan ? 1 : 0.5,
-                transition: 'all 0.2s',
-                transform: selectedPlan ? 'scale(1)' : 'scale(1)',
-              }}
-              onClick={handleProceedToPayment}
-              disabled={!selectedPlan || isLoading}
-              onMouseOver={(e) => {
-                if (selectedPlan && !isLoading) {
-                  e.currentTarget.style.backgroundColor = '#1d4ed8';
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                }
-              }}
-              onMouseOut={(e) => {
-                if (selectedPlan && !isLoading) {
-                  e.currentTarget.style.backgroundColor = '#2563eb';
-                  e.currentTarget.style.transform = 'scale(1)';
-                }
-              }}
-            >
-              {isLoading ? "Processing..." : "Proceed to Payment"}
-            </button>
-            {!selectedPlan && (
-              <p style={{ color: '#f87171', marginTop: '16px', fontSize: '16px' }}>
-                Please select a plan to continue
-              </p>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section id="testimonials" className="py-16 bg-blue-900/10">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-10 text-center text-[#3b82f6]">What Our Customers Say</h2>
-          <Testimonials />
-        </div>
-      </section>
-
-      {/* About Section with Bizzy character - Smaller on mobile */}
-      <section id="about" className="py-6 bg-blue-900/20">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="md:w-1/2">
-              <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Meet Bizzy</h2>
-              <p className="text-blue-100 mb-3 text-sm md:text-base">Your AI-powered assistant for navigating the complexities of starting a UK business. Bizzy transforms business startup administration from a chore into a breeze.</p>
-              <p className="text-blue-100 mb-3 text-sm md:text-base">Clear, up-to-date guidance on exactly what to do, every step of the way. Short video clips and a document library to boot. Chat to Bizzy if you get stuck!</p>
-              <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 text-sm md:text-base">
-                Learn More About Bizzy
-              </Button>
-            </div>
-            <div className="md:w-1/2 flex justify-center">
-              <div className="relative scale-75 md:scale-100">
-                <div className="absolute inset-0 bg-[#1d4ed8]/30 blur-3xl rounded-full"></div>
-                <img src="/lovable-uploads/829e09df-4a1a-4e87-b80b-951eb01a8635.png" alt="Bizzy Character" className="w-[600px] relative drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section - Using the ref for better scroll targeting */}
-      <section id="faqs" ref={faqsRef} className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
-          <div className="max-w-3xl mx-auto">
-            <Accordion type="single" collapsible className="space-y-4">
-              <AccordionItem value="item-1" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  How does Bizzy help with my company post-formation?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Bizzy provides step-by-step professional guidance through the post-company formation process, offering our guided help for everything you need to do across every department once starting, a full document library, and AI assistance to ensure you complete all required steps correctly.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-2" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Is there a recurring subscription?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  No, Bizzy operates on a one-time payment model. You pay once for the plan of your choice and get lifetime access to the features included in that plan.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-3" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Can I upgrade my plan later?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Yes, you can upgrade to a higher-tier plan at any time by paying the difference between your current plan and the new one.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-4" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  How does the AI assistant work?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Bizzy's AI assistant uses advanced natural language processing to understand your questions and provide relevant guidance, document suggestions, and compliance advice specific to your business needs.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-5" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Is my data secure with Bizzy?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Absolutely. We employ enterprise-grade encryption and follow strict data protection protocols to ensure your business information remains completely secure and confidential.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-6" className="bg-blue-900/30 border border-blue-800 rounded-lg px-6">
-                <AccordionTrigger className="text-xl font-semibold text-[#3b82f6] py-4">
-                  Is Bizzy Guidance or Advice and can I trust the information?
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-blue-100">
-                  Your Business Guidance, Professionally Assured: Bizzy provides comprehensive step-by-step guidance across every aspect of getting your new UK business started (post formation), telling you everything you need to do across finance, payroll, tax, HR, Gov.UK services, paperwork and beyond. It has been professionally pre-checked / assured and updated, but it is guidance not advice. Please see our full disclaimer{' '}
-                  <a href="/disclaimer" className="text-[#3b82f6] hover:text-[#60a5fa] underline">
-                    here
-                  </a>.
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
           </div>
         </div>
       </section>
