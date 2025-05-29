@@ -42,6 +42,7 @@ import { SmartRecommendationsPanel } from "@/components/guidance/SmartRecommenda
 import { SwipeableStepContent } from "@/components/guidance/SwipeableStepContent";
 import { MilestoneReached } from "@/components/celebrations/MilestoneReached";
 import { AchievementNotification } from "@/components/celebrations/AchievementNotification";
+import BizzyChat from "@/components/BizzyChat";
 import type { 
   EnhancedGuidanceSection, 
   EnhancedGuidanceStep, 
@@ -82,7 +83,7 @@ const EnhancedGuidedHelp = () => {
   const [quickWins, setQuickWins] = useState<QuickWinStep[]>([]);
   const [totalTimeSpent, setTotalTimeSpent] = useState(0);
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
-  const [showChatbot, setShowChatbot] = useState(false);
+  const [bizzyOpen, setBizzyOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [companyAge, setCompanyAge] = useState(0);
   const [stepLoading, setStepLoading] = useState(false);
@@ -729,7 +730,7 @@ const EnhancedGuidedHelp = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setShowChatbot(true)}
+              onClick={() => setBizzyOpen(true)}
               className="flex items-center gap-2 px-4 py-2 bg-white text-[#0088cc] rounded-lg hover:bg-gray-100 transition-all duration-200 font-medium shadow-sm hover:shadow-md text-xs lg:text-sm"
             >
               <HelpCircle className="w-4 h-4" />
@@ -1014,55 +1015,11 @@ const EnhancedGuidedHelp = () => {
         />
       ))}
 
-      {/* Chatbot Modal - Mobile responsive */}
-      {showChatbot && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 lg:p-0">
-          <div className={`bg-white rounded-lg flex flex-col ${isMobile ? 'w-full h-full max-w-md' : 'w-96 h-[500px]'}`}>
-            <div className="flex items-center justify-between p-4 border-b bg-[#0088cc] text-white rounded-t-lg">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-white rounded-full overflow-hidden">
-                  <AspectRatio ratio={1}>
-                    <img 
-                      src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
-                      alt="Bizzy" 
-                      className="w-full h-full object-contain"
-                    />
-                  </AspectRatio>
-                </div>
-                <span className="font-medium">Talk to Bizzy</span>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-6 w-6 p-0 text-white hover:bg-white/20"
-                onClick={() => setShowChatbot(false)}
-              >
-                ×
-              </Button>
-            </div>
-            
-            <div className="flex-1 p-4">
-              <div className="bg-gray-100 p-3 rounded-lg">
-                <p className="text-sm">
-                  Hi! I'm here to help you with your business setup journey. What questions do you have about this step?
-                </p>
-              </div>
-            </div>
-            
-            <div className="border-t p-4">
-              <div className="flex gap-2">
-                <input 
-                  placeholder="Ask me anything..." 
-                  className="flex-1 px-3 py-2 border rounded-md"
-                />
-                <Button className="bg-[#0088cc] hover:bg-[#0088cc]/90">
-                  Send
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Bizzy AI Chat - Now using the same component as dashboard */}
+      <BizzyChat 
+        isOpen={bizzyOpen} 
+        onClose={() => setBizzyOpen(false)} 
+      />
     </div>
   );
 };
