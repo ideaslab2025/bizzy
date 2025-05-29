@@ -111,7 +111,7 @@ export function AppSidebar() {
     <Sidebar className="bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200">
       <SidebarHeader className="p-6 border-b border-gray-200">
         {/* Enhanced Bizzy Logo - Even Bigger */}
-        <div className="flex items-center justify-center h-40 mb-4">
+        <div className="flex items-center justify-center h-40 mb-8">
           <motion.a
             href="/"
             className="flex items-center gap-3 group cursor-pointer transition-all duration-200"
@@ -145,12 +145,12 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="px-4 py-8">
-        {/* Main Menu Section - Increased top padding */}
-        <div className="mb-8">
+      <SidebarContent className="px-4 pt-12 pb-8">
+        {/* Main Menu Section - Much more top padding */}
+        <div className="mb-12">
           <motion.button
             onClick={() => toggleSection('main')}
-            className="flex w-full items-center justify-between mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex w-full items-center justify-between mb-6 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
           >
             <span>Main Menu</span>
             <motion.div
@@ -226,13 +226,13 @@ export function AppSidebar() {
         </div>
 
         {/* Divider */}
-        <div className="my-6 border-t border-gray-200" />
+        <div className="my-8 border-t border-gray-200" />
 
-        {/* Support Section - Fixed spacing */}
-        <div className="mb-8">
+        {/* Support Section - More spacing */}
+        <div className="mb-12">
           <motion.button
             onClick={() => toggleSection('support')}
-            className="flex w-full items-center justify-between mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex w-full items-center justify-between mb-6 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
           >
             <span>Support</span>
             <motion.div
