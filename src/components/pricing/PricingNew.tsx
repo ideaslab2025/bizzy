@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -207,7 +208,7 @@ const PricingNew = () => {
             <h1 className="text-4xl font-bold text-gray-900">Choose Your Plan</h1>
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Select the perfect plan to accelerate your business journey with Bizzy's comprehensive tools and expert guidance.
+            Select the perfect one-off plan (no subscriptions!) to accelerate your business journey with Bizzy's comprehensive tools and expert guidance.
           </p>
           {!user && (
             <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-md mx-auto">
@@ -309,21 +310,21 @@ const PricingNew = () => {
                 <Star className="w-8 h-8 text-blue-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Expert Guidance</h3>
-              <p className="text-gray-600">Professional advice from business setup experts</p>
+              <p className="text-gray-600">Professional guidance, pre-checked from business experts</p>
             </div>
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                 <Shield className="w-8 h-8 text-green-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Compliance Assured</h3>
-              <p className="text-gray-600">Stay compliant with UK business regulations</p>
+              <p className="text-gray-600">Stay compliant with UK business regulations, with our extensive document library</p>
             </div>
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
                 <Zap className="w-8 h-8 text-purple-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Fast Setup</h3>
-              <p className="text-gray-600">Get your business running in days, not weeks</p>
+              <p className="text-gray-600">Get your business running in days, not weeks, with everything in on</p>
             </div>
           </div>
         </div>
