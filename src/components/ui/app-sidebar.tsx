@@ -110,43 +110,48 @@ export function AppSidebar() {
   return (
     <Sidebar className="bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200">
       <SidebarHeader className="p-6 border-b border-gray-200">
-        <motion.div 
-          className="flex items-center space-x-3 group cursor-pointer transition-all duration-200"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => navigate('/')}
-        >
-          <motion.div 
-            className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md"
-            whileHover={{ 
-              boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)",
-              scale: 1.1 
+        {/* Bizzy Logo */}
+        <div className="flex items-center h-16 mb-4">
+          <motion.a
+            href="/"
+            className="flex items-center gap-3 group cursor-pointer transition-all duration-200"
+            whileHover={{ scale: 1.02 }}
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/');
             }}
-            transition={{ duration: 0.2 }}
           >
-            <span className="text-white font-bold text-lg">B</span>
-          </motion.div>
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 tracking-tight">Bizzy</h2>
-            <p className="text-xs text-gray-500 mt-1">Setup 68% Complete</p>
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-blue-500 flex items-center justify-center">
+                <span className="text-white font-bold text-xl">B</span>
+              </div>
+              <span className="text-lg font-semibold text-gray-900">Bizzy</span>
+            </div>
+          </motion.a>
+        </div>
+        
+        {/* Setup Progress */}
+        <div>
+          <p className="text-xs text-gray-500 mb-2">Setup 68% Complete</p>
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <motion.div 
+              className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: "68%" }}
+              transition={{ duration: 1, delay: 0.2 }}
+            />
           </div>
-        </motion.div>
-        <div className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
-          <motion.div 
-            className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: "68%" }}
-            transition={{ duration: 1, delay: 0.2 }}
-          />
         </div>
       </SidebarHeader>
       
       <SidebarContent className="px-4 py-6">
-        <SidebarGroup>
+        {/* Main Menu Section */}
+        <div className="mb-6">
           <motion.button
             onClick={() => toggleSection('main')}
-            className="flex w-full items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 hover:text-gray-700 transition-colors"
+            className="flex w-full items-center justify-between mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
+            <span>Main Menu</span>
             <motion.div
               animate={{ rotate: expandedSections.includes('main') ? 90 : 0 }}
               transition={{ duration: 0.2 }}
@@ -164,8 +169,8 @@ export function AppSidebar() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <SidebarGroupContent>
-                  <SidebarMenu className="space-y-2">
+                <div className="space-y-1">
+                  <SidebarMenu>
                     {menuItems.map((item) => (
                       <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton 
@@ -213,18 +218,22 @@ export function AppSidebar() {
                       </SidebarMenuItem>
                     ))}
                   </SidebarMenu>
-                </SidebarGroupContent>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
-        </SidebarGroup>
+        </div>
 
-        <SidebarGroup className="mt-8">
+        {/* Divider */}
+        <div className="my-4 border-t border-gray-200" />
+
+        {/* Support Section */}
+        <div className="mb-6">
           <motion.button
             onClick={() => toggleSection('support')}
-            className="flex w-full items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 hover:text-gray-700 transition-colors"
+            className="flex w-full items-center justify-between mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <SidebarGroupLabel>Support</SidebarGroupLabel>
+            <span>Support</span>
             <motion.div
               animate={{ rotate: expandedSections.includes('support') ? 90 : 0 }}
               transition={{ duration: 0.2 }}
@@ -242,8 +251,8 @@ export function AppSidebar() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <SidebarGroupContent>
-                  <SidebarMenu className="space-y-2">
+                <div className="space-y-1">
+                  <SidebarMenu>
                     {supportItems.map((item) => (
                       <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton 
@@ -266,11 +275,11 @@ export function AppSidebar() {
                       </SidebarMenuItem>
                     ))}
                   </SidebarMenu>
-                </SidebarGroupContent>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
-        </SidebarGroup>
+        </div>
       </SidebarContent>
       
       <SidebarFooter className="p-4 border-t border-gray-200 mt-auto space-y-4">

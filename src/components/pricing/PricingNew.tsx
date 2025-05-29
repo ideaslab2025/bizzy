@@ -15,9 +15,9 @@ const PricingNew = () => {
 
   const plans = [
     {
-      name: "Starter",
-      price: "£7.99",
-      period: "/month",
+      name: "Bronze",
+      price: "£97",
+      period: "",
       description: "Perfect for solo entrepreneurs and small startups",
       icon: <Users className="w-6 h-6" />,
       badge: null,
@@ -29,19 +29,20 @@ const PricingNew = () => {
         "Basic compliance checking",
         "1 consultation session"
       ],
-      color: "border-gray-200",
-      buttonStyle: "bg-gray-900 hover:bg-gray-800 text-white"
+      color: "border-amber-200 bg-amber-50",
+      buttonStyle: "bg-amber-600 hover:bg-amber-700 text-white",
+      textColor: "text-amber-700"
     },
     {
-      name: "Professional",
-      price: "£19.99",
-      period: "/month",
+      name: "Silver",
+      price: "£197",
+      period: "",
       description: "Ideal for growing businesses and established companies",
       icon: <Building2 className="w-6 h-6" />,
       badge: <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Most Popular</Badge>,
       planId: "silver",
       features: [
-        "Everything in Starter",
+        "Everything in Bronze",
         "Advanced business tools",
         "Priority email & chat support",
         "Custom document generation",
@@ -49,29 +50,53 @@ const PricingNew = () => {
         "Advanced compliance monitoring",
         "Team collaboration tools"
       ],
-      color: "border-blue-200 shadow-lg",
-      buttonStyle: "bg-blue-600 hover:bg-blue-700 text-white"
+      color: "border-gray-200 bg-gray-50 shadow-lg",
+      buttonStyle: "bg-gray-600 hover:bg-gray-700 text-white",
+      textColor: "text-gray-700"
     },
     {
-      name: "Enterprise",
-      price: "£49.99",
-      period: "/month",
+      name: "Gold",
+      price: "£297",
+      period: "",
+      description: "Advanced solution for established businesses",
+      icon: <Crown className="w-6 h-6" />,
+      badge: null,
+      planId: "gold",
+      features: [
+        "Everything in Silver",
+        "Premium business tools",
+        "Priority phone support",
+        "Advanced integrations",
+        "5 consultation sessions",
+        "Custom branding options",
+        "Advanced analytics",
+        "Dedicated support"
+      ],
+      color: "border-yellow-200 bg-yellow-50",
+      buttonStyle: "bg-yellow-600 hover:bg-yellow-700 text-white",
+      textColor: "text-yellow-700"
+    },
+    {
+      name: "Platinum",
+      price: "£497",
+      period: "",
       description: "Comprehensive solution for large organizations",
       icon: <Crown className="w-6 h-6" />,
       badge: <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">Premium</Badge>,
-      planId: "gold",
+      planId: "platinum",
       features: [
-        "Everything in Professional",
+        "Everything in Gold",
         "Unlimited consultations",
         "Dedicated account manager",
         "Custom integrations",
-        "Advanced analytics",
         "White-label options",
         "24/7 phone support",
-        "Legal review services"
+        "Legal review services",
+        "Priority development requests"
       ],
-      color: "border-purple-200",
-      buttonStyle: "bg-purple-600 hover:bg-purple-700 text-white"
+      color: "border-purple-200 bg-purple-50",
+      buttonStyle: "bg-purple-600 hover:bg-purple-700 text-white",
+      textColor: "text-purple-700"
     }
   ];
 
@@ -155,7 +180,7 @@ const PricingNew = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-8xl mx-auto">
           {plans.map((plan, index) => (
             <Card key={plan.name} className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300`}>
               {plan.badge && (
@@ -166,13 +191,15 @@ const PricingNew = () => {
               
               <CardHeader className="text-center pb-8">
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  {plan.icon}
-                  <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
+                  <div className={plan.textColor}>
+                    {plan.icon}
+                  </div>
+                  <CardTitle className={`text-2xl font-bold ${plan.textColor}`}>{plan.name}</CardTitle>
                 </div>
                 
                 <div className="mb-4">
                   <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                  <span className="text-gray-600">{plan.period}</span>
+                  {plan.period && <span className="text-gray-600">{plan.period}</span>}
                 </div>
                 
                 <CardDescription className="text-gray-600 text-base">

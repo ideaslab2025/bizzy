@@ -70,7 +70,7 @@ const Dashboard = () => {
               <div className="flex items-center gap-3">
                 <ThemeToggle />
                 
-                {/* Notifications with Enhanced Hover */}
+                {/* Enhanced Notifications */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -80,17 +80,17 @@ const Dashboard = () => {
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="relative text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200"
+                        className="relative rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 hover:text-gray-900"
                       >
                         <Bell className="w-5 h-5" />
                         {hasNotifications && (
                           <motion.span
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
-                            className="absolute -top-1 -right-1 flex h-3 w-3"
+                            className="absolute top-1 right-1 flex h-3 w-3"
                           >
                             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                            <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
+                            <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
                           </motion.span>
                         )}
                       </Button>
@@ -109,7 +109,7 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* User Menu with Enhanced Hover */}
+                {/* Enhanced User Menu */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -118,7 +118,7 @@ const Dashboard = () => {
                     >
                       <Button 
                         variant="ghost" 
-                        className="flex items-center gap-2 text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200"
+                        className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-md text-gray-700 hover:text-gray-900"
                       >
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                           <User className="w-4 h-4 text-white" />
