@@ -1,11 +1,11 @@
-
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Bell, User, ChevronDown, Settings, LogOut, MessageCircle, X } from "lucide-react";
+import { ArrowLeft, Bell, User, ChevronDown, Settings, LogOut, MessageCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useGuidanceProgress } from "@/hooks/useGuidanceProgress";
 import { SidebarSection } from "@/components/guidance/SidebarSection";
+import { GuidanceStep } from "@/components/guidance/GuidanceStep";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,47 +16,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import BizzyChat from "@/components/BizzyChat";
-import { EnhancedGuidanceSection } from "@/types/guidance";
-
-// Mock guidance sections data for now
-const guidanceSections: EnhancedGuidanceSection[] = [
-  {
-    id: 1,
-    title: "Launch Essentials",
-    description: "Get your business started with the basics",
-    order_number: 1,
-    icon: "rocket",
-    estimated_time_minutes: 120,
-    priority_order: 1,
-    deadline_days: 7,
-    color_theme: "blue",
-    created_at: new Date().toISOString()
-  },
-  {
-    id: 2,
-    title: "Financial Setup",
-    description: "Set up your business finances",
-    order_number: 2,
-    icon: "dollar-sign",
-    estimated_time_minutes: 90,
-    priority_order: 2,
-    deadline_days: 14,
-    color_theme: "green",
-    created_at: new Date().toISOString()
-  },
-  {
-    id: 3,
-    title: "Legal & Compliance",
-    description: "Ensure your business is legally compliant",
-    order_number: 3,
-    icon: "shield",
-    estimated_time_minutes: 150,
-    priority_order: 3,
-    deadline_days: 21,
-    color_theme: "red",
-    created_at: new Date().toISOString()
-  }
-];
+import { guidanceSections } from "@/data/guidance-data";
+import { EnhancedGuidanceSection, GuidanceStepType } from "@/types/guidance";
 
 const EnhancedGuidedHelp = () => {
   const { user } = useAuth();
@@ -76,6 +37,7 @@ const EnhancedGuidedHelp = () => {
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(true);
   const [activeSection, setActiveSection] = useState<EnhancedGuidanceSection | null>(null);
+  const [activeStep, setActiveStep] = useState<GuidanceStepType | null>(null);
 
   // Get user display name
   const getUserDisplayName = () => {
@@ -89,26 +51,48 @@ const EnhancedGuidedHelp = () => {
   };
 
   useEffect(() => {
-    // Extract section from URL
+    // Extract section and step from URL
     const params = new URLSearchParams(location.search);
     const sectionId = params.get('section');
+    const stepNumber = params.get('step');
 
-    // Find the section based on the URL parameters
+    // Find the section and step based on the URL parameters
     if (sectionId) {
       const section = guidanceSections.find(s => s.id === parseInt(sectionId));
       if (section) {
         setActiveSection(section);
       }
     }
+    if (sectionId && stepNumber) {
+      const section = guidanceSections.find(s => s.id === parseInt(sectionId));
+      if (section) {
+        const step = section.steps.find(step => step.step === parseInt(stepNumber));
+        if (step) {
+          setActiveStep(step);
+        }
+      }
+    }
   }, [location.search]);
 
   const handleSectionClick = (section: EnhancedGuidanceSection) => {
     setActiveSection(section);
-    navigate(`/guided-help?section=${section.id}`);
+    setActiveStep(section.steps[0]); // Automatically open the first step
+    navigate(`/guided-help?section=${section.id}&step=${section.steps[0].step}`);
+  };
+
+  const handleStepClick = (step: GuidanceStepType) => {
+      setActiveStep(step);
+      if (activeSection) {
+        navigate(`/guided-help?section=${activeSection.id}&step=${step.step}`);
+      }
   };
 
   const isSectionCompleted = (sectionId: number) => {
     return completedSections.has(sectionId);
+  };
+
+  const isStepCompleted = (sectionId: number, stepNumber: number) => {
+    return completedSteps.has(`${sectionId}-${stepNumber}`);
   };
 
   const toggleComplete = (sectionId: number) => {
@@ -116,7 +100,7 @@ const EnhancedGuidedHelp = () => {
   };
 
   const getSectionProgress = (sectionId: number) => {
-    return sectionProgress[sectionId]?.progress || 0;
+    return sectionProgress.get(sectionId) || 0;
   };
 
   const isSectionLocked = (sectionId: number) => {
@@ -174,7 +158,7 @@ const EnhancedGuidedHelp = () => {
                     )}
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
+                <DropdownMenuContent align="end" className="w-80">
                   <div className="p-4 border-b">
                     <h3 className="font-semibold">Notifications</h3>
                   </div>
@@ -201,7 +185,7 @@ const EnhancedGuidedHelp = () => {
                     <ChevronDown className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
+                <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem>
                     <User className="w-4 h-4 mr-2" />
                     Profile
@@ -236,7 +220,7 @@ const EnhancedGuidedHelp = () => {
         <motion.aside 
           className="w-56 bg-gradient-to-b from-blue-600 to-blue-800 min-h-[calc(100vh-5rem)] shadow-xl"
           initial={false}
-          animate={{ width: mobileMenuOpen ? 256 : 224 }}
+          animate={{ width: mobileMenuOpen ? 256 : 256 }}
         >
           <nav className="p-4 space-y-2">
             {guidanceSections.map(section => (
@@ -255,42 +239,15 @@ const EnhancedGuidedHelp = () => {
 
         {/* Main Content Area */}
         <main className="flex-1 p-6">
-          {activeSection ? (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">{activeSection.title}</h2>
-                  <p className="text-gray-600 mt-2">{activeSection.description}</p>
-                </div>
-                <Button
-                  onClick={() => toggleComplete(activeSection.id)}
-                  variant={isSectionCompleted(activeSection.id) ? "default" : "outline"}
-                  className="flex items-center gap-2"
-                >
-                  {isSectionCompleted(activeSection.id) ? "Completed" : "Mark Complete"}
-                </Button>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="font-medium text-blue-900 mb-2">Section Progress</h3>
-                  <div className="w-full bg-blue-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${getSectionProgress(activeSection.id)}%` }}
-                    />
-                  </div>
-                  <p className="text-sm text-blue-700 mt-2">
-                    {getSectionProgress(activeSection.id)}% complete
-                  </p>
-                </div>
-                
-                <div className="text-gray-600">
-                  <p>Estimated time: {activeSection.estimated_time_minutes} minutes</p>
-                  <p>Priority level: {activeSection.priority_order}</p>
-                </div>
-              </div>
-            </div>
+          {activeSection && activeStep ? (
+            <GuidanceStep 
+              section={activeSection}
+              step={activeStep}
+              onStepClick={handleStepClick}
+              isStepCompleted={isStepCompleted(activeSection.id, activeStep.step)}
+              isSectionCompleted={isSectionCompleted(activeSection.id)}
+              toggleComplete={() => toggleComplete(activeSection.id)}
+            />
           ) : (
             <div className="text-center text-gray-600 mt-12">
               {progressLoading ? (
