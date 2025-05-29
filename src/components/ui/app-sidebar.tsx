@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Home, FileText, HelpCircle, Settings, BookOpen, Badge, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -169,24 +170,24 @@ export function AppSidebar() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <SidebarMenu>
+                <SidebarMenu className="flex flex-col space-y-3">
                   {menuItems.map((item) => (
-                    <SidebarMenuItem key={item.title} className="mb-3">
+                    <SidebarMenuItem key={item.title} className="block mb-2 last:mb-0">
                       <SidebarMenuButton 
                         asChild
                         isActive={location.pathname === item.url}
                         className={`
                           relative group transition-all duration-200 ease-out
-                          hover:bg-gray-100 hover:translate-x-1 hover:shadow-sm
+                          hover:bg-gray-100 hover:shadow-sm
                           data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 
                           data-[active=true]:border-l-4 data-[active=true]:border-blue-500
                           data-[active=true]:ml-0 data-[active=true]:pl-4
-                          rounded-lg py-2.5 px-4 text-base font-medium
+                          rounded-lg h-auto py-3 px-4 text-base font-medium
                         `}
                       >
                         <button 
                           onClick={() => navigate(item.url)}
-                          className="flex items-center w-full text-left"
+                          className="flex items-center w-full text-left h-full"
                         >
                           <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
                           <div className="flex-1 min-w-0">
@@ -206,7 +207,7 @@ export function AppSidebar() {
                                 </motion.div>
                               )}
                             </div>
-                            <p className="text-xs text-gray-500 mt-1 group-data-[active=true]:text-blue-500 leading-relaxed">
+                            <p className="text-xs text-gray-500 mt-0.5 group-data-[active=true]:text-blue-500 leading-relaxed leading-[1.4]">
                               {item.description}
                             </p>
                           </div>
@@ -247,21 +248,21 @@ export function AppSidebar() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <SidebarMenu>
+                <SidebarMenu className="flex flex-col space-y-3">
                   {supportItems.map((item) => (
-                    <SidebarMenuItem key={item.title} className="mb-3">
+                    <SidebarMenuItem key={item.title} className="block mb-2 last:mb-0">
                       <SidebarMenuButton 
                         asChild
-                        className="hover:bg-gray-100 hover:translate-x-1 transition-all duration-200 rounded-lg py-2.5 px-4"
+                        className="hover:bg-gray-100 transition-all duration-200 rounded-lg h-auto py-3 px-4"
                       >
                         <button 
                           onClick={() => navigate(item.url)}
-                          className="flex items-center w-full text-left"
+                          className="flex items-center w-full text-left h-full"
                         >
                           <item.icon className="w-5 h-5 mr-3 text-gray-600" />
                           <div>
                             <span className="text-gray-700 font-medium">{item.title}</span>
-                            <p className="text-xs text-gray-500 mt-1 leading-relaxed">{item.description}</p>
+                            <p className="text-xs text-gray-500 mt-0.5 leading-relaxed leading-[1.4]">{item.description}</p>
                           </div>
                         </button>
                       </SidebarMenuButton>
