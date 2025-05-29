@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Menu, Star, User, LogOut, Check, Sparkles, Zap, Shield } from "lucide-react";
+import { Menu, Star, User, LogOut, Check, Sparkles, Zap, Shield, Users, Building2, Crown } from "lucide-react";
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import BizzyCharacter from "@/components/BizzyCharacter";
@@ -95,6 +95,8 @@ const Index = () => {
       name: "Bronze",
       price: "£97",
       description: "Perfect for solo entrepreneurs and small startups",
+      icon: <Users className="w-6 h-6" />,
+      badge: null,
       planId: "bronze",
       features: [
         "Basic business setup guidance",
@@ -111,8 +113,9 @@ const Index = () => {
       name: "Silver", 
       price: "£197",
       description: "Ideal for growing businesses and established companies",
-      planId: "silver",
+      icon: <Building2 className="w-6 h-6" />,
       badge: <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Most Popular</Badge>,
+      planId: "silver",
       features: [
         "Everything in Bronze",
         "Advanced business tools",
@@ -130,6 +133,8 @@ const Index = () => {
       name: "Gold",
       price: "£297", 
       description: "Advanced solution for established businesses",
+      icon: <Crown className="w-6 h-6" />,
+      badge: null,
       planId: "gold",
       features: [
         "Everything in Silver",
@@ -149,8 +154,9 @@ const Index = () => {
       name: "Platinum",
       price: "£497",
       description: "Comprehensive solution for large organizations",
-      planId: "platinum",
+      icon: <Crown className="w-6 h-6" />,
       badge: <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">Premium</Badge>,
+      planId: "platinum",
       features: [
         "Everything in Gold",
         "Unlimited consultations",
@@ -453,6 +459,109 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section id="pricing" className="py-20 bg-gradient-to-br from-blue-800/50 to-blue-900/30">
+        <div className="container mx-auto px-4">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Sparkles className="w-8 h-8 text-blue-600" />
+              <h1 className="text-4xl font-bold text-white">Choose Your Plan</h1>
+            </div>
+            <p className="text-xl text-blue-100/80 max-w-3xl mx-auto">
+              Select the perfect plan to accelerate your business journey with Bizzy's comprehensive tools and expert guidance.
+            </p>
+          </div>
+
+          {/* Pricing Cards */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-8xl mx-auto">
+            {plans.map((plan, index) => (
+              <Card 
+                key={plan.name} 
+                className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300`}
+              >
+                {plan.badge && (
+                  <div className="absolute top-4 right-4">
+                    {plan.badge}
+                  </div>
+                )}
+                
+                <CardHeader className="text-center pb-8">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <div className={plan.textColor}>
+                      {plan.icon}
+                    </div>
+                    <CardTitle className={`text-2xl font-bold ${plan.textColor}`}>{plan.name}</CardTitle>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                  </div>
+                  
+                  <CardDescription className="text-gray-600 text-base">
+                    {plan.description}
+                  </CardDescription>
+                </CardHeader>
+
+                <CardContent className="pt-0">
+                  <Link to={`/pricing?plan=${plan.planId}`}>
+                    <Button 
+                      className={`w-full mb-8 py-6 text-lg font-semibold ${plan.buttonStyle}`}
+                    >
+                      <Zap className="w-5 h-5 mr-2" />
+                      Get Started
+                    </Button>
+                  </Link>
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-900 flex items-center gap-2">
+                      <Shield className="w-4 h-4" />
+                      What's included:
+                    </h4>
+                    <ul className="space-y-3">
+                      {plan.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-start gap-3">
+                          <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Why Choose Bizzy */}
+          <div className="mt-20 text-center">
+            <h2 className="text-3xl font-bold text-white mb-8">Why Choose Bizzy?</h2>
+            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                  <Star className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2 text-white">Expert Guidance</h3>
+                <p className="text-blue-100/80">Professional advice from business setup experts</p>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                  <Shield className="w-8 h-8 text-green-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2 text-white">Compliance Assured</h3>
+                <p className="text-blue-100/80">Stay compliant with UK business regulations</p>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                  <Zap className="w-8 h-8 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2 text-white">Fast Setup</h3>
+                <p className="text-blue-100/80">Get your business running in days, not weeks</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-br from-blue-800/50 to-blue-900/30">
         <div className="container mx-auto px-4 text-center">
@@ -463,6 +572,47 @@ const Index = () => {
               Get Started Today
             </Button>
           </Link>
+        </div>
+      </section>
+
+      {/* FAQs Section */}
+      <section id="faqs" ref={faqsRef} className="py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-12 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
+          <div className="max-w-3xl mx-auto">
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1" className="border-blue-900/30">
+                <AccordionTrigger className="text-blue-100 hover:text-[#3b82f6]">What makes Bizzy different from other business setup services?</AccordionTrigger>
+                <AccordionContent className="text-blue-100/80">
+                  Bizzy focuses on what happens after company formation. While others stop at incorporation, we provide ongoing support with step-by-step guidance, AI assistance, and professionally assured document templates to help you navigate the complex post-setup phase.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2" className="border-blue-900/30">
+                <AccordionTrigger className="text-blue-100 hover:text-[#3b82f6]">How does the AI assistant help my business?</AccordionTrigger>
+                <AccordionContent className="text-blue-100/80">
+                  Our AI assistant provides instant answers to your business questions, guides you to relevant resources, and helps you understand complex procedures through simple explanations. It's like having a business advisor available 24/7.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3" className="border-blue-900/30">
+                <AccordionTrigger className="text-blue-100 hover:text-[#3b82f6]">Are the document templates legally compliant?</AccordionTrigger>
+                <AccordionContent className="text-blue-100/80">
+                  Yes, all our document templates are professionally assured and regularly updated to ensure compliance with current UK business regulations. They're automatically populated with your company details for convenience.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-4" className="border-blue-900/30">
+                <AccordionTrigger className="text-blue-100 hover:text-[#3b82f6]">Can I skip sections that don't apply to my business?</AccordionTrigger>
+                <AccordionContent className="text-blue-100/80">
+                  Absolutely! Our step-by-step guidance includes skippable sections, so you can focus only on what's relevant to your specific business needs and industry requirements.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-5" className="border-blue-900/30">
+                <AccordionTrigger className="text-blue-100 hover:text-[#3b82f6]">How quickly can I get my business processes set up?</AccordionTrigger>
+                <AccordionContent className="text-blue-100/80">
+                  With Bizzy's streamlined approach and pre-built templates, most businesses can complete their essential setup processes in days rather than weeks. The exact time depends on your business complexity and chosen plan.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
         </div>
       </section>
 
