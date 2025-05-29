@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Home, FileText, HelpCircle, Settings, BookOpen, Badge, ChevronRight } from 'lucide-react';
+import { Home, FileText, BookOpen, Settings, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -41,15 +40,6 @@ const menuItems = [
     url: "/dashboard/settings",
     icon: Settings,
     description: "Account & preferences"
-  },
-];
-
-const supportItems = [
-  {
-    title: "Help Center",
-    url: "/help",
-    icon: HelpCircle,
-    description: "FAQs & support"
   },
 ];
 
@@ -109,7 +99,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200">
-      <SidebarHeader className="p-3 border-b border-gray-200">
+      <SidebarHeader className="p-2 border-b border-gray-200">
         {/* Minimized Bizzy Logo */}
         <div className="flex items-center justify-center mb-1">
           <motion.a
@@ -125,7 +115,7 @@ export function AppSidebar() {
               <img 
                 src="/lovable-uploads/aa4b1538-01d2-4242-8776-815bd99470d9.png" 
                 alt="Bizzy" 
-                className="h-20 w-auto"
+                className="h-16 w-auto"
               />
             </div>
           </motion.a>
@@ -145,9 +135,9 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="px-3 pt-2 flex-1 overflow-y-auto">
+      <SidebarContent className="px-3 pt-1 flex-1 overflow-y-auto">
         {/* Main Menu Section */}
-        <div className="mb-4">
+        <div className="mb-2">
           <motion.button
             onClick={() => toggleSection('main')}
             className="flex w-full items-center justify-between mb-1 px-2 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
@@ -210,59 +200,6 @@ export function AppSidebar() {
                             <p className="text-xs text-gray-500 mt-0 group-data-[active=true]:text-blue-500 leading-tight">
                               {item.description}
                             </p>
-                          </div>
-                        </button>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Divider */}
-        <div className="my-3 border-t border-gray-200" />
-
-        {/* Support Section */}
-        <div className="mb-4">
-          <motion.button
-            onClick={() => toggleSection('support')}
-            className="flex w-full items-center justify-between mb-1 px-2 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <span>Support</span>
-            <motion.div
-              animate={{ rotate: expandedSections.includes('support') ? 90 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <ChevronRight className="w-3 h-3" />
-            </motion.div>
-          </motion.button>
-          
-          <AnimatePresence>
-            {expandedSections.includes('support') && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
-              >
-                <SidebarMenu className="flex flex-col space-y-1">
-                  {supportItems.map((item) => (
-                    <SidebarMenuItem key={item.title} className="block mb-0.5 last:mb-0">
-                      <SidebarMenuButton 
-                        asChild
-                        className="hover:bg-gray-100 transition-all duration-200 rounded-lg h-auto py-2 px-2"
-                      >
-                        <button 
-                          onClick={() => navigate(item.url)}
-                          className="flex items-center w-full text-left h-full"
-                        >
-                          <item.icon className="w-4 h-4 mr-2 text-gray-600" />
-                          <div>
-                            <span className="text-gray-700 font-medium text-sm">{item.title}</span>
-                            <p className="text-xs text-gray-500 mt-0 leading-tight">{item.description}</p>
                           </div>
                         </button>
                       </SidebarMenuButton>
