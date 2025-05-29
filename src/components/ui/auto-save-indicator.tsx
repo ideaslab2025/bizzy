@@ -1,20 +1,25 @@
 
 import React from 'react';
-import { Check, Undo } from 'lucide-react';
+import { Check, Undo, Wifi, WifiOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { CloudSyncIndicator } from './cloud-sync-indicator';
 
 interface AutoSaveIndicatorProps {
   status: 'idle' | 'saving' | 'saved' | 'error';
   lastSaved?: Date;
   onRetry?: () => void;
   className?: string;
+  showCloudSync?: boolean;
+  progress?: number;
 }
 
 export const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
   status,
   lastSaved,
   onRetry,
-  className
+  className,
+  showCloudSync = true,
+  progress = 0
 }) => {
   const formatTime = (date: Date) => {
     const now = new Date();
@@ -26,6 +31,33 @@ export const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
     return `${minutes} minutes ago`;
   };
 
+  // Map auto-save status to cloud sync status
+  const getSyncStatus = () => {
+    switch (status) {
+      case 'saving':
+        return 'uploading';
+      case 'saved':
+        return 'synced';
+      case 'error':
+        return 'error';
+      default:
+        return 'synced';
+    }
+  };
+
+  if (showCloudSync) {
+    return (
+      <CloudSyncIndicator
+        status={getSyncStatus()}
+        lastSaved={lastSaved}
+        progress={progress}
+        onForceSync={onRetry}
+        className={className}
+      />
+    );
+  }
+
+  // Fallback to simple indicator
   return (
     <div className={cn("flex items-center gap-2 text-xs transition-all duration-300", className)}>
       {status === 'saving' && (

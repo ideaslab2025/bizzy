@@ -1,15 +1,18 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, X, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
-import { CommandPalette } from "@/components/ui/command-palette";
+import { EnhancedCommandPalette } from "@/components/ui/enhanced-command-palette";
 import { RecentlyViewed } from "@/components/ui/recently-viewed";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { FirstViewSpotlight } from "@/components/ui/first-view-spotlight";
 import { NeonGlow } from "@/components/ui/neon-glow";
+import { CloudSyncIndicator } from "@/components/ui/cloud-sync-indicator";
+import { ContextualFAQ } from "@/components/ui/contextual-faq";
+import { UndoKeyboardHandler } from "@/components/ui/undo-toast";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -30,9 +33,17 @@ const Dashboard = () => {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [bizzyOpen, setBizzyOpen] = useState(false);
   const [hasNotifications] = useState(true);
+  const [syncStatus, setSyncStatus] = useState<'typing' | 'uploading' | 'syncing' | 'synced' | 'offline' | 'error'>('synced');
+  const [userBehavior, setUserBehavior] = useState({
+    dwellTime: 0,
+    errorOccurred: false,
+    repetitiveClicks: false,
+    navigationLoops: false,
+    hoveredFeatures: [] as string[]
+  });
 
   // Listen for keyboard shortcut to open command palette
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
@@ -42,6 +53,39 @@ const Dashboard = () => {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Track user behavior for contextual FAQ
+  useEffect(() => {
+    const startTime = Date.now();
+    let clickCount = 0;
+    let lastClickTime = 0;
+
+    const trackClick = () => {
+      const now = Date.now();
+      if (now - lastClickTime < 1000) {
+        clickCount++;
+      } else {
+        clickCount = 1;
+      }
+      lastClickTime = now;
+
+      if (clickCount > 3) {
+        setUserBehavior(prev => ({ ...prev, repetitiveClicks: true }));
+      }
+    };
+
+    const trackDwellTime = setInterval(() => {
+      const dwellTime = Date.now() - startTime;
+      setUserBehavior(prev => ({ ...prev, dwellTime }));
+    }, 1000);
+
+    document.addEventListener('click', trackClick);
+
+    return () => {
+      document.removeEventListener('click', trackClick);
+      clearInterval(trackDwellTime);
+    };
   }, []);
 
   return (
@@ -92,6 +136,14 @@ const Dashboard = () => {
 
               {/* Right Actions */}
               <div className="flex items-center gap-3">
+                {/* Cloud Sync Indicator */}
+                <CloudSyncIndicator
+                  status={syncStatus}
+                  lastSynced={new Date(Date.now() - 30000)}
+                  onForceSync={() => setSyncStatus('syncing')}
+                  onShowHistory={() => console.log('Show sync history')}
+                />
+
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -193,15 +245,19 @@ const Dashboard = () => {
             <Outlet />
           </div>
           
-          {/* Recently Viewed Sidebar */}
+          {/* Enhanced Recently Viewed Sidebar */}
           <div className="fixed right-4 top-1/2 -translate-y-1/2 z-30">
-            <RecentlyViewed />
+            <RecentlyViewed 
+              showSearch={true}
+              groupByTime={true}
+              collapsed={false}
+            />
           </div>
         </main>
       </div>
       
-      {/* Command Palette */}
-      <CommandPalette 
+      {/* Enhanced Command Palette */}
+      <EnhancedCommandPalette 
         open={commandPaletteOpen} 
         onOpenChange={setCommandPaletteOpen}
       />
@@ -211,6 +267,17 @@ const Dashboard = () => {
         isOpen={bizzyOpen} 
         onClose={() => setBizzyOpen(false)} 
       />
+      
+      {/* Contextual FAQ */}
+      <ContextualFAQ
+        currentPage={window.location.pathname}
+        userBehavior={userBehavior}
+        onContactSupport={() => setBizzyOpen(true)}
+        onDismiss={(context) => console.log('FAQ dismissed for:', context)}
+      />
+      
+      {/* Global Keyboard Handlers */}
+      <UndoKeyboardHandler />
       
       <FirstViewSpotlight />
     </SidebarProvider>
