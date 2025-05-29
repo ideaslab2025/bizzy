@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -128,11 +127,36 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
 }) => {
   const { items, togglePin, removeItem, clearAll } = useRecentlyViewed();
   const navigate = useNavigate();
+  const cardRef = useRef<HTMLDivElement>(null);
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+
+  // Click outside to close
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
+        setIsVisible(false);
+      }
+    };
+
+    if (isVisible) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [isVisible]);
+
+  // Reset visibility when items change
+  useEffect(() => {
+    if (items.length > 0) {
+      setIsVisible(true);
+    }
+  }, [items.length]);
 
   const filteredItems = items.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -194,12 +218,12 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
     setIsSelectionMode(false);
   };
 
-  if (items.length === 0) {
+  if (items.length === 0 || !isVisible) {
     return null;
   }
 
   return (
-    <Card className={cn("glass-card", className)}>
+    <Card ref={cardRef} className={cn("glass-card", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
