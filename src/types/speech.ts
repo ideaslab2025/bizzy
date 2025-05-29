@@ -2,34 +2,18 @@
 // Speech Recognition API type declarations
 declare global {
   interface Window {
-    SpeechRecognition?: any;
-    webkitSpeechRecognition?: any;
-  }
-  
-  interface SpeechRecognition extends EventTarget {
-    continuous: boolean;
-    interimResults: boolean;
-    onresult: (event: SpeechRecognitionEvent) => void;
-    onerror: () => void;
-    start: () => void;
-    stop: () => void;
-  }
-  
-  interface SpeechRecognitionEvent {
-    results: SpeechRecognitionResultList;
-  }
-  
-  interface SpeechRecognitionResultList {
-    [index: number]: SpeechRecognitionResult;
-  }
-  
-  interface SpeechRecognitionResult {
-    [index: number]: SpeechRecognitionAlternative;
-  }
-  
-  interface SpeechRecognitionAlternative {
-    transcript: string;
+    SpeechRecognition?: typeof SpeechRecognition;
+    webkitSpeechRecognition?: typeof SpeechRecognition;
   }
 }
+
+// Use interface merging to extend existing types if they exist
+interface SpeechRecognitionConstructor {
+  new (): SpeechRecognition;
+}
+
+// Only declare if not already available
+declare var SpeechRecognition: SpeechRecognitionConstructor;
+declare var webkitSpeechRecognition: SpeechRecognitionConstructor;
 
 export {};
