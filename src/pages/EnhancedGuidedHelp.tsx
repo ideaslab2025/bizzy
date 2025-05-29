@@ -240,14 +240,41 @@ const EnhancedGuidedHelp = () => {
         {/* Main Content Area */}
         <main className="flex-1 p-6">
           {activeSection && activeStep ? (
-            <GuidanceStep 
-              section={activeSection}
-              step={activeStep}
-              onStepClick={handleStepClick}
-              isStepCompleted={isStepCompleted(activeSection.id, activeStep.step)}
-              isSectionCompleted={isSectionCompleted(activeSection.id)}
-              toggleComplete={() => toggleComplete(activeSection.id)}
-            />
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">{activeSection.title}</h2>
+                  <p className="text-gray-600 mt-2">{activeSection.description}</p>
+                </div>
+                <Button
+                  onClick={() => toggleComplete(activeSection.id)}
+                  variant={isSectionCompleted(activeSection.id) ? "default" : "outline"}
+                  className="flex items-center gap-2"
+                >
+                  {isSectionCompleted(activeSection.id) ? "Completed" : "Mark Complete"}
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h3 className="font-medium text-blue-900 mb-2">Section Progress</h3>
+                  <div className="w-full bg-blue-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${getSectionProgress(activeSection.id)}%` }}
+                    />
+                  </div>
+                  <p className="text-sm text-blue-700 mt-2">
+                    {getSectionProgress(activeSection.id)}% complete
+                  </p>
+                </div>
+                
+                <div className="text-gray-600">
+                  <p>Estimated time: {activeSection.estimated_time_minutes} minutes</p>
+                  <p>Priority level: {activeSection.priority_order}</p>
+                </div>
+              </div>
+            </div>
           ) : (
             <div className="text-center text-gray-600 mt-12">
               {progressLoading ? (
