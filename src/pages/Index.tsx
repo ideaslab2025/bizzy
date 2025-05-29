@@ -88,7 +88,7 @@ const Index = () => {
   // Pricing plans for homepage display only
   const plans = [{
     name: "Bronze",
-    price: "£97",
+    price: "£100",
     description: "Perfect for solo entrepreneurs and small startups",
     icon: <Users className="w-6 h-6" />,
     badge: null,
@@ -99,7 +99,7 @@ const Index = () => {
     textColor: "text-amber-700"
   }, {
     name: "Silver",
-    price: "£197",
+    price: "£200",
     description: "Ideal for growing businesses and established companies",
     icon: <Building2 className="w-6 h-6" />,
     badge: <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Most Popular</Badge>,
@@ -110,7 +110,7 @@ const Index = () => {
     textColor: "text-gray-700"
   }, {
     name: "Gold",
-    price: "£297",
+    price: "£350",
     description: "Advanced solution for established businesses",
     icon: <Crown className="w-6 h-6" />,
     badge: null,
@@ -121,7 +121,7 @@ const Index = () => {
     textColor: "text-yellow-700"
   }, {
     name: "Platinum",
-    price: "£497",
+    price: "£500",
     description: "Comprehensive solution for large organizations",
     icon: <Crown className="w-6 h-6" />,
     badge: <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">Premium</Badge>,

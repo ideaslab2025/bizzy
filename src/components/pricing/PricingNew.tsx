@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +38,7 @@ const PricingNew = () => {
   const plans = [
     {
       name: "Bronze",
-      price: "£97",
+      price: "£100",
       period: "",
       description: "Perfect for solo entrepreneurs and small startups",
       icon: <Users className="w-6 h-6" />,
@@ -58,7 +57,7 @@ const PricingNew = () => {
     },
     {
       name: "Silver",
-      price: "£197",
+      price: "£200",
       period: "",
       description: "Ideal for growing businesses and established companies",
       icon: <Building2 className="w-6 h-6" />,
@@ -79,7 +78,7 @@ const PricingNew = () => {
     },
     {
       name: "Gold",
-      price: "£297",
+      price: "£350",
       period: "",
       description: "Advanced solution for established businesses",
       icon: <Crown className="w-6 h-6" />,
@@ -101,7 +100,7 @@ const PricingNew = () => {
     },
     {
       name: "Platinum",
-      price: "£497",
+      price: "£500",
       period: "",
       description: "Comprehensive solution for large organizations",
       icon: <Crown className="w-6 h-6" />,

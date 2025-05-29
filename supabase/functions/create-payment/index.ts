@@ -11,7 +11,7 @@ const corsHeaders = {
 const PLAN_PRICES = {
   bronze: 10000,   // £100.00 in pence
   silver: 20000,   // £200.00 in pence
-  gold: 30000,     // £300.00 in pence
+  gold: 35000,     // £350.00 in pence
   platinum: 50000, // £500.00 in pence
 };
 
