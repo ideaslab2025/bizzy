@@ -67,7 +67,6 @@ export const ContextualFAQ: React.FC<ContextualFAQProps> = ({
   onDismiss
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFAQ, setSelectedFAQ] = useState<string | null>(null);
 
@@ -80,15 +79,8 @@ export const ContextualFAQ: React.FC<ContextualFAQProps> = ({
       userBehavior.navigationLoops;
 
     if (shouldShow && !isVisible) {
-      // Show notification dot first
+      // Show the panel directly without notification dot
       setIsVisible(true);
-      
-      // Auto-expand after 3 seconds if user doesn't interact
-      const timer = setTimeout(() => {
-        setIsExpanded(true);
-      }, 3000);
-
-      return () => clearTimeout(timer);
     }
   }, [userBehavior, isVisible]);
 
@@ -125,7 +117,6 @@ export const ContextualFAQ: React.FC<ContextualFAQProps> = ({
 
   const handleDismiss = () => {
     setIsVisible(false);
-    setIsExpanded(false);
     onDismiss?.(currentPage);
   };
 
@@ -139,126 +130,104 @@ export const ContextualFAQ: React.FC<ContextualFAQProps> = ({
         exit={{ x: 400, opacity: 0 }}
         className="fixed right-4 top-1/2 -translate-y-1/2 z-50 w-96"
       >
-        {!isExpanded ? (
-          // Notification dot
-          <motion.div
-            className="relative cursor-pointer"
-            onClick={() => setIsExpanded(true)}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center shadow-lg">
-              <HelpCircle className="w-6 h-6 text-white" />
+        {/* FAQ panel - no notification dot */}
+        <Card className="glass-card shadow-2xl">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg">Need Help?</CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDismiss}
+                className="h-6 w-6 p-0"
+              >
+                <X className="w-4 h-4" />
+              </Button>
             </div>
-            <motion.div
-              className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full"
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap">
-              Need help with {currentPage.replace('/', '')}?
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                placeholder="Search FAQs..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
             </div>
-          </motion.div>
-        ) : (
-          // Expanded FAQ panel
-          <Card className="glass-card shadow-2xl">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Need Help?</CardTitle>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleDismiss}
-                  className="h-6 w-6 p-0"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
-                  placeholder="Search FAQs..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </CardHeader>
+          </CardHeader>
 
-            <CardContent className="space-y-3 max-h-96 overflow-y-auto">
-              {getRelevantFAQs().map((faq) => (
-                <motion.div
-                  key={faq.id}
-                  className="border rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                  onClick={() => setSelectedFAQ(selectedFAQ === faq.id ? null : faq.id)}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium text-sm">{faq.question}</h4>
-                    <div className="flex items-center gap-2">
-                      {faq.hasDemo && (
-                        <Badge variant="outline" className="text-xs">
-                          <Play className="w-3 h-3 mr-1" />
-                          Demo
-                        </Badge>
-                      )}
-                      <ChevronRight 
-                        className={cn(
-                          "w-4 h-4 transition-transform",
-                          selectedFAQ === faq.id && "rotate-90"
-                        )}
-                      />
-                    </div>
-                  </div>
-                  
-                  <AnimatePresence>
-                    {selectedFAQ === faq.id && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="mt-3 text-sm text-gray-600"
-                      >
-                        <p>{faq.answer}</p>
-                        
-                        <div className="flex gap-2 mt-3">
-                          {faq.hasDemo && (
-                            <Button size="sm" variant="outline">
-                              <Play className="w-3 h-3 mr-1" />
-                              Show me how
-                            </Button>
-                          )}
-                          <Button size="sm" variant="ghost">
-                            Helpful?
-                          </Button>
-                        </div>
-                      </motion.div>
+          <CardContent className="space-y-3 max-h-96 overflow-y-auto">
+            {getRelevantFAQs().map((faq) => (
+              <motion.div
+                key={faq.id}
+                className="border rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                onClick={() => setSelectedFAQ(selectedFAQ === faq.id ? null : faq.id)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium text-sm">{faq.question}</h4>
+                  <div className="flex items-center gap-2">
+                    {faq.hasDemo && (
+                      <Badge variant="outline" className="text-xs">
+                        <Play className="w-3 h-3 mr-1" />
+                        Demo
+                      </Badge>
                     )}
-                  </AnimatePresence>
-                </motion.div>
-              ))}
-
-              {getRelevantFAQs().length === 0 && (
-                <div className="text-center py-6 text-gray-500">
-                  <HelpCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p>No FAQs found for "{searchQuery}"</p>
+                    <ChevronRight 
+                      className={cn(
+                        "w-4 h-4 transition-transform",
+                        selectedFAQ === faq.id && "rotate-90"
+                      )}
+                    />
+                  </div>
                 </div>
-              )}
+                
+                <AnimatePresence>
+                  {selectedFAQ === faq.id && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="mt-3 text-sm text-gray-600"
+                    >
+                      <p>{faq.answer}</p>
+                      
+                      <div className="flex gap-2 mt-3">
+                        {faq.hasDemo && (
+                          <Button size="sm" variant="outline">
+                            <Play className="w-3 h-3 mr-1" />
+                            Show me how
+                          </Button>
+                        )}
+                        <Button size="sm" variant="ghost">
+                          Helpful?
+                        </Button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
 
-              <div className="pt-3 border-t">
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={onContactSupport}
-                >
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Contact Support
-                </Button>
+            {getRelevantFAQs().length === 0 && (
+              <div className="text-center py-6 text-gray-500">
+                <HelpCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p>No FAQs found for "{searchQuery}"</p>
               </div>
-            </CardContent>
-          </Card>
-        )}
+            )}
+
+            <div className="pt-3 border-t">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={onContactSupport}
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Contact Support
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </motion.div>
     </AnimatePresence>
   );
