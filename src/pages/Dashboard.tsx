@@ -12,6 +12,12 @@ import { FirstViewSpotlight } from "@/components/ui/first-view-spotlight";
 import { NeonGlow } from "@/components/ui/neon-glow";
 import { Button } from "@/components/ui/button";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -47,7 +53,16 @@ const Dashboard = () => {
           <header className="sticky top-0 z-40 h-16 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-b border-gray-200 shadow-sm">
             <div className="h-full px-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200" />
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Toggle Sidebar</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
                   Dashboard
                 </h1>
@@ -145,7 +160,7 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced Get Help Button */}
+                {/* Enhanced Talk to Bizzy Button */}
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -153,7 +168,7 @@ const Dashboard = () => {
                   className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
                 >
                   <HelpCircle className="w-4 h-4" />
-                  <span>Get Help</span>
+                  <span>Talk to Bizzy</span>
                 </motion.button>
               </div>
             </div>
