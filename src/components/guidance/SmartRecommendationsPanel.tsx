@@ -1,20 +1,19 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
 import { 
-  Brain, 
+  Lightbulb, 
   Clock, 
-  AlertTriangle, 
-  Zap, 
+  ArrowRight, 
   TrendingUp,
-  ChevronRight,
-  Target
+  AlertCircle,
+  RefreshCw
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { useSmartRecommendations } from '@/hooks/useSmartRecommendations';
+import { cn } from '@/lib/utils';
 
 interface SmartRecommendationsPanelProps {
   userId: string;
@@ -31,196 +30,167 @@ export const SmartRecommendationsPanel: React.FC<SmartRecommendationsPanelProps>
   companyAge,
   onNavigateToStep
 }) => {
-  const { 
-    recommendations, 
-    isLoading, 
-    error, 
-    getTopRecommendations 
-  } = useSmartRecommendations(
-    userId, 
-    completedStepIds, 
-    currentSectionCategory, 
-    companyAge
-  );
+  const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
-  if (isLoading) {
-    return (
-      <Card className="border-blue-200 bg-blue-50">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-3">
-            <Brain className="w-5 h-5 animate-pulse text-blue-600" />
-            <span className="text-blue-800">Analyzing your progress...</span>
-          </div>
-        </CardContent>
-      </Card>
+  try {
+    const { getTopRecommendations, loading } = useSmartRecommendations(
+      userId,
+      completedStepIds,
+      currentSectionCategory,
+      companyAge
     );
-  }
 
-  if (error) {
+    const recommendations = getTopRecommendations(3);
+
+    const handleRetry = () => {
+      setError(null);
+      setRetryCount(prev => prev + 1);
+    };
+
+    if (error) {
+      return (
+        <Card className="border-orange-200 bg-orange-50">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3 text-orange-800">
+              <AlertCircle className="w-5 h-5" />
+              <div className="flex-1">
+                <h3 className="font-semibold">Unable to load recommendations</h3>
+                <p className="text-sm text-orange-600 mt-1">
+                  We're having trouble getting your personalized recommendations right now.
+                </p>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleRetry}
+                className="border-orange-300 text-orange-700 hover:bg-orange-100"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Try Again
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    if (loading) {
+      return (
+        <Card className="border-blue-200 bg-blue-50">
+          <CardContent className="p-6">
+            <div className="animate-pulse space-y-3">
+              <div className="h-4 bg-blue-200 rounded w-3/4"></div>
+              <div className="h-3 bg-blue-200 rounded w-1/2"></div>
+              <div className="h-8 bg-blue-200 rounded"></div>
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    if (!recommendations || recommendations.length === 0) {
+      return (
+        <Card className="border-gray-200 bg-gray-50">
+          <CardContent className="p-6">
+            <div className="text-center text-gray-600">
+              <Lightbulb className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+              <p className="font-medium">No recommendations available</p>
+              <p className="text-sm">Keep working through your sections to unlock personalized suggestions!</p>
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-blue-800">
+              <TrendingUp className="w-5 h-5" />
+              Smart Recommendations
+              <Badge variant="secondary" className="ml-auto bg-blue-100 text-blue-800">
+                {recommendations.length}
+              </Badge>
+            </CardTitle>
+            <p className="text-sm text-blue-600">
+              Personalized next steps based on your progress and business needs
+            </p>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="space-y-3">
+              {recommendations.map((rec, index) => (
+                <motion.div
+                  key={rec.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start gap-3 hover:bg-blue-100 h-auto p-4 text-left",
+                      "border-blue-200 hover:border-blue-300 transition-all duration-200"
+                    )}
+                    onClick={() => onNavigateToStep(rec.section_id, rec.order_number)}
+                  >
+                    <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0 animate-pulse"></div>
+                    <div className="flex-1">
+                      <div className="font-medium text-sm mb-1">{rec.title}</div>
+                      <div className="text-xs text-gray-600 flex items-center gap-3">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {rec.estimated_time_minutes}m
+                        </span>
+                        {rec.quick_win && (
+                          <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                            Quick Win
+                          </Badge>
+                        )}
+                        {rec.priority_score && rec.priority_score > 8 && (
+                          <Badge variant="secondary" className="text-xs bg-orange-100 text-orange-700">
+                            High Priority
+                          </Badge>
+                        )}
+                      </div>
+                      {rec.reason && (
+                        <div className="text-xs text-blue-600 mt-1 italic">
+                          {rec.reason}
+                        </div>
+                      )}
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+
+  } catch (err) {
+    console.error('SmartRecommendationsPanel error:', err);
+    
     return (
       <Card className="border-red-200 bg-red-50">
         <CardContent className="p-6">
-          <div className="flex items-center gap-3">
-            <AlertTriangle className="w-5 h-5 text-red-600" />
-            <span className="text-red-800">Unable to load recommendations</span>
+          <div className="flex items-center gap-3 text-red-800">
+            <AlertCircle className="w-5 h-5" />
+            <div className="flex-1">
+              <h3 className="font-semibold">Recommendations Unavailable</h3>
+              <p className="text-sm text-red-600 mt-1">
+                There was an error loading your personalized recommendations. This doesn't affect your progress tracking.
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
     );
   }
-
-  const topRecommendations = getTopRecommendations(3);
-  const hasRecommendations = topRecommendations.length > 0;
-
-  if (!hasRecommendations) {
-    return (
-      <Card className="border-green-200 bg-green-50">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-3">
-            <Target className="w-5 h-5 text-green-600" />
-            <span className="text-green-800">Great job! You're on track with your business setup.</span>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      {/* Main Recommendations */}
-      <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-blue-800">
-            <Brain className="w-5 h-5" />
-            Smart Recommendations
-            <Badge variant="secondary" className="ml-auto">
-              {topRecommendations.length} suggested
-            </Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {topRecommendations.map((rec, index) => (
-              <motion.div
-                key={rec.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-3 hover:bg-blue-100 h-auto p-4"
-                  onClick={() => onNavigateToStep(rec.section_id, rec.order_number)}
-                >
-                  <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
-                    rec.deadline_days && rec.deadline_days <= 7 ? "bg-red-100" :
-                    rec.quick_win ? "bg-green-100" : "bg-blue-100"
-                  )}>
-                    {rec.deadline_days && rec.deadline_days <= 7 ? (
-                      <AlertTriangle className="w-4 h-4 text-red-600" />
-                    ) : rec.quick_win ? (
-                      <Zap className="w-4 h-4 text-green-600" />
-                    ) : (
-                      <TrendingUp className="w-4 h-4 text-blue-600" />
-                    )}
-                  </div>
-                  
-                  <div className="flex-1 text-left">
-                    <div className="font-medium">{rec.title}</div>
-                    <div className="text-sm text-gray-600 flex items-center gap-2 mt-1">
-                      <span>{rec.section_title}</span>
-                      {rec.deadline_days && rec.deadline_days <= 7 && (
-                        <Badge variant="destructive" className="text-xs">
-                          Due in {rec.deadline_days}d
-                        </Badge>
-                      )}
-                      {rec.quick_win && (
-                        <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
-                          Quick Win
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <div className="flex items-center gap-1 text-sm text-gray-500">
-                      <Clock className="w-3 h-3" />
-                      {rec.estimated_time_minutes}m
-                    </div>
-                    <ChevronRight className="w-4 h-4" />
-                  </div>
-                </Button>
-              </motion.div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Category-specific recommendations */}
-      {recommendations.urgent.length > 0 && (
-        <Card className="border-red-200 bg-red-50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-red-800">
-              <AlertTriangle className="w-5 h-5" />
-              Urgent Actions
-              <Badge variant="destructive" className="ml-auto">
-                {recommendations.urgent.length}
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {recommendations.urgent.slice(0, 2).map((urgent) => (
-                <Button
-                  key={urgent.id}
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 hover:bg-red-100"
-                  onClick={() => onNavigateToStep(urgent.section_id, urgent.order_number)}
-                >
-                  <span className="flex-1 text-left truncate">{urgent.title}</span>
-                  <span className="text-xs text-red-600">
-                    {urgent.deadline_days}d left
-                  </span>
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {recommendations.quickWins.length > 0 && (
-        <Card className="border-green-200 bg-green-50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-800">
-              <Zap className="w-5 h-5" />
-              Quick Wins
-              <Badge variant="secondary" className="ml-auto bg-green-100 text-green-700">
-                {recommendations.quickWins.length}
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {recommendations.quickWins.slice(0, 3).map((quickWin) => (
-                <Button
-                  key={quickWin.id}
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 hover:bg-green-100"
-                  onClick={() => onNavigateToStep(quickWin.section_id, quickWin.order_number)}
-                >
-                  <span className="flex-1 text-left truncate">{quickWin.title}</span>
-                  <span className="text-xs text-green-600">
-                    {quickWin.estimated_time_minutes}m
-                  </span>
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-    </div>
-  );
 };

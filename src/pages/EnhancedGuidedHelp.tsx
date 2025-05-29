@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -29,7 +29,8 @@ import {
   Umbrella,
   TrendingUp,
   Monitor,
-  Briefcase
+  Briefcase,
+  HelpCircle
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -65,6 +66,7 @@ interface QuickWinStep extends EnhancedGuidanceStep {
 const EnhancedGuidedHelp = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const isMobile = useIsMobile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sections, setSections] = useState<EnhancedGuidanceSection[]>([]);
@@ -122,6 +124,26 @@ const EnhancedGuidedHelp = () => {
       calculateCompanyAge();
     }
   }, [user]);
+
+  // Handle URL parameters for navigation
+  useEffect(() => {
+    const sectionParam = searchParams.get('section');
+    const stepParam = searchParams.get('step');
+    
+    if (sectionParam) {
+      const sectionId = parseInt(sectionParam);
+      // Find the business section by ID and get its order number
+      const businessSection = businessSections.find(bs => bs.id === sectionId);
+      if (businessSection) {
+        setCurrentSection(businessSection.order_number);
+      }
+    }
+    
+    if (stepParam) {
+      const stepNumber = parseInt(stepParam);
+      setCurrentStep(stepNumber);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (currentSection) {
@@ -371,10 +393,27 @@ const EnhancedGuidedHelp = () => {
     }
   };
 
+  // Function to check completion state from localStorage
+  const getSectionCompletionFromStorage = (sectionId: number) => {
+    return localStorage.getItem(`bizzy_section_${sectionId}_complete`) === 'true';
+  };
+
+  // Function to save completion state to localStorage
+  const saveSectionCompletionToStorage = (sectionId: number, completed: boolean) => {
+    if (completed) {
+      localStorage.setItem(`bizzy_section_${sectionId}_complete`, 'true');
+    } else {
+      localStorage.removeItem(`bizzy_section_${sectionId}_complete`);
+    }
+  };
+
   const toggleSectionCompleted = async (sectionId: number) => {
     if (!user) return;
     
-    const isNowCompleted = !completedSections.has(sectionId);
+    const isNowCompleted = !completedSections.has(sectionId) && !getSectionCompletionFromStorage(sectionId);
+    
+    // Save to localStorage
+    saveSectionCompletionToStorage(sectionId, isNowCompleted);
     
     const { data: sectionSteps, error } = await supabase
       .from('guidance_steps')
@@ -485,7 +524,7 @@ const EnhancedGuidedHelp = () => {
   };
 
   const isSectionCompleted = (sectionId: number) => {
-    return completedSections.has(sectionId);
+    return completedSections.has(sectionId) || getSectionCompletionFromStorage(sectionId);
   };
 
   const isLastStepInSection = () => {
@@ -594,9 +633,8 @@ const EnhancedGuidedHelp = () => {
         <h2 className="text-lg font-semibold mb-4">Your Business Setup Journey</h2>
         <div className="space-y-3">
           {businessSections.map((section) => {
-            const isCompleted = completedSections.has(section.id);
+            const isCompleted = isSectionCompleted(section.id);
             const isCurrent = currentSection === section.order_number;
-            const IconComponent = section.icon;
             
             return (
               <SidebarSection
@@ -675,7 +713,7 @@ const EnhancedGuidedHelp = () => {
           />
         )}
 
-        {/* Top Bar - Mobile responsive */}
+        {/* Top Bar - Mobile responsive with matching dashboard styling */}
         <div className="bg-[#0088cc] border-b p-4 flex justify-between items-center">
           <div className="flex-1">
             <h1 className="text-xl lg:text-2xl font-bold text-white">
@@ -687,35 +725,48 @@ const EnhancedGuidedHelp = () => {
           </div>
           
           <div className="flex items-center gap-2 lg:gap-4">
-            <Button 
+            {/* Talk to Bizzy Button - Matching dashboard styling */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setShowChatbot(true)}
-              className="bg-white text-[#0088cc] hover:bg-gray-100 text-xs lg:text-sm px-2 lg:px-4"
-              size={isMobile ? "sm" : "default"}
+              className="flex items-center gap-2 px-4 py-2 bg-white text-[#0088cc] rounded-lg hover:bg-gray-100 transition-all duration-200 font-medium shadow-sm hover:shadow-md text-xs lg:text-sm"
             >
-              {isMobile ? "Bizzy" : "Talk to Bizzy"}
-            </Button>
+              <HelpCircle className="w-4 h-4" />
+              <span>{isMobile ? "Bizzy" : "Talk to Bizzy"}</span>
+            </motion.button>
             
-            {/* Notifications - Mobile optimized */}
+            {/* Notifications - Matching dashboard styling */}
             <div
               className="relative"
               onMouseEnter={() => setShowNotifications(true)}
               onMouseLeave={() => setShowNotifications(false)}
             >
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="relative text-white hover:bg-white/20"
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <Bell className="w-4 h-4 lg:w-5 lg:h-5" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 lg:w-4 lg:h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                  3
-                </span>
-              </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="relative text-white hover:bg-white/20 rounded-lg p-2 transition-all duration-200"
+                >
+                  <Bell className="w-4 h-4 lg:w-5 lg:h-5" />
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute top-1 right-1 flex h-3 w-3"
+                  >
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
+                  </motion.span>
+                </Button>
+              </motion.div>
 
               {showNotifications && !isMobile && (
-                <div className="absolute right-0 top-full mt-2 w-80 bg-white border rounded-lg shadow-lg z-50">
-                  <div className="p-4 border-b bg-gray-50">
-                    <h3 className="font-medium text-gray-900">Notifications</h3>
+                <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                  <div className="p-4 border-b border-gray-100 bg-gray-50">
+                    <h3 className="font-semibold text-gray-900">Notifications</h3>
                   </div>
                   <div className="p-4 space-y-3">
                     <div className="text-sm">
@@ -735,34 +786,38 @@ const EnhancedGuidedHelp = () => {
               )}
             </div>
 
-            {/* Account button */}
+            {/* Account button - Matching dashboard styling */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="flex items-center gap-1 lg:gap-2 text-white hover:bg-white/20"
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <User className="h-3 w-3 lg:h-4 lg:w-4" />
-                  <span className="hidden sm:inline text-xs lg:text-sm">
-                    {user?.email?.split('@')[0] || 'Account'}
-                  </span>
-                </Button>
+                  <Button 
+                    variant="ghost" 
+                    className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 text-white hover:bg-white/20"
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="font-medium hidden md:inline-block">
+                      {user?.email?.split('@')[0] || 'Account'}
+                    </span>
+                  </Button>
+                </motion.div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard/settings" className="flex items-center gap-2 w-full cursor-pointer">
-                    <User className="h-4 w-4" />
-                    Account Settings
-                  </Link>
+              <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
+                <DropdownMenuItem className="hover:bg-gray-50">
+                  <User className="w-4 h-4 mr-2" />
+                  Profile
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem 
                   onClick={handleSignOut}
-                  className="flex items-center gap-2 text-red-600 hover:text-red-600 cursor-pointer"
+                  className="hover:bg-gray-50 text-red-600"
                 >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -771,7 +826,7 @@ const EnhancedGuidedHelp = () => {
 
         {/* Content with Smart Recommendations */}
         <div className="flex-1 p-4 lg:p-8 pb-20 lg:pb-32">
-          {/* Smart Recommendations Panel */}
+          {/* Smart Recommendations Panel - with error handling */}
           {user && completedStepIds.length >= 0 && (
             <div className="mb-6">
               <React.Suspense fallback={<div className="animate-pulse h-32 bg-gray-200 rounded"></div>}>

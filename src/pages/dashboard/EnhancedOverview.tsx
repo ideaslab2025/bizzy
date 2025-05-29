@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -161,15 +162,20 @@ const EnhancedOverview: React.FC = () => {
   };
 
   // Extended sections data with icons for the visual journey map
-  const navigateToSection = (sectionOrderNumber: number) => {
-    navigate(`/guided-help?section=${sectionOrderNumber}`);
+  const navigateToSection = (sectionId: number) => {
+    navigate(`/guided-help?section=${sectionId}`);
   };
 
   const navigateToStep = (sectionId: number, stepNumber: number) => {
     const section = analytics?.sections.find(s => s.id === sectionId);
     if (section) {
-      navigate(`/guided-help?section=${section.order_number}&step=${stepNumber}`);
+      navigate(`/guided-help?section=${section.id}&step=${stepNumber}`);
     }
+  };
+
+  // Function to check completion state from localStorage
+  const getSectionCompletionFromStorage = (sectionId: number) => {
+    return localStorage.getItem(`bizzy_section_${sectionId}_complete`) === 'true';
   };
 
   if (loading || !analytics) {
@@ -199,7 +205,7 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Visual Journey Map - Updated with shared data and proper connecting lines */}
+      {/* Visual Journey Map - Fixed horizontal layout with connecting lines */}
       <Card className="p-6">
         <CardHeader className="px-0 pt-0">
           <CardTitle className="flex items-center gap-2">
@@ -209,20 +215,20 @@ const EnhancedOverview: React.FC = () => {
         </CardHeader>
         <CardContent className="px-0">
           <div className="relative">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4 relative">
+            <div className="flex gap-4 overflow-x-auto pb-4 relative">
               {businessSections.map((section, index) => {
                 const IconComponent = section.icon;
                 const completion = analytics?.completionBySection[section.id] || 0;
-                const isCompleted = completion === 100;
+                const isCompleted = completion === 100 || getSectionCompletionFromStorage(section.id);
                 const isCurrent = section.id === analytics?.currentSection?.id;
                 const isNext = index < businessSections.length - 1;
                 
                 return (
-                  <div key={section.id} className="relative">
+                  <div key={section.id} className="relative flex-shrink-0">
                     <motion.div
-                      className="flex flex-col items-center cursor-pointer"
+                      className="flex flex-col items-center cursor-pointer min-w-[120px]"
                       whileHover={{ scale: 1.05 }}
-                      onClick={() => navigateToSection(section.order_number)}
+                      onClick={() => navigateToSection(section.id)}
                     >
                       {/* Section node */}
                       <div className={cn(
@@ -253,9 +259,9 @@ const EnhancedOverview: React.FC = () => {
                     </motion.div>
 
                     {/* Connecting line to next section */}
-                    {isNext && index % 5 !== 4 && (
+                    {isNext && (
                       <div className={cn(
-                        "absolute top-6 left-full w-full h-0.5 -translate-y-1/2 z-0 hidden md:block",
+                        "absolute top-6 left-full w-4 h-0.5 -translate-y-1/2 z-0",
                         isCompleted ? "bg-green-500" : "bg-gray-300"
                       )} />
                     )}
@@ -367,7 +373,7 @@ const EnhancedOverview: React.FC = () => {
                 
                 <Button 
                   className="w-full"
-                  onClick={() => navigateToSection(analytics.currentSection.order_number)}
+                  onClick={() => navigateToSection(analytics.currentSection.id)}
                 >
                   Continue Section
                   <ArrowRight className="w-4 h-4 ml-2" strokeWidth={2} />

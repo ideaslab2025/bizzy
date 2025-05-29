@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { CheckCircle, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { EnhancedGuidanceSection } from '@/types/guidance';
+import { businessSections } from '@/data/businessSections';
 
 interface SidebarSectionProps {
   section: EnhancedGuidanceSection & {
@@ -23,6 +24,10 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
   onClick
 }) => {
   const progress = section.total_steps > 0 ? (section.completed_steps / section.total_steps) : 0;
+  
+  // Get the matching business section for icon
+  const businessSection = businessSections.find(bs => bs.id === section.id);
+  const IconComponent = businessSection?.icon;
 
   return (
     <motion.button
@@ -62,8 +67,19 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
               className="transition-all duration-500"
             />
           </svg>
-          <div className="absolute inset-0 flex items-center justify-center text-2xl">
-            {isCompleted ? "✓" : section.emoji || section.order_number}
+          <div className="absolute inset-0 flex items-center justify-center">
+            {isCompleted ? (
+              <CheckCircle className="w-6 h-6 text-green-500" />
+            ) : IconComponent ? (
+              <IconComponent 
+                className={cn(
+                  "w-6 h-6",
+                  isActive ? "text-[#0088cc]" : businessSection?.iconColor || "text-white"
+                )} 
+              />
+            ) : (
+              <span className="text-lg font-bold">{section.order_number}</span>
+            )}
           </div>
         </div>
         
