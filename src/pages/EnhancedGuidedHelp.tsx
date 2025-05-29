@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -16,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import BizzyChat from "@/components/BizzyChat";
 import { guidanceSections } from "@/data/guidance-data";
-import { EnhancedGuidanceSection, GuidanceStepType } from "@/types/guidance";
+import { EnhancedGuidanceSection } from "@/types/guidance";
 
 const EnhancedGuidedHelp = () => {
   const { user } = useAuth();
@@ -36,7 +37,6 @@ const EnhancedGuidedHelp = () => {
   const [showChatbot, setShowChatbot] = useState(false);
   const [showNotifications, setShowNotifications] = useState(true);
   const [activeSection, setActiveSection] = useState<EnhancedGuidanceSection | null>(null);
-  const [activeStep, setActiveStep] = useState<GuidanceStepType | null>(null);
 
   // Get user display name
   const getUserDisplayName = () => {
@@ -50,48 +50,26 @@ const EnhancedGuidedHelp = () => {
   };
 
   useEffect(() => {
-    // Extract section and step from URL
+    // Extract section from URL
     const params = new URLSearchParams(location.search);
     const sectionId = params.get('section');
-    const stepNumber = params.get('step');
 
-    // Find the section and step based on the URL parameters
+    // Find the section based on the URL parameters
     if (sectionId) {
       const section = guidanceSections.find(s => s.id === parseInt(sectionId));
       if (section) {
         setActiveSection(section);
       }
     }
-    if (sectionId && stepNumber) {
-      const section = guidanceSections.find(s => s.id === parseInt(sectionId));
-      if (section) {
-        const step = section.steps.find(step => step.step === parseInt(stepNumber));
-        if (step) {
-          setActiveStep(step);
-        }
-      }
-    }
   }, [location.search]);
 
   const handleSectionClick = (section: EnhancedGuidanceSection) => {
     setActiveSection(section);
-    setActiveStep(section.steps[0]); // Automatically open the first step
-    navigate(`/guided-help?section=${section.id}&step=${section.steps[0].step}`);
-  };
-
-  const handleStepClick = (step: GuidanceStepType) => {
-      setActiveStep(step);
-      if (activeSection) {
-        navigate(`/guided-help?section=${activeSection.id}&step=${step.step}`);
-      }
+    navigate(`/guided-help?section=${section.id}`);
   };
 
   const isSectionCompleted = (sectionId: number) => {
     return completedSections.has(sectionId);
-  };
-
-  const isStepCompleted = (sectionId: number, stepNumber: number) => {
-    return completedSteps.has(`${sectionId}-${stepNumber}`);
   };
 
   const toggleComplete = (sectionId: number) => {
@@ -99,7 +77,7 @@ const EnhancedGuidedHelp = () => {
   };
 
   const getSectionProgress = (sectionId: number) => {
-    return sectionProgress.get(sectionId) || 0;
+    return sectionProgress[sectionId]?.progress || 0;
   };
 
   const isSectionLocked = (sectionId: number) => {
