@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, X, HelpCircle } from "lucide-react";
@@ -176,50 +177,11 @@ const Dashboard = () => {
         onOpenChange={setCommandPaletteOpen}
       />
       
-      {/* Bizzy AI Chat Modal */}
-      <AnimatePresence>
-        {bizzyOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-            onClick={() => setBizzyOpen(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 100, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 100, scale: 0.9 }}
-              className="w-full max-w-2xl max-h-[80vh] bg-white rounded-2xl shadow-2xl overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between border-b p-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <span className="text-blue-600 font-bold text-sm">B</span>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Bizzy AI Assistant</h3>
-                    <p className="text-xs text-gray-500">Here to help you succeed</p>
-                  </div>
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setBizzyOpen(false)}
-                  className="rounded-lg p-2 hover:bg-gray-100 transition-colors"
-                >
-                  <X className="h-5 w-5 text-gray-500" />
-                </motion.button>
-              </div>
-              
-              <div className="h-96">
-                <BizzyChat />
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Bizzy AI Chat */}
+      <BizzyChat 
+        isOpen={bizzyOpen} 
+        onClose={() => setBizzyOpen(false)} 
+      />
       
       <FirstViewSpotlight />
     </SidebarProvider>
