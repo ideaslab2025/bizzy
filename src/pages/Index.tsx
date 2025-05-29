@@ -408,9 +408,7 @@ const Index = () => {
               <Sparkles className="w-8 h-8 text-blue-600" />
               <h1 className="text-4xl font-bold text-white">Choose Your Plan</h1>
             </div>
-            <p className="text-xl text-blue-100/80 max-w-3xl mx-auto">
-              Select the perfect plan to accelerate your business journey with Bizzy's comprehensive tools and expert guidance.
-            </p>
+            <p className="text-xl text-blue-100/80 max-w-3xl mx-auto">Select the perfect one-off plan (no subscriptions!) to accelerate your business journey with Bizzy's comprehensive tools and expert guidance.</p>
           </div>
 
           {/* Pricing Cards */}
