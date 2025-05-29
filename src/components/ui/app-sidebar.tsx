@@ -109,12 +109,12 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200">
-      <SidebarHeader className="p-4 border-b border-gray-200">
-        {/* Enhanced Bizzy Logo - Reduced spacing */}
-        <div className="flex items-center justify-center mb-3">
+      <SidebarHeader className="p-3 border-b border-gray-200">
+        {/* Minimized Bizzy Logo */}
+        <div className="flex items-center justify-center mb-1">
           <motion.a
             href="/"
-            className="flex items-center gap-3 group cursor-pointer transition-all duration-200"
+            className="flex items-center gap-2 group cursor-pointer transition-all duration-200"
             whileHover={{ scale: 1.02 }}
             onClick={(e) => {
               e.preventDefault();
@@ -125,16 +125,16 @@ export function AppSidebar() {
               <img 
                 src="/lovable-uploads/aa4b1538-01d2-4242-8776-815bd99470d9.png" 
                 alt="Bizzy" 
-                className="h-32 w-auto"
+                className="h-20 w-auto"
               />
             </div>
           </motion.a>
         </div>
         
-        {/* Setup Progress - Reduced margins */}
-        <div className="mt-2">
+        {/* Compact Setup Progress */}
+        <div className="mt-1">
           <p className="text-xs text-gray-500 mb-1">Setup 68% Complete</p>
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
             <motion.div 
               className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
               initial={{ width: 0 }}
@@ -145,12 +145,12 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="px-4 pt-4 flex-1 overflow-y-auto">
+      <SidebarContent className="px-3 pt-2 flex-1 overflow-y-auto">
         {/* Main Menu Section */}
-        <div className="mb-6">
+        <div className="mb-4">
           <motion.button
             onClick={() => toggleSection('main')}
-            className="flex w-full items-center justify-between mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex w-full items-center justify-between mb-1 px-2 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
           >
             <span>Main Menu</span>
             <motion.div
@@ -170,9 +170,9 @@ export function AppSidebar() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <SidebarMenu className="flex flex-col space-y-2">
+                <SidebarMenu className="flex flex-col space-y-1">
                   {menuItems.map((item) => (
-                    <SidebarMenuItem key={item.title} className="block mb-1 last:mb-0">
+                    <SidebarMenuItem key={item.title} className="block mb-0.5 last:mb-0">
                       <SidebarMenuButton 
                         asChild
                         isActive={location.pathname === item.url}
@@ -182,17 +182,17 @@ export function AppSidebar() {
                           data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 
                           data-[active=true]:border-l-4 data-[active=true]:border-blue-500
                           data-[active=true]:ml-0 data-[active=true]:pl-4
-                          rounded-lg h-auto py-2.5 px-3 text-base font-medium
+                          rounded-lg h-auto py-2 px-2 text-sm font-medium
                         `}
                       >
                         <button 
                           onClick={() => navigate(item.url)}
                           className="flex items-center w-full text-left h-full"
                         >
-                          <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
+                          <item.icon className="w-4 h-4 mr-2 flex-shrink-0" />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between">
-                              <span className="text-gray-700 group-data-[active=true]:text-blue-600 font-medium">
+                              <span className="text-gray-700 group-data-[active=true]:text-blue-600 font-medium text-sm">
                                 {item.title}
                               </span>
                               {item.isNew && (
@@ -201,13 +201,13 @@ export function AppSidebar() {
                                   animate={{ scale: 1 }}
                                   className="ml-2"
                                 >
-                                  <Badge className="px-1.5 py-0.5 text-xs bg-red-500 text-white rounded-full">
+                                  <Badge className="px-1 py-0 text-xs bg-red-500 text-white rounded-full">
                                     New
                                   </Badge>
                                 </motion.div>
                               )}
                             </div>
-                            <p className="text-xs text-gray-500 mt-0.5 group-data-[active=true]:text-blue-500 leading-relaxed leading-[1.3]">
+                            <p className="text-xs text-gray-500 mt-0 group-data-[active=true]:text-blue-500 leading-tight">
                               {item.description}
                             </p>
                           </div>
@@ -222,13 +222,13 @@ export function AppSidebar() {
         </div>
 
         {/* Divider */}
-        <div className="my-4 border-t border-gray-200" />
+        <div className="my-3 border-t border-gray-200" />
 
         {/* Support Section */}
-        <div className="mb-6">
+        <div className="mb-4">
           <motion.button
             onClick={() => toggleSection('support')}
-            className="flex w-full items-center justify-between mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex w-full items-center justify-between mb-1 px-2 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
           >
             <span>Support</span>
             <motion.div
@@ -248,21 +248,21 @@ export function AppSidebar() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <SidebarMenu className="flex flex-col space-y-2">
+                <SidebarMenu className="flex flex-col space-y-1">
                   {supportItems.map((item) => (
-                    <SidebarMenuItem key={item.title} className="block mb-1 last:mb-0">
+                    <SidebarMenuItem key={item.title} className="block mb-0.5 last:mb-0">
                       <SidebarMenuButton 
                         asChild
-                        className="hover:bg-gray-100 transition-all duration-200 rounded-lg h-auto py-2.5 px-3"
+                        className="hover:bg-gray-100 transition-all duration-200 rounded-lg h-auto py-2 px-2"
                       >
                         <button 
                           onClick={() => navigate(item.url)}
                           className="flex items-center w-full text-left h-full"
                         >
-                          <item.icon className="w-5 h-5 mr-3 text-gray-600" />
+                          <item.icon className="w-4 h-4 mr-2 text-gray-600" />
                           <div>
-                            <span className="text-gray-700 font-medium">{item.title}</span>
-                            <p className="text-xs text-gray-500 mt-0.5 leading-relaxed leading-[1.3]">{item.description}</p>
+                            <span className="text-gray-700 font-medium text-sm">{item.title}</span>
+                            <p className="text-xs text-gray-500 mt-0 leading-tight">{item.description}</p>
                           </div>
                         </button>
                       </SidebarMenuButton>
@@ -275,10 +275,10 @@ export function AppSidebar() {
         </div>
       </SidebarContent>
       
-      <SidebarFooter className="p-4 border-t border-gray-200 mt-auto space-y-4">
+      <SidebarFooter className="p-3 border-t border-gray-200 mt-auto space-y-3">
         <UpgradeButton userPlan={mockUserPlan} />
         
-        <div className="text-center text-xs text-gray-400 space-y-1">
+        <div className="text-center text-xs text-gray-400 space-y-0.5">
           <p>Bizzy Platform v2.1</p>
           <p>© 2025 Bizzy Ltd</p>
         </div>
