@@ -1,14 +1,12 @@
 
 import React, { createContext, useContext } from 'react';
-import { useCustomCursor } from '@/hooks/useCustomCursor';
 
-const CursorContext = createContext<ReturnType<typeof useCustomCursor> | null>(null);
+// Empty context since we removed custom cursor functionality
+const CursorContext = createContext<null>(null);
 
 export const useCursorContext = () => {
   const context = useContext(CursorContext);
-  if (!context) {
-    throw new Error('useCursorContext must be used within CursorProvider');
-  }
+  // Return null since we don't have cursor functionality anymore
   return context;
 };
 
@@ -17,10 +15,8 @@ interface CursorProviderProps {
 }
 
 export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
-  const cursorState = useCustomCursor();
-
   return (
-    <CursorContext.Provider value={cursorState}>
+    <CursorContext.Provider value={null}>
       {children}
     </CursorContext.Provider>
   );
