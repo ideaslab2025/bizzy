@@ -46,9 +46,8 @@ const testimonials = [
 const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [dragStartX, setDragStartX] = useState(0);
 
-  // Auto-scroll every 5 seconds when not hovered
+  // Auto-cycle every 5 seconds when not hovered
   useEffect(() => {
     if (isHovered) return;
     
@@ -122,7 +121,7 @@ const Testimonials = () => {
         </button>
 
         {/* Testimonial Carousel */}
-        <div className="relative h-80 flex items-center justify-center">
+        <div className="relative h-96 flex items-center justify-center">
           <AnimatePresence mode="wait" custom={currentIndex}>
             <motion.div
               key={currentIndex}
@@ -141,9 +140,9 @@ const Testimonials = () => {
               onDragEnd={handleDragEnd}
               className="absolute w-full flex justify-center cursor-grab active:cursor-grabbing"
             >
-              <div className="rounded-full bg-blue-900/30 border-blue-800 w-80 h-80 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+              <div className="rounded-full bg-blue-900/30 border-blue-800 w-96 h-96 flex flex-col items-center justify-center p-8 relative overflow-hidden">
                 {/* Star rating */}
-                <div className="flex items-center gap-1 mb-3">
+                <div className="flex items-center gap-1 mb-4">
                   {Array(testimonials[currentIndex].rating).fill(0).map((_, i) => (
                     <svg key={i} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
@@ -152,7 +151,7 @@ const Testimonials = () => {
                 </div>
                 
                 {/* Quote text */}
-                <div className="relative text-center mb-6">
+                <div className="relative text-center mb-6 flex-1 flex items-center">
                   <p className="text-blue-100 italic text-lg px-6 leading-relaxed">
                     <span className="text-blue-500 text-2xl font-serif">"</span>
                     {testimonials[currentIndex].text}
@@ -161,8 +160,8 @@ const Testimonials = () => {
                 </div>
                 
                 {/* Avatar and details */}
-                <div className="flex flex-col items-center mt-auto">
-                  <Avatar className="h-24 w-24 mb-3 border-2 border-blue-500">
+                <div className="flex flex-col items-center">
+                  <Avatar className="h-20 w-20 mb-3 border-2 border-blue-500">
                     <AvatarImage src={testimonials[currentIndex].image} alt={testimonials[currentIndex].name} />
                     <AvatarFallback>{testimonials[currentIndex].name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
