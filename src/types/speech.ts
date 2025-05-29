@@ -7,12 +7,15 @@ declare global {
   }
 }
 
-// Define the SpeechRecognition interface
+// Define the SpeechRecognition interface with all properties
 interface SpeechRecognition extends EventTarget {
   continuous: boolean;
   interimResults: boolean;
+  lang: string;
   onresult: ((event: SpeechRecognitionEvent) => void) | null;
   onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onstart: ((event: Event) => void) | null;
+  onend: ((event: Event) => void) | null;
   start(): void;
   stop(): void;
 }
