@@ -131,7 +131,7 @@ export const FirstViewSpotlight: React.FC = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.target.dataset.spotlightFirstView === 'true') {
+          if (entry.isIntersecting && (entry.target as HTMLElement).dataset.spotlightFirstView === 'true') {
             showSpotlight(entry.target as HTMLElement);
           }
         });
