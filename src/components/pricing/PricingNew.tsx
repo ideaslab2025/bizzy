@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const PricingNew = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
@@ -121,16 +123,19 @@ const PricingNew = () => {
     }
   ];
 
-  // Moved payment functionality from homepage
+  // Updated payment functionality with authentication check
   const handleSubscribe = async (planId: string, planName: string) => {
     console.log("Starting payment process for plan:", planName);
     
+    // Check if user is authenticated first
     if (!user) {
       toast({
-        title: "Authentication Required",
-        description: "Please log in to subscribe to a plan.",
-        variant: "destructive",
+        title: "Login Required",
+        description: "Please log in or create an account to subscribe to a plan.",
+        variant: "default",
       });
+      // Redirect to login page
+      navigate("/login");
       return;
     }
 
@@ -143,7 +148,13 @@ const PricingNew = () => {
       
       if (sessionError || !session?.access_token) {
         console.error('Session error:', sessionError);
-        throw new Error('Please log in again to continue.');
+        toast({
+          title: "Authentication Error",
+          description: "Please log in again to continue.",
+          variant: "destructive",
+        });
+        navigate("/login");
+        return;
       }
 
       console.log('Session found, calling create-payment function');
@@ -199,6 +210,23 @@ const PricingNew = () => {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Select the perfect plan to accelerate your business journey with Bizzy's comprehensive tools and expert guidance.
           </p>
+          {!user && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-md mx-auto">
+              <p className="text-blue-800 text-sm">
+                Please <button 
+                  onClick={() => navigate("/login")} 
+                  className="underline font-medium hover:text-blue-900"
+                >
+                  log in
+                </button> or <button 
+                  onClick={() => navigate("/register")} 
+                  className="underline font-medium hover:text-blue-900"
+                >
+                  create an account
+                </button> to subscribe to a plan.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Pricing Cards */}
@@ -249,7 +277,7 @@ const PricingNew = () => {
                   ) : (
                     <>
                       <Zap className="w-5 h-5 mr-2" />
-                      Select Plan
+                      {user ? 'Select Plan' : 'Login to Subscribe'}
                     </>
                   )}
                 </Button>
