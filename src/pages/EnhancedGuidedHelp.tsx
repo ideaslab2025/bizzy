@@ -16,8 +16,47 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import BizzyChat from "@/components/BizzyChat";
-import { guidanceSections } from "@/data/guidance-data";
 import { EnhancedGuidanceSection } from "@/types/guidance";
+
+// Mock guidance sections data for now
+const guidanceSections: EnhancedGuidanceSection[] = [
+  {
+    id: 1,
+    title: "Launch Essentials",
+    description: "Get your business started with the basics",
+    order_number: 1,
+    icon: "rocket",
+    estimated_time_minutes: 120,
+    priority_order: 1,
+    deadline_days: 7,
+    color_theme: "blue",
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 2,
+    title: "Financial Setup",
+    description: "Set up your business finances",
+    order_number: 2,
+    icon: "dollar-sign",
+    estimated_time_minutes: 90,
+    priority_order: 2,
+    deadline_days: 14,
+    color_theme: "green",
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 3,
+    title: "Legal & Compliance",
+    description: "Ensure your business is legally compliant",
+    order_number: 3,
+    icon: "shield",
+    estimated_time_minutes: 150,
+    priority_order: 3,
+    deadline_days: 21,
+    color_theme: "red",
+    created_at: new Date().toISOString()
+  }
+];
 
 const EnhancedGuidedHelp = () => {
   const { user } = useAuth();
@@ -26,6 +65,7 @@ const EnhancedGuidedHelp = () => {
   
   const { 
     completedSections, 
+    completedSteps, 
     sectionProgress,
     toggleSectionCompleted,
     getOverallProgress,
@@ -134,7 +174,7 @@ const EnhancedGuidedHelp = () => {
                     )}
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80">
+                <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
                   <div className="p-4 border-b">
                     <h3 className="font-semibold">Notifications</h3>
                   </div>
@@ -161,7 +201,7 @@ const EnhancedGuidedHelp = () => {
                     <ChevronDown className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
                   <DropdownMenuItem>
                     <User className="w-4 h-4 mr-2" />
                     Profile
