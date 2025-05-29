@@ -145,12 +145,12 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="px-4 py-6">
+      <SidebarContent className="px-4 pt-6">
         {/* Main Menu Section */}
         <div className="mb-8">
           <motion.button
             onClick={() => toggleSection('main')}
-            className="flex w-full items-center justify-between mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex w-full items-center justify-between mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
           >
             <span>Main Menu</span>
             <motion.div
@@ -173,7 +173,7 @@ export function AppSidebar() {
                 <div className="space-y-2">
                   <SidebarMenu>
                     {menuItems.map((item) => (
-                      <SidebarMenuItem key={item.title}>
+                      <SidebarMenuItem key={item.title} className="mb-3">
                         <SidebarMenuButton 
                           asChild
                           isActive={location.pathname === item.url}
@@ -183,7 +183,7 @@ export function AppSidebar() {
                             data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 
                             data-[active=true]:border-l-4 data-[active=true]:border-blue-500
                             data-[active=true]:ml-0 data-[active=true]:pl-4
-                            rounded-lg py-3 px-4 text-base font-medium mb-2
+                            rounded-lg py-2.5 px-4 text-base font-medium
                           `}
                         >
                           <motion.button 
@@ -232,7 +232,7 @@ export function AppSidebar() {
         <div className="mb-8">
           <motion.button
             onClick={() => toggleSection('support')}
-            className="flex w-full items-center justify-between mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex w-full items-center justify-between mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
           >
             <span>Support</span>
             <motion.div
@@ -255,10 +255,10 @@ export function AppSidebar() {
                 <div className="space-y-2">
                   <SidebarMenu>
                     {supportItems.map((item) => (
-                      <SidebarMenuItem key={item.title}>
+                      <SidebarMenuItem key={item.title} className="mb-3">
                         <SidebarMenuButton 
                           asChild
-                          className="hover:bg-gray-100 hover:translate-x-1 transition-all duration-200 rounded-lg py-3 px-4 mb-2"
+                          className="hover:bg-gray-100 hover:translate-x-1 transition-all duration-200 rounded-lg py-2.5 px-4"
                         >
                           <motion.button 
                             onClick={() => navigate(item.url)}
