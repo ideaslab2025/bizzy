@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cloud, CloudUpload, RotateCw, Check, CloudOff, AlertTriangle, Wifi, WifiOff } from 'lucide-react';
@@ -8,7 +7,7 @@ export type SyncStatus = 'typing' | 'uploading' | 'syncing' | 'synced' | 'offlin
 
 interface CloudSyncIndicatorProps {
   status: SyncStatus;
-  lastSynced?: Date;
+  lastSaved?: Date;
   progress?: number;
   onForceSync?: () => void;
   onShowHistory?: () => void;
@@ -17,7 +16,7 @@ interface CloudSyncIndicatorProps {
 
 export const CloudSyncIndicator: React.FC<CloudSyncIndicatorProps> = ({
   status,
-  lastSynced,
+  lastSaved,
   progress = 0,
   onForceSync,
   onShowHistory,
@@ -78,7 +77,7 @@ export const CloudSyncIndicator: React.FC<CloudSyncIndicatorProps> = ({
       case 'syncing':
         return 'Syncing...';
       case 'synced':
-        return lastSynced ? `Synced ${getTimeAgo(lastSynced)}` : 'Synced';
+        return lastSaved ? `Synced ${getTimeAgo(lastSaved)}` : 'Synced';
       case 'offline':
         return 'Working offline';
       case 'error':

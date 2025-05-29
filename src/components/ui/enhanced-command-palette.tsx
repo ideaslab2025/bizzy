@@ -19,6 +19,39 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
+// Extend window interface for SpeechRecognition
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+  
+  interface SpeechRecognition extends EventTarget {
+    continuous: boolean;
+    interimResults: boolean;
+    onresult: (event: SpeechRecognitionEvent) => void;
+    onerror: () => void;
+    start: () => void;
+    stop: () => void;
+  }
+  
+  interface SpeechRecognitionEvent {
+    results: SpeechRecognitionResultList;
+  }
+  
+  interface SpeechRecognitionResultList {
+    [index: number]: SpeechRecognitionResult;
+  }
+  
+  interface SpeechRecognitionResult {
+    [index: number]: SpeechRecognitionAlternative;
+  }
+  
+  interface SpeechRecognitionAlternative {
+    transcript: string;
+  }
+}
+
 interface Command {
   id: string;
   title: string;
@@ -185,7 +218,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   };
 
   // Handle calculation
-  const handleCalculation = (query: string) => {
+  const handleCalculation = (query: string): Command | null => {
     try {
       const mathExpression = query.replace(/[^0-9+\-*/().\s]/g, '');
       const result = Function(`"use strict"; return (${mathExpression})`)();
@@ -199,7 +232,9 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
         action: () => {
           navigator.clipboard.writeText(result.toString());
           onOpenChange(false);
-        }
+        },
+        preview: 'Copy result to clipboard',
+        shortcut: 'Enter'
       };
     } catch {
       return null;
