@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { Home, FileText, BookOpen, Settings, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -102,7 +103,7 @@ export function AppSidebar() {
   return (
     <Sidebar className="bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200">
       <SidebarHeader className="p-2 border-b border-gray-200">
-        {/* Minimized Bizzy Logo */}
+        {/* Bigger Bizzy Logo */}
         <div className="flex items-center justify-center mb-1">
           <motion.a
             href="/"
@@ -117,7 +118,7 @@ export function AppSidebar() {
               <img 
                 src="/lovable-uploads/aa4b1538-01d2-4242-8776-815bd99470d9.png" 
                 alt="Bizzy" 
-                className="h-16 w-auto"
+                className="h-20 w-auto"
               />
             </div>
           </motion.a>
@@ -138,8 +139,8 @@ export function AppSidebar() {
       </SidebarHeader>
       
       <SidebarContent className="px-3 pt-1 flex-1 overflow-y-auto">
-        {/* Main Menu Section */}
-        <div className="mb-2">
+        {/* Main Menu Section - removed bottom margin */}
+        <div>
           <motion.button
             onClick={() => toggleSection('main')}
             className="flex w-full items-center justify-between mb-1 px-2 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
@@ -225,3 +226,4 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
+
