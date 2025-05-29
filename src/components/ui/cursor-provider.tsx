@@ -1,6 +1,5 @@
 
 import React, { createContext, useContext } from 'react';
-import { CustomCursor } from './custom-cursor';
 import { useCustomCursor } from '@/hooks/useCustomCursor';
 
 const CursorContext = createContext<ReturnType<typeof useCustomCursor> | null>(null);
@@ -23,7 +22,6 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
   return (
     <CursorContext.Provider value={cursorState}>
       {children}
-      <CustomCursor enabled={cursorState.preferences.enabled} />
     </CursorContext.Provider>
   );
 };

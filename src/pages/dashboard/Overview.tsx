@@ -117,25 +117,19 @@ const Overview = () => {
             <button 
               className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium transition-all duration-300"
               onClick={handleNavigateToGuidedHelp}
-              data-cursor="help"
             >
               Continue Journey
             </button>
           </NeonGlow>
           
           <NeonGlow color="green" hover>
-            <button 
-              className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium transition-all duration-300"
-              data-cursor="grab"
-            >
+            <button className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium transition-all duration-300">
               Download Documents
             </button>
           </NeonGlow>
           
           <NeonGlow color="rainbow" hover>
-            <button 
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium transition-all duration-300"
-            >
+            <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium transition-all duration-300">
               Premium Features
             </button>
           </NeonGlow>
