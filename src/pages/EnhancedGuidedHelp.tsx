@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
@@ -18,7 +19,16 @@ import {
   LogOut, 
   Bell,
   Trophy,
-  Menu
+  Menu,
+  FileText,
+  Building2,
+  Calculator,
+  Users,
+  Shield,
+  Umbrella,
+  TrendingUp,
+  Monitor,
+  Briefcase
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
