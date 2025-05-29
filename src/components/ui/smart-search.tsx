@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Mic, Camera, History, TrendingUp, Sparkles, X } from 'lucide-react';
@@ -7,6 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+
+// Speech Recognition API type declarations
+declare global {
+  interface Window {
+    webkitSpeechRecognition?: any;
+    SpeechRecognition?: any;
+  }
+}
 
 interface SearchResult {
   id: string;
@@ -50,13 +57,13 @@ export const SmartSearch: React.FC<SmartSearchProps> = ({
     // Simulate AI processing delay
     await new Promise(resolve => setTimeout(resolve, 300));
     
-    // Mock intelligent results based on query
+    // Mock intelligent results based on query with proper literal types
     const mockResults: SearchResult[] = [
       {
         id: '1',
         title: 'Business Registration Form',
         excerpt: 'Complete business registration documentation for new companies...',
-        type: 'document',
+        type: 'document' as const,
         relevance: 95,
         matchReason: 'Exact match for "business registration"',
         lastModified: new Date(Date.now() - 1000 * 60 * 60 * 2),
@@ -65,7 +72,7 @@ export const SmartSearch: React.FC<SmartSearchProps> = ({
         id: '2',
         title: 'Tax Documentation Guide',
         excerpt: 'Step-by-step guide for organizing tax documents...',
-        type: 'guide',
+        type: 'guide' as const,
         relevance: 87,
         matchReason: 'Related to business documentation',
         lastModified: new Date(Date.now() - 1000 * 60 * 60 * 24),
@@ -74,7 +81,7 @@ export const SmartSearch: React.FC<SmartSearchProps> = ({
         id: '3',
         title: 'Company Formation Video',
         excerpt: 'Video tutorial on forming a new company...',
-        type: 'video',
+        type: 'video' as const,
         relevance: 82,
         matchReason: 'Contains keywords "company" and "formation"',
         lastModified: new Date(Date.now() - 1000 * 60 * 60 * 48),
@@ -122,9 +129,9 @@ export const SmartSearch: React.FC<SmartSearchProps> = ({
     return () => clearTimeout(timeoutId);
   }, [query]);
 
-  // Handle voice search
+  // Handle voice search with proper type checking
   const startVoiceSearch = () => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    if (typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
       const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
       const recognition = new SpeechRecognition();
       
@@ -134,7 +141,7 @@ export const SmartSearch: React.FC<SmartSearchProps> = ({
       
       recognition.onstart = () => setIsListening(true);
       recognition.onend = () => setIsListening(false);
-      recognition.onresult = (event) => {
+      recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setQuery(transcript);
       };
