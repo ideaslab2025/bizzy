@@ -125,7 +125,7 @@ export function AppSidebar() {
               <img 
                 src="/lovable-uploads/aa4b1538-01d2-4242-8776-815bd99470d9.png" 
                 alt="Bizzy" 
-                className="h-32 w-auto"
+                className="h-40 w-auto"
               />
             </div>
           </motion.a>
