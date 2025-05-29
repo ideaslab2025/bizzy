@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, X, HelpCircle } from "lucide-react";
@@ -18,7 +17,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { BizzyChat } from "@/components/BizzyChat";
+import BizzyChat from "@/components/BizzyChat";
 
 const Dashboard = () => {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
