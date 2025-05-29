@@ -256,6 +256,11 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="py-2 md:py-6 pb-40 relative overflow-hidden">
+        {/* Animated Gradient Mesh Background */}
+        <div className="gradient-mesh-animated">
+          <div className="gradient-orb"></div>
+        </div>
+        
         <div className="absolute inset-0 bg-gradient-to-b from-[#1d4ed8]/10 to-transparent z-0"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -274,7 +279,7 @@ const Index = () => {
                 </Button>
               </div>
             </div>
-            <div className="relative h-[500px] md:h-[600px] flex items-center justify-center -mt-32 overflow-visible">
+            <div className="relative h-[500px] md:h-[600px] flex items-center justify-center -mt-32 overflow-visible z-20">
               <img src="/lovable-uploads/642ffc5f-5961-48bc-84b1-0546760e70a3.png" alt="Business owners with paperwork" className="w-[160%] h-full object-contain hero-image" />
             </div>
           </div>
