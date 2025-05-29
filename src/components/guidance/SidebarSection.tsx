@@ -113,7 +113,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
           </p>
           {section.deadline_days && !isCompleted && (
             <p className="text-xs text-yellow-300 mt-1 flex items-center gap-1">
-              <Clock className="w-3 h-3" />
+              <Clock className="w-3 h-3" fill="none" strokeWidth={2} />
               Due in {section.deadline_days} days
             </p>
           )}
