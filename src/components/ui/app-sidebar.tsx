@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Home, FileText, HelpCircle, Settings, BookOpen, Badge, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -183,7 +182,7 @@ export function AppSidebar() {
                             data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 
                             data-[active=true]:border-l-4 data-[active=true]:border-blue-500
                             data-[active=true]:ml-0 data-[active=true]:pl-4
-                            rounded-lg py-2.5 px-4 text-base font-medium mb-3
+                            rounded-lg py-2.5 px-4 text-base font-medium mb-4
                           `}
                         >
                           <motion.button 
@@ -258,7 +257,7 @@ export function AppSidebar() {
                       <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton 
                           asChild
-                          className="hover:bg-gray-100 hover:translate-x-1 transition-all duration-200 rounded-lg py-2.5 px-4 mb-3"
+                          className="hover:bg-gray-100 hover:translate-x-1 transition-all duration-200 rounded-lg py-2.5 px-4 mb-4"
                         >
                           <motion.button 
                             onClick={() => navigate(item.url)}
