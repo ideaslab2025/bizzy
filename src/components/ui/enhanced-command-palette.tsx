@@ -93,20 +93,22 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   // Initialize speech recognition
   useEffect(() => {
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognition.current = new SpeechRecognition();
-      recognition.current.continuous = false;
-      recognition.current.interimResults = false;
-      
-      recognition.current.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        setQuery(transcript);
-        setIsListening(false);
-      };
-      
-      recognition.current.onerror = () => {
-        setIsListening(false);
-      };
+      const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognitionClass) {
+        recognition.current = new SpeechRecognitionClass();
+        recognition.current.continuous = false;
+        recognition.current.interimResults = false;
+        
+        recognition.current.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          setQuery(transcript);
+          setIsListening(false);
+        };
+        
+        recognition.current.onerror = () => {
+          setIsListening(false);
+        };
+      }
     }
   }, []);
 
@@ -201,7 +203,9 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           onOpenChange(false);
         },
         preview: 'Copy result to clipboard',
-        shortcut: 'Enter'
+        shortcut: 'Enter',
+        isRecent: false,
+        usageCount: 0
       };
     } catch {
       return null;
