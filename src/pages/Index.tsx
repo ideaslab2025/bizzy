@@ -469,7 +469,7 @@ const Index = () => {
                   <Shield className="w-8 h-8 text-green-600" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-white">Compliance Assured</h3>
-                <p className="text-blue-100/80">Stay compliant with UK business regulations, with our extensive document lib </p>
+                <p className="text-blue-100/80">Stay compliant with UK business regulations, with our extensive document library </p>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
