@@ -289,7 +289,7 @@ const EnhancedGuidedHelp = () => {
             <div className="p-4">
               <BizzyChat isOpen={showChatbot} onClose={() => setShowChatbot(false)} />
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       )}
     </div>
