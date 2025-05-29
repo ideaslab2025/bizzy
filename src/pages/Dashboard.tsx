@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Bell, Search, User, ChevronDown, Settings, LogOut, X, MessageCircle } from "lucide-react";
+import { Bell, Search, User, ChevronDown, Settings, LogOut, X, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
@@ -19,13 +19,11 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import BizzyChat from "@/components/BizzyChat";
-import { useAuth } from "@/hooks/useAuth";
 
 const Dashboard = () => {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [bizzyOpen, setBizzyOpen] = useState(false);
   const [hasNotifications] = useState(true);
-  const { user } = useAuth();
 
   // Listen for keyboard shortcut to open command palette
   React.useEffect(() => {
@@ -40,17 +38,6 @@ const Dashboard = () => {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Get user display name
-  const getUserDisplayName = () => {
-    if (user?.user_metadata?.full_name) {
-      return user.user_metadata.full_name;
-    }
-    if (user?.user_metadata?.first_name && user?.user_metadata?.last_name) {
-      return `${user.user_metadata.first_name} ${user.user_metadata.last_name}`;
-    }
-    return user?.email?.split('@')[0] || 'User';
-  };
-
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50">
@@ -60,7 +47,7 @@ const Dashboard = () => {
           <header className="sticky top-0 z-40 h-16 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-b border-gray-200 shadow-sm">
             <div className="h-full px-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200 rounded-lg" />
+                <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200" />
                 <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
                   Dashboard
                 </h1>
@@ -73,7 +60,7 @@ const Dashboard = () => {
                   <input
                     type="text"
                     placeholder="Search documents, guides..."
-                    className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:bg-gray-50 cursor-pointer"
+                    className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     onClick={() => setCommandPaletteOpen(true)}
                   />
                 </div>
@@ -83,26 +70,31 @@ const Dashboard = () => {
               <div className="flex items-center gap-3">
                 <ThemeToggle />
                 
-                {/* Enhanced Notifications with consistent hover */}
+                {/* Enhanced Notifications with proper hover */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="relative rounded-lg p-2 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 hover:scale-105"
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                     >
-                      <Bell className="w-5 h-5" />
-                      {hasNotifications && (
-                        <motion.span
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="absolute top-1 right-1 flex h-3 w-3"
-                        >
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                          <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
-                        </motion.span>
-                      )}
-                    </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="relative rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 hover:text-gray-900 hover:scale-105 transform"
+                      >
+                        <Bell className="w-5 h-5" />
+                        {hasNotifications && (
+                          <motion.span
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="absolute top-1 right-1 flex h-3 w-3"
+                          >
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                            <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
+                          </motion.span>
+                        )}
+                      </Button>
+                    </motion.div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
                     <div className="p-4 border-b border-gray-100">
@@ -117,19 +109,24 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced User Menu with consistent hover */}
+                {/* Enhanced User Menu with proper hover */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="flex items-center gap-2 rounded-lg p-2 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 hover:scale-105"
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="font-medium hidden md:inline-block">{getUserDisplayName()}</span>
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-md text-gray-700 hover:text-gray-900"
+                      >
+                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                          <User className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="font-medium hidden md:inline-block">John Doe</span>
+                        <ChevronDown className="w-4 h-4" />
+                      </Button>
+                    </motion.div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
                     <DropdownMenuItem className="hover:bg-gray-50">
@@ -148,14 +145,16 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced Talk to Bizzy Button with consistent styling */}
-                <Button
+                {/* Enhanced Get Help Button */}
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setBizzyOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hover:scale-105 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
                 >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Talk to Bizzy</span>
-                </Button>
+                  <HelpCircle className="w-4 h-4" />
+                  <span>Get Help</span>
+                </motion.button>
               </div>
             </div>
           </header>

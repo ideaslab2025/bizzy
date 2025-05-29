@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,12 +11,9 @@ import { motion } from 'framer-motion';
 import { 
   TrendingUp, Clock, FileText, Calendar, Award, 
   Zap, ArrowRight, CheckCircle, AlertTriangle,
-  Target, PlayCircle, BookOpen, Shield, Lock,
-  ShieldCheck, Umbrella, ShieldAlert, Rocket,
-  Monitor, Cpu, Briefcase, Building2, Banknote, Users, Scale, RefreshCw, UserPlus, CreditCard
+  Target, PlayCircle, BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useGuidanceProgress } from '@/hooks/useGuidanceProgress';
 
 interface DashboardAnalytics {
   overallProgress: number;
@@ -41,103 +39,12 @@ interface QuickWin {
   estimated_time_minutes: number;
 }
 
-// Section configuration with enhanced metadata and proper outline icons
-const sectionConfig = {
-  1: { 
-    icon: Rocket, 
-    color: 'text-blue-600 bg-blue-100', 
-    emoji: '🚀', 
-    title: 'Launch Essentials',
-    iconColor: '#3B82F6',
-    description: 'Get your company officially registered and set up with all government requirements.'
-  },
-  2: { 
-    icon: Banknote, 
-    color: 'text-green-600 bg-green-100', 
-    emoji: '💰', 
-    title: 'Financial Setup',
-    iconColor: '#10B981',
-    description: 'Open business accounts, register for taxes, and establish your financial foundation.'
-  },
-  3: { 
-    icon: Users, 
-    color: 'text-orange-600 bg-orange-100', 
-    emoji: '👥', 
-    title: 'Employment & HR',
-    iconColor: '#F97316',
-    description: 'Register as an employer, set up payroll, and create essential HR policies.'
-  },
-  4: { 
-    icon: Scale, 
-    color: 'text-red-600 bg-red-100', 
-    emoji: '⚖️', 
-    title: 'Legal & Compliance',
-    iconColor: '#EF4444',
-    description: 'Ensure legal compliance with contracts, terms of service, and regulatory requirements.'
-  },
-  5: { 
-    icon: RefreshCw, 
-    color: 'text-purple-600 bg-purple-100', 
-    emoji: '🔄', 
-    title: 'Ongoing Operations',
-    iconColor: '#8B5CF6',
-    description: 'Establish systems for smooth daily operations and long-term business management.'
-  },
-  6: { 
-    icon: Shield, 
-    color: 'text-indigo-600 bg-indigo-100', 
-    emoji: '🛡️', 
-    title: 'Data Protection & GDPR',
-    iconColor: '#6366F1',
-    description: 'Register with ICO, create privacy policies, and ensure GDPR compliance for your business data handling.'
-  },
-  7: { 
-    icon: Umbrella, 
-    color: 'text-amber-600 bg-amber-100', 
-    emoji: '☂️', 
-    title: 'Insurance & Risk Management',
-    iconColor: '#F59E0B',
-    description: 'Set up essential business insurance including employers\' liability, public liability, and professional indemnity.'
-  },
-  8: { 
-    icon: TrendingUp, 
-    color: 'text-emerald-600 bg-emerald-100', 
-    emoji: '📈', 
-    title: 'Business Growth & Scaling',
-    iconColor: '#10B981',
-    description: 'Plan for expansion, hiring strategies, and prepare your business for investment and scaling opportunities.'
-  },
-  9: { 
-    icon: Monitor, 
-    color: 'text-sky-600 bg-sky-100', 
-    emoji: '💻', 
-    title: 'Technology & Systems',
-    iconColor: '#0EA5E9',
-    description: 'Implement essential software, digital tools, and cybersecurity measures for efficient operations.'
-  },
-  10: { 
-    icon: Briefcase, 
-    color: 'text-rose-600 bg-rose-100', 
-    emoji: '💼', 
-    title: 'Sector-Specific Requirements',
-    iconColor: '#F43F5E',
-    description: 'Complete industry-specific registrations, licenses, and compliance requirements for your business sector.'
-  }
-};
-
 const EnhancedOverview: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { 
-    sectionProgress, 
-    completedSections, 
-    getOverallProgress, 
-    loading: progressLoading 
-  } = useGuidanceProgress();
-  
-  const [sections, setSections] = useState<any[]>([]);
-  const [quickWins, setQuickWins] = useState<any[]>([]);
-  const [analytics, setAnalytics] = useState<any>(null);
+  const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null);
+  const [quickWins, setQuickWins] = useState<QuickWin[]>([]);
+  const [deadlines, setDeadlines] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -150,13 +57,24 @@ const EnhancedOverview: React.FC = () => {
     if (!user) return;
 
     try {
-      // Fetch sections
-      const { data: sectionsData } = await supabase
+      // Fetch sections and steps
+      const { data: sections } = await supabase
         .from('guidance_sections')
         .select('*')
         .order('order_number');
 
-      // Fetch documents and other data
+      const { data: allSteps } = await supabase
+        .from('guidance_steps')
+        .select('*, guidance_sections(title)')
+        .order('order_number');
+
+      // Fetch user progress
+      const { data: progress } = await supabase
+        .from('user_guidance_progress')
+        .select('*')
+        .eq('user_id', user.id);
+
+      // Fetch documents
       const { data: documents } = await supabase
         .from('documents')
         .select('*');
@@ -167,46 +85,73 @@ const EnhancedOverview: React.FC = () => {
         .eq('user_id', user.id)
         .eq('status', 'completed');
 
-      // Enhanced sections with configuration data
-      const enhancedSections = sectionsData?.map(section => {
-        const config = sectionConfig[section.order_number as keyof typeof sectionConfig];
-        return {
-          ...section,
-          title: config?.title || section.title,
-          emoji: config?.emoji || section.emoji || section.order_number.toString(),
-          icon: config?.icon,
-          colorClass: config?.color,
-          iconColor: config?.iconColor,
-          description: config?.description
-        };
+      // Fetch quick wins
+      const completedStepIds = progress?.filter(p => p.completed).map(p => p.step_id) || [];
+      const { data: quickWinSteps } = await supabase
+        .from('guidance_steps')
+        .select('*, guidance_sections(title)')
+        .eq('quick_win', true)
+        .not('id', 'in', completedStepIds.length > 0 ? `(${completedStepIds.join(',')})` : '(0)')
+        .limit(3);
+
+      // Process data
+      const completionBySection: Record<number, number> = {};
+      sections?.forEach(section => {
+        const sectionSteps = allSteps?.filter(step => step.section_id === section.id) || [];
+        const completedSectionSteps = sectionSteps.filter(step => 
+          completedStepIds.includes(step.id)
+        );
+        completionBySection[section.id] = sectionSteps.length > 0 
+          ? (completedSectionSteps.length / sectionSteps.length) * 100 
+          : 0;
       });
 
-      setSections(enhancedSections || []);
+      const totalSteps = allSteps?.length || 0;
+      const completedSteps = completedStepIds.length;
+      const overallProgress = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
 
       // Find current section (first incomplete section)
-      const currentSection = enhancedSections?.find(section => 
-        !completedSections.has(section.id)
-      ) || enhancedSections?.[0];
+      const currentSection = sections?.find(section => 
+        completionBySection[section.id] < 100
+      ) || sections?.[0];
 
-      const overallProgress = getOverallProgress();
-      const totalCompletedSteps = Object.values(sectionProgress).reduce((sum, section) => sum + section.completedSteps, 0);
+      // Recent activities
+      const recentActivities = progress
+        ?.filter(p => p.completed)
+        .sort((a, b) => new Date(b.last_visited_at).getTime() - new Date(a.last_visited_at).getTime())
+        .slice(0, 5)
+        .map(p => {
+          const step = allSteps?.find(s => s.id === p.step_id);
+          return {
+            title: step?.title || 'Unknown step',
+            section: step?.guidance_sections?.title || 'Unknown section',
+            completedAt: p.last_visited_at
+          };
+        }) || [];
 
       setAnalytics({
         overallProgress,
-        totalSteps: Object.values(sectionProgress).reduce((sum, section) => sum + section.totalSteps, 0),
-        completedSteps: totalCompletedSteps,
+        totalSteps,
+        completedSteps,
         documentsCompleted: userDocuments?.length || 0,
         totalDocuments: documents?.length || 0,
-        totalHours: Math.round((totalCompletedSteps * 45) / 60),
+        totalHours: Math.round((completedSteps * 45) / 60), // Estimate 45 min per step
         currentSection,
-        sections: enhancedSections || [],
-        completionBySection: Object.fromEntries(
-          Object.entries(sectionProgress).map(([id, progress]) => [id, progress.progress])
-        ),
-        recentActivities: [],
-        achievements: [],
-        nextDeadline: null
+        sections: sections || [],
+        completionBySection,
+        recentActivities,
+        achievements: [], // TODO: Implement achievements
+        nextDeadline: null // TODO: Implement deadline tracking
       });
+
+      setQuickWins(quickWinSteps?.map(step => ({
+        id: step.id,
+        title: step.title,
+        section_title: step.guidance_sections?.title || '',
+        section_id: step.section_id || 0,
+        order_number: step.order_number,
+        estimated_time_minutes: step.estimated_time_minutes || 30
+      })) || []);
 
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -226,22 +171,7 @@ const EnhancedOverview: React.FC = () => {
     }
   };
 
-  const getSectionIcon = (section: any) => {
-    const config = sectionConfig[section.order_number as keyof typeof sectionConfig];
-    if (config?.icon) {
-      const IconComponent = config.icon;
-      return (
-        <IconComponent 
-          className="w-6 h-6" 
-          style={{ color: config.iconColor }}
-          strokeWidth={2}
-        />
-      );
-    }
-    return null;
-  };
-
-  if (loading || progressLoading || !analytics) {
+  if (loading || !analytics) {
     return (
       <div className="p-8">
         <div className="animate-pulse space-y-6">
@@ -294,29 +224,25 @@ const EnhancedOverview: React.FC = () => {
                   {/* Section node */}
                   <div className="relative z-10 flex flex-col items-center">
                     <div className={cn(
-                      "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all",
-                      completedSections.has(section.id) ? 
+                      "w-12 h-12 rounded-full flex items-center justify-center text-2xl border-4 transition-all",
+                      analytics.completionBySection[section.id] === 100 ? 
                         "bg-green-500 border-green-500 text-white" :
                       section.id === analytics.currentSection?.id ? 
                         "bg-blue-500 border-blue-500 text-white" : 
-                        "bg-white border-gray-300"
+                        "bg-white border-gray-300 text-gray-500"
                     )}>
-                      {completedSections.has(section.id) ? (
-                        <CheckCircle className="w-6 h-6 text-white" strokeWidth={2} />
+                      {analytics.completionBySection[section.id] === 100 ? (
+                        <CheckCircle className="w-6 h-6" />
                       ) : (
-                        <div>
-                          {getSectionIcon(section) || section.emoji || section.order_number}
-                        </div>
+                        section.emoji || section.order_number
                       )}
                     </div>
-                    <p className="text-sm mt-2 text-center font-medium max-w-20">
-                      {sectionConfig[section.order_number as keyof typeof sectionConfig]?.title || section.title}
-                    </p>
+                    <p className="text-sm mt-2 text-center font-medium">{section.title}</p>
                     <p className="text-xs text-gray-500">
-                      {Math.round(sectionProgress[section.id]?.progress || 0)}% • {section.estimated_time_minutes}min
+                      {Math.round(analytics.completionBySection[section.id])}% • {section.estimated_time_minutes}min
                     </p>
                     
-                    {section.deadline_days && !completedSections.has(section.id) && (
+                    {section.deadline_days && analytics.completionBySection[section.id] < 100 && (
                       <Badge variant="outline" className="mt-1 text-xs">
                         {section.deadline_days} days
                       </Badge>
@@ -415,9 +341,7 @@ const EnhancedOverview: React.FC = () => {
             {analytics.currentSection ? (
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-semibold text-lg">
-                    {sectionConfig[analytics.currentSection.order_number as keyof typeof sectionConfig]?.title || analytics.currentSection.title}
-                  </h3>
+                  <h3 className="font-semibold text-lg">{analytics.currentSection.title}</h3>
                   <p className="text-sm text-gray-600 mt-1">{analytics.currentSection.description}</p>
                   
                   <div className="mt-3">

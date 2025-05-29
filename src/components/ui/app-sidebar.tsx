@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Home, FileText, HelpCircle, Settings, BookOpen, Badge, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -110,7 +111,7 @@ export function AppSidebar() {
     <Sidebar className="bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200">
       <SidebarHeader className="p-6 border-b border-gray-200">
         {/* Enhanced Bizzy Logo - Even Bigger */}
-        <div className="flex items-center justify-center h-40 mb-6">
+        <div className="flex items-center justify-center h-40 mb-8">
           <motion.a
             href="/"
             className="flex items-center gap-3 group cursor-pointer transition-all duration-200"
@@ -145,8 +146,8 @@ export function AppSidebar() {
       </SidebarHeader>
       
       <SidebarContent className="px-4 pt-6 pb-8">
-        {/* Main Menu Section */}
-        <div className="mb-6">
+        {/* Main Menu Section - Much more top padding */}
+        <div className="mb-12">
           <motion.button
             onClick={() => toggleSection('main')}
             className="flex w-full items-center justify-between mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
@@ -169,10 +170,10 @@ export function AppSidebar() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="space-y-4">
+                <div className="space-y-2">
                   <SidebarMenu>
                     {menuItems.map((item) => (
-                      <SidebarMenuItem key={item.title} className="block">
+                      <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton 
                           asChild
                           isActive={location.pathname === item.url}
@@ -182,7 +183,7 @@ export function AppSidebar() {
                             data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 
                             data-[active=true]:border-l-4 data-[active=true]:border-blue-500
                             data-[active=true]:ml-0 data-[active=true]:pl-4
-                            rounded-lg py-2.5 px-4 text-base font-medium min-h-[4rem]
+                            rounded-lg py-2.5 px-4 text-base font-medium mb-3
                           `}
                         >
                           <motion.button 
@@ -209,7 +210,7 @@ export function AppSidebar() {
                                   </motion.div>
                                 )}
                               </div>
-                              <p className="text-xs text-gray-500 mt-0.5 group-data-[active=true]:text-blue-500 leading-normal">
+                              <p className="text-xs text-gray-500 mt-0.5 group-data-[active=true]:text-blue-500">
                                 {item.description}
                               </p>
                             </div>
@@ -225,9 +226,9 @@ export function AppSidebar() {
         </div>
 
         {/* Divider */}
-        <div className="my-4 border-t border-gray-200" />
+        <div className="my-8 border-t border-gray-200" />
 
-        {/* Support Section */}
+        {/* Support Section - More spacing */}
         <div className="mb-12">
           <motion.button
             onClick={() => toggleSection('support')}
@@ -251,13 +252,13 @@ export function AppSidebar() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="space-y-4">
+                <div className="space-y-2">
                   <SidebarMenu>
                     {supportItems.map((item) => (
-                      <SidebarMenuItem key={item.title} className="block">
+                      <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton 
                           asChild
-                          className="hover:bg-gray-100 hover:translate-x-1 transition-all duration-200 rounded-lg py-2.5 px-4 min-h-[4rem]"
+                          className="hover:bg-gray-100 hover:translate-x-1 transition-all duration-200 rounded-lg py-2.5 px-4 mb-3"
                         >
                           <motion.button 
                             onClick={() => navigate(item.url)}
@@ -268,7 +269,7 @@ export function AppSidebar() {
                             <item.icon className="w-5 h-5 mr-3 text-gray-600" />
                             <div>
                               <span className="text-gray-700 font-medium">{item.title}</span>
-                              <p className="text-xs text-gray-500 mt-0.5 leading-normal">{item.description}</p>
+                              <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
                             </div>
                           </motion.button>
                         </SidebarMenuButton>

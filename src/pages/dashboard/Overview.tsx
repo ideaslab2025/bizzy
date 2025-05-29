@@ -6,14 +6,11 @@ import { PullToRefresh } from "@/components/ui/pull-to-refresh";
 import { NeonGlow } from "@/components/ui/neon-glow";
 import { AnimatedCounter, CurrencyCounter, PercentageCounter } from "@/components/ui/animated-counter";
 import { useAuth } from "@/hooks/useAuth";
-import { useGuidanceProgress } from "@/hooks/useGuidanceProgress";
 import { toast } from "sonner";
-import { Rocket } from "lucide-react";
 
 const Overview = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { completedSteps, getOverallProgress } = useGuidanceProgress();
 
   if (!user) {
     return (
@@ -38,7 +35,7 @@ const Overview = () => {
   };
 
   // Mock data for now - in a real app this would come from user profile
-  const completedStepIds = Array.from(completedSteps);
+  const completedStepIds = [1, 2, 3]; // Example completed steps
   const currentSectionCategory = "foundation"; // Example category
   const companyAge = 30; // Example company age in days
 
@@ -66,7 +63,7 @@ const Overview = () => {
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Tasks Completed</h3>
               <div className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
-                <AnimatedCounter value={completedStepIds.length} />
+                <AnimatedCounter value={42} />
               </div>
             </div>
           </NeonGlow>
@@ -75,7 +72,7 @@ const Overview = () => {
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Progress</h3>
               <div className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
-                <PercentageCounter value={getOverallProgress()} />
+                <PercentageCounter value={78.5} />
               </div>
             </div>
           </NeonGlow>
@@ -118,10 +115,9 @@ const Overview = () => {
         >
           <NeonGlow color="blue" pulse hover>
             <button 
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium transition-all duration-300 flex items-center gap-2"
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium transition-all duration-300"
               onClick={handleNavigateToGuidedHelp}
             >
-              <Rocket className="w-5 h-5" />
               Continue Journey
             </button>
           </NeonGlow>
