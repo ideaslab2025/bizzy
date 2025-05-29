@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useLocation, useNavigate } from "react-router-dom";
 import { 
   CheckCircle, 
   Play, 
@@ -28,7 +29,14 @@ import {
   Umbrella,
   TrendingUp,
   Monitor,
-  Briefcase
+  Briefcase,
+  FileText,
+  Building2,
+  UserPlus,
+  CreditCard,
+  Lock,
+  ShieldAlert,
+  Cpu
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -40,6 +48,7 @@ import { SmartRecommendationsPanel } from "@/components/guidance/SmartRecommenda
 import { SwipeableStepContent } from "@/components/guidance/SwipeableStepContent";
 import { MilestoneReached } from "@/components/celebrations/MilestoneReached";
 import { AchievementNotification } from "@/components/celebrations/AchievementNotification";
+import { useGuidanceProgress } from "@/hooks/useGuidanceProgress";
 import type { 
   EnhancedGuidanceSection, 
   EnhancedGuidanceStep, 
@@ -137,6 +146,18 @@ const sectionConfig = {
 const EnhancedGuidedHelp = () => {
   const { user, signOut } = useAuth();
   const isMobile = useIsMobile();
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  const { 
+    completedSections, 
+    completedSteps, 
+    sectionProgress,
+    toggleSectionCompleted,
+    getOverallProgress,
+    loading: progressLoading 
+  } = useGuidanceProgress();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sections, setSections] = useState<EnhancedGuidanceSection[]>([]);
   const [currentSection, setCurrentSection] = useState<number>(1);
@@ -640,13 +661,12 @@ const EnhancedGuidedHelp = () => {
   const overallProgress = Math.round(getOverallProgress());
 
   const enhancedSections = sections.map(section => {
-    const sectionSteps = allSteps.filter(step => step.section_id === section.id);
-    const sectionCompletedSteps = sectionSteps.filter(step => completedSteps.has(step.id));
+    const progressData = sectionProgress[section.id];
     return {
       ...section,
-      total_steps: sectionSteps.length,
-      completed_steps: sectionCompletedSteps.length,
-      progress: sectionSteps.length > 0 ? (sectionCompletedSteps.length / sectionSteps.length) : 0
+      total_steps: progressData?.totalSteps || 0,
+      completed_steps: progressData?.completedSteps || 0,
+      progress: progressData?.progress || 0
     };
   });
 
@@ -662,7 +682,7 @@ const EnhancedGuidedHelp = () => {
       {/* Progress Overview */}
       <div className="p-4 bg-white/10 border-b border-white/20">
         <div className="text-center">
-          <div className="text-3xl font-bold">{overallProgress}%</div>
+          <div className="text-3xl font-bold">{Math.round(getOverallProgress())}%</div>
           <div className="text-sm opacity-80">Overall Progress</div>
         </div>
       </div>
@@ -676,16 +696,20 @@ const EnhancedGuidedHelp = () => {
             const isCurrent = currentSection === section.order_number;
             
             return (
-              <SidebarSection
-                key={section.id}
-                section={section}
-                isActive={isCurrent}
-                isCompleted={isCompleted}
-                onClick={() => {
-                  setCurrentSection(section.order_number);
-                  setMobileMenuOpen(false);
-                }}
-              />
+              <div key={section.id} data-section={section.order_number}>
+                <SidebarSection
+                  section={section}
+                  isActive={isCurrent}
+                  isCompleted={isCompleted}
+                  onClick={() => {
+                    setCurrentSection(section.order_number);
+                    setMobileMenuOpen(false);
+                    
+                    // Update URL
+                    navigate(`/guided-help?section=${section.order_number}`, { replace: true });
+                  }}
+                />
+              </div>
             );
           })}
         </div>
@@ -985,9 +1009,9 @@ const EnhancedGuidedHelp = () => {
             {isLastStepInSection() && currentSectionData && (
               <>
                 <Button
-                  onClick={() => toggleSectionCompleted(currentSectionData.id)}
+                  onClick={() => handleToggleSectionCompleted(currentSectionData.id)}
                   className={
-                    isSectionCompleted(currentSectionData.id)
+                    completedSections.has(currentSectionData.id)
                       ? "bg-gray-400 hover:bg-gray-500 text-white text-xs lg:text-sm px-2 lg:px-4"
                       : "bg-green-600 hover:bg-green-700 text-white text-xs lg:text-sm px-2 lg:px-4"
                   }
@@ -995,8 +1019,8 @@ const EnhancedGuidedHelp = () => {
                 >
                   <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
                   {isMobile ? 
-                    (isSectionCompleted(currentSectionData.id) ? 'Incomplete' : 'Complete') :
-                    (isSectionCompleted(currentSectionData.id) ? 'Mark as Incomplete' : 'Mark Section as Complete')
+                    (completedSections.has(currentSectionData.id) ? 'Incomplete' : 'Complete') :
+                    (completedSections.has(currentSectionData.id) ? 'Mark as Incomplete' : 'Mark Section as Complete')
                   }
                 </Button>
                 

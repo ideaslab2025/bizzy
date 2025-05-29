@@ -15,6 +15,7 @@ import {
   Monitor, Cpu, Briefcase, Building2, Banknote, Users, Scale, RefreshCw, UserPlus, CreditCard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useGuidanceProgress } from '@/hooks/useGuidanceProgress';
 
 interface DashboardAnalytics {
   overallProgress: number;
@@ -127,9 +128,16 @@ const sectionConfig = {
 const EnhancedOverview: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null);
-  const [quickWins, setQuickWins] = useState<QuickWin[]>([]);
-  const [deadlines, setDeadlines] = useState<any[]>([]);
+  const { 
+    sectionProgress, 
+    completedSections, 
+    getOverallProgress, 
+    loading: progressLoading 
+  } = useGuidanceProgress();
+  
+  const [sections, setSections] = useState<any[]>([]);
+  const [quickWins, setQuickWins] = useState<any[]>([]);
+  const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -142,24 +150,13 @@ const EnhancedOverview: React.FC = () => {
     if (!user) return;
 
     try {
-      // Fetch sections and steps
-      const { data: sections } = await supabase
+      // Fetch sections
+      const { data: sectionsData } = await supabase
         .from('guidance_sections')
         .select('*')
         .order('order_number');
 
-      const { data: allSteps } = await supabase
-        .from('guidance_steps')
-        .select('*, guidance_sections(title)')
-        .order('order_number');
-
-      // Fetch user progress
-      const { data: progress } = await supabase
-        .from('user_guidance_progress')
-        .select('*')
-        .eq('user_id', user.id);
-
-      // Fetch documents
+      // Fetch documents and other data
       const { data: documents } = await supabase
         .from('documents')
         .select('*');
@@ -170,17 +167,8 @@ const EnhancedOverview: React.FC = () => {
         .eq('user_id', user.id)
         .eq('status', 'completed');
 
-      // Fetch quick wins
-      const completedStepIds = progress?.filter(p => p.completed).map(p => p.step_id) || [];
-      const { data: quickWinSteps } = await supabase
-        .from('guidance_steps')
-        .select('*, guidance_sections(title)')
-        .eq('quick_win', true)
-        .not('id', 'in', completedStepIds.length > 0 ? `(${completedStepIds.join(',')})` : '(0)')
-        .limit(3);
-
-      // Enhance sections with configuration data
-      const enhancedSections = sections?.map(section => {
+      // Enhanced sections with configuration data
+      const enhancedSections = sectionsData?.map(section => {
         const config = sectionConfig[section.order_number as keyof typeof sectionConfig];
         return {
           ...section,
@@ -188,68 +176,37 @@ const EnhancedOverview: React.FC = () => {
           emoji: config?.emoji || section.emoji || section.order_number.toString(),
           icon: config?.icon,
           colorClass: config?.color,
-          iconColor: config?.iconColor
+          iconColor: config?.iconColor,
+          description: config?.description
         };
       });
 
-      // Process data
-      const completionBySection: Record<number, number> = {};
-      enhancedSections?.forEach(section => {
-        const sectionSteps = allSteps?.filter(step => step.section_id === section.id) || [];
-        const completedSectionSteps = sectionSteps.filter(step => 
-          completedStepIds.includes(step.id)
-        );
-        completionBySection[section.id] = sectionSteps.length > 0 
-          ? (completedSectionSteps.length / sectionSteps.length) * 100 
-          : 0;
-      });
-
-      const totalSteps = allSteps?.length || 0;
-      const completedSteps = completedStepIds.length;
-      const overallProgress = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
+      setSections(enhancedSections || []);
 
       // Find current section (first incomplete section)
       const currentSection = enhancedSections?.find(section => 
-        completionBySection[section.id] < 100
+        !completedSections.has(section.id)
       ) || enhancedSections?.[0];
 
-      // Recent activities
-      const recentActivities = progress
-        ?.filter(p => p.completed)
-        .sort((a, b) => new Date(b.last_visited_at).getTime() - new Date(a.last_visited_at).getTime())
-        .slice(0, 5)
-        .map(p => {
-          const step = allSteps?.find(s => s.id === p.step_id);
-          return {
-            title: step?.title || 'Unknown step',
-            section: step?.guidance_sections?.title || 'Unknown section',
-            completedAt: p.last_visited_at
-          };
-        }) || [];
+      const overallProgress = getOverallProgress();
+      const totalCompletedSteps = Object.values(sectionProgress).reduce((sum, section) => sum + section.completedSteps, 0);
 
       setAnalytics({
         overallProgress,
-        totalSteps,
-        completedSteps,
+        totalSteps: Object.values(sectionProgress).reduce((sum, section) => sum + section.totalSteps, 0),
+        completedSteps: totalCompletedSteps,
         documentsCompleted: userDocuments?.length || 0,
         totalDocuments: documents?.length || 0,
-        totalHours: Math.round((completedSteps * 45) / 60), // Estimate 45 min per step
+        totalHours: Math.round((totalCompletedSteps * 45) / 60),
         currentSection,
         sections: enhancedSections || [],
-        completionBySection,
-        recentActivities,
-        achievements: [], // TODO: Implement achievements
-        nextDeadline: null // TODO: Implement deadline tracking
+        completionBySection: Object.fromEntries(
+          Object.entries(sectionProgress).map(([id, progress]) => [id, progress.progress])
+        ),
+        recentActivities: [],
+        achievements: [],
+        nextDeadline: null
       });
-
-      setQuickWins(quickWinSteps?.map(step => ({
-        id: step.id,
-        title: step.title,
-        section_title: step.guidance_sections?.title || '',
-        section_id: step.section_id || 0,
-        order_number: step.order_number,
-        estimated_time_minutes: step.estimated_time_minutes || 30
-      })) || []);
 
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -284,7 +241,7 @@ const EnhancedOverview: React.FC = () => {
     return null;
   };
 
-  if (loading || !analytics) {
+  if (loading || progressLoading || !analytics) {
     return (
       <div className="p-8">
         <div className="animate-pulse space-y-6">
@@ -338,13 +295,13 @@ const EnhancedOverview: React.FC = () => {
                   <div className="relative z-10 flex flex-col items-center">
                     <div className={cn(
                       "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all",
-                      analytics.completionBySection[section.id] === 100 ? 
+                      completedSections.has(section.id) ? 
                         "bg-green-500 border-green-500 text-white" :
                       section.id === analytics.currentSection?.id ? 
                         "bg-blue-500 border-blue-500 text-white" : 
                         "bg-white border-gray-300"
                     )}>
-                      {analytics.completionBySection[section.id] === 100 ? (
+                      {completedSections.has(section.id) ? (
                         <CheckCircle className="w-6 h-6 text-white" strokeWidth={2} />
                       ) : (
                         <div>
@@ -356,10 +313,10 @@ const EnhancedOverview: React.FC = () => {
                       {sectionConfig[section.order_number as keyof typeof sectionConfig]?.title || section.title}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {Math.round(analytics.completionBySection[section.id])}% • {section.estimated_time_minutes}min
+                      {Math.round(sectionProgress[section.id]?.progress || 0)}% • {section.estimated_time_minutes}min
                     </p>
                     
-                    {section.deadline_days && analytics.completionBySection[section.id] < 100 && (
+                    {section.deadline_days && !completedSections.has(section.id) && (
                       <Badge variant="outline" className="mt-1 text-xs">
                         {section.deadline_days} days
                       </Badge>
