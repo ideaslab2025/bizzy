@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -63,6 +64,7 @@ interface QuickWinStep extends EnhancedGuidanceStep {
 
 const EnhancedGuidedHelp = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sections, setSections] = useState<EnhancedGuidanceSection[]>([]);
@@ -570,11 +572,15 @@ const EnhancedGuidedHelp = () => {
   const sectionProgress = currentSectionData ? getSectionProgress(currentSectionData.id) : 0;
   const overallProgress = Math.round(getOverallProgress());
 
-  const enhancedSections = sections.map(section => {
+  const enhancedSections = businessSections.map(section => {
     const sectionSteps = allSteps.filter(step => step.section_id === section.id);
     const sectionCompletedSteps = sectionSteps.filter(step => completedSteps.has(step.id));
     return {
       ...section,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      color_theme: section.iconColor.replace('text-', '').replace('-600', ''),
+      priority_order: section.order_number,
       total_steps: sectionSteps.length,
       completed_steps: sectionCompletedSteps.length,
       progress: sectionSteps.length > 0 ? (sectionCompletedSteps.length / sectionSteps.length) : 0
