@@ -56,13 +56,14 @@ export const SmartRecommendationsPanel: React.FC<SmartRecommendationsPanelProps>
     );
   }
 
-  if (error) {
+  // Show a more helpful message instead of error for missing recommendations
+  if (error || !recommendations) {
     return (
-      <Card className="border-red-200 bg-red-50">
+      <Card className="border-green-200 bg-green-50">
         <CardContent className="p-6">
           <div className="flex items-center gap-3">
-            <AlertTriangle className="w-5 h-5 text-red-600" />
-            <span className="text-red-800">Unable to load recommendations</span>
+            <Target className="w-5 h-5 text-green-600" />
+            <span className="text-green-800">Great job! Continue with your current progress.</span>
           </div>
         </CardContent>
       </Card>
@@ -158,7 +159,7 @@ export const SmartRecommendationsPanel: React.FC<SmartRecommendationsPanelProps>
       </Card>
 
       {/* Category-specific recommendations */}
-      {recommendations.urgent.length > 0 && (
+      {recommendations.urgent && recommendations.urgent.length > 0 && (
         <Card className="border-red-200 bg-red-50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-red-800">
@@ -190,7 +191,7 @@ export const SmartRecommendationsPanel: React.FC<SmartRecommendationsPanelProps>
         </Card>
       )}
 
-      {recommendations.quickWins.length > 0 && (
+      {recommendations.quickWins && recommendations.quickWins.length > 0 && (
         <Card className="border-green-200 bg-green-50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-green-800">

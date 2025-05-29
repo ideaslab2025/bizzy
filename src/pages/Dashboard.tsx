@@ -1,16 +1,13 @@
 
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
-import { Bell, Search, User, ChevronDown, Settings, LogOut, X, MessageCircle } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
-import { CommandPalette } from "@/components/ui/command-palette";
-import { RecentlyViewed } from "@/components/ui/recently-viewed";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { FirstViewSpotlight } from "@/components/ui/first-view-spotlight";
-import { NeonGlow } from "@/components/ui/neon-glow";
+import { Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Bell, MessageCircle, User, ChevronDown, Settings, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { motion } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,29 +15,20 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useSidebar } from "@/components/ui/sidebar";
 import BizzyChat from "@/components/BizzyChat";
-import { useAuth } from "@/hooks/useAuth";
 
-const Dashboard = () => {
-  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const [bizzyOpen, setBizzyOpen] = useState(false);
-  const [hasNotifications] = useState(true);
+const DashboardHeader = () => {
   const { user } = useAuth();
+  const { state } = useSidebar();
+  const [showChatbot, setShowChatbot] = React.useState(false);
 
-  // Listen for keyboard shortcut to open command palette
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setCommandPaletteOpen(true);
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // Get user display name
   const getUserDisplayName = () => {
     if (user?.user_metadata?.full_name) {
       return user.user_metadata.full_name;
@@ -52,139 +40,144 @@ const Dashboard = () => {
   };
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50">
-        <AppSidebar />
-        <main className="flex-1 relative">
-          {/* Enhanced Header */}
-          <header className="sticky top-0 z-40 h-16 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-            <div className="h-full px-6 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200 rounded-lg" />
-                <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-                  Dashboard
-                </h1>
-              </div>
-              
-              {/* Center Search */}
-              <div className="flex-1 max-w-md mx-8">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search documents, guides..."
-                    className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:bg-gray-50 cursor-pointer"
-                    onClick={() => setCommandPaletteOpen(true)}
-                  />
-                </div>
-              </div>
-
-              {/* Right Actions */}
-              <div className="flex items-center gap-3">
-                <ThemeToggle />
-                
-                {/* Enhanced Notifications with consistent hover */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="relative rounded-lg p-2 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 hover:scale-105"
-                    >
-                      <Bell className="w-5 h-5" />
-                      {hasNotifications && (
-                        <motion.span
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="absolute top-1 right-1 flex h-3 w-3"
-                        >
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                          <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
-                        </motion.span>
-                      )}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
-                    <div className="p-4 border-b border-gray-100">
-                      <h3 className="font-semibold text-gray-900">Notifications</h3>
-                    </div>
-                    <DropdownMenuItem className="p-4 hover:bg-gray-50">
-                      <div>
-                        <p className="font-medium text-gray-900">Welcome to Bizzy!</p>
-                        <p className="text-sm text-gray-500 mt-1">Complete your profile to get started</p>
-                      </div>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {/* Enhanced User Menu with consistent hover */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="flex items-center gap-2 rounded-lg p-2 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 hover:scale-105"
-                    >
-                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="font-medium hidden md:inline-block">{getUserDisplayName()}</span>
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
-                    <DropdownMenuItem className="hover:bg-gray-50">
-                      <User className="w-4 h-4 mr-2" />
-                      Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="hover:bg-gray-50">
-                      <Settings className="w-4 h-4 mr-2" />
-                      Settings
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="hover:bg-gray-50 text-red-600">
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Logout
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {/* Enhanced Talk to Bizzy Button with consistent styling */}
-                <Button
-                  onClick={() => setBizzyOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hover:scale-105 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Talk to Bizzy</span>
-                </Button>
-              </div>
+    <>
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <SidebarTrigger />
+                </TooltipTrigger>
+                <TooltipContent>
+                  {state === "expanded" ? "Hide Sidebar" : "Show Sidebar"}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            <div>
+              <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+                Dashboard
+              </h1>
             </div>
-          </header>
-          
-          {/* Main Content */}
-          <div className="p-6 bg-gray-50 min-h-[calc(100vh-4rem)]">
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="relative hover:bg-gray-100 dark:hover:bg-gray-800 hover:scale-105 transition-all duration-200 rounded-lg p-2"
+                >
+                  <Bell className="w-5 h-5" />
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute top-1 right-1 flex h-3 w-3"
+                  >
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
+                  </motion.span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg z-50">
+                <div className="p-4 border-b">
+                  <h3 className="font-semibold">Notifications</h3>
+                </div>
+                <DropdownMenuItem className="p-4">
+                  <div>
+                    <p className="font-medium">New guidance available!</p>
+                    <p className="text-sm text-gray-500 mt-1">Check out the latest updates to your business setup guide</p>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 hover:scale-105 transition-all duration-200 rounded-lg p-2"
+                >
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-medium hidden md:inline-block">{getUserDisplayName()}</span>
+                  <ChevronDown className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg z-50">
+                <DropdownMenuItem>
+                  <User className="w-4 h-4 mr-2" />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings className="w-4 h-4 mr-2" />
+                  Settings
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-red-600">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button
+              onClick={() => setShowChatbot(true)}
+              className="bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 transition-all duration-200 border border-blue-600 rounded-lg px-4 py-2 flex items-center gap-2"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>Talk to Bizzy</span>
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      {showChatbot && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed top-0 left-0 w-full h-full bg-black/50 z-50 flex items-center justify-center"
+        >
+          <motion.div
+            initial={{ scale: 0.8, y: 50 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.8, y: 50 }}
+            className="bg-white rounded-lg shadow-xl overflow-hidden max-w-3xl max-h-[90vh]"
+          >
+            <div className="flex justify-between items-center p-4 border-b">
+              <h2 className="text-lg font-semibold">Talk to Bizzy</h2>
+              <Button variant="ghost" onClick={() => setShowChatbot(false)}>
+                ×
+              </Button>
+            </div>
+            <div className="p-4">
+              <BizzyChat isOpen={showChatbot} onClose={() => setShowChatbot(false)} />
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </>
+  );
+};
+
+const Dashboard = () => {
+  return (
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <AppSidebar />
+        <div className="flex-1 flex flex-col">
+          <DashboardHeader />
+          <main className="flex-1 overflow-auto">
             <Outlet />
-          </div>
-          
-          {/* Recently Viewed Sidebar */}
-          <div className="fixed right-4 top-1/2 -translate-y-1/2 z-30">
-            <RecentlyViewed />
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
-      
-      {/* Command Palette */}
-      <CommandPalette 
-        open={commandPaletteOpen} 
-        onOpenChange={setCommandPaletteOpen}
-      />
-      
-      {/* Bizzy AI Chat */}
-      <BizzyChat 
-        isOpen={bizzyOpen} 
-        onClose={() => setBizzyOpen(false)} 
-      />
-      
-      <FirstViewSpotlight />
     </SidebarProvider>
   );
 };
