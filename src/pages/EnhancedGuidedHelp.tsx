@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -64,6 +65,7 @@ const EnhancedGuidedHelp = () => {
   
   const { 
     completedSections, 
+    completedSteps, 
     sectionProgress,
     toggleSectionCompleted,
     getOverallProgress,
@@ -124,7 +126,7 @@ const EnhancedGuidedHelp = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Enhanced Header - Reduced padding from py-6 to py-4 */}
+      {/* Enhanced Header */}
       <header className="bg-blue-600 shadow-lg border-b border-blue-700 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
@@ -230,7 +232,7 @@ const EnhancedGuidedHelp = () => {
       </header>
 
       <div className="flex">
-        {/* Enhanced Sidebar - Reduced width from w-64 to w-56 */}
+        {/* Enhanced Sidebar */}
         <motion.aside 
           className="w-56 bg-gradient-to-b from-blue-600 to-blue-800 min-h-[calc(100vh-5rem)] shadow-xl"
           initial={false}
