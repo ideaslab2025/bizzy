@@ -34,7 +34,7 @@ export const SmartRecommendationsPanel: React.FC<SmartRecommendationsPanelProps>
   const [retryCount, setRetryCount] = useState(0);
 
   try {
-    const { getTopRecommendations, loading } = useSmartRecommendations(
+    const { getTopRecommendations, isLoading } = useSmartRecommendations(
       userId,
       completedStepIds,
       currentSectionCategory,
@@ -75,7 +75,7 @@ export const SmartRecommendationsPanel: React.FC<SmartRecommendationsPanelProps>
       );
     }
 
-    if (loading) {
+    if (isLoading) {
       return (
         <Card className="border-blue-200 bg-blue-50">
           <CardContent className="p-6">
@@ -152,17 +152,12 @@ export const SmartRecommendationsPanel: React.FC<SmartRecommendationsPanelProps>
                             Quick Win
                           </Badge>
                         )}
-                        {rec.priority_score && rec.priority_score > 8 && (
+                        {rec.urgency_score && rec.urgency_score > 50 && (
                           <Badge variant="secondary" className="text-xs bg-orange-100 text-orange-700">
                             High Priority
                           </Badge>
                         )}
                       </div>
-                      {rec.reason && (
-                        <div className="text-xs text-blue-600 mt-1 italic">
-                          {rec.reason}
-                        </div>
-                      )}
                     </div>
                     <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0" />
                   </Button>
