@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -18,39 +17,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-
-// Extend window interface for SpeechRecognition
-declare global {
-  interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
-  }
-  
-  interface SpeechRecognition extends EventTarget {
-    continuous: boolean;
-    interimResults: boolean;
-    onresult: (event: SpeechRecognitionEvent) => void;
-    onerror: () => void;
-    start: () => void;
-    stop: () => void;
-  }
-  
-  interface SpeechRecognitionEvent {
-    results: SpeechRecognitionResultList;
-  }
-  
-  interface SpeechRecognitionResultList {
-    [index: number]: SpeechRecognitionResult;
-  }
-  
-  interface SpeechRecognitionResult {
-    [index: number]: SpeechRecognitionAlternative;
-  }
-  
-  interface SpeechRecognitionAlternative {
-    transcript: string;
-  }
-}
+import '@/types/speech';
 
 interface Command {
   id: string;

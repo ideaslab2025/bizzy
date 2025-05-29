@@ -139,7 +139,7 @@ const Dashboard = () => {
                 {/* Cloud Sync Indicator */}
                 <CloudSyncIndicator
                   status={syncStatus}
-                  lastSynced={new Date(Date.now() - 30000)}
+                  lastSaved={new Date(Date.now() - 30000)}
                   onForceSync={() => setSyncStatus('syncing')}
                   onShowHistory={() => console.log('Show sync history')}
                 />
