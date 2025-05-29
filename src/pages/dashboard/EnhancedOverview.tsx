@@ -12,7 +12,7 @@ import {
   Zap, ArrowRight, CheckCircle, AlertTriangle,
   Target, PlayCircle, BookOpen, Shield, Lock,
   ShieldCheck, Umbrella, ShieldAlert, Rocket,
-  Monitor, Cpu, Briefcase, Building2, Calculator, Users
+  Monitor, Cpu, Briefcase, Building2, Banknote, Users, Scale, RefreshCw, UserPlus, CreditCard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -40,18 +40,88 @@ interface QuickWin {
   estimated_time_minutes: number;
 }
 
-// Section configuration with enhanced metadata
+// Section configuration with enhanced metadata and proper outline icons
 const sectionConfig = {
-  1: { icon: FileText, color: 'text-blue-600 bg-blue-100', emoji: '📄', title: 'Foundation Setup', iconColor: '#2563eb' },
-  2: { icon: Building2, color: 'text-green-600 bg-green-100', emoji: '🏢', title: 'Legal Structure', iconColor: '#16a34a' },
-  3: { icon: Calculator, color: 'text-purple-600 bg-purple-100', emoji: '💰', title: 'Financial Setup', iconColor: '#9333ea' },
-  4: { icon: Users, color: 'text-orange-600 bg-orange-100', emoji: '👥', title: 'Team & Operations', iconColor: '#ea580c' },
-  5: { icon: FileText, color: 'text-red-600 bg-red-100', emoji: '📋', title: 'Compliance', iconColor: '#dc2626' },
-  6: { icon: Shield, color: 'text-purple-600 bg-purple-100', emoji: '🛡️', title: 'Data Protection & GDPR', iconColor: '#9333ea' },
-  7: { icon: Umbrella, color: 'text-orange-600 bg-orange-100', emoji: '☂️', title: 'Insurance & Risk Management', iconColor: '#ea580c' },
-  8: { icon: TrendingUp, color: 'text-green-600 bg-green-100', emoji: '📈', title: 'Business Growth & Scaling', iconColor: '#16a34a' },
-  9: { icon: Monitor, color: 'text-blue-600 bg-blue-100', emoji: '💻', title: 'Technology & Systems', iconColor: '#2563eb' },
-  10: { icon: Briefcase, color: 'text-indigo-600 bg-indigo-100', emoji: '💼', title: 'Sector-Specific Requirements', iconColor: '#4f46e5' }
+  1: { 
+    icon: Rocket, 
+    color: 'text-blue-600 bg-blue-100', 
+    emoji: '🚀', 
+    title: 'Launch Essentials',
+    iconColor: '#3B82F6',
+    description: 'Get your company officially registered and set up with all government requirements.'
+  },
+  2: { 
+    icon: Banknote, 
+    color: 'text-green-600 bg-green-100', 
+    emoji: '💰', 
+    title: 'Financial Setup',
+    iconColor: '#10B981',
+    description: 'Open business accounts, register for taxes, and establish your financial foundation.'
+  },
+  3: { 
+    icon: Users, 
+    color: 'text-orange-600 bg-orange-100', 
+    emoji: '👥', 
+    title: 'Employment & HR',
+    iconColor: '#F97316',
+    description: 'Register as an employer, set up payroll, and create essential HR policies.'
+  },
+  4: { 
+    icon: Scale, 
+    color: 'text-red-600 bg-red-100', 
+    emoji: '⚖️', 
+    title: 'Legal & Compliance',
+    iconColor: '#EF4444',
+    description: 'Ensure legal compliance with contracts, terms of service, and regulatory requirements.'
+  },
+  5: { 
+    icon: RefreshCw, 
+    color: 'text-purple-600 bg-purple-100', 
+    emoji: '🔄', 
+    title: 'Ongoing Operations',
+    iconColor: '#8B5CF6',
+    description: 'Establish systems for smooth daily operations and long-term business management.'
+  },
+  6: { 
+    icon: Shield, 
+    color: 'text-indigo-600 bg-indigo-100', 
+    emoji: '🛡️', 
+    title: 'Data Protection & GDPR',
+    iconColor: '#6366F1',
+    description: 'Register with ICO, create privacy policies, and ensure GDPR compliance for your business data handling.'
+  },
+  7: { 
+    icon: Umbrella, 
+    color: 'text-amber-600 bg-amber-100', 
+    emoji: '☂️', 
+    title: 'Insurance & Risk Management',
+    iconColor: '#F59E0B',
+    description: 'Set up essential business insurance including employers\' liability, public liability, and professional indemnity.'
+  },
+  8: { 
+    icon: TrendingUp, 
+    color: 'text-emerald-600 bg-emerald-100', 
+    emoji: '📈', 
+    title: 'Business Growth & Scaling',
+    iconColor: '#10B981',
+    description: 'Plan for expansion, hiring strategies, and prepare your business for investment and scaling opportunities.'
+  },
+  9: { 
+    icon: Monitor, 
+    color: 'text-sky-600 bg-sky-100', 
+    emoji: '💻', 
+    title: 'Technology & Systems',
+    iconColor: '#0EA5E9',
+    description: 'Implement essential software, digital tools, and cybersecurity measures for efficient operations.'
+  },
+  10: { 
+    icon: Briefcase, 
+    color: 'text-rose-600 bg-rose-100', 
+    emoji: '💼', 
+    title: 'Sector-Specific Requirements',
+    iconColor: '#F43F5E',
+    description: 'Complete industry-specific registrations, licenses, and compliance requirements for your business sector.'
+  }
 };
 
 const EnhancedOverview: React.FC = () => {
@@ -203,7 +273,13 @@ const EnhancedOverview: React.FC = () => {
     const config = sectionConfig[section.order_number as keyof typeof sectionConfig];
     if (config?.icon) {
       const IconComponent = config.icon;
-      return <IconComponent className="w-6 h-6" style={{ color: config.iconColor }} fill="currentColor" />;
+      return (
+        <IconComponent 
+          className="w-6 h-6" 
+          style={{ color: config.iconColor }}
+          strokeWidth={2}
+        />
+      );
     }
     return null;
   };
@@ -261,7 +337,7 @@ const EnhancedOverview: React.FC = () => {
                   {/* Section node */}
                   <div className="relative z-10 flex flex-col items-center">
                     <div className={cn(
-                      "w-12 h-12 rounded-full flex items-center justify-center text-2xl border-4 transition-all",
+                      "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all",
                       analytics.completionBySection[section.id] === 100 ? 
                         "bg-green-500 border-green-500 text-white" :
                       section.id === analytics.currentSection?.id ? 
@@ -269,9 +345,9 @@ const EnhancedOverview: React.FC = () => {
                         "bg-white border-gray-300"
                     )}>
                       {analytics.completionBySection[section.id] === 100 ? (
-                        <CheckCircle className="w-6 h-6" style={{ color: 'white' }} />
+                        <CheckCircle className="w-6 h-6 text-white" strokeWidth={2} />
                       ) : (
-                        <div style={{ color: sectionConfig[section.order_number as keyof typeof sectionConfig]?.iconColor || '#6b7280' }}>
+                        <div>
                           {getSectionIcon(section) || section.emoji || section.order_number}
                         </div>
                       )}

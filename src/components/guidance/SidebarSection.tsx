@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { 
-  CheckCircle, Clock, FileText, Building2, Calculator, Users,
+  CheckCircle, Clock, Rocket, Banknote, Users, Scale, RefreshCw,
   Shield, Umbrella, TrendingUp, Monitor, Briefcase
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -18,18 +19,68 @@ interface SidebarSectionProps {
   onClick: () => void;
 }
 
-// Section configuration matching the dashboard
+// Section configuration matching the dashboard with outline icons
 const sectionConfig = {
-  1: { icon: FileText, title: 'Foundation Setup', iconColor: '#2563eb' },
-  2: { icon: Building2, title: 'Legal Structure', iconColor: '#16a34a' },
-  3: { icon: Calculator, title: 'Financial Setup', iconColor: '#9333ea' },
-  4: { icon: Users, title: 'Team & Operations', iconColor: '#ea580c' },
-  5: { icon: FileText, title: 'Compliance', iconColor: '#dc2626' },
-  6: { icon: Shield, title: 'Data Protection & GDPR', iconColor: '#9333ea' },
-  7: { icon: Umbrella, title: 'Insurance & Risk Management', iconColor: '#ea580c' },
-  8: { icon: TrendingUp, title: 'Business Growth & Scaling', iconColor: '#16a34a' },
-  9: { icon: Monitor, title: 'Technology & Systems', iconColor: '#2563eb' },
-  10: { icon: Briefcase, title: 'Sector-Specific Requirements', iconColor: '#4f46e5' }
+  1: { 
+    icon: Rocket, 
+    title: 'Launch Essentials', 
+    iconColor: '#3B82F6',
+    description: 'Get your company officially registered and set up with all government requirements.'
+  },
+  2: { 
+    icon: Banknote, 
+    title: 'Financial Setup', 
+    iconColor: '#10B981',
+    description: 'Open business accounts, register for taxes, and establish your financial foundation.'
+  },
+  3: { 
+    icon: Users, 
+    title: 'Employment & HR', 
+    iconColor: '#F97316',
+    description: 'Register as an employer, set up payroll, and create essential HR policies.'
+  },
+  4: { 
+    icon: Scale, 
+    title: 'Legal & Compliance', 
+    iconColor: '#EF4444',
+    description: 'Ensure legal compliance with contracts, terms of service, and regulatory requirements.'
+  },
+  5: { 
+    icon: RefreshCw, 
+    title: 'Ongoing Operations', 
+    iconColor: '#8B5CF6',
+    description: 'Establish systems for smooth daily operations and long-term business management.'
+  },
+  6: { 
+    icon: Shield, 
+    title: 'Data Protection & GDPR', 
+    iconColor: '#6366F1',
+    description: 'Register with ICO, create privacy policies, and ensure GDPR compliance for your business data handling.'
+  },
+  7: { 
+    icon: Umbrella, 
+    title: 'Insurance & Risk Management', 
+    iconColor: '#F59E0B',
+    description: 'Set up essential business insurance including employers\' liability, public liability, and professional indemnity.'
+  },
+  8: { 
+    icon: TrendingUp, 
+    title: 'Business Growth & Scaling', 
+    iconColor: '#10B981',
+    description: 'Plan for expansion, hiring strategies, and prepare your business for investment and scaling opportunities.'
+  },
+  9: { 
+    icon: Monitor, 
+    title: 'Technology & Systems', 
+    iconColor: '#0EA5E9',
+    description: 'Implement essential software, digital tools, and cybersecurity measures for efficient operations.'
+  },
+  10: { 
+    icon: Briefcase, 
+    title: 'Sector-Specific Requirements', 
+    iconColor: '#F43F5E',
+    description: 'Complete industry-specific registrations, licenses, and compliance requirements for your business sector.'
+  }
 };
 
 export const SidebarSection: React.FC<SidebarSectionProps> = ({
@@ -83,12 +134,12 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
             {isCompleted ? (
-              <CheckCircle className="w-6 h-6" style={{ color: '#10b981' }} fill="currentColor" />
+              <CheckCircle className="w-6 h-6 text-green-500" strokeWidth={2} />
             ) : IconComponent ? (
               <IconComponent 
                 className="w-6 h-6" 
                 style={{ color: config?.iconColor || 'currentColor' }} 
-                fill="currentColor" 
+                strokeWidth={2}
               />
             ) : (
               <span className="text-lg">{section.emoji || section.order_number}</span>
@@ -122,7 +173,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
           animate={{ scale: 1 }}
           className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full p-1"
         >
-          <CheckCircle className="w-4 h-4" />
+          <CheckCircle className="w-4 h-4" strokeWidth={2} />
         </motion.div>
       )}
     </motion.button>

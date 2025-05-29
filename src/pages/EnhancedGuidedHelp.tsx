@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,10 +19,11 @@ import {
   Bell,
   Trophy,
   Menu,
-  FileText,
-  Building2,
-  Calculator,
+  Rocket,
+  Banknote,
   Users,
+  Scale,
+  RefreshCw,
   Shield,
   Umbrella,
   TrendingUp,
@@ -60,18 +60,78 @@ interface QuickWinStep extends EnhancedGuidanceStep {
   section_title: string;
 }
 
-// Section configuration with enhanced metadata
+// Section configuration with enhanced metadata and proper outline icons
 const sectionConfig = {
-  1: { icon: FileText, color: 'text-blue-600 bg-blue-100', emoji: '📄', title: 'Foundation Setup' },
-  2: { icon: Building2, color: 'text-green-600 bg-green-100', emoji: '🏢', title: 'Legal Structure' },
-  3: { icon: Calculator, color: 'text-purple-600 bg-purple-100', emoji: '💰', title: 'Financial Setup' },
-  4: { icon: Users, color: 'text-orange-600 bg-orange-100', emoji: '👥', title: 'Team & Operations' },
-  5: { icon: FileText, color: 'text-red-600 bg-red-100', emoji: '📋', title: 'Compliance' },
-  6: { icon: Shield, color: 'text-purple-600 bg-purple-100', emoji: '🛡️', title: 'Data Protection & GDPR' },
-  7: { icon: Umbrella, color: 'text-orange-600 bg-orange-100', emoji: '☂️', title: 'Insurance & Risk Management' },
-  8: { icon: TrendingUp, color: 'text-green-600 bg-green-100', emoji: '📈', title: 'Business Growth & Scaling' },
-  9: { icon: Monitor, color: 'text-blue-600 bg-blue-100', emoji: '💻', title: 'Technology & Systems' },
-  10: { icon: Briefcase, color: 'text-indigo-600 bg-indigo-100', emoji: '💼', title: 'Sector-Specific Requirements' }
+  1: { 
+    icon: Rocket, 
+    color: 'text-blue-600 bg-blue-100', 
+    emoji: '🚀', 
+    title: 'Launch Essentials',
+    description: 'Get your company officially registered and set up with all government requirements.'
+  },
+  2: { 
+    icon: Banknote, 
+    color: 'text-green-600 bg-green-100', 
+    emoji: '💰', 
+    title: 'Financial Setup',
+    description: 'Open business accounts, register for taxes, and establish your financial foundation.'
+  },
+  3: { 
+    icon: Users, 
+    color: 'text-orange-600 bg-orange-100', 
+    emoji: '👥', 
+    title: 'Employment & HR',
+    description: 'Register as an employer, set up payroll, and create essential HR policies.'
+  },
+  4: { 
+    icon: Scale, 
+    color: 'text-red-600 bg-red-100', 
+    emoji: '⚖️', 
+    title: 'Legal & Compliance',
+    description: 'Ensure legal compliance with contracts, terms of service, and regulatory requirements.'
+  },
+  5: { 
+    icon: RefreshCw, 
+    color: 'text-purple-600 bg-purple-100', 
+    emoji: '🔄', 
+    title: 'Ongoing Operations',
+    description: 'Establish systems for smooth daily operations and long-term business management.'
+  },
+  6: { 
+    icon: Shield, 
+    color: 'text-indigo-600 bg-indigo-100', 
+    emoji: '🛡️', 
+    title: 'Data Protection & GDPR',
+    description: 'Register with ICO, create privacy policies, and ensure GDPR compliance for your business data handling.'
+  },
+  7: { 
+    icon: Umbrella, 
+    color: 'text-amber-600 bg-amber-100', 
+    emoji: '☂️', 
+    title: 'Insurance & Risk Management',
+    description: 'Set up essential business insurance including employers\' liability, public liability, and professional indemnity.'
+  },
+  8: { 
+    icon: TrendingUp, 
+    color: 'text-emerald-600 bg-emerald-100', 
+    emoji: '📈', 
+    title: 'Business Growth & Scaling',
+    description: 'Plan for expansion, hiring strategies, and prepare your business for investment and scaling opportunities.'
+  },
+  9: { 
+    icon: Monitor, 
+    color: 'text-sky-600 bg-sky-100', 
+    emoji: '💻', 
+    title: 'Technology & Systems',
+    description: 'Implement essential software, digital tools, and cybersecurity measures for efficient operations.'
+  },
+  10: { 
+    icon: Briefcase, 
+    color: 'text-rose-600 bg-rose-100', 
+    emoji: '💼', 
+    title: 'Sector-Specific Requirements',
+    description: 'Complete industry-specific registrations, licenses, and compliance requirements for your business sector.'
+  }
 };
 
 const EnhancedGuidedHelp = () => {
@@ -637,7 +697,7 @@ const EnhancedGuidedHelp = () => {
     const config = sectionConfig[section.order_number as keyof typeof sectionConfig];
     if (config?.icon) {
       const IconComponent = config.icon;
-      return <IconComponent className="w-6 h-6" fill="currentColor" />;
+      return <IconComponent className="w-6 h-6" strokeWidth={2} />;
     }
     return null;
   };
@@ -675,7 +735,11 @@ const EnhancedGuidedHelp = () => {
         {/* Enhanced Progress Header */}
         {currentSectionData && (
           <ProgressHeader
-            currentSection={currentSectionData}
+            currentSection={{
+              ...currentSectionData,
+              title: sectionConfig[currentSectionData.order_number as keyof typeof sectionConfig]?.title || currentSectionData.title,
+              description: sectionConfig[currentSectionData.order_number as keyof typeof sectionConfig]?.description || currentSectionData.description
+            }}
             currentStep={currentStep}
             totalSteps={steps.length}
             currentStepData={currentStepData}
@@ -819,13 +883,19 @@ const EnhancedGuidedHelp = () => {
               ) : (
                 <div className="max-w-4xl">
                   <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                    {currentSectionData?.title}
+                    {currentSectionData ? 
+                      (sectionConfig[currentSectionData.order_number as keyof typeof sectionConfig]?.title || currentSectionData.title) :
+                      'Section Title'
+                    }
                   </h2>
                   <Card className="mb-8">
                     <CardContent className="p-4 lg:p-8">
                       <div className="prose max-w-none">
                         <p className="text-base lg:text-lg text-gray-600">
-                          Content for this section is coming soon. You can still mark this section as complete to track your progress.
+                          {currentSectionData ? 
+                            (sectionConfig[currentSectionData.order_number as keyof typeof sectionConfig]?.description || 'Content for this section is coming soon.') :
+                            'Content for this section is coming soon. You can still mark this section as complete to track your progress.'
+                          }
                         </p>
                       </div>
                     </CardContent>
