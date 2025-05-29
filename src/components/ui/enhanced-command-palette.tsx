@@ -117,7 +117,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 max-w-2xl mx-auto mt-20 fixed top-0 left-1/2 transform -translate-x-1/2 z-50">
+      <DialogContent className="p-0 max-w-2xl mx-auto mt-20 border shadow-2xl">
         <div className="flex flex-col">
           {/* Search Input */}
           <div className="flex items-center border-b px-4 py-3">
@@ -128,7 +128,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search for commands, documents, or ask a question..."
-              className="border-0 bg-transparent focus:ring-0 text-base"
+              className="border-0 bg-transparent focus:ring-0 text-base focus-visible:ring-0 shadow-none"
             />
             {query && (
               <Badge variant="secondary" className="ml-2">

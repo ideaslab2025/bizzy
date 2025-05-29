@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -102,7 +101,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                       
                       <CardContent className="pt-0">
                         <div className="space-y-4">
-                          {/* Progress */}
                           {status.progress > 0 && (
                             <div className="space-y-2">
                               <div className="flex justify-between text-sm">
@@ -113,7 +111,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                             </div>
                           )}
                           
-                          {/* Subcategories */}
                           <div className="space-y-2">
                             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                               Key Areas
@@ -131,7 +128,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                             </div>
                           </div>
                           
-                          {/* Timeline */}
                           <div className="flex items-center justify-between text-sm text-gray-600">
                             <div className="flex items-center gap-1">
                               <Clock className="w-4 h-4" strokeWidth={2} />
@@ -144,7 +140,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                             )}
                           </div>
                           
-                          {/* Action Button */}
                           <Button 
                             className={cn(
                               "w-full mt-4",
@@ -184,17 +179,16 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
             })}
           </div>
 
-          {/* Second Row - Right to Left */}
+          {/* Second Row - Left to Right with proper arrows */}
           <div className="grid grid-cols-3 gap-8 relative">
             {businessSections.slice(6).map((section, index) => {
               const status = getSectionStatus(section);
               const IconComponent = section.icon;
               const actualIndex = index + 6;
-              const isFirstInSecondRow = index === 0;
               const isLastSection = actualIndex === businessSections.length - 1;
               
               return (
-                <div key={section.id} className={cn("relative", index === 1 ? "order-2" : index === 2 ? "order-1" : "order-3")}>
+                <div key={section.id} className="relative">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -241,7 +235,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                       
                       <CardContent className="pt-0">
                         <div className="space-y-4">
-                          {/* Progress */}
                           {status.progress > 0 && (
                             <div className="space-y-2">
                               <div className="flex justify-between text-sm">
@@ -252,7 +245,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                             </div>
                           )}
                           
-                          {/* Subcategories */}
                           <div className="space-y-2">
                             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                               Key Areas
@@ -270,7 +262,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                             </div>
                           </div>
                           
-                          {/* Timeline */}
                           <div className="flex items-center justify-between text-sm text-gray-600">
                             <div className="flex items-center gap-1">
                               <Clock className="w-4 h-4" strokeWidth={2} />
@@ -283,7 +274,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                             )}
                           </div>
                           
-                          {/* Action Button */}
                           <Button 
                             className={cn(
                               "w-full mt-4",
@@ -301,13 +291,18 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                     </Card>
                   </motion.div>
 
-                  {/* Left Arrow for second row (reverse direction) */}
-                  {index === 2 && (
-                    <div className="absolute top-1/2 -left-4 transform -translate-y-1/2 z-10">
-                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg rotate-180">
+                  {/* Right Arrow for second row (left to right flow) */}
+                  {index < 2 && (
+                    <div className="absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                         <ChevronRight className="w-5 h-5 text-white" strokeWidth={2} />
                       </div>
                     </div>
+                  )}
+
+                  {/* Bottom line for the last section */}
+                  {isLastSection && (
+                    <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-blue-300 to-transparent"></div>
                   )}
                 </div>
               );
@@ -369,7 +364,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                   
                   <CardContent className="pt-0">
                     <div className="space-y-4">
-                      {/* Progress */}
                       {status.progress > 0 && (
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
@@ -380,7 +374,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                         </div>
                       )}
                       
-                      {/* Subcategories */}
                       <div className="space-y-2">
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                           Key Areas
@@ -398,7 +391,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                         </div>
                       </div>
                       
-                      {/* Timeline */}
                       <div className="flex items-center justify-between text-sm text-gray-600">
                         <div className="flex items-center gap-1">
                           <Clock className="w-4 h-4" strokeWidth={2} />
@@ -411,7 +403,6 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                         )}
                       </div>
                       
-                      {/* Action Button */}
                       <Button 
                         className={cn(
                           "w-full mt-4",
