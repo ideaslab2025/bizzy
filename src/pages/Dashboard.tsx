@@ -70,7 +70,7 @@ const Dashboard = () => {
               <div className="flex items-center gap-3">
                 <ThemeToggle />
                 
-                {/* Enhanced Notifications */}
+                {/* Enhanced Notifications with proper hover */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -80,7 +80,7 @@ const Dashboard = () => {
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="relative rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 hover:text-gray-900"
+                        className="relative rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 hover:text-gray-900 hover:scale-105 transform"
                       >
                         <Bell className="w-5 h-5" />
                         {hasNotifications && (
@@ -109,7 +109,7 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced User Menu */}
+                {/* Enhanced User Menu with proper hover */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
