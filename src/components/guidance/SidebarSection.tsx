@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, Clock } from 'lucide-react';
@@ -83,7 +82,9 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
                       : businessSection?.iconColor 
                         ? businessSection.iconColor.replace('text-', 'text-').replace('-600', '-700')
                         : "text-gray-700"
-                  )} 
+                  )}
+                  fill="none"
+                  strokeWidth={2}
                 />
               </div>
             ) : (
