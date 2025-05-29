@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,9 +10,11 @@ import { motion } from 'framer-motion';
 import { 
   TrendingUp, Clock, FileText, Calendar, Award, 
   Zap, ArrowRight, CheckCircle, AlertTriangle,
-  Target, PlayCircle, BookOpen
+  Target, PlayCircle, BookOpen, Shield, Umbrella,
+  Monitor, Briefcase
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BusinessJourneySections } from '@/components/guidance/BusinessJourneySections';
 
 interface DashboardAnalytics {
   overallProgress: number;
@@ -160,6 +161,20 @@ const EnhancedOverview: React.FC = () => {
     }
   };
 
+  // Extended sections data with icons for the visual journey map
+  const journeySections = [
+    { id: 1, title: "Foundation", emoji: "🏗️", icon: CheckCircle },
+    { id: 2, title: "Compliance", emoji: "📋", icon: CheckCircle },
+    { id: 3, title: "Banking", emoji: "🏦", icon: CheckCircle },
+    { id: 4, title: "Operations", emoji: "⚙️", icon: CheckCircle },
+    { id: 5, title: "Employment", emoji: "👥", icon: CheckCircle },
+    { id: 6, title: "Data Protection", emoji: "🛡️", icon: Shield },
+    { id: 7, title: "Insurance", emoji: "☂️", icon: Umbrella },
+    { id: 8, title: "Growth", emoji: "📈", icon: TrendingUp },
+    { id: 9, title: "Technology", emoji: "💻", icon: Monitor },
+    { id: 10, title: "Sector-Specific", emoji: "💼", icon: Briefcase }
+  ];
+
   const navigateToSection = (sectionOrderNumber: number) => {
     navigate(`/guided-help?section=${sectionOrderNumber}`);
   };
@@ -198,7 +213,7 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Visual Journey Map */}
+      {/* Visual Journey Map - Updated with all 10 sections */}
       <Card className="p-6">
         <CardHeader className="px-0 pt-0">
           <CardTitle className="flex items-center gap-2">
@@ -208,50 +223,64 @@ const EnhancedOverview: React.FC = () => {
         </CardHeader>
         <CardContent className="px-0">
           <div className="relative">
-            <div className="flex justify-between items-center mb-4">
-              {analytics.sections.map((section, index) => (
-                <motion.div
-                  key={section.id}
-                  className="flex-1 relative cursor-pointer"
-                  whileHover={{ scale: 1.05 }}
-                  onClick={() => navigateToSection(section.order_number)}
-                >
-                  {/* Connection line */}
-                  {index < analytics.sections.length - 1 && (
-                    <div className="absolute top-6 left-1/2 w-full h-0.5 bg-gray-300 z-0" />
-                  )}
-                  
-                  {/* Section node */}
-                  <div className="relative z-10 flex flex-col items-center">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+              {journeySections.map((section, index) => {
+                const IconComponent = section.icon;
+                const completion = analytics?.completionBySection[section.id] || 0;
+                const isCompleted = completion === 100;
+                const isCurrent = section.id === analytics?.currentSection?.id;
+                
+                return (
+                  <motion.div
+                    key={section.id}
+                    className="flex flex-col items-center cursor-pointer"
+                    whileHover={{ scale: 1.05 }}
+                    onClick={() => navigateToSection(section.id)}
+                  >
+                    {/* Section node */}
                     <div className={cn(
-                      "w-12 h-12 rounded-full flex items-center justify-center text-2xl border-4 transition-all",
-                      analytics.completionBySection[section.id] === 100 ? 
+                      "w-12 h-12 rounded-full flex items-center justify-center text-2xl border-4 transition-all mb-2",
+                      isCompleted ? 
                         "bg-green-500 border-green-500 text-white" :
-                      section.id === analytics.currentSection?.id ? 
+                      isCurrent ? 
                         "bg-blue-500 border-blue-500 text-white" : 
                         "bg-white border-gray-300 text-gray-500"
                     )}>
-                      {analytics.completionBySection[section.id] === 100 ? (
+                      {isCompleted ? (
                         <CheckCircle className="w-6 h-6" />
                       ) : (
-                        section.emoji || section.order_number
+                        <IconComponent className="w-6 h-6" />
                       )}
                     </div>
-                    <p className="text-sm mt-2 text-center font-medium">{section.title}</p>
-                    <p className="text-xs text-gray-500">
-                      {Math.round(analytics.completionBySection[section.id])}% • {section.estimated_time_minutes}min
-                    </p>
                     
-                    {section.deadline_days && analytics.completionBySection[section.id] < 100 && (
-                      <Badge variant="outline" className="mt-1 text-xs">
-                        {section.deadline_days} days
-                      </Badge>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
+                    <p className="text-sm text-center font-medium">{section.title}</p>
+                    <p className="text-xs text-gray-500">
+                      {Math.round(completion)}%
+                    </p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Business Journey Sections - New comprehensive view */}
+      <Card className="p-6">
+        <CardHeader className="px-0 pt-0">
+          <CardTitle className="flex items-center gap-2">
+            <BookOpen className="w-5 h-5" />
+            Complete Business Setup Guide
+          </CardTitle>
+          <p className="text-gray-600 mt-2">
+            Navigate through all aspects of setting up your business, from foundation to specialized requirements.
+          </p>
+        </CardHeader>
+        <CardContent className="px-0">
+          <BusinessJourneySections 
+            onSectionClick={navigateToSection}
+            sectionsProgress={analytics?.completionBySection || {}}
+          />
         </CardContent>
       </Card>
 
