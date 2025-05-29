@@ -46,8 +46,17 @@ const Dashboard = () => {
       }
     };
 
+    const handleOpenBizzy = () => {
+      setBizzyOpen(true);
+    };
+
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('openBizzy', handleOpenBizzy);
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('openBizzy', handleOpenBizzy);
+    };
   }, []);
 
   return (

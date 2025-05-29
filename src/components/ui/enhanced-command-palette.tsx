@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Calculator, Calendar, FileText, Settings, Sparkles, Clock, TrendingUp } from 'lucide-react';
+import { Search, FileText, HelpCircle, Settings, Sparkles, Clock, TrendingUp, BookOpen, Users, Building } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 interface CommandItem {
   id: string;
@@ -30,44 +31,83 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
-  // Mock command items
+  // Bizzy-relevant command items
   const commands: CommandItem[] = [
     {
       id: '1',
       title: 'Go to Dashboard',
-      description: 'Navigate to your dashboard',
+      description: 'Navigate to your main dashboard',
       icon: FileText,
       category: 'Navigation',
-      action: () => console.log('Dashboard'),
+      action: () => navigate('/dashboard'),
       shortcut: '⌘D',
       recent: true,
     },
     {
       id: '2',
-      title: 'Open Calculator',
-      description: 'Quick calculations',
-      icon: Calculator,
-      category: 'Tools',
-      action: () => console.log('Calculator'),
-      shortcut: '⌘C',
+      title: 'Browse Documents',
+      description: 'View and manage business documents',
+      icon: FileText,
+      category: 'Navigation',
+      action: () => navigate('/dashboard/documents'),
+      shortcut: '⌘2',
     },
     {
       id: '3',
-      title: 'View Calendar',
-      description: 'Check your schedule',
-      icon: Calendar,
+      title: 'Guided Help',
+      description: 'Get step-by-step business setup guidance',
+      icon: BookOpen,
       category: 'Navigation',
-      action: () => console.log('Calendar'),
-      shortcut: '⌘K',
+      action: () => navigate('/guided-help'),
+      shortcut: '⌘G',
     },
     {
       id: '4',
+      title: 'Talk to Bizzy',
+      description: 'Get AI assistance for your business',
+      icon: HelpCircle,
+      category: 'AI Assistant',
+      action: () => {
+        onOpenChange(false);
+        // Trigger Bizzy chat
+        const event = new CustomEvent('openBizzy');
+        window.dispatchEvent(event);
+      },
+      shortcut: '⌘B',
+    },
+    {
+      id: '5',
+      title: 'Business Setup Journey',
+      description: 'View your progress through business setup steps',
+      icon: Building,
+      category: 'Guidance',
+      action: () => navigate('/guided-help'),
+      shortcut: '⌘J',
+    },
+    {
+      id: '6',
+      title: 'Search Documents',
+      description: 'Find specific business templates and forms',
+      icon: Search,
+      category: 'Search',
+      action: () => {
+        navigate('/dashboard/documents');
+        setTimeout(() => {
+          const searchInput = document.querySelector('input[placeholder*="search"]') as HTMLInputElement;
+          if (searchInput) searchInput.focus();
+        }, 100);
+      },
+      shortcut: '⌘/',
+    },
+    {
+      id: '7',
       title: 'Settings',
-      description: 'Manage your preferences',
+      description: 'Manage your account preferences',
       icon: Settings,
       category: 'System',
-      action: () => console.log('Settings'),
+      action: () => navigate('/dashboard/settings'),
       shortcut: '⌘,',
     },
   ];
@@ -88,7 +128,6 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
 
   useEffect(() => {
     if (open && inputRef.current) {
-      // Use a small delay to ensure the dialog is fully rendered
       setTimeout(() => {
         inputRef.current?.focus();
       }, 100);
@@ -117,7 +156,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 max-w-2xl mx-auto mt-20 border shadow-2xl">
+      <DialogContent className="p-0 max-w-xl mx-auto mt-8 border shadow-2xl fixed top-8 left-1/2 transform -translate-x-1/2">
         <div className="flex flex-col">
           {/* Search Input */}
           <div className="flex items-center border-b px-4 py-3">
@@ -127,7 +166,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Search for commands, documents, or ask a question..."
+              placeholder="Search for documents, guides, or get help..."
               className="border-0 bg-transparent focus:ring-0 text-base focus-visible:ring-0 shadow-none"
             />
             {query && (
@@ -139,12 +178,12 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           </div>
 
           {/* Results */}
-          <div className="max-h-96 overflow-y-auto">
+          <div className="max-h-80 overflow-y-auto">
             {Object.keys(groupedCommands).length === 0 ? (
-              <div className="p-8 text-center text-gray-500">
-                <Search className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <div className="p-6 text-center text-gray-500">
+                <Search className="w-10 h-10 mx-auto mb-3 text-gray-300" />
                 <p>No results found for "{query}"</p>
-                <p className="text-sm mt-1">Try different keywords or check spelling</p>
+                <p className="text-sm mt-1">Try searching for documents, guides, or help topics</p>
               </div>
             ) : (
               Object.entries(groupedCommands).map(([category, items]) => (
