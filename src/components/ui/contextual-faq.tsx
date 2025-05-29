@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HelpCircle, X, Search, Play, MessageCircle, ChevronRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,16 +20,10 @@ interface FAQ {
 }
 
 interface ContextualFAQProps {
+  isOpen: boolean;
+  onClose: () => void;
   currentPage: string;
-  userBehavior: {
-    dwellTime: number;
-    errorOccurred: boolean;
-    repetitiveClicks: boolean;
-    navigationLoops: boolean;
-    hoveredFeatures: string[];
-  };
   onContactSupport?: () => void;
-  onDismiss?: (context: string) => void;
 }
 
 const mockFAQs: FAQ[] = [
@@ -61,28 +55,13 @@ const mockFAQs: FAQ[] = [
 ];
 
 export const ContextualFAQ: React.FC<ContextualFAQProps> = ({
+  isOpen,
+  onClose,
   currentPage,
-  userBehavior,
-  onContactSupport,
-  onDismiss
+  onContactSupport
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFAQ, setSelectedFAQ] = useState<string | null>(null);
-
-  // Behavioral trigger logic
-  useEffect(() => {
-    const shouldShow = 
-      userBehavior.dwellTime > 30000 || // 30 seconds dwell time
-      userBehavior.errorOccurred ||
-      userBehavior.repetitiveClicks ||
-      userBehavior.navigationLoops;
-
-    if (shouldShow && !isVisible) {
-      // Show the panel directly without notification dot
-      setIsVisible(true);
-    }
-  }, [userBehavior, isVisible]);
 
   // Filter and rank FAQs based on context
   const getRelevantFAQs = () => {
@@ -97,15 +76,15 @@ export const ContextualFAQ: React.FC<ContextualFAQProps> = ({
       );
     }
 
-    // Boost relevance based on user behavior
+    // Boost relevance based on current page
     faqs = faqs.map(faq => {
       let score = faq.relevanceScore;
       
-      if (userBehavior.errorOccurred && faq.category === 'technical') {
-        score += 0.3;
+      if (currentPage.includes('guidance') && faq.tags.includes('guidance')) {
+        score += 0.2;
       }
       
-      if (currentPage.includes('guidance') && faq.tags.includes('guidance')) {
+      if (currentPage.includes('documents') && faq.tags.includes('documents')) {
         score += 0.2;
       }
 
@@ -115,12 +94,7 @@ export const ContextualFAQ: React.FC<ContextualFAQProps> = ({
     return faqs.sort((a, b) => b.relevanceScore - a.relevanceScore).slice(0, 5);
   };
 
-  const handleDismiss = () => {
-    setIsVisible(false);
-    onDismiss?.(currentPage);
-  };
-
-  if (!isVisible) return null;
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
@@ -130,7 +104,6 @@ export const ContextualFAQ: React.FC<ContextualFAQProps> = ({
         exit={{ x: 400, opacity: 0 }}
         className="fixed right-4 top-1/2 -translate-y-1/2 z-50 w-96"
       >
-        {/* FAQ panel - no notification dot */}
         <Card className="glass-card shadow-2xl">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
@@ -138,7 +111,7 @@ export const ContextualFAQ: React.FC<ContextualFAQProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={handleDismiss}
+                onClick={onClose}
                 className="h-6 w-6 p-0"
               >
                 <X className="w-4 h-4" />

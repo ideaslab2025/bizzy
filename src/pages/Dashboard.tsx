@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, X, HelpCircle } from "lucide-react";
@@ -32,15 +31,9 @@ import BizzyChat from "@/components/BizzyChat";
 const Dashboard = () => {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [bizzyOpen, setBizzyOpen] = useState(false);
+  const [faqOpen, setFaqOpen] = useState(false);
   const [hasNotifications] = useState(true);
   const [syncStatus, setSyncStatus] = useState<'typing' | 'uploading' | 'syncing' | 'synced' | 'offline' | 'error'>('synced');
-  const [userBehavior, setUserBehavior] = useState({
-    dwellTime: 0,
-    errorOccurred: false,
-    repetitiveClicks: false,
-    navigationLoops: false,
-    hoveredFeatures: [] as string[]
-  });
 
   // Listen for keyboard shortcut to open command palette
   useEffect(() => {
@@ -53,39 +46,6 @@ const Dashboard = () => {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // Track user behavior for contextual FAQ
-  useEffect(() => {
-    const startTime = Date.now();
-    let clickCount = 0;
-    let lastClickTime = 0;
-
-    const trackClick = () => {
-      const now = Date.now();
-      if (now - lastClickTime < 1000) {
-        clickCount++;
-      } else {
-        clickCount = 1;
-      }
-      lastClickTime = now;
-
-      if (clickCount > 3) {
-        setUserBehavior(prev => ({ ...prev, repetitiveClicks: true }));
-      }
-    };
-
-    const trackDwellTime = setInterval(() => {
-      const dwellTime = Date.now() - startTime;
-      setUserBehavior(prev => ({ ...prev, dwellTime }));
-    }, 1000);
-
-    document.addEventListener('click', trackClick);
-
-    return () => {
-      document.removeEventListener('click', trackClick);
-      clearInterval(trackDwellTime);
-    };
   }, []);
 
   return (
@@ -268,12 +228,15 @@ const Dashboard = () => {
         onClose={() => setBizzyOpen(false)} 
       />
       
+      {/* FAQ Trigger Button */}
+      <FAQTrigger onClick={() => setFaqOpen(true)} />
+      
       {/* Contextual FAQ */}
       <ContextualFAQ
+        isOpen={faqOpen}
+        onClose={() => setFaqOpen(false)}
         currentPage={window.location.pathname}
-        userBehavior={userBehavior}
         onContactSupport={() => setBizzyOpen(true)}
-        onDismiss={(context) => console.log('FAQ dismissed for:', context)}
       />
       
       {/* Global Keyboard Handlers */}
