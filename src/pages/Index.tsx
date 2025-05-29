@@ -13,11 +13,12 @@ import Testimonials from "@/components/Testimonials";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
-
 const Index = () => {
-  const { user, signOut } = useAuth();
+  const {
+    user,
+    signOut
+  } = useAuth();
   const navigate = useNavigate();
-  
   const [floatingPosition, setFloatingPosition] = useState({
     x: window.innerWidth - 150,
     y: window.innerHeight - 150
@@ -26,7 +27,6 @@ const Index = () => {
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
-  
   useEffect(() => {
     const floatingAnimation = () => {
       setFloatingPosition(prev => ({
@@ -36,7 +36,6 @@ const Index = () => {
       requestAnimationFrame(floatingAnimation);
     };
     const animation = requestAnimationFrame(floatingAnimation);
-
     const handleResize = () => {
       setFloatingPosition({
         x: window.innerWidth - 150,
@@ -44,7 +43,6 @@ const Index = () => {
       });
     };
     window.addEventListener('resize', handleResize);
-
     const handleHashChange = () => {
       const hash = window.location.hash;
       if (hash === '#faqs' && faqsRef.current) {
@@ -57,7 +55,6 @@ const Index = () => {
         });
       }
     };
-
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
     return () => {
@@ -79,7 +76,6 @@ const Index = () => {
       });
     }
   };
-
   const handleSignOut = async () => {
     try {
       await signOut();
@@ -90,89 +86,51 @@ const Index = () => {
   };
 
   // Pricing plans for homepage display only
-  const plans = [
-    {
-      name: "Bronze",
-      price: "£97",
-      description: "Perfect for solo entrepreneurs and small startups",
-      icon: <Users className="w-6 h-6" />,
-      badge: null,
-      planId: "bronze",
-      features: [
-        "Basic business setup guidance",
-        "Essential document templates",
-        "Email support",
-        "Basic compliance checking",
-        "1 consultation session"
-      ],
-      color: "border-amber-200 bg-amber-50",
-      buttonStyle: "bg-amber-600 hover:bg-amber-700 text-white",
-      textColor: "text-amber-700"
-    },
-    {
-      name: "Silver", 
-      price: "£197",
-      description: "Ideal for growing businesses and established companies",
-      icon: <Building2 className="w-6 h-6" />,
-      badge: <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Most Popular</Badge>,
-      planId: "silver",
-      features: [
-        "Everything in Bronze",
-        "Advanced business tools",
-        "Priority email & chat support",
-        "Custom document generation",
-        "3 consultation sessions",
-        "Advanced compliance monitoring",
-        "Team collaboration tools"
-      ],
-      color: "border-gray-200 bg-gray-50 shadow-lg",
-      buttonStyle: "bg-gray-600 hover:bg-gray-700 text-white",
-      textColor: "text-gray-700"
-    },
-    {
-      name: "Gold",
-      price: "£297", 
-      description: "Advanced solution for established businesses",
-      icon: <Crown className="w-6 h-6" />,
-      badge: null,
-      planId: "gold",
-      features: [
-        "Everything in Silver",
-        "Premium business tools",
-        "Priority phone support",
-        "Advanced integrations",
-        "5 consultation sessions",
-        "Custom branding options",
-        "Advanced analytics",
-        "Dedicated support"
-      ],
-      color: "border-yellow-200 bg-yellow-50",
-      buttonStyle: "bg-yellow-600 hover:bg-yellow-700 text-white",
-      textColor: "text-yellow-700"
-    },
-    {
-      name: "Platinum",
-      price: "£497",
-      description: "Comprehensive solution for large organizations",
-      icon: <Crown className="w-6 h-6" />,
-      badge: <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">Premium</Badge>,
-      planId: "platinum",
-      features: [
-        "Everything in Gold",
-        "Unlimited consultations",
-        "Dedicated account manager",
-        "Custom integrations",
-        "White-label options",
-        "24/7 phone support",
-        "Legal review services",
-        "Priority development requests"
-      ],
-      color: "border-purple-200 bg-purple-50",
-      buttonStyle: "bg-purple-600 hover:bg-purple-700 text-white",
-      textColor: "text-purple-700"
-    }
-  ];
-
+  const plans = [{
+    name: "Bronze",
+    price: "£97",
+    description: "Perfect for solo entrepreneurs and small startups",
+    icon: <Users className="w-6 h-6" />,
+    badge: null,
+    planId: "bronze",
+    features: ["Basic business setup guidance", "Essential document templates", "Email support", "Basic compliance checking", "1 consultation session"],
+    color: "border-amber-200 bg-amber-50",
+    buttonStyle: "bg-amber-600 hover:bg-amber-700 text-white",
+    textColor: "text-amber-700"
+  }, {
+    name: "Silver",
+    price: "£197",
+    description: "Ideal for growing businesses and established companies",
+    icon: <Building2 className="w-6 h-6" />,
+    badge: <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Most Popular</Badge>,
+    planId: "silver",
+    features: ["Everything in Bronze", "Advanced business tools", "Priority email & chat support", "Custom document generation", "3 consultation sessions", "Advanced compliance monitoring", "Team collaboration tools"],
+    color: "border-gray-200 bg-gray-50 shadow-lg",
+    buttonStyle: "bg-gray-600 hover:bg-gray-700 text-white",
+    textColor: "text-gray-700"
+  }, {
+    name: "Gold",
+    price: "£297",
+    description: "Advanced solution for established businesses",
+    icon: <Crown className="w-6 h-6" />,
+    badge: null,
+    planId: "gold",
+    features: ["Everything in Silver", "Premium business tools", "Priority phone support", "Advanced integrations", "5 consultation sessions", "Custom branding options", "Advanced analytics", "Dedicated support"],
+    color: "border-yellow-200 bg-yellow-50",
+    buttonStyle: "bg-yellow-600 hover:bg-yellow-700 text-white",
+    textColor: "text-yellow-700"
+  }, {
+    name: "Platinum",
+    price: "£497",
+    description: "Comprehensive solution for large organizations",
+    icon: <Crown className="w-6 h-6" />,
+    badge: <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">Premium</Badge>,
+    planId: "platinum",
+    features: ["Everything in Gold", "Unlimited consultations", "Dedicated account manager", "Custom integrations", "White-label options", "24/7 phone support", "Legal review services", "Priority development requests"],
+    color: "border-purple-200 bg-purple-50",
+    buttonStyle: "bg-purple-600 hover:bg-purple-700 text-white",
+    textColor: "text-purple-700"
+  }];
   return <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
       {/* Header/Navigation */}
       <header className="border-b border-blue-900/30 sticky top-0 z-50 bg-[#0a192f] bg-opacity-100 backdrop-blur-md shadow-md">
@@ -191,8 +149,7 @@ const Index = () => {
           
           <div className="flex gap-2 items-center">
             {/* Show user account if logged in */}
-            {user ? (
-              <>
+            {user ? <>
                 {/* Mobile Dashboard Button */}
                 <Link to="/dashboard" className="md:hidden">
                   <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
@@ -203,20 +160,12 @@ const Index = () => {
                 {/* Desktop Account Dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className="hidden md:flex">
-                    <Button 
-                      variant="ghost" 
-                      className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[state=open]:bg-blue-900/30"
-                    >
+                    <Button variant="ghost" className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[state=open]:bg-blue-900/30">
                       <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-medium text-white">
-                        {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || 
-                         user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || 
-                         user?.email?.charAt(0)?.toUpperCase() || 'U'}
+                        {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
                       </div>
                       <span className="hidden lg:inline">
-                        {user?.user_metadata?.company_name || 
-                         (user?.user_metadata?.first_name 
-                           ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}`
-                           : user?.email?.split('@')[0] || 'Account')}
+                        {user?.user_metadata?.company_name || (user?.user_metadata?.first_name ? `${user.user_metadata.first_name.charAt(0).toUpperCase() + user.user_metadata.first_name.slice(1)}` : user?.email?.split('@')[0] || 'Account')}
                       </span>
                     </Button>
                   </DropdownMenuTrigger>
@@ -228,18 +177,13 @@ const Index = () => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem 
-                      onClick={handleSignOut}
-                      className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2"
-                    >
+                    <DropdownMenuItem onClick={handleSignOut} className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2">
                       <LogOut className="h-4 w-4" />
                       Sign Out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </>
-            ) : (
-              <>
+              </> : <>
                 {/* Mobile Login Button */}
                 <Link to="/login" className="md:hidden">
                   <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">
@@ -254,8 +198,7 @@ const Index = () => {
                 <Link to="/register" className="hidden md:block">
                   <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started</Button>
                 </Link>
-              </>
-            )}
+              </>}
             
             {/* Mobile Menu */}
             <Drawer>
@@ -288,29 +231,21 @@ const Index = () => {
                     </Button>
                   </DrawerClose>
                   <div className="border-t border-blue-900/30 pt-4 flex flex-col space-y-2">
-                    {user ? (
-                      <>
+                    {user ? <>
                         <Link to="/dashboard" className="w-full">
                           <Button variant="ghost" className="w-full text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Dashboard</Button>
                         </Link>
-                        <Button 
-                          variant="ghost" 
-                          className="w-full text-red-600 hover:text-red-500 hover:bg-red-900/30"
-                          onClick={handleSignOut}
-                        >
+                        <Button variant="ghost" className="w-full text-red-600 hover:text-red-500 hover:bg-red-900/30" onClick={handleSignOut}>
                           Sign Out
                         </Button>
-                      </>
-                    ) : (
-                      <>
+                      </> : <>
                         <Link to="/login" className="w-full">
                           <Button variant="ghost" className="w-full text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Log in</Button>
                         </Link>
                         <Link to="/register" className="w-full">
                           <Button className="w-full bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started</Button>
                         </Link>
-                      </>
-                    )}
+                      </>}
                   </div>
                 </div>
               </DrawerContent>
@@ -372,12 +307,9 @@ const Index = () => {
               
               <div className="p-3 z-10 relative flex flex-col h-full">
                 <div className="w-full h-[200px] mx-auto flex items-end justify-center pt-16">
-                  <img 
-                    src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" 
-                    alt="Step-by-Step Guidance" 
-                    className="h-[170px] object-contain scale-125 translate-y-3" 
-                    style={{ maxWidth: '90%' }}
-                  />
+                  <img src="/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png" alt="Step-by-Step Guidance" className="h-[170px] object-contain scale-125 translate-y-3" style={{
+                  maxWidth: '90%'
+                }} />
                 </div>
                 <div className="mt-6 mb-4">
                   <h3 className="text-lg font-bold text-[#3b82f6] mb-2 text-center">Step-by-Step Guidance</h3>
@@ -475,16 +407,10 @@ const Index = () => {
 
           {/* Pricing Cards */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-8xl mx-auto">
-            {plans.map((plan, index) => (
-              <Card 
-                key={plan.name} 
-                className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300`}
-              >
-                {plan.badge && (
-                  <div className="absolute top-4 right-4">
+            {plans.map((plan, index) => <Card key={plan.name} className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300`}>
+                {plan.badge && <div className="absolute top-4 right-4">
                     {plan.badge}
-                  </div>
-                )}
+                  </div>}
                 
                 <CardHeader className="text-center pb-8">
                   <div className="flex items-center justify-center gap-3 mb-4">
@@ -505,9 +431,7 @@ const Index = () => {
 
                 <CardContent className="pt-0">
                   <Link to={`/pricing?plan=${plan.planId}`}>
-                    <Button 
-                      className={`w-full mb-8 py-6 text-lg font-semibold ${plan.buttonStyle}`}
-                    >
+                    <Button className={`w-full mb-8 py-6 text-lg font-semibold ${plan.buttonStyle}`}>
                       <Zap className="w-5 h-5 mr-2" />
                       Get Started
                     </Button>
@@ -519,17 +443,14 @@ const Index = () => {
                       What's included:
                     </h4>
                     <ul className="space-y-3">
-                      {plan.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-start gap-3">
+                      {plan.features.map((feature, featureIndex) => <li key={featureIndex} className="flex items-start gap-3">
                           <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                           <span className="text-gray-700">{feature}</span>
-                        </li>
-                      ))}
+                        </li>)}
                     </ul>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
 
           {/* Why Choose Bizzy */}
@@ -541,7 +462,7 @@ const Index = () => {
                   <Star className="w-8 h-8 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-white">Expert Guidance</h3>
-                <p className="text-blue-100/80">Professional advice from business setup experts</p>
+                <p className="text-blue-100/80">Professional guidance, pre-checked from business experts</p>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
@@ -682,5 +603,4 @@ const Index = () => {
       </div>
     </div>;
 };
-
 export default Index;
