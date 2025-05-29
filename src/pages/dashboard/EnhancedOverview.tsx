@@ -13,7 +13,7 @@ import {
   Zap, ArrowRight, CheckCircle, AlertTriangle,
   Target, PlayCircle, BookOpen, Shield, Lock,
   ShieldCheck, Umbrella, ShieldAlert, Rocket,
-  Monitor, Cpu, Briefcase, Building2
+  Monitor, Cpu, Briefcase, Building2, Calculator, Users
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -43,11 +43,11 @@ interface QuickWin {
 
 // Section configuration with enhanced metadata
 const sectionConfig = {
-  1: { icon: FileText, color: 'text-blue-600 bg-blue-100', emoji: '📄' },
-  2: { icon: Building2, color: 'text-green-600 bg-green-100', emoji: '🏢' },
-  3: { icon: Calculator, color: 'text-purple-600 bg-purple-100', emoji: '💰' },
-  4: { icon: Users, color: 'text-orange-600 bg-orange-100', emoji: '👥' },
-  5: { icon: FileText, color: 'text-red-600 bg-red-100', emoji: '📋' },
+  1: { icon: FileText, color: 'text-blue-600 bg-blue-100', emoji: '📄', title: 'Foundation Setup' },
+  2: { icon: Building2, color: 'text-green-600 bg-green-100', emoji: '🏢', title: 'Legal Structure' },
+  3: { icon: Calculator, color: 'text-purple-600 bg-purple-100', emoji: '💰', title: 'Financial Setup' },
+  4: { icon: Users, color: 'text-orange-600 bg-orange-100', emoji: '👥', title: 'Team & Operations' },
+  5: { icon: FileText, color: 'text-red-600 bg-red-100', emoji: '📋', title: 'Compliance' },
   6: { icon: Shield, color: 'text-purple-600 bg-purple-100', emoji: '🛡️', title: 'Data Protection & GDPR' },
   7: { icon: Umbrella, color: 'text-orange-600 bg-orange-100', emoji: '☂️', title: 'Insurance & Risk Management' },
   8: { icon: TrendingUp, color: 'text-green-600 bg-green-100', emoji: '📈', title: 'Business Growth & Scaling' },
