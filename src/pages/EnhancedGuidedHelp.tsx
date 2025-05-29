@@ -572,21 +572,6 @@ const EnhancedGuidedHelp = () => {
   const sectionProgress = currentSectionData ? getSectionProgress(currentSectionData.id) : 0;
   const overallProgress = Math.round(getOverallProgress());
 
-  const enhancedSections = businessSections.map(section => {
-    const sectionSteps = allSteps.filter(step => step.section_id === section.id);
-    const sectionCompletedSteps = sectionSteps.filter(step => completedSteps.has(step.id));
-    return {
-      ...section,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      color_theme: section.iconColor.replace('text-', '').replace('-600', ''),
-      priority_order: section.order_number,
-      total_steps: sectionSteps.length,
-      completed_steps: sectionCompletedSteps.length,
-      progress: sectionSteps.length > 0 ? (sectionCompletedSteps.length / sectionSteps.length) : 0
-    };
-  });
-
   const sidebarContent = (
     <div className="bg-[#0088cc] h-full text-white flex flex-col">
       {/* Logo */}
@@ -617,7 +602,17 @@ const EnhancedGuidedHelp = () => {
               <SidebarSection
                 key={section.id}
                 section={{
-                  ...section,
+                  id: section.id,
+                  title: section.title,
+                  description: section.description,
+                  order_number: section.order_number,
+                  icon: section.iconColor,
+                  emoji: undefined,
+                  estimated_time_minutes: parseInt(section.estimatedTime),
+                  priority_order: section.order_number,
+                  deadline_days: section.deadline ? parseInt(section.deadline.split(' ')[0]) : undefined,
+                  color_theme: section.iconColor.replace('text-', '').replace('-600', ''),
+                  created_at: new Date().toISOString(),
                   total_steps: allSteps.filter(step => step.section_id === section.id).length,
                   completed_steps: allSteps.filter(step => step.section_id === section.id && completedSteps.has(step.id)).length,
                   progress: getSectionProgress(section.id)
