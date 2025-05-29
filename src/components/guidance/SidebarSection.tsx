@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, Clock } from 'lucide-react';
@@ -68,7 +69,11 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
             {isCompleted ? (
-              <CheckCircle className="w-6 h-6 text-green-500" />
+              <CheckCircle 
+                className="w-6 h-6 text-green-500" 
+                fill="none"
+                strokeWidth={2}
+              />
             ) : IconComponent ? (
               <div className="relative">
                 {/* Enhanced white background with stronger contrast */}
@@ -122,7 +127,11 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
           animate={{ scale: 1 }}
           className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full p-1"
         >
-          <CheckCircle className="w-4 h-4" />
+          <CheckCircle 
+            className="w-4 h-4" 
+            fill="none"
+            strokeWidth={2}
+          />
         </motion.div>
       )}
     </motion.button>
