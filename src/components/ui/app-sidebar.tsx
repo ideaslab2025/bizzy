@@ -1,7 +1,8 @@
 
-import React from 'react';
-import { Home, FileText, HelpCircle, Settings, Users, BookOpen, Badge } from 'lucide-react';
+import React, { useState } from 'react';
+import { Home, FileText, HelpCircle, Settings, BookOpen, Badge, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sidebar,
   SidebarContent,
@@ -52,114 +53,232 @@ const supportItems = [
   },
 ];
 
+// Mock user plan - in real app this would come from context/props
+const mockUserPlan = { current: 'free' as const };
+
+const UpgradeButton = ({ userPlan }: { userPlan: { current: 'free' | 'bronze' | 'silver' | 'gold' | 'platinum' } }) => {
+  const navigate = useNavigate();
+  
+  const plans = {
+    free: { next: 'bronze', color: 'bg-gradient-to-r from-amber-600 to-amber-700', label: 'Bronze' },
+    bronze: { next: 'silver', color: 'bg-gradient-to-r from-gray-400 to-gray-500', label: 'Silver' },
+    silver: { next: 'gold', color: 'bg-gradient-to-r from-yellow-500 to-yellow-600', label: 'Gold' },
+    gold: { next: 'platinum', color: 'bg-gradient-to-r from-purple-600 to-purple-700', label: 'Platinum' },
+    platinum: null,
+  };
+
+  const nextPlan = plans[userPlan.current];
+
+  if (!nextPlan) {
+    return (
+      <div className="rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 p-3 text-center">
+        <p className="text-sm text-white font-medium">Platinum Member</p>
+        <p className="text-xs text-purple-200 mt-1">You're on our highest plan!</p>
+      </div>
+    );
+  }
+
+  return (
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={() => navigate(`/pricing?plan=${nextPlan.next}`)}
+      className={`w-full rounded-lg ${nextPlan.color} px-4 py-3 text-white transition-all hover:shadow-lg`}
+    >
+      <div className="flex items-center justify-between">
+        <span className="font-medium">Upgrade to {nextPlan.label}</span>
+        <ChevronRight className="h-4 w-4" />
+      </div>
+      <p className="mt-1 text-xs opacity-90">Unlock more features</p>
+    </motion.button>
+  );
+};
+
 export function AppSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [expandedSections, setExpandedSections] = useState<string[]>(['main']);
+
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections(prev =>
+      prev.includes(sectionId)
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
+  };
 
   return (
     <Sidebar className="bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200">
       <SidebarHeader className="p-6 border-b border-gray-200">
-        <div className="flex items-center space-x-3 group cursor-pointer transition-all duration-200 hover:scale-105">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow duration-200">
+        <motion.div 
+          className="flex items-center space-x-3 group cursor-pointer transition-all duration-200"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => navigate('/')}
+        >
+          <motion.div 
+            className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md"
+            whileHover={{ 
+              boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)",
+              scale: 1.1 
+            }}
+            transition={{ duration: 0.2 }}
+          >
             <span className="text-white font-bold text-lg">B</span>
-          </div>
+          </motion.div>
           <div>
             <h2 className="text-xl font-bold text-gray-900 tracking-tight">Bizzy</h2>
             <p className="text-xs text-gray-500 mt-1">Setup 68% Complete</p>
           </div>
-        </div>
-        <div className="mt-3 h-1 bg-gray-200 rounded-full overflow-hidden">
-          <div className="h-full w-[68%] bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-300"></div>
+        </motion.div>
+        <div className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+          <motion.div 
+            className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: "68%" }}
+            transition={{ duration: 1, delay: 0.2 }}
+          />
         </div>
       </SidebarHeader>
       
       <SidebarContent className="px-4 py-6">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
-            Main Menu
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-2">
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton 
-                    asChild
-                    isActive={location.pathname === item.url}
-                    className={`
-                      relative group transition-all duration-200 ease-out
-                      hover:bg-gray-100 hover:translate-x-1 hover:shadow-sm
-                      data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 
-                      data-[active=true]:border-l-4 data-[active=true]:border-blue-500
-                      data-[active=true]:ml-0 data-[active=true]:pl-4
-                      rounded-lg py-3 px-4 text-base font-medium
-                    `}
-                  >
-                    <button 
-                      onClick={() => navigate(item.url)}
-                      className="flex items-center w-full text-left"
-                    >
-                      <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-700 group-data-[active=true]:text-blue-600 font-medium">
-                            {item.title}
-                          </span>
-                          {item.isNew && (
-                            <Badge className="ml-2 px-1.5 py-0.5 text-xs bg-red-500 text-white rounded-full">
-                              New
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-xs text-gray-500 mt-0.5 group-data-[active=true]:text-blue-500">
-                          {item.description}
-                        </p>
-                      </div>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
+          <motion.button
+            onClick={() => toggleSection('main')}
+            className="flex w-full items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 hover:text-gray-700 transition-colors"
+          >
+            <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
+            <motion.div
+              animate={{ rotate: expandedSections.includes('main') ? 90 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ChevronRight className="w-3 h-3" />
+            </motion.div>
+          </motion.button>
+          
+          <AnimatePresence>
+            {expandedSections.includes('main') && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <SidebarGroupContent>
+                  <SidebarMenu className="space-y-2">
+                    {menuItems.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton 
+                          asChild
+                          isActive={location.pathname === item.url}
+                          className={`
+                            relative group transition-all duration-200 ease-out
+                            hover:bg-gray-100 hover:translate-x-1 hover:shadow-sm
+                            data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 
+                            data-[active=true]:border-l-4 data-[active=true]:border-blue-500
+                            data-[active=true]:ml-0 data-[active=true]:pl-4
+                            rounded-lg py-3 px-4 text-base font-medium
+                          `}
+                        >
+                          <motion.button 
+                            onClick={() => navigate(item.url)}
+                            className="flex items-center w-full text-left"
+                            whileHover={{ x: 2 }}
+                            transition={{ duration: 0.15 }}
+                          >
+                            <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between">
+                                <span className="text-gray-700 group-data-[active=true]:text-blue-600 font-medium">
+                                  {item.title}
+                                </span>
+                                {item.isNew && (
+                                  <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    className="ml-2"
+                                  >
+                                    <Badge className="px-1.5 py-0.5 text-xs bg-red-500 text-white rounded-full">
+                                      New
+                                    </Badge>
+                                  </motion.div>
+                                )}
+                              </div>
+                              <p className="text-xs text-gray-500 mt-0.5 group-data-[active=true]:text-blue-500">
+                                {item.description}
+                              </p>
+                            </div>
+                          </motion.button>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </SidebarGroup>
 
         <SidebarGroup className="mt-8">
-          <SidebarGroupLabel className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
-            Support
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-2">
-              {supportItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton 
-                    asChild
-                    className="hover:bg-gray-100 hover:translate-x-1 transition-all duration-200 rounded-lg py-3 px-4"
-                  >
-                    <button 
-                      onClick={() => navigate(item.url)}
-                      className="flex items-center w-full text-left"
-                    >
-                      <item.icon className="w-5 h-5 mr-3 text-gray-600" />
-                      <div>
-                        <span className="text-gray-700 font-medium">{item.title}</span>
-                        <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
-                      </div>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
+          <motion.button
+            onClick={() => toggleSection('support')}
+            className="flex w-full items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 hover:text-gray-700 transition-colors"
+          >
+            <SidebarGroupLabel>Support</SidebarGroupLabel>
+            <motion.div
+              animate={{ rotate: expandedSections.includes('support') ? 90 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ChevronRight className="w-3 h-3" />
+            </motion.div>
+          </motion.button>
+          
+          <AnimatePresence>
+            {expandedSections.includes('support') && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <SidebarGroupContent>
+                  <SidebarMenu className="space-y-2">
+                    {supportItems.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton 
+                          asChild
+                          className="hover:bg-gray-100 hover:translate-x-1 transition-all duration-200 rounded-lg py-3 px-4"
+                        >
+                          <motion.button 
+                            onClick={() => navigate(item.url)}
+                            className="flex items-center w-full text-left"
+                            whileHover={{ x: 2 }}
+                            transition={{ duration: 0.15 }}
+                          >
+                            <item.icon className="w-5 h-5 mr-3 text-gray-600" />
+                            <div>
+                              <span className="text-gray-700 font-medium">{item.title}</span>
+                              <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
+                            </div>
+                          </motion.button>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="p-4 border-t border-gray-200 mt-auto">
-        <div className="text-center">
-          <button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 hover:shadow-md transform hover:scale-105">
-            Upgrade to Pro
-          </button>
-          <p className="text-xs text-gray-400 mt-3">
-            © 2024 Bizzy Platform • v2.1.0
-          </p>
+      <SidebarFooter className="p-4 border-t border-gray-200 mt-auto space-y-4">
+        <UpgradeButton userPlan={mockUserPlan} />
+        
+        <div className="text-center text-xs text-gray-400 space-y-1">
+          <p>Bizzy Platform v2.1</p>
+          <p>© 2025 Bizzy Ltd</p>
         </div>
       </SidebarFooter>
     </Sidebar>

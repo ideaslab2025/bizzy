@@ -1,7 +1,8 @@
 
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Bell, Search, User, ChevronDown, Settings, LogOut } from "lucide-react";
+import { Bell, Search, User, ChevronDown, Settings, LogOut, X, HelpCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
 import { CommandPalette } from "@/components/ui/command-palette";
@@ -17,9 +18,12 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { BizzyChat } from "@/components/BizzyChat";
 
 const Dashboard = () => {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [bizzyOpen, setBizzyOpen] = useState(false);
+  const [hasNotifications] = useState(true);
 
   // Listen for keyboard shortcut to open command palette
   React.useEffect(() => {
@@ -40,7 +44,7 @@ const Dashboard = () => {
         <AppSidebar />
         <main className="flex-1 relative">
           {/* Enhanced Header */}
-          <header className="sticky top-0 z-40 h-16 bg-gradient-to-r from-slate-100 via-white to-gray-100 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+          <header className="sticky top-0 z-40 h-16 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-b border-gray-200 shadow-sm">
             <div className="h-full px-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200" />
@@ -66,19 +70,31 @@ const Dashboard = () => {
               <div className="flex items-center gap-3">
                 <ThemeToggle />
                 
-                {/* Notifications */}
+                {/* Notifications with Enhanced Hover */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="relative text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200"
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                     >
-                      <Bell className="w-5 h-5" />
-                      <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full flex items-center justify-center">
-                        <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
-                      </span>
-                    </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="relative text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200"
+                      >
+                        <Bell className="w-5 h-5" />
+                        {hasNotifications && (
+                          <motion.span
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="absolute -top-1 -right-1 flex h-3 w-3"
+                          >
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                            <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
+                          </motion.span>
+                        )}
+                      </Button>
+                    </motion.div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
                     <div className="p-4 border-b border-gray-100">
@@ -93,19 +109,24 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* User Menu */}
+                {/* User Menu with Enhanced Hover */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="flex items-center gap-2 text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200"
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="font-medium">John Doe</span>
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="flex items-center gap-2 text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200"
+                      >
+                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                          <User className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="font-medium hidden md:inline-block">John Doe</span>
+                        <ChevronDown className="w-4 h-4" />
+                      </Button>
+                    </motion.div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
                     <DropdownMenuItem className="hover:bg-gray-50">
@@ -124,11 +145,16 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                <NeonGlow color="blue" hover>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md">
-                    Get Help
-                  </button>
-                </NeonGlow>
+                {/* Enhanced Get Help Button */}
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setBizzyOpen(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+                >
+                  <HelpCircle className="w-4 h-4" />
+                  <span>Get Help</span>
+                </motion.button>
               </div>
             </div>
           </header>
@@ -144,10 +170,58 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
+      
+      {/* Command Palette */}
       <CommandPalette 
         open={commandPaletteOpen} 
         onOpenChange={setCommandPaletteOpen}
       />
+      
+      {/* Bizzy AI Chat Modal */}
+      <AnimatePresence>
+        {bizzyOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+            onClick={() => setBizzyOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 100, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 100, scale: 0.9 }}
+              className="w-full max-w-2xl max-h-[80vh] bg-white rounded-2xl shadow-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between border-b p-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                    <span className="text-blue-600 font-bold text-sm">B</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Bizzy AI Assistant</h3>
+                    <p className="text-xs text-gray-500">Here to help you succeed</p>
+                  </div>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setBizzyOpen(false)}
+                  className="rounded-lg p-2 hover:bg-gray-100 transition-colors"
+                >
+                  <X className="h-5 w-5 text-gray-500" />
+                </motion.button>
+              </div>
+              
+              <div className="h-96">
+                <BizzyChat />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
       <FirstViewSpotlight />
     </SidebarProvider>
   );
