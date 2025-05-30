@@ -45,13 +45,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  // Debug: Log state changes
-  useEffect(() => {
-    console.log('Query state changed:', query);
-    console.log('Active tab:', activeTab);
-  }, [query, activeTab]);
-
-  // Business-focused command items
+  // Reduced business-focused command items (removed some to save space)
   const businessRelatedItems: CommandItem[] = [
     {
       id: 'documents',
@@ -80,17 +74,9 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
       action: () => navigate('/guided-help'),
       keywords: ['tasks', 'guidance', 'help', 'setup', 'guides'],
     },
-    {
-      id: 'team',
-      title: 'Team Management',
-      description: 'Manage team and permissions',
-      icon: Users,
-      category: 'business',
-      action: () => navigate('/dashboard/team'),
-      keywords: ['team', 'users', 'permissions', 'management'],
-    },
   ];
 
+  // Reduced quick actions (removed some to save space)
   const quickActions: CommandItem[] = [
     {
       id: 'upload',
@@ -114,22 +100,6 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
         window.dispatchEvent(event);
       },
       keywords: ['bizzy', 'ai', 'help', 'assistant'],
-    },
-    {
-      id: 'next-task',
-      title: 'Start next setup task',
-      icon: Zap,
-      category: 'guides',
-      action: () => navigate('/guided-help'),
-      keywords: ['task', 'next', 'setup', 'continue', 'guides'],
-    },
-    {
-      id: 'settings',
-      title: 'Account Settings',
-      icon: Settings,
-      category: 'settings',
-      action: () => navigate('/dashboard/settings'),
-      keywords: ['settings', 'account', 'preferences'],
     },
   ];
 
@@ -220,16 +190,11 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
     return matchesQuery && matchesTab;
   });
 
-  const businessItems = filteredItems.filter(item => item.category === 'business');
-  const actionItems = filteredItems.filter(item => item.category !== 'business');
-
   // Focus input when dialog opens
   useEffect(() => {
     if (open && inputRef.current) {
-      console.log('Dialog opened, focusing input...');
       const timer = setTimeout(() => {
         inputRef.current?.focus();
-        console.log('Input focused successfully');
       }, 100);
       return () => clearTimeout(timer);
     }
@@ -271,14 +236,13 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
     { id: 'all', label: 'All' },
     { id: 'documents', label: 'Documents' },
     { id: 'guides', label: 'Guides' },
-    { id: 'settings', label: 'Settings' },
     { id: 'help', label: 'Help' },
   ];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
-        className="p-0 max-w-3xl max-h-[80vh] overflow-hidden bg-white rounded-lg border shadow-2xl"
+        className="p-0 max-w-2xl h-[480px] overflow-hidden bg-white rounded-xl border border-gray-200 shadow-2xl"
         aria-labelledby="command-palette-title"
         aria-describedby="command-palette-description"
       >
@@ -289,41 +253,35 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           Search for documents, guides, and perform quick actions
         </DialogDescription>
         
-        {/* SEARCH INPUT - ALWAYS VISIBLE AT TOP */}
-        <div className="p-6 pb-3 border-b bg-white">
+        {/* SEARCH INPUT - Monday.com style */}
+        <div className="p-4 border-b border-gray-100 bg-white">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none z-10" />
             <input
               ref={inputRef}
               value={query}
-              onChange={(e) => {
-                console.log('Input changed:', e.target.value);
-                setQuery(e.target.value);
-              }}
+              onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Search everything..."
-              className="w-full text-lg h-12 pl-10 pr-4 border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-white"
+              placeholder="Search for anything..."
+              className="w-full text-sm h-10 pl-10 pr-4 border-0 bg-gray-50 rounded-lg focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all"
               autoFocus
               autoComplete="off"
             />
           </div>
         </div>
 
-        {/* TAB NAVIGATION */}
-        <div className="flex items-center gap-1 px-6 py-2 border-b bg-gray-50">
+        {/* TAB NAVIGATION - Monday.com style */}
+        <div className="flex items-center gap-0 px-4 py-2 border-b border-gray-100 bg-gray-50">
           {tabs.map((tab) => (
             <Button
               key={tab.id}
               variant="ghost"
-              onClick={() => {
-                console.log('Tab clicked:', tab.id);
-                setActiveTab(tab.id);
-              }}
+              onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "px-4 py-1.5 text-sm font-medium rounded",
+                "px-3 py-1.5 text-xs font-medium rounded-md transition-all",
                 activeTab === tab.id
-                  ? "bg-blue-100 text-blue-700"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  ? "bg-white text-blue-600 shadow-sm border border-gray-200"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
               )}
             >
               {tab.label}
@@ -331,22 +289,22 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           ))}
         </div>
 
-        {/* CONTENT AREA */}
-        <div className="flex-1 overflow-y-auto max-h-[50vh]">
+        {/* CONTENT AREA - Fixed height to prevent size changes */}
+        <div className="flex-1 overflow-y-auto h-[340px]">
           {isSearching ? (
-            <div className="text-center py-8">
-              <Loader className="w-6 h-6 animate-spin mx-auto text-gray-400" />
-              <p className="text-sm text-gray-500 mt-2">Searching...</p>
+            <div className="flex items-center justify-center h-full">
+              <Loader className="w-5 h-5 animate-spin text-gray-400" />
+              <p className="text-sm text-gray-500 ml-2">Searching...</p>
             </div>
           ) : query.trim() && searchResults.length > 0 ? (
-            <div className="p-6 space-y-6">
+            <div className="p-4 space-y-4">
               {['document', 'guide', 'step'].map(type => {
                 const typeResults = searchResults.filter(r => r.type === type);
                 if (typeResults.length === 0) return null;
                 
                 return (
                   <div key={type}>
-                    <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2">
+                    <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
                       {type === 'document' ? 'Documents' : type === 'guide' ? 'Guides' : 'Steps'}
                     </h3>
                     <div className="space-y-1">
@@ -362,13 +320,15 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
                               setQuery('');
                             }}
                             className={cn(
-                              "w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors",
-                              selectedIndex === globalIndex ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                              "w-full text-left p-3 rounded-lg flex items-center gap-3 transition-all",
+                              selectedIndex === globalIndex 
+                                ? "bg-blue-50 text-blue-700 border border-blue-200" 
+                                : "hover:bg-gray-50"
                             )}
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
                           >
-                            <IconComponent className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                            <IconComponent className="w-4 h-4 text-gray-400 flex-shrink-0" />
                             <div className="flex-1 min-w-0">
                               <p className="font-medium text-sm">{result.title}</p>
                               {result.description && (
@@ -384,13 +344,15 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
               })}
             </div>
           ) : query.trim() && searchResults.length === 0 && !isSearching ? (
-            <div className="text-center py-8">
-              <Search className="w-10 h-10 mx-auto text-gray-300" />
-              <p className="mt-3 text-gray-600">No results found for "{query}"</p>
-              <p className="text-sm text-gray-500 mt-1">Try different keywords or browse categories below</p>
+            <div className="flex items-center justify-center h-full text-center">
+              <div>
+                <Search className="w-8 h-8 mx-auto text-gray-300 mb-2" />
+                <p className="text-gray-600 font-medium">No results found</p>
+                <p className="text-sm text-gray-500 mt-1">Try different keywords</p>
+              </div>
             </div>
           ) : (
-            <div className="p-6">
+            <div className="p-4">
               {filteredItems.length > 0 ? (
                 <div className="space-y-1">
                   {filteredItems.map((item, index) => {
@@ -399,19 +361,20 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
                       <motion.button
                         key={item.id}
                         onClick={() => {
-                          console.log('Item clicked:', item.title);
                           item.action();
                           onOpenChange(false);
                           setQuery('');
                         }}
                         className={cn(
-                          "w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors",
-                          selectedIndex === index ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                          "w-full text-left p-3 rounded-lg flex items-center gap-3 transition-all",
+                          selectedIndex === index 
+                            ? "bg-blue-50 text-blue-700 border border-blue-200" 
+                            : "hover:bg-gray-50"
                         )}
                         whileHover={{ scale: 1.01 }}
                         whileTap={{ scale: 0.99 }}
                       >
-                        <IconComponent className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                        <IconComponent className="w-4 h-4 text-gray-400 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm">{item.title}</p>
                           {item.description && (
@@ -423,7 +386,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
                   })}
                 </div>
               ) : (
-                <div className="text-center py-8">
+                <div className="flex items-center justify-center h-full text-center">
                   <p className="text-gray-600">No items found in this category</p>
                 </div>
               )}
@@ -431,16 +394,25 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="border-t p-3 text-xs text-gray-500 flex items-center justify-between bg-gray-50">
+        {/* Footer - Monday.com style */}
+        <div className="border-t border-gray-100 p-3 text-xs text-gray-400 flex items-center justify-between bg-gray-50">
           <div className="flex items-center gap-4">
-            <span>↑↓ Navigate</span>
-            <span>↵ Select</span>
-            <span>⌘K Open</span>
+            <span className="flex items-center gap-1">
+              <kbd className="px-1 py-0.5 bg-white border border-gray-200 rounded text-[10px]">↑↓</kbd>
+              Navigate
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="px-1 py-0.5 bg-white border border-gray-200 rounded text-[10px]">↵</kbd>
+              Select
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="px-1 py-0.5 bg-white border border-gray-200 rounded text-[10px]">⌘K</kbd>
+              Open
+            </span>
           </div>
           <div className="flex items-center gap-1">
             <Sparkles className="w-3 h-3" />
-            <span>AI-powered search</span>
+            <span>AI-powered</span>
           </div>
         </div>
       </DialogContent>
