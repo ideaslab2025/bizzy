@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Search, FileText, HelpCircle, Settings, Sparkles, Building, Users, CheckCircle, Zap, BookOpen, Loader } from 'lucide-react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -304,7 +304,16 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
             e.preventDefault();
           }
         }}
+        aria-labelledby="command-palette-title"
+        aria-describedby="command-palette-description"
       >
+        {/* Hidden accessibility components required by Radix UI Dialog */}
+        <DialogTitle id="command-palette-title" className="sr-only">
+          Command Palette
+        </DialogTitle>
+        <DialogDescription id="command-palette-description" className="sr-only">
+          Search for documents, guides, and perform quick actions
+        </DialogDescription>
         
         {/* SEARCH INPUT - ALWAYS VISIBLE AT TOP */}
         <div className="p-6 pb-3 border-b bg-white">
@@ -330,6 +339,8 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
               type="text"
               autoComplete="off"
               style={{ WebkitUserSelect: 'text', userSelect: 'text' }}
+              role="searchbox"
+              aria-label="Search documents, guides, and actions"
             />
           </div>
         </div>
