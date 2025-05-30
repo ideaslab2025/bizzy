@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +10,8 @@ import {
   Clock, 
   ArrowRight,
   ChevronRight,
-  ArrowDown
+  ArrowDown,
+  Flag
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { businessSections, BusinessSection } from '@/data/businessSections';
@@ -25,13 +27,19 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
 }) => {
   const getSectionStatus = (section: BusinessSection) => {
     const progress = sectionsProgress[section.id] || 0;
-    const isCompleted = progress >= 100;
-    const isInProgress = progress > 0 && progress < 100;
+    console.log(`Section ${section.id} progress:`, progress); // Debug line
+    
+    // Check localStorage for section completion as fallback
+    const isCompletedInStorage = localStorage.getItem(`bizzy_section_${section.id}_complete`) === 'true';
+    const finalProgress = isCompletedInStorage ? 100 : progress;
+    
+    const isCompleted = finalProgress >= 100;
+    const isInProgress = finalProgress > 0 && finalProgress < 100;
     
     return {
       isCompleted,
       isInProgress,
-      progress,
+      progress: finalProgress,
       buttonText: isCompleted ? 'Completed' : isInProgress ? 'Continue' : 'Start'
     };
   };
@@ -178,6 +186,20 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
             </div>
           </div>
 
+          {/* Curved Connection Line from Row 1 to Row 2 */}
+          <div className="absolute" style={{ top: '20%', right: '15%', width: '120px', height: '120px', pointerEvents: 'none', zIndex: 5 }}>
+            <svg width="120" height="120" className="overflow-visible">
+              <path 
+                d="M 20,10 Q 60,30 100,110" 
+                stroke="#3B82F6" 
+                strokeWidth="2" 
+                fill="none"
+                strokeDasharray="4,4"
+                opacity="0.4" 
+              />
+            </svg>
+          </div>
+
           {/* Second Row - Right to Left */}
           <div className="grid grid-cols-3 gap-8 mb-16 relative">
             {businessSections.slice(3, 6).reverse().map((section, reverseIndex) => {
@@ -309,6 +331,20 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
             </div>
           </div>
 
+          {/* Curved Connection Line from Row 2 to Row 3 */}
+          <div className="absolute" style={{ top: '53%', left: '15%', width: '120px', height: '120px', pointerEvents: 'none', zIndex: 5 }}>
+            <svg width="120" height="120" className="overflow-visible">
+              <path 
+                d="M 100,10 Q 60,30 20,110" 
+                stroke="#3B82F6" 
+                strokeWidth="2" 
+                fill="none"
+                strokeDasharray="4,4"
+                opacity="0.4" 
+              />
+            </svg>
+          </div>
+
           {/* Third Row - Left to Right */}
           <div className="grid grid-cols-3 gap-8 relative">
             {businessSections.slice(6).map((section, index) => {
@@ -429,13 +465,24 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                       </div>
                     </div>
                   )}
+
+                  {/* Completion line under last section */}
+                  {isLastSection && (
+                    <div className="absolute -bottom-6 left-0 right-0 flex flex-col items-center z-10">
+                      <div className="w-full h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-green-500 rounded-full"></div>
+                      <div className="mt-2 flex items-center gap-2 text-green-600">
+                        <Flag className="w-4 h-4" strokeWidth={2} />
+                        <span className="text-sm font-semibold">Journey Complete!</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
 
           {/* Bottom completion line spanning the full width */}
-          <div className="mt-8 w-full h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full"></div>
+          <div className="mt-12 w-full h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full"></div>
         </div>
 
         {/* Mobile/Tablet - Simple Grid */}
