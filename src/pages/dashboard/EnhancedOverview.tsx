@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -94,21 +95,44 @@ const EnhancedOverview: React.FC = () => {
         .not('id', 'in', completedStepIds.length > 0 ? `(${completedStepIds.join(',')})` : '(0)')
         .limit(3);
 
-      // Process data
+      // IMPROVED: Process data with enhanced localStorage integration
       const completionBySection: Record<number, number> = {};
       sections?.forEach(section => {
         const sectionSteps = allSteps?.filter(step => step.section_id === section.id) || [];
         const completedSectionSteps = sectionSteps.filter(step => 
           completedStepIds.includes(step.id)
         );
-        completionBySection[section.id] = sectionSteps.length > 0 
+        
+        // Calculate base progress from Supabase
+        let baseProgress = sectionSteps.length > 0 
           ? (completedSectionSteps.length / sectionSteps.length) * 100 
           : 0;
+        
+        // Check localStorage for any additional progress
+        const localStorageComplete = localStorage.getItem(`bizzy_section_${section.id}_complete`) === 'true';
+        const localStorageProgress = localStorage.getItem(`bizzy_section_${section.id}_progress`);
+        const progressFromStorage = localStorageProgress ? parseInt(localStorageProgress, 10) : 0;
+        
+        // Use the highest value between Supabase and localStorage
+        let finalProgress = Math.max(baseProgress, progressFromStorage);
+        if (localStorageComplete && finalProgress < 100) {
+          finalProgress = 100;
+        }
+        
+        completionBySection[section.id] = finalProgress;
+        
+        console.log(`Section ${section.id} - Supabase: ${baseProgress}%, localStorage: ${progressFromStorage}%, Final: ${finalProgress}%`);
       });
 
       const totalSteps = allSteps?.length || 0;
       const completedSteps = completedStepIds.length;
-      const overallProgress = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
+      
+      // Calculate overall progress considering localStorage
+      const overallProgressFromSections = Object.values(completionBySection).reduce((sum, progress) => sum + progress, 0) / Object.keys(completionBySection).length;
+      const overallProgress = Math.max(
+        totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0,
+        overallProgressFromSections
+      );
 
       // Find current section (first incomplete section)
       const currentSection = sections?.find(section => 
@@ -172,9 +196,11 @@ const EnhancedOverview: React.FC = () => {
     }
   };
 
-  // Function to check completion state from localStorage
+  // IMPROVED: Function to check completion state from both sources
   const getSectionCompletionFromStorage = (sectionId: number) => {
-    return localStorage.getItem(`bizzy_section_${sectionId}_complete`) === 'true';
+    const localStorageComplete = localStorage.getItem(`bizzy_section_${sectionId}_complete`) === 'true';
+    const analyticsProgress = analytics?.completionBySection[sectionId] || 0;
+    return localStorageComplete || analyticsProgress >= 100;
   };
 
   if (loading || !analytics) {
