@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Search, FileText, HelpCircle, Settings, Sparkles, Building, Users, CheckCircle, Zap } from 'lucide-react';
+import { Search, FileText, HelpCircle, Settings, Sparkles, Building, Users, CheckCircle, Zap, BookOpen, Loader } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 interface CommandItem {
   id: string;
@@ -16,6 +17,15 @@ interface CommandItem {
   category: string;
   action: () => void;
   keywords: string[];
+}
+
+interface SearchResult {
+  id: string;
+  title: string;
+  description?: string;
+  type: 'document' | 'guide' | 'step';
+  icon: React.ElementType;
+  action: () => void;
 }
 
 interface EnhancedCommandPaletteProps {
@@ -30,6 +40,8 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('all');
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -117,6 +129,80 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
 
   const allItems = [...businessRelatedItems, ...quickActions];
 
+  // Real database search functionality
+  const performSearch = async (searchQuery: string) => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+    
+    try {
+      // Search across multiple tables
+      const { data: documents } = await supabase
+        .from('documents')
+        .select('id, title, description, category')
+        .or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`)
+        .limit(5);
+
+      const { data: guidanceSections } = await supabase
+        .from('guidance_sections')
+        .select('id, title, description')
+        .or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`)
+        .limit(5);
+
+      const { data: guidanceSteps } = await supabase
+        .from('guidance_steps')
+        .select('id, title, content, section_id')
+        .or(`title.ilike.%${searchQuery}%,content.ilike.%${searchQuery}%`)
+        .limit(5);
+
+      // Combine and format results
+      const results: SearchResult[] = [
+        ...(documents || []).map(doc => ({
+          id: `doc-${doc.id}`,
+          title: doc.title,
+          description: doc.description,
+          type: 'document' as const,
+          icon: FileText,
+          action: () => navigate(`/dashboard/documents`)
+        })),
+        ...(guidanceSections || []).map(section => ({
+          id: `section-${section.id}`,
+          title: section.title,
+          description: section.description,
+          type: 'guide' as const,
+          icon: BookOpen,
+          action: () => navigate(`/guided-help?section=${section.id}`)
+        })),
+        ...(guidanceSteps || []).map(step => ({
+          id: `step-${step.id}`,
+          title: step.title,
+          description: step.content,
+          type: 'step' as const,
+          icon: CheckCircle,
+          action: () => navigate(`/guided-help?section=${step.section_id}&step=${step.id}`)
+        }))
+      ];
+
+      setSearchResults(results);
+    } catch (error) {
+      console.error('Search error:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Debounce search to avoid too many queries
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      performSearch(query);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [query]);
+
   const filteredItems = allItems.filter(item => {
     const matchesQuery = query === '' || 
       item.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -161,15 +247,21 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
       return;
     }
     
+    const allResults = query.trim() ? searchResults : filteredItems;
+    
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setSelectedIndex(prev => Math.min(prev + 1, filteredItems.length - 1));
+      setSelectedIndex(prev => Math.min(prev + 1, allResults.length - 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setSelectedIndex(prev => Math.max(prev - 1, 0));
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (filteredItems[selectedIndex]) {
+      if (query.trim() && searchResults[selectedIndex]) {
+        searchResults[selectedIndex].action();
+        onOpenChange(false);
+        setQuery('');
+      } else if (!query.trim() && filteredItems[selectedIndex]) {
         filteredItems[selectedIndex].action();
         onOpenChange(false);
         setQuery('');
@@ -188,8 +280,9 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-0 max-w-3xl mx-auto border shadow-2xl fixed top-[20%] left-1/2 transform -translate-x-1/2 max-h-[70vh] overflow-hidden bg-white rounded-lg">
-        {/* Large Search Input Area */}
-        <div className="p-6 pb-3 border-b">
+        
+        {/* SEARCH INPUT - ALWAYS VISIBLE AT TOP */}
+        <div className="p-6 pb-3 border-b bg-white">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
@@ -206,7 +299,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           </div>
         </div>
 
-        {/* Tab Navigation */}
+        {/* TAB NAVIGATION - BELOW SEARCH */}
         <div className="flex items-center gap-1 px-6 py-2 border-b bg-gray-50">
           {tabs.map((tab) => (
             <Button
@@ -225,10 +318,67 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           ))}
         </div>
 
-        {/* Content Area */}
+        {/* CONTENT AREA - SHOWS RESULTS OR SUGGESTIONS */}
         <div className="flex-1 overflow-y-auto">
-          {query === '' && activeTab === 'all' ? (
-            // Default view with three columns
+          {isSearching ? (
+            <div className="text-center py-8">
+              <Loader className="w-6 h-6 animate-spin mx-auto text-gray-400" />
+              <p className="text-sm text-gray-500 mt-2">Searching...</p>
+            </div>
+          ) : query.trim() && searchResults.length > 0 ? (
+            <div className="p-6 space-y-6">
+              {/* Group results by type */}
+              {['document', 'guide', 'step'].map(type => {
+                const typeResults = searchResults.filter(r => r.type === type);
+                if (typeResults.length === 0) return null;
+                
+                return (
+                  <div key={type}>
+                    <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2">
+                      {type === 'document' ? 'Documents' : type === 'guide' ? 'Guides' : 'Steps'}
+                    </h3>
+                    <div className="space-y-1">
+                      {typeResults.map((result, index) => {
+                        const globalIndex = searchResults.indexOf(result);
+                        const IconComponent = result.icon;
+                        return (
+                          <motion.button
+                            key={result.id}
+                            onClick={() => {
+                              result.action();
+                              onOpenChange(false);
+                              setQuery('');
+                            }}
+                            className={cn(
+                              "w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors",
+                              selectedIndex === globalIndex ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                            )}
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
+                          >
+                            <IconComponent className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-sm">{result.title}</p>
+                              {result.description && (
+                                <p className="text-xs text-gray-500 truncate">{result.description}</p>
+                              )}
+                            </div>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : query.trim() && searchResults.length === 0 && !isSearching ? (
+            <div className="text-center py-8">
+              <Search className="w-10 h-10 mx-auto text-gray-300" />
+              <p className="mt-3 text-gray-600">No results found for "{query}"</p>
+              <p className="text-sm text-gray-500 mt-1">Try different keywords or browse categories below</p>
+            </div>
+          ) : (
+            // Show category suggestions when no search query
             <div className="grid grid-cols-3 gap-6 p-6">
               {/* Related to Business Column */}
               <div>
@@ -306,88 +456,6 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
                   </p>
                 </div>
               </div>
-            </div>
-          ) : (
-            // Search results view
-            <div className="p-4">
-              {filteredItems.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <Search className="w-10 h-10 mx-auto mb-3 text-gray-300" />
-                  <p>No results found for "{query}"</p>
-                  <p className="text-sm mt-1">Try searching for documents, guides, or help topics</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {businessItems.length > 0 && (
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-700 mb-2">Business Related</h3>
-                      <div className="space-y-1">
-                        {businessItems.map((item, index) => {
-                          const globalIndex = filteredItems.indexOf(item);
-                          const IconComponent = item.icon;
-                          return (
-                            <motion.button
-                              key={item.id}
-                              className={cn(
-                                "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors",
-                                selectedIndex === globalIndex ? "bg-blue-50 text-blue-700" : "hover:bg-gray-50"
-                              )}
-                              onClick={() => {
-                                item.action();
-                                onOpenChange(false);
-                                setQuery('');
-                              }}
-                              whileHover={{ scale: 1.01 }}
-                              whileTap={{ scale: 0.99 }}
-                            >
-                              <IconComponent className="w-4 h-4 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="font-medium">{item.title}</div>
-                                {item.description && (
-                                  <p className="text-sm text-gray-500 truncate">{item.description}</p>
-                                )}
-                              </div>
-                            </motion.button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {actionItems.length > 0 && (
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-700 mb-2">Quick Actions</h3>
-                      <div className="space-y-1">
-                        {actionItems.map((item) => {
-                          const globalIndex = filteredItems.indexOf(item);
-                          const IconComponent = item.icon;
-                          return (
-                            <motion.button
-                              key={item.id}
-                              className={cn(
-                                "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors",
-                                selectedIndex === globalIndex ? "bg-blue-50 text-blue-700" : "hover:bg-gray-50"
-                              )}
-                              onClick={() => {
-                                item.action();
-                                onOpenChange(false);
-                                setQuery('');
-                              }}
-                              whileHover={{ scale: 1.01 }}
-                              whileTap={{ scale: 0.99 }}
-                            >
-                              <IconComponent className="w-4 h-4 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="font-medium">{item.title}</div>
-                              </div>
-                            </motion.button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           )}
         </div>
