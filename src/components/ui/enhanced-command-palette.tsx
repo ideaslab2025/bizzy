@@ -48,7 +48,8 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   // Debug: Log state changes
   useEffect(() => {
     console.log('Query state changed:', query);
-  }, [query]);
+    console.log('Active tab:', activeTab);
+  }, [query, activeTab]);
 
   // Business-focused command items
   const businessRelatedItems: CommandItem[] = [
@@ -57,9 +58,9 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
       title: 'My Documents',
       description: 'View business templates and forms',
       icon: FileText,
-      category: 'business',
+      category: 'documents',
       action: () => navigate('/dashboard/documents'),
-      keywords: ['documents', 'templates', 'forms', 'files'],
+      keywords: ['documents', 'templates', 'forms', 'files', 'business'],
     },
     {
       id: 'progress',
@@ -68,16 +69,16 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
       icon: Building,
       category: 'business',
       action: () => navigate('/dashboard'),
-      keywords: ['progress', 'setup', 'dashboard', 'journey'],
+      keywords: ['progress', 'setup', 'dashboard', 'journey', 'business'],
     },
     {
       id: 'tasks',
       title: 'Current Tasks',
       description: 'Continue with guided setup',
       icon: CheckCircle,
-      category: 'business',
+      category: 'guides',
       action: () => navigate('/guided-help'),
-      keywords: ['tasks', 'guidance', 'help', 'setup'],
+      keywords: ['tasks', 'guidance', 'help', 'setup', 'guides'],
     },
     {
       id: 'team',
@@ -95,18 +96,18 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
       id: 'upload',
       title: 'Upload new document',
       icon: FileText,
-      category: 'actions',
+      category: 'documents',
       action: () => {
         navigate('/dashboard/documents');
         onOpenChange(false);
       },
-      keywords: ['upload', 'document', 'file', 'add'],
+      keywords: ['upload', 'document', 'file', 'add', 'documents'],
     },
     {
       id: 'bizzy',
       title: 'Talk to Bizzy AI',
       icon: HelpCircle,
-      category: 'actions',
+      category: 'help',
       action: () => {
         onOpenChange(false);
         const event = new CustomEvent('openBizzy');
@@ -118,15 +119,15 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
       id: 'next-task',
       title: 'Start next setup task',
       icon: Zap,
-      category: 'actions',
+      category: 'guides',
       action: () => navigate('/guided-help'),
-      keywords: ['task', 'next', 'setup', 'continue'],
+      keywords: ['task', 'next', 'setup', 'continue', 'guides'],
     },
     {
       id: 'settings',
       title: 'Account Settings',
       icon: Settings,
-      category: 'actions',
+      category: 'settings',
       action: () => navigate('/dashboard/settings'),
       keywords: ['settings', 'account', 'preferences'],
     },
@@ -214,27 +215,22 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
       item.description?.toLowerCase().includes(query.toLowerCase()) ||
       item.keywords.some(keyword => keyword.toLowerCase().includes(query.toLowerCase()));
     
-    const matchesTab = activeTab === 'all' || 
-      (activeTab === 'documents' && item.category === 'business' && item.keywords.includes('documents')) ||
-      (activeTab === 'guides' && item.keywords.includes('guidance')) ||
-      (activeTab === 'settings' && item.keywords.includes('settings')) ||
-      (activeTab === 'help' && item.keywords.includes('help'));
+    const matchesTab = activeTab === 'all' || item.category === activeTab;
     
     return matchesQuery && matchesTab;
   });
 
   const businessItems = filteredItems.filter(item => item.category === 'business');
-  const actionItems = filteredItems.filter(item => item.category === 'actions');
+  const actionItems = filteredItems.filter(item => item.category !== 'business');
 
-  // Debug: Check if input is focused
+  // Focus input when dialog opens
   useEffect(() => {
     if (open && inputRef.current) {
       console.log('Dialog opened, focusing input...');
       const timer = setTimeout(() => {
         inputRef.current?.focus();
-        inputRef.current?.select();
-        console.log('Input focused:', document.activeElement === inputRef.current);
-      }, 150);
+        console.log('Input focused successfully');
+      }, 100);
       return () => clearTimeout(timer);
     }
   }, [open]);
@@ -243,15 +239,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
     setSelectedIndex(0);
   }, [query, activeTab]);
 
-  // Update handleInputChange to include logging
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('Input change event fired:', e.target.value);
-    e.stopPropagation();
-    setQuery(e.target.value);
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Only prevent default for navigation keys, not typing
     if (e.key === 'Escape') {
       onOpenChange(false);
       return;
@@ -277,7 +265,6 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
         setQuery('');
       }
     }
-    // Let all other keys through for typing
   };
 
   const tabs = [
@@ -291,23 +278,10 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
-        className="p-0 max-w-3xl mx-auto border shadow-2xl fixed top-[20%] left-1/2 transform -translate-x-1/2 max-h-[70vh] overflow-hidden bg-white rounded-lg"
-        onPointerDownOutside={(e) => {
-          // Prevent closing when clicking inside
-          if (inputRef.current?.contains(e.target as Node)) {
-            e.preventDefault();
-          }
-        }}
-        onInteractOutside={(e) => {
-          // Prevent any interaction issues
-          if (inputRef.current?.contains(e.target as Node)) {
-            e.preventDefault();
-          }
-        }}
+        className="p-0 max-w-3xl max-h-[80vh] overflow-hidden bg-white rounded-lg border shadow-2xl"
         aria-labelledby="command-palette-title"
         aria-describedby="command-palette-description"
       >
-        {/* Hidden accessibility components required by Radix UI Dialog */}
         <DialogTitle id="command-palette-title" className="sr-only">
           Command Palette
         </DialogTitle>
@@ -318,40 +292,33 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
         {/* SEARCH INPUT - ALWAYS VISIBLE AT TOP */}
         <div className="p-6 pb-3 border-b bg-white">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
             <input
               ref={inputRef}
               value={query}
               onChange={(e) => {
-                console.log('Native input change:', e.target.value);
+                console.log('Input changed:', e.target.value);
                 setQuery(e.target.value);
               }}
-              onKeyDown={(e) => {
-                // Only handle special keys
-                if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(e.key)) {
-                  handleKeyDown(e);
-                }
-                // All other keys pass through naturally
-              }}
-              placeholder="Search Everything ..."
-              className="w-full text-lg h-12 pl-10 pr-4 border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-white relative z-50"
+              onKeyDown={handleKeyDown}
+              placeholder="Search everything..."
+              className="w-full text-lg h-12 pl-10 pr-4 border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-white"
               autoFocus
-              type="text"
               autoComplete="off"
-              style={{ WebkitUserSelect: 'text', userSelect: 'text' }}
-              role="searchbox"
-              aria-label="Search documents, guides, and actions"
             />
           </div>
         </div>
 
-        {/* TAB NAVIGATION - BELOW SEARCH */}
+        {/* TAB NAVIGATION */}
         <div className="flex items-center gap-1 px-6 py-2 border-b bg-gray-50">
           {tabs.map((tab) => (
             <Button
               key={tab.id}
               variant="ghost"
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                console.log('Tab clicked:', tab.id);
+                setActiveTab(tab.id);
+              }}
               className={cn(
                 "px-4 py-1.5 text-sm font-medium rounded",
                 activeTab === tab.id
@@ -364,8 +331,8 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           ))}
         </div>
 
-        {/* CONTENT AREA - SHOWS RESULTS OR SUGGESTIONS */}
-        <div className="flex-1 overflow-y-auto">
+        {/* CONTENT AREA */}
+        <div className="flex-1 overflow-y-auto max-h-[50vh]">
           {isSearching ? (
             <div className="text-center py-8">
               <Loader className="w-6 h-6 animate-spin mx-auto text-gray-400" />
@@ -373,7 +340,6 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
             </div>
           ) : query.trim() && searchResults.length > 0 ? (
             <div className="p-6 space-y-6">
-              {/* Group results by type */}
               {['document', 'guide', 'step'].map(type => {
                 const typeResults = searchResults.filter(r => r.type === type);
                 if (typeResults.length === 0) return null;
@@ -424,84 +390,43 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
               <p className="text-sm text-gray-500 mt-1">Try different keywords or browse categories below</p>
             </div>
           ) : (
-            // Show category suggestions when no search query
-            <div className="grid grid-cols-3 gap-6 p-6">
-              {/* Related to Business Column */}
-              <div>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
-                  <Building className="w-4 h-4 text-orange-500" />
-                  Related to your business
-                </h3>
+            <div className="p-6">
+              {filteredItems.length > 0 ? (
                 <div className="space-y-1">
-                  {businessRelatedItems.map((item) => {
+                  {filteredItems.map((item, index) => {
                     const IconComponent = item.icon;
                     return (
-                      <button
+                      <motion.button
                         key={item.id}
                         onClick={() => {
+                          console.log('Item clicked:', item.title);
                           item.action();
                           onOpenChange(false);
                           setQuery('');
                         }}
-                        className="w-full text-left px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3 text-sm transition-colors"
+                        className={cn(
+                          "w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors",
+                          selectedIndex === index ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                        )}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
                       >
-                        <IconComponent className="w-4 h-4 text-gray-500" />
-                        <div>
-                          <div className="font-medium">{item.title}</div>
+                        <IconComponent className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm">{item.title}</p>
                           {item.description && (
-                            <div className="text-xs text-gray-500">{item.description}</div>
+                            <p className="text-xs text-gray-500 truncate">{item.description}</p>
                           )}
                         </div>
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </div>
-              </div>
-
-              {/* Quick Actions Column */}
-              <div>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
-                  <Zap className="w-4 h-4 text-green-500" />
-                  Quick Actions
-                </h3>
-                <div className="space-y-1">
-                  {quickActions.map((item) => {
-                    const IconComponent = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          item.action();
-                          onOpenChange(false);
-                          setQuery('');
-                        }}
-                        className="w-full text-left px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3 text-sm transition-colors"
-                      >
-                        <IconComponent className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-700">{item.title}</span>
-                      </button>
-                    );
-                  })}
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-600">No items found in this category</p>
                 </div>
-              </div>
-
-              {/* Search Tips Column */}
-              <div>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
-                  <Sparkles className="w-4 h-4 text-yellow-500" />
-                  Quick Search Tips
-                </h3>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <kbd className="px-2 py-1 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded">Ctrl</kbd>
-                    <span className="text-gray-500">+</span>
-                    <kbd className="px-2 py-1 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded">K</kbd>
-                  </div>
-                  <p className="text-xs text-gray-600">
-                    Use this keyboard shortcut to search documents, guides, and help articles faster!
-                  </p>
-                </div>
-              </div>
+              )}
             </div>
           )}
         </div>
