@@ -27,11 +27,23 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
 }) => {
   const getSectionStatus = (section: BusinessSection) => {
     const progress = sectionsProgress[section.id] || 0;
-    console.log(`Section ${section.id} progress:`, progress); // Debug line
+    console.log(`Section ${section.id} progress from props:`, progress);
     
-    // Check localStorage for section completion as fallback
+    // Enhanced fallback - check for both completion and progress in localStorage
     const isCompletedInStorage = localStorage.getItem(`bizzy_section_${section.id}_complete`) === 'true';
-    const finalProgress = isCompletedInStorage ? 100 : progress;
+    const storedProgress = localStorage.getItem(`bizzy_section_${section.id}_progress`);
+    const progressFromStorage = storedProgress ? parseInt(storedProgress, 10) : 0;
+    
+    console.log(`Section ${section.id} localStorage complete:`, isCompletedInStorage);
+    console.log(`Section ${section.id} localStorage progress:`, progressFromStorage);
+    
+    // Use the highest value between props and localStorage
+    let finalProgress = Math.max(progress, progressFromStorage);
+    if (isCompletedInStorage && finalProgress < 100) {
+      finalProgress = 100;
+    }
+    
+    console.log(`Section ${section.id} final progress:`, finalProgress);
     
     const isCompleted = finalProgress >= 100;
     const isInProgress = finalProgress > 0 && finalProgress < 100;
@@ -186,16 +198,16 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
             </div>
           </div>
 
-          {/* Curved Connection Line from Row 1 to Row 2 */}
-          <div className="absolute" style={{ top: '20%', right: '15%', width: '120px', height: '120px', pointerEvents: 'none', zIndex: 5 }}>
-            <svg width="120" height="120" className="overflow-visible">
+          {/* Curved Connection Line from Row 1 to Row 2 - FIXED POSITIONING */}
+          <div className="absolute top-80 right-32 w-40 h-32 pointer-events-none z-5">
+            <svg width="160" height="128" className="overflow-visible">
               <path 
-                d="M 20,10 Q 60,30 100,110" 
+                d="M 10,0 Q 80,40 150,128" 
                 stroke="#3B82F6" 
-                strokeWidth="2" 
+                strokeWidth="3" 
                 fill="none"
-                strokeDasharray="4,4"
-                opacity="0.4" 
+                strokeDasharray="6,6"
+                opacity="0.6" 
               />
             </svg>
           </div>
@@ -331,16 +343,16 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
             </div>
           </div>
 
-          {/* Curved Connection Line from Row 2 to Row 3 */}
-          <div className="absolute" style={{ top: '53%', left: '15%', width: '120px', height: '120px', pointerEvents: 'none', zIndex: 5 }}>
-            <svg width="120" height="120" className="overflow-visible">
+          {/* Curved Connection Line from Row 2 to Row 3 - FIXED POSITIONING */}
+          <div className="absolute bottom-80 left-32 w-40 h-32 pointer-events-none z-5">
+            <svg width="160" height="128" className="overflow-visible">
               <path 
-                d="M 100,10 Q 60,30 20,110" 
+                d="M 150,0 Q 80,40 10,128" 
                 stroke="#3B82F6" 
-                strokeWidth="2" 
+                strokeWidth="3" 
                 fill="none"
-                strokeDasharray="4,4"
-                opacity="0.4" 
+                strokeDasharray="6,6"
+                opacity="0.6" 
               />
             </svg>
           </div>
@@ -351,7 +363,9 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
               const status = getSectionStatus(section);
               const IconComponent = section.icon;
               const actualIndex = index + 6;
-              const isLastSection = actualIndex === businessSections.length - 1;
+              const isLastSection = section.id === 10; // Explicitly check for section 10
+              
+              console.log(`Section ${section.id} is last section:`, isLastSection); // Debug
               
               return (
                 <div key={section.id} className="relative">
@@ -466,13 +480,13 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                     </div>
                   )}
 
-                  {/* Completion line under last section */}
+                  {/* FIXED: Completion line under last section (Section 10) */}
                   {isLastSection && (
-                    <div className="absolute -bottom-6 left-0 right-0 flex flex-col items-center z-10">
-                      <div className="w-full h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-green-500 rounded-full"></div>
-                      <div className="mt-2 flex items-center gap-2 text-green-600">
-                        <Flag className="w-4 h-4" strokeWidth={2} />
-                        <span className="text-sm font-semibold">Journey Complete!</span>
+                    <div className="absolute -bottom-8 left-0 right-0 flex flex-col items-center z-10">
+                      <div className="w-full h-2 bg-gradient-to-r from-blue-400 via-purple-500 to-green-500 rounded-full shadow-md"></div>
+                      <div className="mt-3 flex items-center gap-2 text-green-600">
+                        <Flag className="w-5 h-5" strokeWidth={2} />
+                        <span className="text-sm font-bold">Journey Complete!</span>
                       </div>
                     </div>
                   )}
