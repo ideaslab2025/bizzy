@@ -45,6 +45,11 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
+  // Debug: Log state changes
+  useEffect(() => {
+    console.log('Query state changed:', query);
+  }, [query]);
+
   // Business-focused command items
   const businessRelatedItems: CommandItem[] = [
     {
@@ -221,12 +226,14 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   const businessItems = filteredItems.filter(item => item.category === 'business');
   const actionItems = filteredItems.filter(item => item.category === 'actions');
 
+  // Debug: Check if input is focused
   useEffect(() => {
     if (open && inputRef.current) {
-      // Ensure input gets focus after dialog animation
+      console.log('Dialog opened, focusing input...');
       const timer = setTimeout(() => {
         inputRef.current?.focus();
         inputRef.current?.select();
+        console.log('Input focused:', document.activeElement === inputRef.current);
       }, 150);
       return () => clearTimeout(timer);
     }
@@ -236,12 +243,15 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
     setSelectedIndex(0);
   }, [query, activeTab]);
 
+  // Update handleInputChange to include logging
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('Input change event fired:', e.target.value);
     e.stopPropagation();
     setQuery(e.target.value);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Only prevent default for navigation keys, not typing
     if (e.key === 'Escape') {
       onOpenChange(false);
       return;
@@ -267,6 +277,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
         setQuery('');
       }
     }
+    // Let all other keys through for typing
   };
 
   const tabs = [
@@ -279,22 +290,46 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 max-w-3xl mx-auto border shadow-2xl fixed top-[20%] left-1/2 transform -translate-x-1/2 max-h-[70vh] overflow-hidden bg-white rounded-lg">
+      <DialogContent 
+        className="p-0 max-w-3xl mx-auto border shadow-2xl fixed top-[20%] left-1/2 transform -translate-x-1/2 max-h-[70vh] overflow-hidden bg-white rounded-lg"
+        onPointerDownOutside={(e) => {
+          // Prevent closing when clicking inside
+          if (inputRef.current?.contains(e.target as Node)) {
+            e.preventDefault();
+          }
+        }}
+        onInteractOutside={(e) => {
+          // Prevent any interaction issues
+          if (inputRef.current?.contains(e.target as Node)) {
+            e.preventDefault();
+          }
+        }}
+      >
         
         {/* SEARCH INPUT - ALWAYS VISIBLE AT TOP */}
         <div className="p-6 pb-3 border-b bg-white">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <Input
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+            <input
               ref={inputRef}
               value={query}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
+              onChange={(e) => {
+                console.log('Native input change:', e.target.value);
+                setQuery(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                // Only handle special keys
+                if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(e.key)) {
+                  handleKeyDown(e);
+                }
+                // All other keys pass through naturally
+              }}
               placeholder="Search Everything ..."
-              className="w-full text-lg h-12 pl-10 pr-4 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-white"
+              className="w-full text-lg h-12 pl-10 pr-4 border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-white relative z-50"
               autoFocus
               type="text"
               autoComplete="off"
+              style={{ WebkitUserSelect: 'text', userSelect: 'text' }}
             />
           </div>
         </div>
