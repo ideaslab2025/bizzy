@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Search, FileText, HelpCircle, Settings, Sparkles, Building, Users, CheckCircle, Zap, BookOpen, Loader, X } from 'lucide-react';
@@ -220,7 +221,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
-        className="p-0 max-w-4xl h-[520px] overflow-hidden bg-white rounded-xl border border-gray-200 shadow-2xl fixed left-[50%] top-[40%] translate-x-[-50%] translate-y-[-50%] z-50"
+        className="p-0 max-w-4xl h-[520px] overflow-hidden bg-white rounded-xl border border-gray-200 shadow-2xl fixed left-[50%] top-[40%] translate-x-[-50%] translate-y-[-50%] z-50 [&>button]:hidden"
         aria-labelledby="command-palette-title"
         aria-describedby="command-palette-description"
       >
@@ -231,7 +232,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           Search for documents, guides, and perform quick actions
         </DialogDescription>
         
-        {/* Close button - positioned absolutely in top right */}
+        {/* Custom close button - positioned absolutely in top right */}
         <button
           onClick={() => onOpenChange(false)}
           className="absolute top-4 right-4 z-50 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all"
