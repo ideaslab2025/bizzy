@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, FileText, HelpCircle, Settings, Sparkles, Clock, TrendingUp, BookOpen, Users, Building } from 'lucide-react';
@@ -156,18 +155,18 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 max-w-lg mx-auto border shadow-2xl fixed top-32 left-1/2 transform -translate-x-1/2 max-h-[60vh] overflow-hidden">
+      <DialogContent className="p-0 max-w-lg mx-auto border shadow-2xl fixed top-1/4 left-1/2 transform -translate-x-1/2 max-h-[60vh] overflow-hidden">
         <div className="flex flex-col h-full">
-          {/* Search Input */}
-          <div className="flex items-center border-b px-4 py-4 bg-white">
-            <Search className="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" />
+          {/* Enhanced Search Input */}
+          <div className="flex items-center border-b border-gray-200 px-4 py-4 bg-gray-50">
+            <Search className="w-6 h-6 text-gray-400 mr-3 flex-shrink-0" />
             <Input
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search for documents, guides, or get help..."
-              className="border-0 bg-transparent focus:ring-0 text-base focus-visible:ring-0 shadow-none p-0 h-auto"
+              className="border-0 bg-transparent focus:ring-0 text-base focus-visible:ring-0 shadow-none p-0 h-auto placeholder:text-gray-500"
               autoFocus
             />
             {query && (
@@ -179,7 +178,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           </div>
 
           {/* Results */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto bg-white">
             {Object.keys(groupedCommands).length === 0 ? (
               <div className="p-6 text-center text-gray-500">
                 <Search className="w-10 h-10 mx-auto mb-3 text-gray-300" />
