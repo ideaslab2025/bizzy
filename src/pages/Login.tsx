@@ -29,22 +29,48 @@ const Login = () => {
     setIsLoading(true);
     
     try {
+      console.log("Starting login process...");
+      
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim().toLowerCase(),
         password,
       });
 
+      console.log("Login response:", { data, error });
+
       if (error) {
-        toast.error(error.message);
+        console.error("Login error:", error);
+        
+        // Handle specific error cases
+        if (error.message.includes("Email not confirmed")) {
+          toast.error("Please check your email and click the confirmation link before logging in.");
+          return;
+        }
+        
+        if (error.message.includes("Invalid login credentials")) {
+          toast.error("Invalid email or password. Please check your credentials and try again.");
+          return;
+        }
+        
+        if (error.message.includes("Email link is invalid or has expired")) {
+          toast.error("Your login link has expired. Please try logging in again.");
+          return;
+        }
+        
+        toast.error(error.message || "Login failed. Please try again.");
         return;
       }
 
       if (data.user) {
+        console.log("Login successful:", data.user);
         toast.success("Logged in successfully!");
         navigate("/dashboard");
+      } else {
+        toast.error("Login failed. Please try again.");
       }
-    } catch (error) {
-      toast.error("An unexpected error occurred");
+    } catch (error: any) {
+      console.error("Unexpected login error:", error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }

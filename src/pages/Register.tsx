@@ -77,28 +77,57 @@ const Register = () => {
     setIsLoading(true);
     
     try {
+      console.log("Starting registration process...");
+      
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: email.trim().toLowerCase(),
         password,
         options: {
           data: {
-            first_name: firstName,
-            last_name: lastName,
+            first_name: firstName.trim(),
+            last_name: lastName.trim(),
           }
         }
       });
 
+      console.log("Registration response:", { data, error });
+
       if (error) {
-        toast.error(error.message);
+        console.error("Registration error:", error);
+        
+        // Handle specific error cases
+        if (error.message.includes("User already registered")) {
+          toast.error("An account with this email already exists. Please try logging in instead.");
+          return;
+        }
+        
+        if (error.message.includes("Invalid email")) {
+          toast.error("Please enter a valid email address.");
+          return;
+        }
+        
+        toast.error(error.message || "Failed to create account. Please try again.");
         return;
       }
 
       if (data.user) {
-        toast.success("Account created successfully! Please check your email for verification.");
-        navigate("/onboarding");
+        console.log("User created successfully:", data.user);
+        
+        // Check if email confirmation is required
+        if (!data.user.email_confirmed_at) {
+          toast.success("Account created! Please check your email for a confirmation link before logging in.");
+        } else {
+          toast.success("Account created successfully! You can now log in.");
+        }
+        
+        // Redirect to login page
+        navigate("/login");
+      } else {
+        toast.error("Account creation failed. Please try again.");
       }
-    } catch (error) {
-      toast.error("An unexpected error occurred");
+    } catch (error: any) {
+      console.error("Unexpected registration error:", error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }

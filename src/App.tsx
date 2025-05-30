@@ -11,10 +11,12 @@ import Pricing from "./pages/Pricing";
 import ContentMigration from "./pages/ContentMigration";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Onboarding from "./pages/Onboarding";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
 import Disclaimer from "./pages/Disclaimer";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./hooks/useAuth";
 import { Toaster } from "./components/ui/toaster";
 
@@ -25,7 +27,11 @@ function App() {
         <div className="min-h-screen bg-background">
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />}>
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }>
               <Route index element={<EnhancedOverview />} />
               <Route path="documents" element={<Documents />} />
               <Route path="documents/customize/:id" element={<DocumentCustomizer />} />
@@ -37,6 +43,11 @@ function App() {
             <Route path="/content-migration" element={<ContentMigration />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/onboarding" element={
+              <ProtectedRoute>
+                <Onboarding />
+              </ProtectedRoute>
+            } />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/payment-cancel" element={<PaymentCancel />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
