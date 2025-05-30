@@ -177,28 +177,6 @@ const EnhancedOverview: React.FC = () => {
     return localStorage.getItem(`bizzy_section_${sectionId}_complete`) === 'true';
   };
 
-  // Enhanced function to get real completion with proper synchronization
-  const getSectionCompletion = (sectionId: number) => {
-    // First check analytics data
-    if (analytics?.completionBySection[sectionId] !== undefined) {
-      return analytics.completionBySection[sectionId];
-    }
-    
-    // Then check localStorage for section progress
-    const storageKey = `bizzy_section_${sectionId}_progress`;
-    const storedProgress = localStorage.getItem(storageKey);
-    if (storedProgress) {
-      return parseInt(storedProgress, 10);
-    }
-    
-    // Finally check if marked as complete
-    if (getSectionCompletionFromStorage(sectionId)) {
-      return 100;
-    }
-    
-    return 0;
-  };
-
   if (loading || !analytics) {
     return (
       <div className="p-8">
@@ -226,7 +204,7 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Visual Journey Map - Fixed layout with proper connections */}
+      {/* Visual Journey Map - Compact layout with solid arrow lines */}
       <Card className="p-6">
         <CardHeader className="px-0 pt-0">
           <CardTitle className="flex items-center gap-2">
@@ -236,17 +214,17 @@ const EnhancedOverview: React.FC = () => {
         </CardHeader>
         <CardContent className="px-0">
           <div className="w-full">
-            <div className="relative">
-              {/* Grid of sections */}
-              <div className="grid grid-cols-5 gap-2 lg:gap-4">
-                {businessSections.map((section, index) => {
-                  const IconComponent = section.icon;
-                  const completion = getSectionCompletion(section.id);
-                  const isCompleted = completion === 100;
-                  const isCurrent = section.id === analytics?.currentSection?.id;
-                  
-                  return (
-                    <div key={section.id} className="flex flex-col items-center">
+            <div className="grid grid-cols-5 gap-2 lg:gap-4">
+              {businessSections.map((section, index) => {
+                const IconComponent = section.icon;
+                const completion = analytics?.completionBySection[section.id] || 0;
+                const isCompleted = completion === 100 || getSectionCompletionFromStorage(section.id);
+                const isCurrent = section.id === analytics?.currentSection?.id;
+                const isNext = index < businessSections.length - 1;
+                
+                return (
+                  <React.Fragment key={section.id}>
+                    <div className="flex flex-col items-center">
                       <motion.div
                         className="flex flex-col items-center cursor-pointer w-full"
                         whileHover={{ scale: 1.05 }}
@@ -254,7 +232,7 @@ const EnhancedOverview: React.FC = () => {
                       >
                         {/* Section node */}
                         <div className={cn(
-                          "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all mb-2 relative z-20 bg-white",
+                          "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all mb-2 relative z-10 bg-white",
                           isCompleted ? 
                             "border-green-500" :
                           isCurrent ? 
@@ -279,66 +257,29 @@ const EnhancedOverview: React.FC = () => {
                           {Math.round(completion)}%
                         </p>
                       </motion.div>
-                    </div>
-                  );
-                })}
-              </div>
-              
-              {/* Connecting arrows positioned absolutely over the grid */}
-              <div className="absolute inset-0 pointer-events-none">
-                {businessSections.map((section, index) => {
-                  const completion = getSectionCompletion(section.id);
-                  const isCompleted = completion === 100;
-                  const isLastSection = index === businessSections.length - 1;
-                  
-                  return (
-                    <div key={`connection-${index}`}>
-                      {/* Arrow lines between sections (except for last) */}
-                      {!isLastSection && (
-                        <div
-                          className="absolute top-6"
-                          style={{
-                            left: `${(index * 20) + 10}%`,
-                            width: '20%',
-                          }}
-                        >
+
+                      {/* Solid arrow line underneath each section except the last */}
+                      {isNext && (
+                        <div className="mt-4 w-full flex justify-center">
                           <div className={cn(
-                            "h-0.5 w-full relative",
-                            isCompleted ? "bg-green-500" : "bg-gray-300"
+                            "h-1 w-full bg-gradient-to-r relative",
+                            isCompleted ? 
+                              "from-green-500 to-green-400" : 
+                              "from-gray-300 to-gray-200"
                           )}>
+                            {/* Arrow head */}
                             <div className={cn(
                               "absolute -right-1 top-1/2 -translate-y-1/2 w-0 h-0",
                               "border-l-4 border-t-2 border-b-2 border-t-transparent border-b-transparent",
-                              isCompleted ? "border-l-green-500" : "border-l-gray-300"
+                              isCompleted ? "border-l-green-400" : "border-l-gray-200"
                             )} />
                           </div>
                         </div>
                       )}
-                      
-                      {/* Completion line under last section */}
-                      {isLastSection && (
-                        <div
-                          className="absolute top-20"
-                          style={{
-                            left: `${index * 20}%`,
-                            width: '20%',
-                          }}
-                        >
-                          <div className={cn(
-                            "h-1 w-full relative rounded-full",
-                            "bg-gradient-to-r from-gray-300 to-green-500"
-                          )}>
-                            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-green-500 rounded-full" />
-                          </div>
-                          <div className="mt-2 text-center">
-                            <span className="text-xs font-bold text-green-600">Journey Complete!</span>
-                          </div>
-                        </div>
-                      )}
                     </div>
-                  );
-                })}
-              </div>
+                  </React.Fragment>
+                );
+              })}
             </div>
           </div>
         </CardContent>
@@ -436,9 +377,9 @@ const EnhancedOverview: React.FC = () => {
                   <div className="mt-3">
                     <div className="flex justify-between text-sm mb-1">
                       <span>Progress</span>
-                      <span>{Math.round(getSectionCompletion(analytics.currentSection.id))}%</span>
+                      <span>{Math.round(analytics.completionBySection[analytics.currentSection.id])}%</span>
                     </div>
-                    <Progress value={getSectionCompletion(analytics.currentSection.id)} className="h-2" />
+                    <Progress value={analytics.completionBySection[analytics.currentSection.id]} className="h-2" />
                   </div>
                 </div>
                 
