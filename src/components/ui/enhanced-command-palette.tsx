@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Search, FileText, HelpCircle, Settings, Sparkles, Building, Users, CheckCircle, Zap, BookOpen, Loader, X } from 'lucide-react';
@@ -221,7 +220,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
-        className="p-0 max-w-3xl h-[500px] overflow-hidden bg-white rounded-xl border border-gray-200 shadow-xl relative"
+        className="p-0 max-w-4xl h-[520px] overflow-hidden bg-white rounded-xl border border-gray-200 shadow-2xl fixed left-[50%] top-[40%] translate-x-[-50%] translate-y-[-50%] z-50"
         aria-labelledby="command-palette-title"
         aria-describedby="command-palette-description"
       >
@@ -237,7 +236,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           onClick={() => onOpenChange(false)}
           className="absolute top-4 right-4 z-50 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all"
         >
-          <X className="w-4 h-4" />
+          <X className="w-5 h-5" />
         </button>
 
         {/* SEARCH INPUT - Monday.com style with larger text */}
@@ -258,17 +257,17 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
         </div>
 
         {/* TAB NAVIGATION - Monday.com style with rounded tabs */}
-        <div className="flex items-center gap-1 px-6 py-3 border-b border-gray-100 bg-gray-50">
+        <div className="flex items-center gap-2 px-6 py-4 border-b border-gray-100 bg-gray-50">
           {tabs.map((tab) => (
             <Button
               key={tab.id}
               variant="ghost"
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "px-4 py-2 text-sm font-medium rounded-lg transition-all",
+                "px-4 py-2 text-sm font-medium rounded-full transition-all",
                 activeTab === tab.id
-                  ? "bg-blue-100 text-blue-700 shadow-sm"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-white"
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-200"
               )}
             >
               {tab.label}
@@ -277,7 +276,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
         </div>
 
         {/* CONTENT AREA - Fixed height to prevent size changes */}
-        <div className="flex-1 overflow-y-auto h-[340px]">
+        <div className="flex-1 overflow-hidden h-[380px]">
           {isSearching ? (
             <div className="flex items-center justify-center h-full">
               <Loader className="w-5 h-5 animate-spin text-gray-400" />
