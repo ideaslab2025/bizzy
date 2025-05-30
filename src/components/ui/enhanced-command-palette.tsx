@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Search, FileText, HelpCircle, Settings, Sparkles, Building, Users, CheckCircle, Zap, BookOpen, Loader } from 'lucide-react';
+import { Search, FileText, HelpCircle, Settings, Sparkles, Building, Users, CheckCircle, Zap, BookOpen, Loader, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -45,7 +45,7 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  // Reduced business-focused command items (removed some to save space)
+  // Minimal business-focused command items
   const businessRelatedItems: CommandItem[] = [
     {
       id: 'documents',
@@ -65,18 +65,9 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
       action: () => navigate('/dashboard'),
       keywords: ['progress', 'setup', 'dashboard', 'journey', 'business'],
     },
-    {
-      id: 'tasks',
-      title: 'Current Tasks',
-      description: 'Continue with guided setup',
-      icon: CheckCircle,
-      category: 'guides',
-      action: () => navigate('/guided-help'),
-      keywords: ['tasks', 'guidance', 'help', 'setup', 'guides'],
-    },
   ];
 
-  // Reduced quick actions (removed some to save space)
+  // Minimal quick actions
   const quickActions: CommandItem[] = [
     {
       id: 'upload',
@@ -88,18 +79,6 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
         onOpenChange(false);
       },
       keywords: ['upload', 'document', 'file', 'add', 'documents'],
-    },
-    {
-      id: 'bizzy',
-      title: 'Talk to Bizzy AI',
-      icon: HelpCircle,
-      category: 'help',
-      action: () => {
-        onOpenChange(false);
-        const event = new CustomEvent('openBizzy');
-        window.dispatchEvent(event);
-      },
-      keywords: ['bizzy', 'ai', 'help', 'assistant'],
     },
   ];
 
@@ -234,15 +213,15 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
 
   const tabs = [
     { id: 'all', label: 'All' },
-    { id: 'documents', label: 'Documents' },
-    { id: 'guides', label: 'Guides' },
-    { id: 'help', label: 'Help' },
+    { id: 'documents', label: 'Files' },
+    { id: 'guides', label: 'Updates' },
+    { id: 'help', label: 'People' },
   ];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
-        className="p-0 max-w-2xl h-[480px] overflow-hidden bg-white rounded-xl border border-gray-200 shadow-2xl"
+        className="p-0 max-w-3xl h-[500px] overflow-hidden bg-white rounded-xl border border-gray-200 shadow-xl relative"
         aria-labelledby="command-palette-title"
         aria-describedby="command-palette-description"
       >
@@ -253,35 +232,43 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
           Search for documents, guides, and perform quick actions
         </DialogDescription>
         
-        {/* SEARCH INPUT - Monday.com style */}
-        <div className="p-4 border-b border-gray-100 bg-white">
+        {/* Close button - positioned absolutely in top right */}
+        <button
+          onClick={() => onOpenChange(false)}
+          className="absolute top-4 right-4 z-50 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
+        {/* SEARCH INPUT - Monday.com style with larger text */}
+        <div className="p-6 border-b border-gray-100 bg-white">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none z-10" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
             <input
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Search for anything..."
-              className="w-full text-sm h-10 pl-10 pr-4 border-0 bg-gray-50 rounded-lg focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all"
+              placeholder="Search Everything ..."
+              className="w-full text-lg h-12 pl-12 pr-16 border-0 bg-transparent focus:outline-none placeholder-gray-400 text-gray-700"
               autoFocus
               autoComplete="off"
             />
           </div>
         </div>
 
-        {/* TAB NAVIGATION - Monday.com style */}
-        <div className="flex items-center gap-0 px-4 py-2 border-b border-gray-100 bg-gray-50">
+        {/* TAB NAVIGATION - Monday.com style with rounded tabs */}
+        <div className="flex items-center gap-1 px-6 py-3 border-b border-gray-100 bg-gray-50">
           {tabs.map((tab) => (
             <Button
               key={tab.id}
               variant="ghost"
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "px-3 py-1.5 text-xs font-medium rounded-md transition-all",
+                "px-4 py-2 text-sm font-medium rounded-lg transition-all",
                 activeTab === tab.id
-                  ? "bg-white text-blue-600 shadow-sm border border-gray-200"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                  ? "bg-blue-100 text-blue-700 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-white"
               )}
             >
               {tab.label}
@@ -297,51 +284,113 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
               <p className="text-sm text-gray-500 ml-2">Searching...</p>
             </div>
           ) : query.trim() && searchResults.length > 0 ? (
-            <div className="p-4 space-y-4">
-              {['document', 'guide', 'step'].map(type => {
-                const typeResults = searchResults.filter(r => r.type === type);
-                if (typeResults.length === 0) return null;
-                
-                return (
-                  <div key={type}>
-                    <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
-                      {type === 'document' ? 'Documents' : type === 'guide' ? 'Guides' : 'Steps'}
-                    </h3>
-                    <div className="space-y-1">
-                      {typeResults.map((result, index) => {
-                        const globalIndex = searchResults.indexOf(result);
-                        const IconComponent = result.icon;
-                        return (
-                          <motion.button
-                            key={result.id}
-                            onClick={() => {
-                              result.action();
-                              onOpenChange(false);
-                              setQuery('');
-                            }}
-                            className={cn(
-                              "w-full text-left p-3 rounded-lg flex items-center gap-3 transition-all",
-                              selectedIndex === globalIndex 
-                                ? "bg-blue-50 text-blue-700 border border-blue-200" 
-                                : "hover:bg-gray-50"
-                            )}
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.99 }}
-                          >
-                            <IconComponent className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                              <p className="font-medium text-sm">{result.title}</p>
-                              {result.description && (
-                                <p className="text-xs text-gray-500 truncate">{result.description}</p>
-                              )}
-                            </div>
-                          </motion.button>
-                        );
-                      })}
-                    </div>
+            <div className="p-6">
+              <div className="grid grid-cols-3 gap-8">
+                {/* Left Column - Related to me */}
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Users className="w-4 h-4 text-orange-500" />
+                    <h3 className="text-sm font-medium text-gray-700">Related to me</h3>
                   </div>
-                );
-              })}
+                  <div className="space-y-2">
+                    {searchResults.filter(r => r.type === 'document').slice(0, 3).map((result, index) => {
+                      const globalIndex = searchResults.indexOf(result);
+                      const IconComponent = result.icon;
+                      return (
+                        <motion.button
+                          key={result.id}
+                          onClick={() => {
+                            result.action();
+                            onOpenChange(false);
+                            setQuery('');
+                          }}
+                          className={cn(
+                            "w-full text-left p-2 rounded-lg flex items-center gap-3 transition-all text-sm",
+                            selectedIndex === globalIndex 
+                              ? "bg-blue-50 text-blue-700" 
+                              : "hover:bg-gray-50 text-gray-600"
+                          )}
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                        >
+                          <IconComponent className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <span className="truncate">{result.title}</span>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Middle Column - Saved Searches */}
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Sparkles className="w-4 h-4 text-green-500" />
+                    <h3 className="text-sm font-medium text-gray-700">Saved Searches</h3>
+                  </div>
+                  <div className="space-y-2">
+                    {searchResults.filter(r => r.type === 'guide').slice(0, 3).map((result, index) => {
+                      const globalIndex = searchResults.indexOf(result);
+                      const IconComponent = result.icon;
+                      return (
+                        <motion.button
+                          key={result.id}
+                          onClick={() => {
+                            result.action();
+                            onOpenChange(false);
+                            setQuery('');
+                          }}
+                          className={cn(
+                            "w-full text-left p-2 rounded-lg flex items-center gap-3 transition-all text-sm",
+                            selectedIndex === globalIndex 
+                              ? "bg-blue-50 text-blue-700" 
+                              : "hover:bg-gray-50 text-gray-600"
+                          )}
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                        >
+                          <IconComponent className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <span className="truncate">{result.title}</span>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Right Column - Recent Searches */}
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Search className="w-4 h-4 text-blue-500" />
+                    <h3 className="text-sm font-medium text-gray-700">Recent Searches</h3>
+                  </div>
+                  <div className="space-y-2">
+                    {searchResults.filter(r => r.type === 'step').slice(0, 3).map((result, index) => {
+                      const globalIndex = searchResults.indexOf(result);
+                      const IconComponent = result.icon;
+                      return (
+                        <motion.button
+                          key={result.id}
+                          onClick={() => {
+                            result.action();
+                            onOpenChange(false);
+                            setQuery('');
+                          }}
+                          className={cn(
+                            "w-full text-left p-2 rounded-lg flex items-center gap-3 transition-all text-sm",
+                            selectedIndex === globalIndex 
+                              ? "bg-blue-50 text-blue-700" 
+                              : "hover:bg-gray-50 text-gray-600"
+                          )}
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                        >
+                          <IconComponent className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <span className="truncate">{result.title}</span>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
           ) : query.trim() && searchResults.length === 0 && !isSearching ? (
             <div className="flex items-center justify-center h-full text-center">
@@ -352,68 +401,71 @@ export const EnhancedCommandPalette: React.FC<EnhancedCommandPaletteProps> = ({
               </div>
             </div>
           ) : (
-            <div className="p-4">
-              {filteredItems.length > 0 ? (
-                <div className="space-y-1">
-                  {filteredItems.map((item, index) => {
-                    const IconComponent = item.icon;
-                    return (
-                      <motion.button
-                        key={item.id}
-                        onClick={() => {
-                          item.action();
-                          onOpenChange(false);
-                          setQuery('');
-                        }}
-                        className={cn(
-                          "w-full text-left p-3 rounded-lg flex items-center gap-3 transition-all",
-                          selectedIndex === index 
-                            ? "bg-blue-50 text-blue-700 border border-blue-200" 
-                            : "hover:bg-gray-50"
-                        )}
-                        whileHover={{ scale: 1.01 }}
-                        whileTap={{ scale: 0.99 }}
-                      >
-                        <IconComponent className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm">{item.title}</p>
-                          {item.description && (
-                            <p className="text-xs text-gray-500 truncate">{item.description}</p>
+            <div className="p-6">
+              <div className="grid grid-cols-3 gap-8">
+                {/* Left Column - Related to me */}
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Users className="w-4 h-4 text-orange-500" />
+                    <h3 className="text-sm font-medium text-gray-700">Related to me</h3>
+                  </div>
+                  <div className="space-y-2">
+                    {filteredItems.slice(0, 3).map((item, index) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <motion.button
+                          key={item.id}
+                          onClick={() => {
+                            item.action();
+                            onOpenChange(false);
+                            setQuery('');
+                          }}
+                          className={cn(
+                            "w-full text-left p-2 rounded-lg flex items-center gap-3 transition-all text-sm",
+                            selectedIndex === index 
+                              ? "bg-blue-50 text-blue-700" 
+                              : "hover:bg-gray-50 text-gray-600"
                           )}
-                        </div>
-                      </motion.button>
-                    );
-                  })}
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                        >
+                          <IconComponent className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <span className="truncate">{item.title}</span>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
                 </div>
-              ) : (
-                <div className="flex items-center justify-center h-full text-center">
-                  <p className="text-gray-600">No items found in this category</p>
+
+                {/* Middle Column - Quick tip */}
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Zap className="w-4 h-4 text-yellow-500" />
+                    <h3 className="text-sm font-medium text-gray-700">Quick Search Tip</h3>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <kbd className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-mono">Ctrl</kbd>
+                      <span className="text-xs text-gray-500">+</span>
+                      <kbd className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-mono">B</kbd>
+                    </div>
+                    <p className="text-xs text-gray-600">Use this keyboard shortcut to find boards, dashboards and workspaces faster!</p>
+                  </div>
                 </div>
-              )}
+
+                {/* Right Column - Empty for now */}
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Search className="w-4 h-4 text-blue-500" />
+                    <h3 className="text-sm font-medium text-gray-700">Recent Searches</h3>
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    No recent searches
+                  </div>
+                </div>
+              </div>
             </div>
           )}
-        </div>
-
-        {/* Footer - Monday.com style */}
-        <div className="border-t border-gray-100 p-3 text-xs text-gray-400 flex items-center justify-between bg-gray-50">
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 py-0.5 bg-white border border-gray-200 rounded text-[10px]">↑↓</kbd>
-              Navigate
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 py-0.5 bg-white border border-gray-200 rounded text-[10px]">↵</kbd>
-              Select
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 py-0.5 bg-white border border-gray-200 rounded text-[10px]">⌘K</kbd>
-              Open
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Sparkles className="w-3 h-3" />
-            <span>AI-powered</span>
-          </div>
         </div>
       </DialogContent>
     </Dialog>
