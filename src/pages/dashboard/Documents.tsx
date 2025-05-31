@@ -3,7 +3,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useNavigate } from 'react-router-dom';
-import { useDocumentDownload } from '@/hooks/useDocumentDownload';
 import { DocumentCard } from '@/components/documents/DocumentCard';
 import { DocumentFilters } from '@/components/documents/DocumentFilters';
 import { DocumentPreview } from '@/components/documents/DocumentPreview';
@@ -18,7 +17,6 @@ const Documents = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const { downloadDocument, downloading } = useDocumentDownload();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [progress, setProgress] = useState<UserDocumentProgress[]>([]);
   const [loading, setLoading] = useState(true);
@@ -146,11 +144,27 @@ const Documents = () => {
       return;
     }
 
-    await downloadDocument(document.id, document.template_url);
-    
-    // Refresh progress after download
-    if (user) {
-      fetchProgress();
+    if (!user) return;
+
+    try {
+      // Mark as downloaded
+      await supabase
+        .from('user_document_progress')
+        .upsert({
+          user_id: user.id,
+          document_id: document.id,
+          downloaded: true
+        }, {
+          onConflict: 'user_id,document_id'
+        });
+
+      // Open download link
+      window.open(document.template_url, '_blank');
+      fetchProgress(); // Refresh progress
+      toast.success('Document downloaded successfully');
+    } catch (error) {
+      console.error('Error downloading document:', error);
+      toast.error('Failed to download document');
     }
   };
 
