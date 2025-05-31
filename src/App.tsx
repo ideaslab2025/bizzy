@@ -5,6 +5,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import EnhancedOverview from "./pages/dashboard/EnhancedOverview";
 import Documents from "./pages/dashboard/Documents";
+import MyDocuments from "./pages/dashboard/MyDocuments";
 import DocumentCustomizer from "./pages/dashboard/DocumentCustomizer";
 import EnhancedGuidedHelp from "./pages/EnhancedGuidedHelp";
 import Pricing from "./pages/Pricing";
@@ -36,6 +37,7 @@ function App() {
             }>
               <Route index element={<EnhancedOverview />} />
               <Route path="documents" element={<Documents />} />
+              <Route path="my-documents" element={<MyDocuments />} />
               <Route path="documents/customize/:id" element={<DocumentCustomizer />} />
               <Route path="consultations" element={<div className="p-6"><h1 className="text-2xl font-bold">Consultations</h1><p>Coming soon...</p></div>} />
               <Route path="settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Settings</h1><p>Coming soon...</p></div>} />

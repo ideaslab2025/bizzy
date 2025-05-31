@@ -496,6 +496,39 @@ export type Database = {
           },
         ]
       }
+      user_uploaded_files: {
+        Row: {
+          file_path: string
+          file_size: number
+          file_type: string
+          filename: string
+          id: string
+          original_filename: string
+          uploaded_at: string
+          user_id: string
+        }
+        Insert: {
+          file_path: string
+          file_size: number
+          file_type: string
+          filename: string
+          id?: string
+          original_filename: string
+          uploaded_at?: string
+          user_id: string
+        }
+        Update: {
+          file_path?: string
+          file_size?: number
+          file_type?: string
+          filename?: string
+          id?: string
+          original_filename?: string
+          uploaded_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
