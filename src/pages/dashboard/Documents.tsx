@@ -161,7 +161,7 @@ const Documents = () => {
     if (!user) return;
 
     try {
-      // Mark as downloaded
+      // Track the download
       await supabase
         .from('user_document_progress')
         .upsert({

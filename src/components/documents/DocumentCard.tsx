@@ -6,7 +6,7 @@ import { TiltCard } from '@/components/ui/3d-tilt-card';
 import { SmartTooltip } from '@/components/ui/smart-tooltip';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRecentlyViewed } from '@/components/ui/recently-viewed';
-import { FileText, Download, Edit, Eye, CheckCircle } from 'lucide-react';
+import { FileText, Download, Edit, Eye, CheckCircle, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DocumentHoverCard } from './DocumentHoverCard';
 import type { Document, UserDocumentProgress } from '@/types/documents';
@@ -50,6 +50,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   const { addItem } = useRecentlyViewed();
   const isCompleted = progress?.completed_at;
   const hasProgress = progress?.viewed || progress?.downloaded || progress?.customized;
+  const hasFile = !!document.template_url;
 
   const handleViewDetails = () => {
     addItem({
@@ -59,6 +60,13 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
       url: `/dashboard/documents?doc=${document.id}`,
     });
     onViewDetails(document);
+  };
+
+  const formatFileSize = (bytes: number | undefined) => {
+    if (!bytes) return null;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
   };
 
   const cardContent = (
@@ -78,6 +86,20 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
                   {categoryLabels[document.category]}
                 </Badge>
               </SmartTooltip>
+              
+              {/* File status badge */}
+              {hasFile ? (
+                <Badge className="bg-green-100 text-green-800 text-xs">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  Available
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="text-gray-600 text-xs">
+                  <AlertTriangle className="w-3 h-3 mr-1" />
+                  Coming Soon
+                </Badge>
+              )}
+              
               {document.is_required && (
                 <SmartTooltip
                   id="required-doc"
@@ -94,6 +116,13 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
                 </Badge>
               )}
             </div>
+            
+            {/* File size */}
+            {document.file_size && (
+              <div className="text-xs text-gray-500 mt-1">
+                {formatFileSize(document.file_size)}
+              </div>
+            )}
           </div>
           <div className="flex flex-col items-end gap-1">
             <FileText className="w-4 h-4 lg:w-5 lg:h-5 text-gray-400" />
@@ -155,17 +184,21 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
             </Button>
           )}
           
-          {document.template_url && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onDownload(document)}
-              className={isMobile ? 'w-full' : ''}
-            >
-              <Download className="w-3 h-3 lg:w-4 lg:h-4" />
-              {isMobile && <span className="ml-1 text-xs">Download</span>}
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onDownload(document)}
+            disabled={!hasFile}
+            className={cn(
+              isMobile ? 'w-full' : '',
+              !hasFile && 'opacity-50 cursor-not-allowed'
+            )}
+          >
+            <Download className="w-3 h-3 lg:w-4 lg:h-4" />
+            {isMobile && <span className="ml-1 text-xs">
+              {hasFile ? 'Download' : 'Coming Soon'}
+            </span>}
+          </Button>
         </div>
       </div>
     </div>

@@ -17,6 +17,7 @@ import PaymentCancel from "./pages/PaymentCancel";
 import Disclaimer from "./pages/Disclaimer";
 import NotFound from "./pages/NotFound";
 import StorageTest from "./pages/admin/StorageTest";
+import AdminDocuments from "./pages/admin/AdminDocuments";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./hooks/useAuth";
 import { Toaster } from "./components/ui/toaster";
@@ -53,6 +54,7 @@ function App() {
             <Route path="/payment-cancel" element={<PaymentCancel />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
             <Route path="/admin/storage-test" element={<StorageTest />} />
+            <Route path="/admin/documents" element={<AdminDocuments />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
