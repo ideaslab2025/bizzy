@@ -1,62 +1,66 @@
-
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Dashboard from "./pages/Dashboard";
-import EnhancedOverview from "./pages/dashboard/EnhancedOverview";
-import Documents from "./pages/dashboard/Documents";
-import DocumentCustomizer from "./pages/dashboard/DocumentCustomizer";
-import EnhancedGuidedHelp from "./pages/EnhancedGuidedHelp";
-import Pricing from "./pages/Pricing";
-import ContentMigration from "./pages/ContentMigration";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Onboarding from "./pages/Onboarding";
-import PaymentSuccess from "./pages/PaymentSuccess";
-import PaymentCancel from "./pages/PaymentCancel";
-import Disclaimer from "./pages/Disclaimer";
-import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./hooks/useAuth";
-import { Toaster } from "./components/ui/toaster";
+import React from 'react';
+import { QueryClient } from "react-query";
+import { ThemeProvider } from "@/components/ui/theme-provider"
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import Documents from './pages/dashboard/Documents';
+import CustomizeDocument from './pages/dashboard/CustomizeDocument';
+import Guidance from './pages/Guidance';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Profile from './pages/Profile';
+import ProtectedRoute from './components/ProtectedRoute';
+import PublicRoute from './components/PublicRoute';
+import NotFound from './pages/NotFound';
+import { useAuth } from './hooks/useAuth';
+import { GuidanceProvider } from './contexts/GuidanceContext';
+import AdminDocumentUpload from '@/pages/admin/DocumentUpload';
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <div className="min-h-screen bg-background">
+    <QueryClient>
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+        <Router>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
-            }>
-              <Route index element={<EnhancedOverview />} />
-              <Route path="documents" element={<Documents />} />
-              <Route path="documents/customize/:id" element={<DocumentCustomizer />} />
-              <Route path="consultations" element={<div className="p-6"><h1 className="text-2xl font-bold">Consultations</h1><p>Coming soon...</p></div>} />
-              <Route path="settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Settings</h1><p>Coming soon...</p></div>} />
-            </Route>
-            <Route path="/guided-help" element={<EnhancedGuidedHelp />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/content-migration" element={<ContentMigration />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/onboarding" element={
+            } />
+            <Route path="/dashboard/documents" element={
               <ProtectedRoute>
-                <Onboarding />
+                <Documents />
               </ProtectedRoute>
             } />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-            <Route path="/payment-cancel" element={<PaymentCancel />} />
-            <Route path="/disclaimer" element={<Disclaimer />} />
+            <Route path="/dashboard/documents/customize/:documentId" element={
+              <ProtectedRoute>
+                <CustomizeDocument />
+              </ProtectedRoute>
+            } />
+            <Route path="/guidance" element={
+              <ProtectedRoute>
+                <GuidanceProvider>
+                  <Guidance />
+                </GuidanceProvider>
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
             <Route path="*" element={<NotFound />} />
+            <Route path="/admin/documents" element={
+              <ProtectedRoute>
+                <AdminDocumentUpload />
+              </ProtectedRoute>
+            } />
           </Routes>
-          <Toaster />
-        </div>
-      </BrowserRouter>
-    </AuthProvider>
+        </Router>
+      </ThemeProvider>
+    </QueryClient>
   );
 }
 
