@@ -6,9 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import { DocumentCard } from '@/components/documents/DocumentCard';
 import { DocumentFilters } from '@/components/documents/DocumentFilters';
 import { DocumentPreview } from '@/components/documents/DocumentPreview';
+import { DocumentUpload } from '@/components/documents/DocumentUpload';
 import { DocumentCardSkeleton } from '@/components/ui/skeleton-loader';
 import { CopyableText } from '@/components/ui/copyable-text';
 import { PullToRefresh } from '@/components/ui/pull-to-refresh';
+import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ChevronDown, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Document, UserDocumentProgress, GuidanceStepDocument } from '@/types/documents';
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -24,6 +28,7 @@ const Documents = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [previewDocument, setPreviewDocument] = useState<Document | null>(null);
   const [relatedSteps, setRelatedSteps] = useState<GuidanceStepDocument[]>([]);
+  const [showUpload, setShowUpload] = useState(false);
 
   // Keyboard shortcuts for documents page
   const { showShortcuts, setShowShortcuts } = useKeyboardShortcuts({
@@ -114,6 +119,15 @@ const Documents = () => {
     } catch (error) {
       console.error('Error marking document as viewed:', error);
     }
+  };
+
+  const handleUploadSuccess = (url: string, path: string) => {
+    console.log('Document uploaded successfully:', { url, path });
+    // Optionally refresh documents list or show additional success message
+  };
+
+  const handleUploadError = (error: string) => {
+    console.error('Document upload error:', error);
   };
 
   const filteredDocuments = documents.filter(doc => {
@@ -233,6 +247,25 @@ const Documents = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Upload Section */}
+      <div className="px-4 lg:px-0">
+        <Collapsible open={showUpload} onOpenChange={setShowUpload}>
+          <CollapsibleTrigger asChild>
+            <Button variant="outline" className="w-full mb-4">
+              <Upload className="w-4 h-4 mr-2" />
+              Upload New Document Template
+              <ChevronDown className={`w-4 h-4 ml-2 transition-transform ${showUpload ? 'rotate-180' : ''}`} />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mb-6">
+            <DocumentUpload 
+              onUploadSuccess={handleUploadSuccess}
+              onUploadError={handleUploadError}
+            />
+          </CollapsibleContent>
+        </Collapsible>
       </div>
 
       <div className="px-4 lg:px-0">
