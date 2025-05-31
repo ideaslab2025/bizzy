@@ -7,6 +7,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { CheckCircle, Play, ExternalLink, ChevronLeft, ChevronRight, SkipForward, User, LogOut, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { VimeoPlayer } from "@/components/guidance/VimeoPlayer";
 import type { Json } from "@/integrations/supabase/types";
 
 interface GuidanceSection {
@@ -548,7 +549,6 @@ const GuidedHelp = () => {
               </Card>
             </div>
           ) : currentStepData ? (
-            // ... keep existing code (existing step content)
             <div className="max-w-4xl">
               <h2 className="text-3xl font-bold text-gray-800 mb-6">
                 {currentStepData.title}
@@ -556,21 +556,10 @@ const GuidedHelp = () => {
 
               {/* Video Section */}
               {currentStepData.video_url && (
-                <div className="mb-8">
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                        <Button variant="outline" size="lg" className="gap-2">
-                          <Play className="w-5 h-5" />
-                          Watch Video Guide
-                        </Button>
-                      </div>
-                      <p className="text-sm text-gray-600">
-                        30-60 second video explanation
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
+                <VimeoPlayer 
+                  videoUrl={currentStepData.video_url}
+                  title={`${currentStepData.title} Tutorial`}
+                />
               )}
 
               {/* Content */}
