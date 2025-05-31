@@ -53,24 +53,41 @@ export function AppSidebar() {
   const location = useLocation()
 
   return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+    <Sidebar className="border-r-0">
+      <SidebarContent className="bg-gradient-to-b from-[#0088cc] to-[#006ba6] text-white">
+        <SidebarGroup className="px-4 py-6">
+          <SidebarGroupLabel className="text-white/90 text-base font-semibold mb-4 px-0">
+            Navigation
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-2">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild
                     className={cn(
-                      "transition-colors",
-                      location.pathname === item.url && "bg-accent text-accent-foreground"
+                      "transition-all duration-200 rounded-lg p-3 text-white/90 hover:text-white hover:bg-white/10",
+                      "border border-transparent hover:border-white/20",
+                      "group relative overflow-hidden",
+                      location.pathname === item.url && "bg-white text-[#0088cc] shadow-lg hover:bg-white hover:text-[#0088cc] border-white"
                     )}
                   >
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
+                    <Link to={item.url} className="flex items-center gap-3 w-full">
+                      <div className={cn(
+                        "w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110",
+                        location.pathname === item.url ? "text-[#0088cc]" : "text-white/90 group-hover:text-white"
+                      )}>
+                        <item.icon className="w-5 h-5" />
+                      </div>
+                      <span className={cn(
+                        "font-medium transition-colors",
+                        location.pathname === item.url ? "text-[#0088cc]" : "text-white/90 group-hover:text-white"
+                      )}>
+                        {item.title}
+                      </span>
+                      {location.pathname === item.url && (
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#0088cc] rounded-l-full" />
+                      )}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -78,6 +95,9 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        
+        {/* Bottom gradient overlay */}
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#006ba6] to-transparent pointer-events-none" />
       </SidebarContent>
     </Sidebar>
   )
