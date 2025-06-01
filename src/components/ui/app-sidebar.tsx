@@ -60,33 +60,33 @@ export function AppSidebar() {
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-2">
+            <SidebarMenu className="space-y-3">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild
                     className={cn(
-                      "transition-all duration-200 rounded-lg p-3 text-white/90 hover:text-white hover:bg-white/10",
+                      "transition-all duration-200 rounded-lg p-4 py-4 min-h-[56px] text-white/90 hover:text-white hover:bg-white/10",
                       "border border-transparent hover:border-white/20",
-                      "group relative overflow-hidden",
+                      "group relative overflow-hidden text-left",
                       location.pathname === item.url && "bg-white text-[#0088cc] shadow-lg hover:bg-white hover:text-[#0088cc] border-white"
                     )}
                   >
-                    <Link to={item.url} className="flex items-center gap-3 w-full">
+                    <Link to={item.url} className="flex items-center gap-4 w-full">
                       <div className={cn(
-                        "w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110",
+                        "w-6 h-6 flex-shrink-0 transition-transform group-hover:scale-110",
                         location.pathname === item.url ? "text-[#0088cc]" : "text-white/90 group-hover:text-white"
                       )}>
-                        <item.icon className="w-5 h-5" />
+                        <item.icon className="w-6 h-6" />
                       </div>
                       <span className={cn(
-                        "font-medium transition-colors",
+                        "font-semibold text-base transition-colors",
                         location.pathname === item.url ? "text-[#0088cc]" : "text-white/90 group-hover:text-white"
                       )}>
                         {item.title}
                       </span>
                       {location.pathname === item.url && (
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#0088cc] rounded-l-full" />
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-10 bg-[#0088cc] rounded-l-full" />
                       )}
                     </Link>
                   </SidebarMenuButton>
