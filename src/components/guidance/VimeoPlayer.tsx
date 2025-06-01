@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Play } from 'lucide-react';
+import { Play, ExternalLink } from 'lucide-react';
 
 interface VimeoPlayerProps {
   videoUrl: string;
@@ -21,8 +21,11 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
     return null;
   }
 
-  // Updated embed URL with proper Vimeo parameters for native look and mobile compatibility
-  const embedUrl = `https://player.vimeo.com/video/${videoId}?badge=0&autopause=0&background=0&color=2962FF&title=0&byline=0&portrait=0&playsinline=1&controls=1`;
+  // Enhanced embed URL with comprehensive mobile compatibility parameters
+  const embedUrl = `https://player.vimeo.com/video/${videoId}?badge=0&autopause=0&background=0&color=2962FF&title=0&byline=0&portrait=0&playsinline=1&controls=1&muted=0&keyboard=1&pip=0`;
+
+  // Direct Vimeo link as fallback
+  const directVimeoUrl = `https://vimeo.com/${videoId}`;
 
   return (
     <div className="mb-8">
@@ -42,21 +45,36 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
             src={embedUrl}
             className="absolute top-0 left-0 w-full h-full"
             frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
+            allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope"
             allowFullScreen
+            webkitAllowFullScreen
+            mozAllowFullScreen
             title={title || "Video Tutorial"}
             loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
             style={{ 
               minHeight: '200px',
-              WebkitOverflowScrolling: 'touch'
+              WebkitOverflowScrolling: 'touch',
+              touchAction: 'manipulation'
             }}
           />
         </div>
       </div>
       
-      <p className="text-sm text-gray-600 mt-2">
-        Watch this quick video guide to understand the key concepts
-      </p>
+      <div className="flex items-center justify-between mt-2">
+        <p className="text-sm text-gray-600">
+          Watch this quick video guide to understand the key concepts
+        </p>
+        <a
+          href={directVimeoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 hover:underline"
+        >
+          <ExternalLink className="w-3 h-3" />
+          Watch on Vimeo
+        </a>
+      </div>
     </div>
   );
 };
