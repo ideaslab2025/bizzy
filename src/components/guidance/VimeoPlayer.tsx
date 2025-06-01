@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Play, ExternalLink } from 'lucide-react';
 
@@ -9,6 +9,8 @@ interface VimeoPlayerProps {
 }
 
 export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => {
+  const [showOverlay, setShowOverlay] = useState(true);
+
   // Extract Vimeo video ID from URL
   const getVimeoId = (url: string): string | null => {
     const match = url.match(/vimeo\.com\/(\d+)/);
@@ -22,10 +24,29 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
   }
 
   // Enhanced embed URL with comprehensive mobile compatibility parameters
-  const embedUrl = `https://player.vimeo.com/video/${videoId}?badge=0&autopause=0&background=0&color=2962FF&title=0&byline=0&portrait=0&playsinline=1&controls=1&muted=0&keyboard=1&pip=0`;
+  const embedUrl = `https://player.vimeo.com/video/${videoId}?` + new URLSearchParams({
+    badge: '0',
+    autopause: '0',
+    background: '0',
+    color: '2962FF',
+    title: '0',
+    byline: '0',
+    portrait: '0',
+    playsinline: '1',
+    controls: '1',
+    muted: '0',
+    keyboard: '1',
+    transparent: '1',
+    responsive: '1',
+    dnt: '1',
+    app_id: '122963'
+  }).toString();
 
   // Direct Vimeo link as fallback
   const directVimeoUrl = `https://vimeo.com/${videoId}`;
+
+  // Detect if on iOS to handle specific iOS issues
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   return (
     <div className="mb-8">
@@ -40,20 +61,42 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
       </div>
       
       <div className="relative rounded-lg overflow-hidden shadow-lg bg-gray-100">
-        <div className="aspect-video">
+        <div 
+          className="relative w-full"
+          style={{ 
+            paddingBottom: '56.25%', // 16:9 aspect ratio
+            height: 0,
+            overflow: 'hidden'
+          }}
+        >
+          {showOverlay && (
+            <div 
+              className="absolute inset-0 bg-black/20 flex items-center justify-center z-10 cursor-pointer"
+              onClick={() => setShowOverlay(false)}
+            >
+              <div className="bg-white rounded-full p-4 shadow-lg">
+                <Play className="w-8 h-8 text-blue-600" />
+              </div>
+            </div>
+          )}
+          
           <iframe
             src={embedUrl}
-            className="absolute top-0 left-0 w-full h-full"
+            className={`absolute top-0 left-0 w-full h-full ${showOverlay ? 'pointer-events-none' : ''}`}
             frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope"
+            allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope; encrypted-media"
             allowFullScreen
+            sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"
             title={title || "Video Tutorial"}
             loading="lazy"
             referrerPolicy="strict-origin-when-cross-origin"
             style={{ 
               minHeight: '200px',
               WebkitOverflowScrolling: 'touch',
-              touchAction: 'manipulation'
+              touchAction: 'manipulation',
+              pointerEvents: showOverlay ? 'none' : 'auto',
+              position: 'absolute',
+              inset: 0
             }}
           />
         </div>
