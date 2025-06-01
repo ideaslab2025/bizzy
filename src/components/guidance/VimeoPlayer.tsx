@@ -47,8 +47,6 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
             frameBorder="0"
             allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope"
             allowFullScreen
-            webkitAllowFullScreen
-            mozAllowFullScreen
             title={title || "Video Tutorial"}
             loading="lazy"
             referrerPolicy="strict-origin-when-cross-origin"
