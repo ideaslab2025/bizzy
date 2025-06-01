@@ -21,7 +21,8 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
     return null;
   }
 
-  const embedUrl = `https://player.vimeo.com/video/${videoId}?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0`;
+  // Updated embed URL with proper Vimeo parameters for native look
+  const embedUrl = `https://player.vimeo.com/video/${videoId}?badge=0&autopause=0&background=0&color=2962FF&title=0&byline=0&portrait=0`;
 
   return (
     <div className="mb-8">
