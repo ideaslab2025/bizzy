@@ -21,8 +21,8 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
     return null;
   }
 
-  // Updated embed URL with proper Vimeo parameters for native look
-  const embedUrl = `https://player.vimeo.com/video/${videoId}?badge=0&autopause=0&background=0&color=2962FF&title=0&byline=0&portrait=0`;
+  // Updated embed URL with proper Vimeo parameters for native look and mobile compatibility
+  const embedUrl = `https://player.vimeo.com/video/${videoId}?badge=0&autopause=0&background=0&color=2962FF&title=0&byline=0&portrait=0&playsinline=1&controls=1`;
 
   return (
     <div className="mb-8">
@@ -46,6 +46,10 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
             allowFullScreen
             title={title || "Video Tutorial"}
             loading="lazy"
+            style={{ 
+              minHeight: '200px',
+              WebkitOverflowScrolling: 'touch'
+            }}
           />
         </div>
       </div>
