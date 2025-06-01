@@ -45,6 +45,7 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
             allow="autoplay; fullscreen; picture-in-picture"
             allowFullScreen
             title={title || "Video Tutorial"}
+            loading="lazy"
           />
         </div>
       </div>
