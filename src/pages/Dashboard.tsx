@@ -1,15 +1,15 @@
 
-import React, { useState, useEffect } from "react";
+
+import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Bell, Search, User, ChevronDown, Settings, LogOut, X, HelpCircle } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Bell, Search, User, ChevronDown, Settings, LogOut, HelpCircle } from "lucide-react";
+import { motion } from "framer-motion";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
 import { EnhancedCommandPalette } from "@/components/ui/enhanced-command-palette";
 import { RecentlyViewed } from "@/components/ui/recently-viewed";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { FirstViewSpotlight } from "@/components/ui/first-view-spotlight";
-import { NeonGlow } from "@/components/ui/neon-glow";
 import { CloudSyncIndicator } from "@/components/ui/cloud-sync-indicator";
 import { ContextualFAQ } from "@/components/ui/contextual-faq";
 import { FAQTrigger } from "@/components/ui/faq-trigger";
@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import BizzyChat from "@/components/BizzyChat";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "@/components/ui/sonner";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -42,10 +43,13 @@ const Dashboard = () => {
 
   const handleSignOut = async () => {
     try {
+      console.log("Initiating logout...");
       await signOut();
+      toast.success("Successfully logged out");
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
+      toast.error("Failed to logout. Please try again.");
     }
   };
 
@@ -184,7 +188,7 @@ const Dashboard = () => {
                       Settings
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-gray-50 text-red-600">
+                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 text-red-600 hover:text-red-700">
                       <LogOut className="w-4 h-4 mr-2" />
                       Logout
                     </DropdownMenuItem>

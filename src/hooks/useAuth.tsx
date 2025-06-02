@@ -51,11 +51,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = async () => {
     try {
       console.log("Signing out user...");
+      
+      // Clear local state first
+      setUser(null);
+      setSession(null);
+      
+      // Sign out from Supabase
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('Sign out error:', error);
         throw error;
       }
+      
+      // Clear any additional cached data
+      localStorage.removeItem('supabase.auth.token');
+      sessionStorage.clear();
+      
       console.log("Sign out successful");
     } catch (error) {
       console.error('Unexpected sign out error:', error);
