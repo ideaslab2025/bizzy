@@ -493,8 +493,8 @@ const EnhancedGuidedHelp = () => {
   const sectionProgress = currentSectionData ? getSectionProgress(currentSectionData.id) : 0;
   const overallProgress = Math.round(getOverallProgress());
   const sidebarContent = <div className="bg-[#0088cc] h-full text-white flex flex-col">
-      {/* Logo */}
-      <div className="p-4 bg-white">
+      {/* Logo - Adjusted to match dashboard height */}
+      <div className="p-6 bg-white flex items-center justify-center">
         <Link to="/dashboard" className="flex items-center justify-center">
           <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
         </Link>
