@@ -94,9 +94,11 @@ const RingSegment: React.FC<{
         onPointerLeave={() => onHover(null)}
       >
         <meshStandardMaterial 
-          color="#e5e7eb" 
-          transparent 
-          opacity={0.3}
+          {...({
+            color: "#e5e7eb",
+            transparent: true,
+            opacity: 0.3
+          } as any)}
         />
       </mesh>
       
@@ -111,9 +113,11 @@ const RingSegment: React.FC<{
           position={[0, 0, 0.01]}
         >
           <meshStandardMaterial 
-            color={color} 
-            transparent 
-            opacity={isHovered ? 0.9 : 0.8}
+            {...({
+              color: color,
+              transparent: true,
+              opacity: isHovered ? 0.9 : 0.8
+            } as any)}
           />
         </mesh>
       )}
@@ -172,7 +176,6 @@ const RingChartMesh: React.FC<{
         color="#374151"
         anchorX="center"
         anchorY="middle"
-        font="/fonts/inter-bold.woff"
       >
         {`${overallProgress}%`}
       </Text>
@@ -182,7 +185,6 @@ const RingChartMesh: React.FC<{
         color="#6B7280"
         anchorX="center"
         anchorY="middle"
-        font="/fonts/inter-regular.woff"
       >
         {centerLabel || 'Complete'}
       </Text>
