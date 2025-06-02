@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -23,7 +24,7 @@ interface RichContentRendererProps {
   onChecklistComplete?: (stepId: number, itemId: string, completed: boolean) => void;
 }
 
-// Enhanced parsing function to handle video_url at root level
+// Enhanced parsing function to handle video_url at root level and prevent duplicates
 const parseRichContent = (content: any): RichContentBlock[] => {
   console.log('RichContentRenderer received content:', content);
   
@@ -37,7 +38,7 @@ const parseRichContent = (content: any): RichContentBlock[] => {
       blocks.push({
         type: 'video',
         content: content.video_url,
-        title: 'Starting your Company Documents'
+        title: content.title || 'Business guidance video'
       });
     }
     
@@ -49,18 +50,25 @@ const parseRichContent = (content: any): RichContentBlock[] => {
       
       if (richContent?.blocks && Array.isArray(richContent.blocks)) {
         console.log('Parsing rich_content blocks:', richContent.blocks.length);
-        // Only add blocks that are not videos (to avoid duplicates)
         richContent.blocks.forEach((block: any) => {
-          if (block.type !== 'video') {
-            blocks.push(block);
+          // Skip if this is a video block and we already added one from video_url
+          if (block.type === 'video' && content.video_url) {
+            console.log('Skipping duplicate video block from rich_content');
+            return;
           }
+          
+          blocks.push(block);
         });
       } else if (Array.isArray(richContent)) {
         console.log('Rich content is directly an array');
         richContent.forEach((block: any) => {
-          if (block.type !== 'video') {
-            blocks.push(block);
+          // Skip if this is a video block and we already added one from video_url
+          if (block.type === 'video' && content.video_url) {
+            console.log('Skipping duplicate video block from rich_content array');
+            return;
           }
+          
+          blocks.push(block);
         });
       }
     }
