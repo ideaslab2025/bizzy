@@ -24,33 +24,70 @@ interface RichContentRendererProps {
   onChecklistComplete?: (stepId: number, itemId: string, completed: boolean) => void;
 }
 
-// Add safety check for blocks parsing
+// Enhanced parsing function to handle video_url at root level
 const parseRichContent = (content: any): RichContentBlock[] => {
+  console.log('RichContentRenderer received content:', content);
+  
+  const blocks: RichContentBlock[] = [];
+  
   try {
-    if (!content) return [{ type: 'text', content: 'No content available' }];
+    // First, check if there's a video_url at the root level
+    if (content.video_url) {
+      console.log('Found video_url at root level:', content.video_url);
+      
+      // Check if a video block already exists in rich_content
+      let hasVideoBlock = false;
+      if (content.rich_content) {
+        const richContent = typeof content.rich_content === 'string' 
+          ? JSON.parse(content.rich_content) 
+          : content.rich_content;
+        
+        if (richContent?.blocks && Array.isArray(richContent.blocks)) {
+          hasVideoBlock = richContent.blocks.some((block: any) => block.type === 'video');
+        }
+      }
+      
+      if (!hasVideoBlock) {
+        console.log('No video block found, creating one from video_url');
+        blocks.push({
+          type: 'video',
+          content: content.video_url,
+          title: content.title || 'Business guidance video'
+        });
+      }
+    }
     
-    if (content?.rich_content) {
-      // Handle if rich_content is already parsed or needs parsing
+    // Then parse the regular rich_content blocks if they exist
+    if (content.rich_content) {
       const richContent = typeof content.rich_content === 'string' 
         ? JSON.parse(content.rich_content) 
         : content.rich_content;
       
-      // Check if it has a blocks array (new format)
       if (richContent?.blocks && Array.isArray(richContent.blocks)) {
-        return richContent.blocks;
-      } 
-      // Check if it's directly an array (alternative format)
-      else if (Array.isArray(richContent)) {
-        return richContent;
+        console.log('Parsing rich_content blocks:', richContent.blocks.length);
+        richContent.blocks.forEach((block: any) => {
+          blocks.push(block);
+        });
+      } else if (Array.isArray(richContent)) {
+        console.log('Rich content is directly an array');
+        richContent.forEach((block: any) => {
+          blocks.push(block);
+        });
       }
-      // Fallback to simple text block
-      else {
-        return [{ type: 'text', content: content?.content || 'No content available' }];
-      }
-    } else {
-      // Fallback to simple text from content field
-      return [{ type: 'text', content: content?.content || 'No content available' }];
     }
+    
+    // Fallback: if no blocks were found and no video_url, create a text block from content
+    if (blocks.length === 0 && content.content) {
+      console.log('No rich content found, falling back to text content');
+      blocks.push({ 
+        type: 'text', 
+        content: content.content 
+      });
+    }
+    
+    console.log('Final parsed blocks:', blocks);
+    return blocks;
+    
   } catch (error) {
     console.error('Error parsing rich content:', error);
     return [{ type: 'text', content: 'Error loading content' }];
@@ -62,12 +99,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
   stepId,
   onChecklistComplete
 }) => {
-  console.log('RichContentRenderer received content:', content);
-  
-  // Parse rich_content JSONB field with proper error handling
   const blocks = parseRichContent(content);
-
-  console.log('Parsed blocks:', blocks);
 
   const renderBlock = (block: RichContentBlock, index: number) => {
     switch (block.type) {
@@ -88,13 +120,14 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
         );
 
       case 'video':
+        console.log('Rendering video block with content:', block.content);
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
             key={index}
-            className="mb-8"
+            className="my-6"
           >
             <div className="flex items-center gap-2 mb-4">
               <Badge variant="secondary" className="bg-blue-100 text-blue-700 gap-1">
@@ -104,29 +137,30 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
               {block.title && <span className="text-sm text-gray-600">{block.title}</span>}
             </div>
             
-            <div className="relative rounded-lg overflow-hidden shadow-lg bg-gray-100">
+            <div className="relative w-full overflow-hidden rounded-lg bg-gray-100 shadow-lg" 
+                 style={{ paddingBottom: '56.25%' }}>
               {block.content && block.content.includes('synthesia.io') ? (
-                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                  <iframe
-                    src={block.content}
-                    className="absolute top-0 left-0 w-full h-full rounded-lg"
-                    frameBorder="0"
-                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
-                    allowFullScreen
-                    title={block.title || "Business guidance video"}
-                    onError={() => console.error('Video iframe failed to load:', block.content)}
-                  />
-                </div>
+                <iframe
+                  src={block.content}
+                  className="absolute inset-0 w-full h-full"
+                  frameBorder="0"
+                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+                  allowFullScreen
+                  loading="lazy"
+                  title={block.title || "Business guidance video"}
+                  onLoad={() => console.log('Video iframe loaded successfully')}
+                  onError={(e) => {
+                    console.error('Failed to load video iframe:', block.content, e);
+                  }}
+                />
               ) : (
-                <div className="aspect-video">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center p-6">
-                      <Play className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                      <p className="text-gray-600">Video not available</p>
-                      <p className="text-sm text-gray-500 mt-2">
-                        URL: {block.content ? block.content.substring(0, 50) + '...' : 'No URL provided'}
-                      </p>
-                    </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center p-6">
+                    <Play className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                    <p className="text-gray-600">Video not available</p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      URL: {block.content ? block.content.substring(0, 50) + '...' : 'No URL provided'}
+                    </p>
                   </div>
                 </div>
               )}
