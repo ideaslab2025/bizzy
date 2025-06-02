@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,14 +6,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
 import { 
   TrendingUp, Clock, FileText, Calendar, Award, 
   Zap, ArrowRight, CheckCircle, AlertTriangle,
-  Target, PlayCircle, BookOpen
+  Target, PlayCircle, BookOpen, BarChart3
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { businessSections } from '@/data/businessSections';
+import { AdvancedAnalyticsDashboard } from '@/components/dashboard/AdvancedAnalyticsDashboard';
 
 interface DashboardAnalytics {
   overallProgress: number;
@@ -47,6 +48,7 @@ const EnhancedOverview: React.FC = () => {
   const [quickWins, setQuickWins] = useState<QuickWin[]>([]);
   const [deadlines, setDeadlines] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
     if (user) {
@@ -230,287 +232,307 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Visual Journey Map - Compact layout with solid arrow lines */}
-      <Card className="p-6">
-        <CardHeader className="px-0 pt-0">
-          <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5" />
-            Your Business Setup Journey
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="px-0">
-          <div className="w-full">
-            <div className="grid grid-cols-5 gap-2 lg:gap-4">
-              {businessSections.map((section, index) => {
-                const IconComponent = section.icon;
-                const completion = analytics?.completionBySection[section.id] || 0;
-                const isCompleted = completion === 100 || getSectionCompletionFromStorage(section.id);
-                const isCurrent = section.id === analytics?.currentSection?.id;
-                const isNext = index < businessSections.length - 1;
-                
-                return (
-                  <React.Fragment key={section.id}>
-                    <div className="flex flex-col items-center">
-                      <motion.div
-                        className="flex flex-col items-center cursor-pointer w-full"
-                        whileHover={{ scale: 1.05 }}
-                        onClick={() => navigateToSection(section.id)}
-                      >
-                        {/* Section node */}
-                        <div className={cn(
-                          "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all mb-2 relative z-10 bg-white",
-                          isCompleted ? 
-                            "border-green-500" :
-                          isCurrent ? 
-                            "border-blue-500" : 
-                            "border-gray-300"
-                        )}>
-                          {isCompleted ? (
-                            <CheckCircle className="w-6 h-6 text-green-500" strokeWidth={2} />
-                          ) : (
-                            <IconComponent 
-                              className={cn(
-                                "w-6 h-6",
-                                isCurrent ? "text-blue-500" : section.iconColor
-                              )} 
-                              strokeWidth={2} 
-                            />
+      {/* Tab Navigation */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="overview" className="flex items-center gap-2">
+            <Target className="w-4 h-4" />
+            Business Overview
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex items-center gap-2">
+            <BarChart3 className="w-4 h-4" />
+            Advanced Analytics
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-8">
+          {/* Visual Journey Map - Compact layout with solid arrow lines */}
+          <Card className="p-6">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="flex items-center gap-2">
+                <Target className="w-5 h-5" />
+                Your Business Setup Journey
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="px-0">
+              <div className="w-full">
+                <div className="grid grid-cols-5 gap-2 lg:gap-4">
+                  {businessSections.map((section, index) => {
+                    const IconComponent = section.icon;
+                    const completion = analytics?.completionBySection[section.id] || 0;
+                    const isCompleted = completion === 100 || getSectionCompletionFromStorage(section.id);
+                    const isCurrent = section.id === analytics?.currentSection?.id;
+                    const isNext = index < businessSections.length - 1;
+                    
+                    return (
+                      <React.Fragment key={section.id}>
+                        <div className="flex flex-col items-center">
+                          <motion.div
+                            className="flex flex-col items-center cursor-pointer w-full"
+                            whileHover={{ scale: 1.05 }}
+                            onClick={() => navigateToSection(section.id)}
+                          >
+                            {/* Section node */}
+                            <div className={cn(
+                              "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all mb-2 relative z-10 bg-white",
+                              isCompleted ? 
+                                "border-green-500" :
+                              isCurrent ? 
+                                "border-blue-500" : 
+                                "border-gray-300"
+                            )}>
+                              {isCompleted ? (
+                                <CheckCircle className="w-6 h-6 text-green-500" strokeWidth={2} />
+                              ) : (
+                                <IconComponent 
+                                  className={cn(
+                                    "w-6 h-6",
+                                    isCurrent ? "text-blue-500" : section.iconColor
+                                  )} 
+                                  strokeWidth={2} 
+                                />
+                              )}
+                            </div>
+                            
+                            <p className="text-xs lg:text-sm text-center font-medium leading-tight">{section.title}</p>
+                            <p className="text-xs text-gray-500">
+                              {Math.round(completion)}%
+                            </p>
+                          </motion.div>
+
+                          {/* Solid arrow line underneath each section except the last */}
+                          {isNext && (
+                            <div className="mt-4 w-full flex justify-center">
+                              <div className={cn(
+                                "h-1 w-full bg-gradient-to-r relative",
+                                isCompleted ? 
+                                  "from-green-500 to-green-400" : 
+                                  "from-gray-300 to-gray-200"
+                              )}>
+                                {/* Arrow head */}
+                                <div className={cn(
+                                  "absolute -right-1 top-1/2 -translate-y-1/2 w-0 h-0",
+                                  "border-l-4 border-t-2 border-b-2 border-t-transparent border-b-transparent",
+                                  isCompleted ? "border-l-green-400" : "border-l-gray-200"
+                                )} />
+                              </div>
+                            </div>
                           )}
                         </div>
-                        
-                        <p className="text-xs lg:text-sm text-center font-medium leading-tight">{section.title}</p>
-                        <p className="text-xs text-gray-500">
-                          {Math.round(completion)}%
-                        </p>
-                      </motion.div>
-
-                      {/* Solid arrow line underneath each section except the last */}
-                      {isNext && (
-                        <div className="mt-4 w-full flex justify-center">
-                          <div className={cn(
-                            "h-1 w-full bg-gradient-to-r relative",
-                            isCompleted ? 
-                              "from-green-500 to-green-400" : 
-                              "from-gray-300 to-gray-200"
-                          )}>
-                            {/* Arrow head */}
-                            <div className={cn(
-                              "absolute -right-1 top-1/2 -translate-y-1/2 w-0 h-0",
-                              "border-l-4 border-t-2 border-b-2 border-t-transparent border-b-transparent",
-                              isCompleted ? "border-l-green-400" : "border-l-gray-200"
-                            )} />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </React.Fragment>
-                );
-              })}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <StatCard
-          title="Overall Progress"
-          value={`${Math.round(analytics.overallProgress)}%`}
-          icon={<TrendingUp className="w-5 h-5" strokeWidth={2} />}
-          trend={analytics.completedSteps > 0 ? `${analytics.completedSteps} steps completed` : undefined}
-          color="blue"
-        />
-        <StatCard
-          title="Documents"
-          value={`${analytics.documentsCompleted}/${analytics.totalDocuments}`}
-          icon={<FileText className="w-5 h-5" strokeWidth={2} />}
-          trend={analytics.documentsCompleted > 0 ? `${Math.round((analytics.documentsCompleted / analytics.totalDocuments) * 100)}% complete` : undefined}
-          color="green"
-        />
-        <StatCard
-          title="Time Invested"
-          value={`${analytics.totalHours}h`}
-          icon={<Clock className="w-5 h-5" strokeWidth={2} />}
-          trend="Estimated time saved: 20h"
-          color="purple"
-        />
-        <StatCard
-          title="Next Milestone"
-          value={analytics.currentSection?.title || 'Complete!'}
-          icon={<Target className="w-5 h-5" strokeWidth={2} />}
-          trend={analytics.currentSection ? `${analytics.currentSection.estimated_time_minutes} min remaining` : undefined}
-          color="orange"
-        />
-      </div>
-
-      {/* Action Cards Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Quick Wins */}
-        <Card className="border-green-200 bg-green-50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-800">
-              <Zap className="w-5 h-5" strokeWidth={2} />
-              Quick Wins Available
-              <Badge variant="secondary" className="ml-auto">
-                {quickWins.length}
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {quickWins.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">
-                No quick wins available - great job staying on top of things!
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {quickWins.map((task) => (
-                  <Button
-                    key={task.id}
-                    variant="outline"
-                    className="w-full justify-between hover:bg-green-100"
-                    onClick={() => navigateToStep(task.section_id, task.order_number)}
-                  >
-                    <div className="text-left">
-                      <div className="font-medium">{task.title}</div>
-                      <div className="text-sm text-gray-600">{task.section_title}</div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-500">{task.estimated_time_minutes}min</span>
-                      <ArrowRight className="w-4 h-4" strokeWidth={2} />
-                    </div>
-                  </Button>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Continue Current Section */}
-        <Card className="border-blue-200 bg-blue-50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-blue-800">
-              <PlayCircle className="w-5 h-5" strokeWidth={2} />
-              Continue Your Journey
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {analytics.currentSection ? (
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-lg">{analytics.currentSection.title}</h3>
-                  <p className="text-sm text-gray-600 mt-1">{analytics.currentSection.description}</p>
-                  
-                  <div className="mt-3">
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Progress</span>
-                      <span>{Math.round(analytics.completionBySection[analytics.currentSection.id])}%</span>
-                    </div>
-                    <Progress value={analytics.completionBySection[analytics.currentSection.id]} className="h-2" />
-                  </div>
+                      </React.Fragment>
+                    );
+                  })}
                 </div>
-                
-                <Button 
-                  className="w-full"
-                  onClick={() => navigateToSection(analytics.currentSection.id)}
-                >
-                  Continue Section
-                  <ArrowRight className="w-4 h-4 ml-2" strokeWidth={2} />
-                </Button>
               </div>
-            ) : (
-              <div className="text-center py-4">
-                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-2" strokeWidth={2} />
-                <p className="font-semibold">Congratulations!</p>
-                <p className="text-sm text-gray-600">You've completed all sections</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
 
-      {/* Bottom Row - Recent Activity & Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="w-5 h-5" strokeWidth={2} />
-              Recent Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {analytics.recentActivities.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">
-                No recent activity. Start your first section to see progress here!
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {analytics.recentActivities.map((activity, index) => (
-                  <div key={index} className="flex items-center gap-3 p-2 rounded hover:bg-gray-50">
-                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" strokeWidth={2} />
-                    <div className="flex-1">
-                      <p className="font-medium text-sm">{activity.title}</p>
-                      <p className="text-xs text-gray-500">{activity.section}</p>
-                    </div>
-                    <span className="text-xs text-gray-400">
-                      {new Date(activity.completedAt).toLocaleDateString()}
-                    </span>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <StatCard
+              title="Overall Progress"
+              value={`${Math.round(analytics.overallProgress)}%`}
+              icon={<TrendingUp className="w-5 h-5" strokeWidth={2} />}
+              trend={analytics.completedSteps > 0 ? `${analytics.completedSteps} steps completed` : undefined}
+              color="blue"
+            />
+            <StatCard
+              title="Documents"
+              value={`${analytics.documentsCompleted}/${analytics.totalDocuments}`}
+              icon={<FileText className="w-5 h-5" strokeWidth={2} />}
+              trend={analytics.documentsCompleted > 0 ? `${Math.round((analytics.documentsCompleted / analytics.totalDocuments) * 100)}% complete` : undefined}
+              color="green"
+            />
+            <StatCard
+              title="Time Invested"
+              value={`${analytics.totalHours}h`}
+              icon={<Clock className="w-5 h-5" strokeWidth={2} />}
+              trend="Estimated time saved: 20h"
+              color="purple"
+            />
+            <StatCard
+              title="Next Milestone"
+              value={analytics.currentSection?.title || 'Complete!'}
+              icon={<Target className="w-5 h-5" strokeWidth={2} />}
+              trend={analytics.currentSection ? `${analytics.currentSection.estimated_time_minutes} min remaining` : undefined}
+              color="orange"
+            />
+          </div>
+
+          {/* Action Cards Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Quick Wins */}
+            <Card className="border-green-200 bg-green-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-green-800">
+                  <Zap className="w-5 h-5" strokeWidth={2} />
+                  Quick Wins Available
+                  <Badge variant="secondary" className="ml-auto">
+                    {quickWins.length}
+                  </Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {quickWins.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">
+                    No quick wins available - great job staying on top of things!
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {quickWins.map((task) => (
+                      <Button
+                        key={task.id}
+                        variant="outline"
+                        className="w-full justify-between hover:bg-green-100"
+                        onClick={() => navigateToStep(task.section_id, task.order_number)}
+                      >
+                        <div className="text-left">
+                          <div className="font-medium">{task.title}</div>
+                          <div className="text-sm text-gray-600">{task.section_title}</div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-500">{task.estimated_time_minutes}min</span>
+                          <ArrowRight className="w-4 h-4" strokeWidth={2} />
+                        </div>
+                      </Button>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                )}
+              </CardContent>
+            </Card>
 
-        {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BookOpen className="w-5 h-5" strokeWidth={2} />
-              Quick Actions
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                variant="outline"
-                className="h-20 flex-col gap-2"
-                onClick={() => navigate('/dashboard/documents')}
-              >
-                <FileText className="w-5 h-5" strokeWidth={2} />
-                <span className="text-sm">Documents</span>
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="h-20 flex-col gap-2"
-                onClick={() => navigate('/guided-help')}
-              >
-                <Target className="w-5 h-5" strokeWidth={2} />
-                <span className="text-sm">Guide</span>
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="h-20 flex-col gap-2"
-                onClick={() => {/* TODO: Navigate to achievements */}}
-              >
-                <Award className="w-5 h-5" strokeWidth={2} />
-                <span className="text-sm">Achievements</span>
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="h-20 flex-col gap-2"
-                onClick={() => {/* TODO: Navigate to help */}}
-              >
-                <AlertTriangle className="w-5 h-5" strokeWidth={2} />
-                <span className="text-sm">Get Help</span>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            {/* Continue Current Section */}
+            <Card className="border-blue-200 bg-blue-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-blue-800">
+                  <PlayCircle className="w-5 h-5" strokeWidth={2} />
+                  Continue Your Journey
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {analytics.currentSection ? (
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-semibold text-lg">{analytics.currentSection.title}</h3>
+                      <p className="text-sm text-gray-600 mt-1">{analytics.currentSection.description}</p>
+                      
+                      <div className="mt-3">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>Progress</span>
+                          <span>{Math.round(analytics.completionBySection[analytics.currentSection.id])}%</span>
+                        </div>
+                        <Progress value={analytics.completionBySection[analytics.currentSection.id]} className="h-2" />
+                      </div>
+                    </div>
+                    
+                    <Button 
+                      className="w-full"
+                      onClick={() => navigateToSection(analytics.currentSection.id)}
+                    >
+                      Continue Section
+                      <ArrowRight className="w-4 h-4 ml-2" strokeWidth={2} />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-center py-4">
+                    <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-2" strokeWidth={2} />
+                    <p className="font-semibold">Congratulations!</p>
+                    <p className="text-sm text-gray-600">You've completed all sections</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Bottom Row - Recent Activity & Quick Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Recent Activity */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="w-5 h-5" strokeWidth={2} />
+                  Recent Activity
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {analytics.recentActivities.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">
+                    No recent activity. Start your first section to see progress here!
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {analytics.recentActivities.map((activity, index) => (
+                      <div key={index} className="flex items-center gap-3 p-2 rounded hover:bg-gray-50">
+                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" strokeWidth={2} />
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">{activity.title}</p>
+                          <p className="text-xs text-gray-500">{activity.section}</p>
+                        </div>
+                        <span className="text-xs text-gray-400">
+                          {new Date(activity.completedAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Quick Actions */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BookOpen className="w-5 h-5" strokeWidth={2} />
+                  Quick Actions
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    variant="outline"
+                    className="h-20 flex-col gap-2"
+                    onClick={() => navigate('/dashboard/documents')}
+                  >
+                    <FileText className="w-5 h-5" strokeWidth={2} />
+                    <span className="text-sm">Documents</span>
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    className="h-20 flex-col gap-2"
+                    onClick={() => navigate('/guided-help')}
+                  >
+                    <Target className="w-5 h-5" strokeWidth={2} />
+                    <span className="text-sm">Guide</span>
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    className="h-20 flex-col gap-2"
+                    onClick={() => setActiveTab('analytics')}
+                  >
+                    <BarChart3 className="w-5 h-5" strokeWidth={2} />
+                    <span className="text-sm">Analytics</span>
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    className="h-20 flex-col gap-2"
+                    onClick={() => {/* TODO: Navigate to help */}}
+                  >
+                    <AlertTriangle className="w-5 h-5" strokeWidth={2} />
+                    <span className="text-sm">Get Help</span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-6">
+          <AdvancedAnalyticsDashboard />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
