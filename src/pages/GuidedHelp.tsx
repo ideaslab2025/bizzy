@@ -27,7 +27,7 @@ interface GuidanceStep {
   video_url?: string;
   external_links: Json;
   order_number: number;
-  rich_content?: boolean;
+  rich_content?: Json;
 }
 
 interface UserProgress {
