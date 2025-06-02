@@ -1,88 +1,102 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { DemoContent } from '@/types/demo';
-import { useLiveGuidanceContent } from './useLiveGuidanceContent';
-import { useLiveDocuments } from './useLiveDocuments';
-import { useLiveAIContent } from './useLiveAIContent';
-import { useLiveDashboard } from './useLiveDashboard';
 
-// Hook for managing dynamic demo content with live platform integration
+// Hook for managing dynamic demo content
 export const useDemoContent = () => {
   const [demoContent, setDemoContent] = useState<DemoContent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Live content hooks
-  const guidance = useLiveGuidanceContent();
-  const documents = useLiveDocuments();
-  const aiContent = useLiveAIContent();
-  const dashboard = useLiveDashboard();
+  // Mock data - in production this would fetch from Supabase
+  const mockDemoContent: DemoContent[] = [
+    {
+      id: 'guidance-demo',
+      title: 'Step-by-Step Business Setup',
+      description: 'Interactive walkthrough of business registration and compliance',
+      type: 'guidance',
+      content: {
+        currentStep: 'Register for VAT',
+        progress: 65,
+        totalSteps: 12,
+        nextDeadline: '2025-01-15'
+      },
+      isLive: true
+    },
+    {
+      id: 'documents-demo',
+      title: 'Professional Document Templates',
+      description: 'Access hundreds of business documents and contracts',
+      type: 'documents',
+      content: {
+        featuredTemplates: [
+          'Employment Contract',
+          'Privacy Policy',
+          'Terms of Service',
+          'Invoice Template'
+        ],
+        totalDocuments: 250,
+        recentlyViewed: 3
+      },
+      isLive: true
+    },
+    {
+      id: 'ai-chat-demo',
+      title: 'Bizzy AI Assistant',
+      description: 'Get instant help with business questions and guidance',
+      type: 'ai-chat',
+      content: {
+        sampleQuestions: [
+          'How do I register for PAYE?',
+          'What insurance do I need?',
+          'When is my Corporation Tax due?'
+        ],
+        responseTime: '< 2 seconds',
+        accuracy: '95%'
+      },
+      isLive: false
+    },
+    {
+      id: 'dashboard-demo',
+      title: 'Business Progress Dashboard',
+      description: 'Track your business setup progress and upcoming deadlines',
+      type: 'dashboard',
+      content: {
+        completionRate: 78,
+        tasksCompleted: 15,
+        upcomingDeadlines: 3,
+        timeSaved: '24 hours'
+      },
+      isLive: true
+    }
+  ];
 
-  const buildDemoContent = useCallback(() => {
-    const content: DemoContent[] = [
-      {
-        id: 'guidance-demo',
-        title: 'Step-by-Step Business Setup',
-        description: 'Interactive walkthrough of business registration and compliance',
-        type: 'guidance',
-        content: guidance.demoData || {
-          currentStep: 'Register for VAT',
-          progress: 65,
-          totalSteps: 12,
-          nextDeadline: '2025-01-15'
-        },
-        isLive: !guidance.loading && !!guidance.demoData
-      },
-      {
-        id: 'documents-demo',
-        title: 'Professional Document Templates',
-        description: 'Access hundreds of business documents and contracts',
-        type: 'documents',
-        content: documents.demoData || {
-          featuredTemplates: [
-            'Employment Contract',
-            'Privacy Policy',
-            'Terms of Service',
-            'Invoice Template'
-          ],
-          totalDocuments: 250,
-          recentlyViewed: 3
-        },
-        isLive: !documents.loading && !!documents.demoData
-      },
-      {
-        id: 'ai-chat-demo',
-        title: 'Bizzy AI Assistant',
-        description: 'Get instant help with business questions and guidance',
-        type: 'ai-chat',
-        content: aiContent.demoData,
-        isLive: true
-      },
-      {
-        id: 'dashboard-demo',
-        title: 'Business Progress Dashboard',
-        description: 'Track your business setup progress and upcoming deadlines',
-        type: 'dashboard',
-        content: dashboard.demoData || {
-          completionRate: 78,
-          tasksCompleted: 15,
-          upcomingDeadlines: 3,
-          timeSaved: '24 hours'
-        },
-        isLive: !dashboard.loading && !!dashboard.demoData
-      }
-    ];
+  const fetchDemoContent = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
 
-    setDemoContent(content);
-    setIsLoading(false);
-  }, [guidance.demoData, documents.demoData, aiContent.demoData, dashboard.demoData, guidance.loading, documents.loading, dashboard.loading]);
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // In production, this would be:
+      // const { data, error } = await supabase
+      //   .from('guidance_steps')
+      //   .select('*')
+      //   .limit(5);
+      
+      setDemoContent(mockDemoContent);
+    } catch (err) {
+      setError('Failed to load demo content');
+      console.error('Demo content fetch error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   const refreshContent = useCallback(() => {
-    setIsLoading(true);
-    guidance.refreshContent();
-    documents.refreshContent();
-    dashboard.refreshData();
-  }, [guidance.refreshContent, documents.refreshContent, dashboard.refreshData]);
+    fetchDemoContent();
+  }, [fetchDemoContent]);
 
   const updateContentProgress = useCallback((contentId: string, progress: number) => {
     setDemoContent(prev => 
@@ -94,30 +108,15 @@ export const useDemoContent = () => {
     );
   }, []);
 
-  // Update demo content when live data changes
   useEffect(() => {
-    buildDemoContent();
-  }, [buildDemoContent]);
-
-  // Set loading state based on all content loading states
-  useEffect(() => {
-    const allLoading = guidance.loading || documents.loading || dashboard.loading;
-    if (!allLoading && isLoading) {
-      setIsLoading(false);
-    }
-  }, [guidance.loading, documents.loading, dashboard.loading, isLoading]);
+    fetchDemoContent();
+  }, [fetchDemoContent]);
 
   return {
     demoContent,
     isLoading,
-    error: error || guidance.error || documents.error,
+    error,
     refreshContent,
-    updateContentProgress,
-    liveData: {
-      guidance: guidance.demoData,
-      documents: documents.demoData,
-      aiContent: aiContent.demoData,
-      dashboard: dashboard.demoData
-    }
+    updateContentProgress
   };
 };

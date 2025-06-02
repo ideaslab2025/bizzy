@@ -4,15 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Menu, Star, User, LogOut, Check, Sparkles, Zap, Shield, Users, Building2, Crown, ChevronDown } from "lucide-react";
+import { Menu, Star, User, LogOut, Check, Sparkles, Zap, Shield, Users, Building2, Crown } from "lucide-react";
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { motion } from "framer-motion";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
 import StatisticsSection from "@/components/StatisticsSection";
-import DemoContainer from "@/components/demo/DemoContainer";
-import { useDemoContent } from "@/hooks/useDemoContent";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 
@@ -27,13 +24,9 @@ const Index = () => {
     y: window.innerHeight - 150
   });
 
-  // Demo content hook
-  const { demoContent, isLoading: demoLoading } = useDemoContent();
-
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
-  const demoRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const floatingAnimation = () => {
@@ -71,18 +64,6 @@ const Index = () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
-
-  // Enhanced scroll to demo function
-  const scrollToDemo = () => {
-    if (demoRef.current) {
-      const offsetTop = demoRef.current.offsetTop - 80; // Account for header
-      
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth'
-      });
-    }
-  };
 
   // Function to handle scroll to sections
   const scrollToSection = (sectionId: string) => {
@@ -295,26 +276,9 @@ const Index = () => {
                 <Link to="/register">
                   <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Start Your Journey</Button>
                 </Link>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
-                    className="border-[#1d4ed8] text-[#3b82f6] hover:bg-blue-900/50 hover:text-[#60a5fa] hover:border-[#60a5fa]" 
-                    onClick={scrollToDemo}
-                  >
-                    See How It Works
-                    <motion.div
-                      animate={{ y: [0, 3, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                      className="ml-2"
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </motion.div>
-                  </Button>
-                </motion.div>
+                <Button size="lg" variant="outline" className="border-[#1d4ed8] text-[#3b82f6] hover:bg-blue-900/50 hover:text-[#60a5fa] hover:border-[#60a5fa]" onClick={() => scrollToSection('features')}>
+                  See How It Works
+                </Button>
               </div>
             </div>
             <div className="relative h-[500px] md:h-[600px] flex items-center justify-center -mt-32 overflow-visible z-20">
@@ -326,125 +290,6 @@ const Index = () => {
 
       {/* Added spacer div for better separation */}
       <div className="h-16 md:h-24"></div>
-
-      {/* Interactive Demo Section - NEW */}
-      <motion.section 
-        id="interactive-demo"
-        ref={demoRef}
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="py-20 bg-gradient-to-br from-blue-900/30 to-blue-800/20 relative overflow-hidden"
-      >
-        {/* Background decoration */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-purple-600/5"></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          {/* Demo Introduction */}
-          <motion.div 
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <Sparkles className="w-8 h-8 text-blue-400" />
-              </motion.div>
-              <h2 className="text-4xl md:text-5xl font-bold text-white">
-                Experience Bizzy in Action
-              </h2>
-            </div>
-            
-            <p className="text-xl text-blue-100/80 max-w-3xl mx-auto mb-8">
-              Explore our platform with live content and interactive features. See how Bizzy simplifies business administration with real-time guidance and professional tools.
-            </p>
-            
-            {/* Demo scroll indicator */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="flex flex-col items-center gap-2 mb-8"
-            >
-              <span className="text-sm text-blue-300">Interactive Demo Below</span>
-              <motion.div
-                animate={{ y: [0, 5, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                <ChevronDown className="w-5 h-5 text-blue-400" />
-              </motion.div>
-            </motion.div>
-          </motion.div>
-
-          {/* Demo Container */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-          >
-            {!demoLoading && demoContent.length > 0 ? (
-              <DemoContainer 
-                demoData={demoContent}
-                className="max-w-6xl mx-auto"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-64">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full"
-                />
-                <span className="ml-3 text-blue-200">Loading interactive demo...</span>
-              </div>
-            )}
-          </motion.div>
-
-          {/* Demo Call-to-Action */}
-          <motion.div 
-            className="text-center mt-12"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.6 }}
-          >
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Ready to Transform Your Business Administration?
-            </h3>
-            <p className="text-blue-100/80 mb-6 max-w-2xl mx-auto">
-              Join thousands of UK businesses who've streamlined their operations with Bizzy's comprehensive platform.
-            </p>
-            
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/register">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">
-                    Start Your Free Trial
-                  </Button>
-                </motion.div>
-              </Link>
-              
-              <Link to="/pricing">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
-                    className="border-blue-400 text-blue-300 hover:bg-blue-800/50"
-                  >
-                    View Pricing Plans
-                  </Button>
-                </motion.div>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
 
       {/* Features Section */}
       <section id="features" ref={featuresRef} className="pt-24 pb-12">
