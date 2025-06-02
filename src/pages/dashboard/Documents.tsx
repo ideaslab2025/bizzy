@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -194,8 +195,8 @@ const Documents = () => {
     return (
       <div className="space-y-6">
         <div className="px-4 lg:px-0">
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Document Library</h1>
-          <p className="text-gray-600 mt-2 text-sm lg:text-base">
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Document Library</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm lg:text-base">
             Access templates, forms, and guides to help set up your business
           </p>
         </div>
@@ -224,25 +225,25 @@ const Documents = () => {
   const documentsContent = (
     <div className="space-y-6">
       <div className="px-4 lg:px-0">
-        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Document Library</h1>
-        <p className="text-gray-600 mt-2 text-sm lg:text-base">
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Document Library</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm lg:text-base">
           Access templates, forms, and guides to help set up your business
         </p>
         
         {/* Example copyable reference information */}
-        <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <h3 className="font-medium text-blue-900 mb-2">Quick Reference</h3>
+        <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+          <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-2">Quick Reference</h3>
           <div className="space-y-2 text-sm">
-            <div>
+            <div className="text-gray-700 dark:text-gray-300">
               Document Library ID: 
               <CopyableText textToCopy="DOC-LIB-001" className="ml-2">
-                <code className="bg-blue-100 px-2 py-1 rounded font-mono">DOC-LIB-001</code>
+                <code className="bg-blue-100 dark:bg-blue-800/50 px-2 py-1 rounded font-mono text-blue-900 dark:text-blue-100">DOC-LIB-001</code>
               </CopyableText>
             </div>
-            <div>
+            <div className="text-gray-700 dark:text-gray-300">
               Support Email: 
               <CopyableText textToCopy="support@bizzy.app" className="ml-2">
-                <span className="text-blue-700">support@bizzy.app</span>
+                <span className="text-blue-700 dark:text-blue-400">support@bizzy.app</span>
               </CopyableText>
             </div>
           </div>
@@ -253,7 +254,7 @@ const Documents = () => {
       <div className="px-4 lg:px-0">
         <Collapsible open={showUpload} onOpenChange={setShowUpload}>
           <CollapsibleTrigger asChild>
-            <Button variant="outline" className="w-full mb-4">
+            <Button variant="outline" className="w-full mb-4 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700">
               <Upload className="w-4 h-4 mr-2" />
               Upload New Document Template
               <ChevronDown className={`w-4 h-4 ml-2 transition-transform ${showUpload ? 'rotate-180' : ''}`} />
@@ -299,7 +300,7 @@ const Documents = () => {
 
       {filteredDocuments.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No documents found matching your criteria.</p>
+          <p className="text-gray-500 dark:text-gray-400">No documents found matching your criteria.</p>
         </div>
       )}
 

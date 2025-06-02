@@ -112,17 +112,17 @@ const StorageTest = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">Storage Test Page</h1>
-          <p className="text-gray-600 mt-2">Test file uploads to the 'documents' bucket</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Storage Test Page</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">Test file uploads to the 'documents' bucket</p>
         </div>
 
         {/* Upload Section */}
-        <Card>
+        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
               <Upload className="w-5 h-5" />
               File Upload Test
             </CardTitle>
@@ -133,14 +133,14 @@ const StorageTest = () => {
                 id="file-input"
                 type="file"
                 onChange={handleFileSelect}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 dark:file:bg-blue-900/20 file:text-blue-700 dark:file:text-blue-400 hover:file:bg-blue-100 dark:hover:file:bg-blue-900/30"
                 accept=".pdf,.doc,.docx,.txt,.jpg,.png,.jpeg"
               />
             </div>
 
             {selectedFile && (
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-700">
+              <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                <p className="text-sm text-gray-700 dark:text-gray-300">
                   Selected: <strong>{selectedFile.name}</strong> ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                 </p>
               </div>
@@ -149,7 +149,7 @@ const StorageTest = () => {
             {uploading && (
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm">Uploading...</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Uploading...</span>
                 </div>
                 <Progress value={uploadProgress} className="h-2" />
               </div>
@@ -164,16 +164,16 @@ const StorageTest = () => {
             </Button>
 
             {error && (
-              <Alert variant="destructive">
+              <Alert variant="destructive" className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
                 <XCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription className="text-red-700 dark:text-red-400">{error}</AlertDescription>
               </Alert>
             )}
 
             {success && (
-              <Alert>
+              <Alert className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
                 <CheckCircle className="h-4 w-4" />
-                <AlertDescription>{success}</AlertDescription>
+                <AlertDescription className="text-green-700 dark:text-green-400">{success}</AlertDescription>
               </Alert>
             )}
           </CardContent>
@@ -181,26 +181,27 @@ const StorageTest = () => {
 
         {/* Uploaded Files Section */}
         {uploadedFiles.length > 0 && (
-          <Card>
+          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
-              <CardTitle>Uploaded Files</CardTitle>
+              <CardTitle className="text-gray-900 dark:text-white">Uploaded Files</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 {uploadedFiles.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                     <div>
-                      <p className="font-medium">{file.name}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="font-medium text-gray-900 dark:text-white">{file.name}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         {(file.size / 1024 / 1024).toFixed(2)} MB
                       </p>
-                      <p className="text-xs text-gray-400 break-all">{file.url}</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 break-all">{file.url}</p>
                     </div>
                     <div className="flex gap-2">
                       <Button 
                         size="sm" 
                         variant="outline"
                         onClick={() => downloadFile(file)}
+                        className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
                       >
                         <Download className="w-4 h-4 mr-1" />
                         Download
@@ -221,16 +222,16 @@ const StorageTest = () => {
         )}
 
         {/* Debug Info */}
-        <Card>
+        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <CardHeader>
-            <CardTitle>Debug Information</CardTitle>
+            <CardTitle className="text-gray-900 dark:text-white">Debug Information</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2 text-sm">
-              <p><strong>Bucket:</strong> documents</p>
-              <p><strong>Upload Path:</strong> test-uploads/</p>
-              <p><strong>Bucket Type:</strong> Public</p>
-              <p className="text-gray-600">Check browser console for detailed logs</p>
+              <p className="text-gray-700 dark:text-gray-300"><strong>Bucket:</strong> documents</p>
+              <p className="text-gray-700 dark:text-gray-300"><strong>Upload Path:</strong> test-uploads/</p>
+              <p className="text-gray-700 dark:text-gray-300"><strong>Bucket Type:</strong> Public</p>
+              <p className="text-gray-600 dark:text-gray-400">Check browser console for detailed logs</p>
             </div>
           </CardContent>
         </Card>

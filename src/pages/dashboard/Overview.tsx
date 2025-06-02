@@ -18,7 +18,7 @@ const Overview = () => {
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-gray-600">Please log in to view your dashboard.</p>
+        <p className="text-gray-600 dark:text-gray-400">Please log in to view your dashboard.</p>
       </div>
     );
   }
@@ -128,7 +128,7 @@ const Overview = () => {
         >
           <NeonGlow color="blue" pulse hover>
             <button 
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium transition-all duration-300"
+              className="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-medium transition-all duration-300 hover:bg-blue-700 dark:hover:bg-blue-600"
               onClick={handleNavigateToGuidedHelp}
             >
               Continue Journey
@@ -136,13 +136,13 @@ const Overview = () => {
           </NeonGlow>
           
           <NeonGlow color="green" hover>
-            <button className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium transition-all duration-300">
+            <button className="px-6 py-3 bg-green-600 dark:bg-green-500 text-white rounded-lg font-medium transition-all duration-300 hover:bg-green-700 dark:hover:bg-green-600">
               Download Documents
             </button>
           </NeonGlow>
           
           <NeonGlow color="rainbow" hover>
-            <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium transition-all duration-300">
+            <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white rounded-lg font-medium transition-all duration-300">
               Premium Features
             </button>
           </NeonGlow>

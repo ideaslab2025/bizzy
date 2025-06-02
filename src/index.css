@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -85,19 +86,23 @@
   
   /* Fixed header transparency issue - make it completely solid */
   header.sticky {
-    @apply bg-[#0a192f] !important;
+    @apply bg-[#0a192f] dark:bg-gray-900 !important;
     background-color: #0a192f !important;
     backdrop-filter: none !important;
   }
   
+  .dark header.sticky {
+    background-color: rgb(17, 24, 39) !important;
+  }
+  
   /* Platinum box fix - ensure text is visible */
   [class*="from-slate-50"] {
-    @apply text-gray-800 !important;
+    @apply text-gray-800 dark:text-gray-200 !important;
   }
   
   /* Feature boxes styling */
   #features .relative.overflow-hidden {
-    @apply shadow-xl transition-all hover:-translate-y-1 hover:shadow-blue-500/30;
+    @apply shadow-xl transition-all hover:-translate-y-1 hover:shadow-blue-500/30 dark:shadow-gray-900/50;
   }
 
   /* Updated hero image styling with transparent background and drop-shadow */
@@ -105,6 +110,10 @@
     filter: drop-shadow(0 0 35px rgba(59,130,246,0.8));
     transform: scale(1.3) translateY(-50px);
     mix-blend-mode: normal;
+  }
+  
+  .dark .hero-image {
+    filter: drop-shadow(0 0 35px rgba(59,130,246,0.6)) brightness(0.9);
   }
   
   /* Increase hamburger menu icon size */
@@ -217,6 +226,19 @@
     transform: translateX(-50%);
     animation: float-3 20s ease-in-out infinite;
   }
+  
+  /* Dark mode gradient adjustments */
+  .dark .gradient-mesh-animated::before {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+  }
+  
+  .dark .gradient-mesh-animated::after {
+    background: radial-gradient(circle, rgba(147, 51, 234, 0.08) 0%, transparent 70%);
+  }
+  
+  .dark .gradient-mesh-animated .gradient-orb {
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.06) 0%, transparent 70%);
+  }
 }
 
 @layer utilities {
@@ -257,10 +279,14 @@
     }
   }
 
-  /* Neon Glow Effects */
+  /* Neon Glow Effects with Dark Mode Support */
   .neon-glow-blue {
     --neon-color: #3b82f6;
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
+  }
+  
+  .dark .neon-glow-blue {
+    --neon-color: #60a5fa;
   }
   
   .neon-glow-green {
@@ -268,9 +294,17 @@
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
   }
   
+  .dark .neon-glow-green {
+    --neon-color: #34d399;
+  }
+  
   .neon-glow-purple {
     --neon-color: #8b5cf6;
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
+  }
+  
+  .dark .neon-glow-purple {
+    --neon-color: #a78bfa;
   }
   
   .neon-glow-pink {
@@ -278,14 +312,26 @@
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
   }
   
+  .dark .neon-glow-pink {
+    --neon-color: #f472b6;
+  }
+  
   .neon-glow-yellow {
     --neon-color: #f59e0b;
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
   }
   
+  .dark .neon-glow-yellow {
+    --neon-color: #fbbf24;
+  }
+  
   .neon-glow-red {
     --neon-color: #ef4444;
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
+  }
+  
+  .dark .neon-glow-red {
+    --neon-color: #f87171;
   }
   
   .neon-glow-rainbow {
@@ -328,15 +374,27 @@
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
   }
   
+  .dark .glow-blue {
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+  }
+  
   .glow-green {
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+  }
+  
+  .dark .glow-green {
+    box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
   }
   
   .glow-purple {
     box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
   }
   
-  /* Glassmorphism utilities */
+  .dark .glow-purple {
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+  }
+  
+  /* Glassmorphism utilities with dark mode support */
   .glass {
     background: rgba(255, 255, 255, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -347,6 +405,10 @@
     background: rgba(17, 25, 40, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+  }
+  
+  .dark .glass {
+    @apply glass-dark;
   }
   
   .glass-blur {
@@ -365,6 +427,11 @@
     transform: translateY(-2px);
   }
   
+  .dark .glass-card:hover {
+    background: rgba(17, 25, 40, 0.8);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.3);
+  }
+  
   .glass-modal {
     @apply glass glass-blur;
     animation: glass-appear 0.3s ease-out;
@@ -378,414 +445,43 @@
   .glass-navbar {
     background: rgba(255, 255, 255, 0.85);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.1);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
   
-  /* Fallbacks for browsers without backdrop-filter support */
-  @supports not (backdrop-filter: blur(10px)) {
-    .glass {
-      background: rgba(255, 255, 255, 0.9);
-    }
-    
-    .glass-dark {
-      background: rgba(17, 25, 40, 0.9);
-    }
-  }
-  
-  /* Glass animations */
-  @keyframes glass-appear {
-    from {
-      opacity: 0;
-      transform: scale(0.95) translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
-  
-  @keyframes glass-scale-in {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
-  /* Enhanced card hover with glass effect */
-  .card-glass-hover {
-    @apply transition-all duration-300 ease-out;
-  }
-  
-  .card-glass-hover:hover {
-    @apply glass-card;
-  }
-  
-  /* 3D Tilt Card Effects */
-  .tilt-card {
-    transform-style: preserve-3d;
-    will-change: transform;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .tilt-card:hover {
-    transform: perspective(var(--tilt-perspective)) scale(var(--tilt-scale));
-  }
-  
-  /* Auto-save indicator animations */
-  @keyframes save-pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-  }
-  
-  .save-indicator {
-    animation: save-pulse 1.5s ease-in-out infinite;
-  }
-  
-  /* Command palette specific styles */
-  .command-palette-item {
-    @apply transition-all duration-150 ease-out;
-  }
-  
-  .command-palette-item[data-selected="true"] {
-    @apply bg-blue-50 text-blue-900 dark:bg-blue-900/30 dark:text-blue-100;
-  }
-  
-  /* Smart tooltip styles */
-  .smart-tooltip {
-    animation: tooltip-appear 0.2s ease-out;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-  
-  @keyframes tooltip-appear {
-    from {
-      opacity: 0;
-      transform: scale(0.9) translateY(4px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
-  
-  /* Recently viewed animations */
-  .recently-viewed-item {
-    @apply transition-all duration-200 ease-out;
-  }
-  
-  .recently-viewed-item:hover {
-    @apply bg-gray-50 dark:bg-gray-800/50 transform scale-[1.02];
-  }
-  
-  /* Enhanced glassmorphism for dark mode */
-  .dark .glass {
-    background: rgba(23, 23, 23, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  }
-  
-  .dark .glass-card:hover {
-    background: rgba(23, 23, 23, 0.8);
-    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
-  }
-  
-  /* Neon glow animations */
-  @keyframes neon-pulse {
-    from {
-      box-shadow: var(--neon-shadow);
-    }
-    to {
-      box-shadow: var(--neon-shadow), 0 0 40px var(--neon-color), 0 0 60px var(--neon-color);
-    }
-  }
-  
-  /* Progress bar shimmer animation */
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
-  }
-  
-  /* Haptic feedback visual indicator */
-  .haptic-feedback {
-    animation: haptic-pulse 0.1s ease-out;
-  }
-  
-  @keyframes haptic-pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(0.95); }
-    100% { transform: scale(1); }
-  }
-  
-  /* Counter bounce animation */
-  .counter-complete {
-    animation: counter-bounce 0.3s ease-out;
-  }
-  
-  @keyframes counter-bounce {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-  }
-  
-  /* Spotlight effect helpers */
-  [data-spotlight] {
-    position: relative;
-    isolation: isolate;
-  }
-  
-  /* Disable animations for users who prefer reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    .tilt-card {
-      transform: none !important;
-      transition: none !important;
-    }
-    
-    .tilt-card:hover {
-      transform: scale(1.02) !important;
-    }
-    
-    * {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-    
-    .haptic-feedback {
-      animation: none !important;
-    }
-    
-    .counter-complete {
-      animation: none !important;
-    }
-    
-    .neon-pulse {
-      animation: none !important;
-    }
-  }
-  
-  /* Performance optimizations */
-  .will-change-transform {
-    will-change: transform;
-  }
-  
-  .gpu-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-  
-  /* Focus states for accessibility */
-  .command-palette-item:focus {
-    @apply outline-none ring-2 ring-blue-500 ring-offset-2;
-  }
-  
-  .smart-tooltip:focus-within {
-    @apply ring-2 ring-blue-500 ring-offset-2;
-  }
-  
-  /* Custom scrollbar for dark mode */
-  .dark ::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .dark ::-webkit-scrollbar-track {
-    background: hsl(var(--muted));
-  }
-  
-  .dark ::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground));
-    border-radius: 4px;
-  }
-  
-  .dark ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--foreground));
+  .dark .glass-navbar {
+    background: rgba(17, 25, 40, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
 
-/* Mobile Touch Target Optimization */
-@media (max-width: 768px) {
-  /* Touch target size classes */
-  .touch-target-large {
-    min-height: 48px;
-    min-width: 48px;
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+@keyframes neon-pulse {
+  0% {
+    box-shadow: var(--neon-shadow);
   }
-  
-  .touch-target-standard {
-    min-height: 44px;
-    min-width: 44px;
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-  }
-  
-  .touch-target-cta {
-    min-height: 48px;
-    padding: 14px 20px;
-    margin: 8px 0;
-  }
-  
-  .touch-target-icon {
-    min-height: 44px;
-    min-width: 44px;
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .touch-target-card {
-    padding: 20px 16px;
-    margin: 12px 0;
-  }
-  
-  /* Touch interaction spacing */
-  .touch-interaction-spacing > * + * {
-    margin-top: 12px;
-  }
-  
-  .touch-interaction-spacing.horizontal > * + * {
-    margin-top: 0;
-    margin-left: 16px;
-  }
-  
-  /* Touch feedback states */
-  .touch-target-large:active,
-  .touch-target-standard:active,
-  .touch-target-cta:active,
-  .touch-target-icon:active {
-    transform: scale(0.98);
-    opacity: 0.8;
-    transition: all 0.1s ease;
-  }
-  
-  /* Focus states for accessibility */
-  .touch-target-large:focus,
-  .touch-target-standard:focus,
-  .touch-target-cta:focus,
-  .touch-target-icon:focus {
-    outline: 2px solid #3B82F6;
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-  
-  /* Remove hover effects on touch devices */
-  @media (hover: none) {
-    .touch-target-large:hover,
-    .touch-target-standard:hover,
-    .touch-target-cta:hover,
-    .touch-target-icon:hover {
-      transform: none;
-      box-shadow: none;
-    }
-  }
-  
-  /* Enhanced button touch targets */
-  button, [role="button"] {
-    min-height: 44px;
-    touch-action: manipulation;
-  }
-  
-  /* Enhanced link touch targets */
-  a {
-    min-height: 32px;
-    display: inline-flex;
-    align-items: center;
-    touch-action: manipulation;
-  }
-  
-  /* Enhanced form element touch targets */
-  input, textarea, select {
-    min-height: 48px;
-    padding: 12px 16px;
-    font-size: 16px;
-    touch-action: manipulation;
-  }
-  
-  /* Accordion touch optimization */
-  [data-radix-accordion-trigger] {
-    min-height: 48px;
-    padding: 16px 12px;
-    touch-action: manipulation;
-  }
-  
-  /* Navigation link touch optimization */
-  nav a, nav button {
-    min-height: 48px;
-    padding: 12px 16px;
-    margin: 4px 0;
-    display: flex;
-    align-items: center;
-    touch-action: manipulation;
-  }
-  
-  /* Footer link touch optimization */
-  footer a {
-    min-height: 40px;
-    padding: 8px 4px;
-    margin: 2px 0;
-    display: inline-flex;
-    align-items: center;
-    touch-action: manipulation;
-  }
-  
-  /* Enhanced spacing for mobile interactions */
-  .container {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-  
-  /* Mobile menu optimizations */
-  .mobile-nav-link {
-    min-height: 48px;
-    padding: 12px 16px;
-    margin: 4px 0;
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    touch-action: manipulation;
+  100% {
+    box-shadow: var(--neon-shadow), 0 0 40px var(--neon-color);
   }
 }
 
-/* Performance optimizations for touch interactions */
-.touch-target-large,
-.touch-target-standard,
-.touch-target-cta,
-.touch-target-icon {
-  will-change: transform;
-  backface-visibility: hidden;
+@keyframes glass-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-/* Ensure no double-tap zoom on iOS */
-button, [role="button"], a {
-  touch-action: manipulation;
-}
-
-/* Enhanced focus indicators for accessibility */
-:focus-visible {
-  outline: 2px solid #3B82F6;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* Smooth transitions for all touch interactions */
-.touch-target-large,
-.touch-target-standard,
-.touch-target-cta,
-.touch-target-icon {
-  transition: transform 0.1s ease, opacity 0.1s ease;
+@keyframes glass-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
