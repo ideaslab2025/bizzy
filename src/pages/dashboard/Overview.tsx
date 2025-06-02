@@ -3,7 +3,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { PersonalizedDashboard } from "@/components/dashboard/PersonalizedDashboard";
 import { DocumentStatusDashboard } from "@/components/dashboard/DocumentStatusDashboard";
-import { DocumentAnalytics } from "@/components/dashboard/charts/DocumentAnalytics";
+import { BusinessOverview } from "@/components/dashboard/charts/BusinessOverview";
+import { SimpleDocumentAnalytics } from "@/components/dashboard/charts/SimpleDocumentAnalytics";
 import { PullToRefresh } from "@/components/ui/pull-to-refresh";
 import { NeonGlow } from "@/components/ui/neon-glow";
 import { AnimatedCounter, CurrencyCounter, PercentageCounter } from "@/components/ui/animated-counter";
@@ -98,8 +99,11 @@ const Overview = () => {
           </NeonGlow>
         </div>
 
+        {/* Business Overview Section */}
+        <BusinessOverview userId={user.id} />
+
         {/* Document Analytics Section */}
-        <DocumentAnalytics userId={user.id} />
+        <SimpleDocumentAnalytics userId={user.id} />
 
         {/* Document Status Dashboard */}
         <DocumentStatusDashboard userId={user.id} />
