@@ -28,6 +28,7 @@ import type { EnhancedGuidanceSection, EnhancedGuidanceStep, UserAchievement, St
 import type { UserDocumentProgress } from "@/types/documents";
 import { StepContentSkeleton } from '@/components/ui/skeleton-loader';
 import { businessSections } from '@/data/businessSections';
+
 interface UserProgress {
   section_id: number;
   step_id: number;
@@ -71,34 +72,6 @@ const EnhancedGuidedHelp = () => {
   // Celebration states
   const [showMilestone, setShowMilestone] = useState<any>(null);
   const [achievementQueue, setAchievementQueue] = useState<any[]>([]);
-  const calculateCompanyAge = async () => {
-    if (!user) return;
-    try {
-      const {
-        data: profile
-      } = await supabase.from('profiles').select('created_at').eq('id', user.id).single();
-      if (profile?.created_at) {
-        const createdDate = new Date(profile.created_at);
-        const now = new Date();
-        const ageInDays = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
-        setCompanyAge(ageInDays);
-      }
-    } catch (error) {
-      console.error('Error calculating company age:', error);
-    }
-  };
-  useEffect(() => {
-    fetchSections();
-    fetchAllSteps();
-    if (user) {
-      fetchProgress();
-      fetchAchievements();
-      fetchQuickWins();
-      fetchTimeSpent();
-      setSessionStartTime(new Date());
-      calculateCompanyAge();
-    }
-  }, [user]);
 
   // Handle URL parameters for navigation
   useEffect(() => {
@@ -461,6 +434,8 @@ const EnhancedGuidedHelp = () => {
   const handleSidebarNavigation = (sectionOrderNumber: number) => {
     setCurrentSection(sectionOrderNumber);
     setCurrentStep(1);
+    // Scroll to top when switching sections
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const getCurrentStepData = () => {
     return steps.find(step => step.order_number === currentStep);
@@ -526,7 +501,7 @@ const EnhancedGuidedHelp = () => {
             completed_steps: allSteps.filter(step => step.section_id === section.id && completedSteps.has(step.id)).length,
             progress: getSectionProgress(section.id)
           }} isActive={isCurrent} isCompleted={isCompleted} onClick={() => {
-            setCurrentSection(section.order_number);
+            handleSidebarNavigation(section.order_number);
             setMobileMenuOpen(false);
           }} />;
         })}
