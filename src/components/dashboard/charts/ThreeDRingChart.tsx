@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 interface RingData {
   label: string;
@@ -17,7 +17,7 @@ interface ThreeDRingChartProps {
   centerLabel?: string;
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
@@ -30,22 +30,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     );
   }
   return null;
-};
-
-const CustomLegend = ({ payload }: any) => {
-  return (
-    <div className="grid grid-cols-2 gap-2 text-xs mt-4">
-      {payload.map((entry: any, index: number) => (
-        <div key={index} className="flex items-center">
-          <div 
-            className="w-3 h-3 rounded-full mr-2"
-            style={{ backgroundColor: entry.color }}
-          />
-          <span>{entry.payload.label}: {Math.round((entry.payload.value / entry.payload.total) * 100)}%</span>
-        </div>
-      ))}
-    </div>
-  );
 };
 
 export const ThreeDRingChart: React.FC<ThreeDRingChartProps> = ({
