@@ -7,7 +7,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { CheckCircle, Play, ExternalLink, ChevronLeft, ChevronRight, SkipForward, User, LogOut, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { BizzyVideoPlayer } from "@/components/guidance/BizzyVideoPlayer";
+import { VimeoPlayer } from "@/components/guidance/VimeoPlayer";
 import type { Json } from "@/integrations/supabase/types";
 
 interface GuidanceSection {
@@ -554,9 +554,9 @@ const GuidedHelp = () => {
                 {currentStepData.title}
               </h2>
 
-              {/* Video Section - Updated to use BizzyVideoPlayer */}
+              {/* Video Section */}
               {currentStepData.video_url && (
-                <BizzyVideoPlayer 
+                <VimeoPlayer 
                   videoUrl={currentStepData.video_url}
                   title={`${currentStepData.title} Tutorial`}
                 />
