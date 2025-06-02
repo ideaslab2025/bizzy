@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { PoundSterling, Star, Rocket, Clock } from 'lucide-react';
 import { AnimatedCounter } from './ui/AnimatedCounter';
+import StatisticsSkeleton from './StatisticsSkeleton';
 
 interface StatisticItem {
   value: React.ReactNode;
@@ -11,6 +12,17 @@ interface StatisticItem {
 }
 
 const StatisticsSection: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading time for statistics
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1200);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const statistics: StatisticItem[] = [
     {
       value: <AnimatedCounter end={85} prefix="£" suffix="k+" duration={2500} />,
@@ -37,6 +49,10 @@ const StatisticsSection: React.FC = () => {
       description: "Fast, efficient business setup process"
     }
   ];
+
+  if (isLoading) {
+    return <StatisticsSkeleton />;
+  }
 
   return (
     <section className="py-16 bg-gradient-to-br from-blue-50 to-blue-100/50">

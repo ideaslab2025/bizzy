@@ -10,7 +10,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
+import TestimonialSkeleton from "./TestimonialSkeleton";
 
 const testimonials = [
   {
@@ -51,9 +52,23 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const plugin = useRef(
     Autoplay({ delay: 4000, stopOnInteraction: true })
   );
+
+  useEffect(() => {
+    // Simulate loading time for testimonials
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <TestimonialSkeleton />;
+  }
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
