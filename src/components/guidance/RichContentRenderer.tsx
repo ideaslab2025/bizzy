@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -35,26 +34,11 @@ const parseRichContent = (content: any): RichContentBlock[] => {
     if (content.video_url) {
       console.log('Found video_url at root level:', content.video_url);
       
-      // Check if a video block already exists in rich_content
-      let hasVideoBlock = false;
-      if (content.rich_content) {
-        const richContent = typeof content.rich_content === 'string' 
-          ? JSON.parse(content.rich_content) 
-          : content.rich_content;
-        
-        if (richContent?.blocks && Array.isArray(richContent.blocks)) {
-          hasVideoBlock = richContent.blocks.some((block: any) => block.type === 'video');
-        }
-      }
-      
-      if (!hasVideoBlock) {
-        console.log('No video block found, creating one from video_url');
-        blocks.push({
-          type: 'video',
-          content: content.video_url,
-          title: content.title || 'Starting your Company Documents'
-        });
-      }
+      blocks.push({
+        type: 'video',
+        content: content.video_url,
+        title: 'Starting your Company Documents'
+      });
     }
     
     // Then parse the regular rich_content blocks if they exist
@@ -65,13 +49,18 @@ const parseRichContent = (content: any): RichContentBlock[] => {
       
       if (richContent?.blocks && Array.isArray(richContent.blocks)) {
         console.log('Parsing rich_content blocks:', richContent.blocks.length);
+        // Only add blocks that are not videos (to avoid duplicates)
         richContent.blocks.forEach((block: any) => {
-          blocks.push(block);
+          if (block.type !== 'video') {
+            blocks.push(block);
+          }
         });
       } else if (Array.isArray(richContent)) {
         console.log('Rich content is directly an array');
         richContent.forEach((block: any) => {
-          blocks.push(block);
+          if (block.type !== 'video') {
+            blocks.push(block);
+          }
         });
       }
     }
@@ -134,7 +123,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
                 <Play className="w-3 h-3" />
                 Video Tutorial
               </Badge>
-              {block.title && <span className="text-xs sm:text-sm text-gray-600">{block.title}</span>}
+              <span className="text-xs sm:text-sm text-gray-600">{block.title || 'Starting your Company Documents'}</span>
             </div>
             
             <div className="relative w-full overflow-hidden rounded-lg bg-gray-100 shadow-lg" 
@@ -147,7 +136,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
                   allowFullScreen
                   loading="lazy"
-                  title={block.title || "Starting your Company Documents"}
+                  title="Starting your Company Documents"
                   onLoad={() => console.log('Video iframe loaded successfully')}
                   onError={(e) => {
                     console.error('Failed to load video iframe:', block.content, e);

@@ -552,13 +552,13 @@ const GuidedHelp = () => {
           ) : currentStepData ? (
             <div className="max-w-4xl">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">
-                {currentStepData.title}
+                {currentStepData.title === "Secure your Company documents" ? "Starting your Company Documents" : currentStepData.title}
               </h2>
 
               {/* Rich Content Section - video will be handled automatically by RichContentRenderer */}
               <Card className="mb-6 sm:mb-8">
                 <CardContent className="p-6 sm:p-8">
-                  {currentStepData.rich_content ? (
+                  {currentStepData.rich_content || currentStepData.video_url ? (
                     <RichContentRenderer 
                       content={currentStepData}
                       stepId={currentStepData.id}
