@@ -19,7 +19,7 @@ export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ cate
     ? Math.round((category.completedDocuments / category.totalDocuments) * 100) 
     : 0;
   
-  // Circular progress calculation
+  // Circular progress calculation - smaller size
   const circumference = 2 * Math.PI * 45; // radius = 45
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
@@ -49,13 +49,13 @@ export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ cate
 
   return (
     <div 
-      className="flex flex-col items-center p-4 bg-gray-50 rounded-lg border hover:shadow-md transition-shadow cursor-pointer"
+      className="flex flex-col items-center p-3 bg-gray-50 rounded-lg border hover:shadow-md transition-shadow cursor-pointer h-32"
       onClick={handleClick}
     >
-      {/* Circular Progress with Icon */}
-      <div className="relative w-24 h-24 mb-3">
+      {/* Circular Progress with Icon - smaller size */}
+      <div className="relative w-20 h-20 mb-2">
         {/* Background Circle */}
-        <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
+        <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100">
           <circle
             cx="50"
             cy="50"
@@ -79,24 +79,24 @@ export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ cate
           />
         </svg>
         
-        {/* Category Icon */}
+        {/* Category Icon - smaller */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-2xl">{getCategoryIcon(category.type)}</span>
+          <span className="text-lg">{getCategoryIcon(category.type)}</span>
         </div>
         
-        {/* Percentage Label */}
-        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-          <span className="text-xs font-semibold text-gray-600 bg-white px-2 py-1 rounded shadow">
+        {/* Percentage Label - smaller */}
+        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
+          <span className="text-xs font-medium text-gray-600 bg-white px-1.5 py-0.5 rounded shadow text-center">
             {percentage}%
           </span>
         </div>
       </div>
 
-      {/* Category Info */}
+      {/* Category Info - much smaller fonts */}
       <div className="text-center">
-        <h3 className="text-sm font-semibold text-gray-900 mb-1">{category.name}</h3>
-        <p className="text-xs text-gray-600">
-          {category.completedDocuments}/{category.totalDocuments} documents
+        <h3 className="text-xs font-medium text-gray-900 mb-1 leading-tight">{category.name}</h3>
+        <p className="text-xs text-gray-500">
+          {category.completedDocuments}/{category.totalDocuments}
         </p>
       </div>
     </div>
