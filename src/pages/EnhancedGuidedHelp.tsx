@@ -482,6 +482,7 @@ const EnhancedGuidedHelp = () => {
       setCurrentStep(stepNumber);
     }
   };
+
   const completedStepIds = Array.from(completedSteps);
   const currentStepData = getCurrentStepData();
   const currentSectionData = sections.find(s => s.order_number === currentSection);
@@ -581,15 +582,15 @@ const EnhancedGuidedHelp = () => {
                   </Tooltip>
                 </TooltipProvider>
               )}
-              <h1 className="text-xl font-bold text-gray-900">Guided Help</h1>
+              <h1 className="text-xl font-semibold text-gray-900">Guided Help</h1>
             </div>
             
             {/* Center Section Info - Consolidated from Secondary Header */}
             <div className="flex-1 max-w-2xl mx-8 text-center">
-              <div className="text-lg font-bold text-gray-900">
+              <div className="text-lg font-semibold text-gray-900">
                 {currentSection === 1 ? 'Start Your Company Documents' : (businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup')}
               </div>
-              <div className="flex items-center justify-center gap-4 text-sm font-medium text-gray-600">
+              <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
                 <span>Step {currentStep} of {steps.length === 0 ? 1 : steps.length}</span>
                 {currentStepData?.estimated_time_minutes && (
                   <span>• {currentStepData.estimated_time_minutes} min</span>
@@ -710,10 +711,10 @@ const EnhancedGuidedHelp = () => {
             </div>
           </div>
 
-          {/* Content with Smart Recommendations - Add padding top for fixed header */}
-          <div className="flex-1 p-4 lg:p-6 pb-20 lg:pb-32 pt-20">
-            {/* Smart Recommendations Panel */}
-            {user && completedStepIds.length >= 0 && <div className="mb-6 mt-4">
+          {/* Content with Smart Recommendations - Add more padding top for fixed header */}
+          <div className="flex-1 p-4 lg:p-6 pb-20 lg:pb-32 pt-24">
+            {/* Smart Recommendations Panel - Moved further down */}
+            {user && completedStepIds.length >= 0 && <div className="mb-6 mt-8">
                 <React.Suspense fallback={<div className="animate-pulse h-32 bg-gray-200 rounded"></div>}>
                   <SmartRecommendationsPanel userId={user.id} completedStepIds={completedStepIds} currentSectionCategory={currentSectionData?.color_theme || ''} companyAge={companyAge} onNavigateToStep={handleNavigateToStep} />
                 </React.Suspense>
