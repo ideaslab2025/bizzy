@@ -27,6 +27,7 @@ interface GuidanceStep {
   external_links: Json;
   order_number: number;
   rich_content?: Json;
+  estimated_time_minutes?: number;
 }
 
 interface UserProgress {
@@ -36,12 +37,20 @@ interface UserProgress {
   section_completed: boolean;
 }
 
+interface EnhancedSection extends GuidanceSection {
+  completed_steps: number;
+  total_steps: number;
+  estimated_time_minutes: number;
+}
+
 const GuidedHelp = () => {
   const { user, signOut } = useAuth();
   const [sections, setSections] = useState<GuidanceSection[]>([]);
+  const [enhancedSections, setEnhancedSections] = useState<EnhancedSection[]>([]);
   const [currentSection, setCurrentSection] = useState<number>(1);
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [steps, setSteps] = useState<GuidanceStep[]>([]);
+  const [allSteps, setAllSteps] = useState<GuidanceStep[]>([]);
   const [progress, setProgress] = useState<UserProgress[]>([]);
   const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
   const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set());
@@ -51,6 +60,7 @@ const GuidedHelp = () => {
 
   useEffect(() => {
     fetchSections();
+    fetchAllSteps();
     if (user) {
       fetchProgress();
     }
@@ -61,6 +71,12 @@ const GuidedHelp = () => {
       fetchSteps(currentSection);
     }
   }, [currentSection]);
+
+  useEffect(() => {
+    if (sections.length > 0 && allSteps.length > 0) {
+      calculateEnhancedSections();
+    }
+  }, [sections, allSteps, progress, visitedSteps]);
 
   // Track step visits automatically and save to database
   useEffect(() => {
@@ -83,6 +99,34 @@ const GuidedHelp = () => {
     if (data && !error) {
       setSections(data);
     }
+  };
+
+  const fetchAllSteps = async () => {
+    const { data, error } = await supabase
+      .from('guidance_steps')
+      .select('*')
+      .order('section_id, order_number');
+    
+    if (data && !error) {
+      setAllSteps(data);
+    }
+  };
+
+  const calculateEnhancedSections = () => {
+    const enhanced = sections.map(section => {
+      const sectionSteps = allSteps.filter(step => step.section_id === section.id);
+      const completedStepsCount = sectionSteps.filter(step => visitedSteps.has(step.id)).length;
+      const totalEstimatedTime = sectionSteps.reduce((total, step) => total + (step.estimated_time_minutes || 0), 0);
+
+      return {
+        ...section,
+        completed_steps: completedStepsCount,
+        total_steps: sectionSteps.length,
+        estimated_time_minutes: totalEstimatedTime
+      };
+    });
+
+    setEnhancedSections(enhanced);
   };
 
   const fetchSteps = async (sectionId: number) => {
@@ -377,7 +421,7 @@ const GuidedHelp = () => {
         <div className="flex-1 p-4 pt-2">
           <h2 className="text-lg font-semibold mb-4">Your Business Setup Journey</h2>
           <div className="space-y-3">
-            {sections.map((section) => {
+            {enhancedSections.map((section) => {
               const isCompleted = isSectionCompleted(section.id);
               const isCurrent = currentSection === section.order_number;
               
@@ -413,7 +457,7 @@ const GuidedHelp = () => {
                       {section.title}
                     </div>
                     <div className={`text-sm ${isCompleted && !isCurrent ? 'opacity-60 line-through' : 'opacity-75'}`}>
-                      {section.description}
+                      {section.completed_steps}/{section.total_steps} steps • {section.estimated_time_minutes} min
                     </div>
                   </div>
                   {isCompleted && !isCurrent && (
