@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { businessSections } from '@/data/businessSections';
-import { AdvancedAnalyticsDashboard } from '@/components/dashboard/AdvancedAnalyticsDashboard';
+import { SimpleDocumentAnalytics } from '@/components/dashboard/charts/SimpleDocumentAnalytics';
 
 interface DashboardAnalytics {
   overallProgress: number;
@@ -211,7 +211,7 @@ const EnhancedOverview: React.FC = () => {
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-gray-200 rounded w-1/3"></div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[...Array(4)].map((_, i) => (
+            {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="h-32 bg-gray-200 rounded"></div>
             ))}
           </div>
@@ -241,7 +241,7 @@ const EnhancedOverview: React.FC = () => {
           </TabsTrigger>
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
-            Advanced Analytics
+            Document Analytics
           </TabsTrigger>
         </TabsList>
 
@@ -530,7 +530,7 @@ const EnhancedOverview: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
-          <AdvancedAnalyticsDashboard />
+          <SimpleDocumentAnalytics userId={user.id} />
         </TabsContent>
       </Tabs>
     </div>
