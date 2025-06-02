@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, HelpCircle, Moon, RefreshCw, Menu } from "lucide-react";
@@ -214,12 +213,12 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced Talk to Bizzy Button */}
+                {/* Enhanced Talk to Bizzy Button - Made smaller to match Guided Help */}
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setBizzyOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow-md"
                 >
                   <HelpCircle className="w-4 h-4" />
                   <span>Talk to Bizzy</span>
