@@ -9,7 +9,9 @@ interface VimeoPlayerProps {
 }
 
 export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => {
-  // Determine video type
+  // Log what we're receiving
+  console.log('VimeoPlayer received URL:', videoUrl);
+  
   const getVideoType = (url: string) => {
     if (!url) return 'none';
     if (url.includes('synthesia.io')) return 'synthesia';
@@ -17,6 +19,12 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
   };
 
   const videoType = getVideoType(videoUrl);
+  console.log('Detected video type:', videoType);
+
+  // If it's not detecting as synthesia, show what URL we got
+  if (videoType !== 'synthesia' && videoUrl) {
+    console.warn('URL not recognized as Synthesia:', videoUrl);
+  }
 
   return (
     <div className="mb-8">
@@ -30,14 +38,21 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
       
       <div className="relative rounded-lg overflow-hidden shadow-lg bg-gray-100">
         {videoType === 'synthesia' ? (
-          <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+          <div className="relative w-full" style={{ paddingBottom: '56.25%', height: 0 }}>
             <iframe 
               src={videoUrl}
               className="absolute top-0 left-0 w-full h-full border-0"
-              title={title || "Synthesia video player"}
-              allowFullScreen
-              allow="autoplay; encrypted-media; fullscreen"
-              loading="lazy"
+              title={title || "Business Tutorial Video"}
+              allowFullScreen={true}
+              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                border: 'none'
+              }}
             />
           </div>
         ) : (
@@ -45,9 +60,12 @@ export const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoUrl, title }) => 
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center p-6">
                 <Play className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-600">Video coming soon</p>
+                <p className="text-gray-600">Video not loading</p>
                 <p className="text-sm text-gray-500 mt-2">
-                  Upload video and update URL
+                  URL: {videoUrl ? videoUrl.substring(0, 50) + '...' : 'No URL provided'}
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Type detected: {videoType}
                 </p>
               </div>
             </div>
