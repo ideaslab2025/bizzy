@@ -78,11 +78,13 @@ const Register = () => {
     
     try {
       console.log("Starting registration process...");
+      console.log("User data:", { firstName: firstName.trim(), lastName: lastName.trim(), email: email.trim().toLowerCase() });
       
       const { data, error } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             first_name: firstName.trim(),
             last_name: lastName.trim(),
@@ -106,23 +108,38 @@ const Register = () => {
           return;
         }
         
+        if (error.message.includes("Password should be")) {
+          toast.error("Password does not meet security requirements. Please try a stronger password.");
+          return;
+        }
+        
         toast.error(error.message || "Failed to create account. Please try again.");
         return;
       }
 
       if (data.user) {
         console.log("User created successfully:", data.user);
+        console.log("User metadata sent:", data.user.user_metadata);
         
         // Check if email confirmation is required
         if (!data.user.email_confirmed_at) {
           toast.success("Account created! Please check your email for a confirmation link before logging in.");
         } else {
-          toast.success("Account created successfully! You can now log in.");
+          toast.success("Account created successfully! Redirecting to dashboard...");
+          // If email confirmation is disabled, redirect to dashboard
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 1500);
         }
         
-        // Redirect to login page
-        navigate("/login");
+        // If email confirmation is required, redirect to login page
+        if (!data.user.email_confirmed_at) {
+          setTimeout(() => {
+            navigate("/login");
+          }, 3000);
+        }
       } else {
+        console.error("No user data returned from registration");
         toast.error("Account creation failed. Please try again.");
       }
     } catch (error: any) {
