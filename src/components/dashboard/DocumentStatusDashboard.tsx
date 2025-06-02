@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -39,11 +38,24 @@ export const DocumentStatusDashboard: React.FC<DocumentStatusDashboardProps> = (
     notStartedCount: documents.length - completedDocIds.length - inProgressDocIds.length,
     criticalCount: documents.filter(doc => doc.is_required && !completedDocIds.includes(doc.id)).length,
     categories: ['all', 'legal', 'finance', 'hr', 'governance', 'compliance'],
-    documents: documents.map(doc => ({
-      ...doc,
-      status: completedDocIds.includes(doc.id) ? 'completed' : 
-              inProgressDocIds.includes(doc.id) ? 'in-progress' : 'not-started'
-    }))
+    documents: documents.map(doc => {
+      let status: 'completed' | 'in-progress' | 'not-started';
+      if (completedDocIds.includes(doc.id)) {
+        status = 'completed';
+      } else if (inProgressDocIds.includes(doc.id)) {
+        status = 'in-progress';
+      } else {
+        status = 'not-started';
+      }
+
+      return {
+        id: doc.id,
+        title: doc.title,
+        category: doc.category,
+        is_required: doc.is_required,
+        status
+      };
+    })
   };
 
   return (
@@ -78,6 +90,8 @@ export const DocumentStatusDashboard: React.FC<DocumentStatusDashboardProps> = (
     </div>
   );
 };
+
+// ... keep existing code (CategoryFilter component)
 
 interface CategoryFilterProps {
   value: string;
