@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { Json } from "@/integrations/supabase/types";
 import { RichContentRenderer } from "@/components/guidance/RichContentRenderer";
+import type { EnhancedGuidanceStep } from "@/types/guidance";
 
 interface GuidanceSection {
   id: number;
@@ -28,6 +29,7 @@ interface GuidanceStep {
   order_number: number;
   rich_content?: Json;
   estimated_time_minutes?: number;
+  created_at: string;
 }
 
 interface UserProgress {
