@@ -582,7 +582,7 @@ const EnhancedGuidedHelp = () => {
                   </Tooltip>
                 </TooltipProvider>
               )}
-              <h1 className="text-xl font-semibold text-gray-900">Guided Help</h1>
+              <h1 className="text-xl font-bold text-gray-900">Guided Help</h1>
             </div>
             
             {/* Center Section Info - Consolidated from Secondary Header */}
@@ -712,20 +712,23 @@ const EnhancedGuidedHelp = () => {
           </div>
 
           {/* Content with Smart Recommendations - Add more padding top for fixed header */}
-          <div className="flex-1 p-4 lg:p-6 pb-20 lg:pb-32 pt-24">
-            {/* Smart Recommendations Panel - Moved further down */}
-            {user && completedStepIds.length >= 0 && <div className="mb-6 mt-8">
+          <div className="flex-1 pb-20 lg:pb-32 pt-24">
+            {/* Smart Recommendations Panel - Aligned with header */}
+            {user && completedStepIds.length >= 0 && <div className="mb-6 mt-8 px-4 lg:px-6">
                 <React.Suspense fallback={<div className="animate-pulse h-32 bg-gray-200 rounded"></div>}>
                   <SmartRecommendationsPanel userId={user.id} completedStepIds={completedStepIds} currentSectionCategory={currentSectionData?.color_theme || ''} companyAge={companyAge} onNavigateToStep={handleNavigateToStep} />
                 </React.Suspense>
               </div>}
 
             {/* Quick Wins Panel */}
-            <QuickWinsPanel quickWins={quickWins} onNavigateToStep={handleNavigateToStep} />
+            <div className="px-4 lg:px-6">
+              <QuickWinsPanel quickWins={quickWins} onNavigateToStep={handleNavigateToStep} />
+            </div>
 
             {/* Step Content */}
-            <SwipeableStepContent onNext={nextStep} onPrev={prevStep} canGoNext={currentSection < sections.length || currentStep < steps.length} canGoPrev={currentSection > 1 || currentStep > 1} currentStep={currentStep} totalSteps={steps.length || 1}>
-              {steps.length === 0 ? stepLoading ? <StepContentSkeleton /> : <div className="max-w-4xl">
+            <div className="px-4 lg:px-6">
+              <SwipeableStepContent onNext={nextStep} onPrev={prevStep} canGoNext={currentSection < sections.length || currentStep < steps.length} canGoPrev={currentSection > 1 || currentStep > 1} currentStep={currentStep} totalSteps={steps.length || 1}>
+                {steps.length === 0 ? stepLoading ? <StepContentSkeleton /> : <div className="max-w-4xl">
                     <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
                       Start Your Company Documents
                     </h2>
@@ -769,6 +772,7 @@ const EnhancedGuidedHelp = () => {
                   </Card>
                 </motion.div> : stepLoading ? <StepContentSkeleton /> : null}
             </SwipeableStepContent>
+            </div>
           </div>
 
           {/* Fixed Floating Bottom Navigation */}
