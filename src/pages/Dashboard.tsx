@@ -1,14 +1,12 @@
 
-
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Bell, Search, User, ChevronDown, Settings, LogOut, HelpCircle } from "lucide-react";
+import { Bell, Search, User, ChevronDown, Settings, LogOut, HelpCircle, Moon, RefreshCw, Menu } from "lucide-react";
 import { motion } from "framer-motion";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
 import { EnhancedCommandPalette } from "@/components/ui/enhanced-command-palette";
 import { RecentlyViewed } from "@/components/ui/recently-viewed";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { FirstViewSpotlight } from "@/components/ui/first-view-spotlight";
 import { CloudSyncIndicator } from "@/components/ui/cloud-sync-indicator";
 import { ContextualFAQ } from "@/components/ui/contextual-faq";
@@ -30,11 +28,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import BizzyChat from "@/components/BizzyChat";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 import { toast } from "@/components/ui/sonner";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { signOut } = useAuth();
+  const { toggleTheme } = useTheme();
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [bizzyOpen, setBizzyOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(false);
@@ -57,13 +57,24 @@ const Dashboard = () => {
     navigate("/profile");
   };
 
+  const handleOverviewRefresh = async () => {
+    // Simulate refresh of overview data
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    toast.success('Overview updated');
+  };
+
+  // Mock data for now - in a real app this would come from user profile
+  const completedStepIds = [1, 2, 3]; // Example completed steps
+  const currentSectionCategory = "foundation"; // Example category
+  const companyAge = 30; // Example company age in days
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50">
         <AppSidebar />
         <main className="flex-1 relative">
           {/* Enhanced Header */}
-          <header className="sticky top-0 z-40 h-16 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+          <header className="sticky top-0 z-40 h-16 bg-white backdrop-blur-sm border-b border-gray-200 shadow-sm">
             <div className="h-full px-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <TooltipProvider>
@@ -113,11 +124,19 @@ const Dashboard = () => {
                   onShowHistory={() => console.log('Show sync history')}
                 />
 
+                {/* Dark Mode Toggle - Replace ThemeToggle with Moon icon */}
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <ThemeToggle />
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={toggleTheme}
+                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200"
+                  >
+                    <Moon className="h-4 w-4" />
+                  </Button>
                 </motion.div>
                 
                 {/* Enhanced Notifications with proper hover */}

@@ -19,6 +19,7 @@ import { SmartRecommendationsPanel } from "@/components/guidance/SmartRecommenda
 import { SwipeableStepContent } from "@/components/guidance/SwipeableStepContent";
 import { MilestoneReached } from "@/components/celebrations/MilestoneReached";
 import { AchievementNotification } from "@/components/celebrations/AchievementNotification";
+import { CloudSyncIndicator } from "@/components/ui/cloud-sync-indicator";
 import BizzyChat from "@/components/BizzyChat";
 import type { EnhancedGuidanceSection, EnhancedGuidanceStep, UserAchievement, StepTimeTracking } from "@/types/guidance";
 import type { UserDocumentProgress } from "@/types/documents";
@@ -61,10 +62,12 @@ const EnhancedGuidedHelp = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [companyAge, setCompanyAge] = useState(0);
   const [stepLoading, setStepLoading] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<'typing' | 'uploading' | 'syncing' | 'synced' | 'offline' | 'error'>('synced');
 
   // Celebration states
   const [showMilestone, setShowMilestone] = useState<any>(null);
   const [achievementQueue, setAchievementQueue] = useState<any[]>([]);
+
   const calculateCompanyAge = async () => {
     if (!user) return;
     try {
@@ -558,44 +561,60 @@ const EnhancedGuidedHelp = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
-        {/* Top Header - Dashboard Style */}
-        <div className="bg-[#0088cc] border-b p-3 flex justify-between items-center h-16">
+        {/* Main Header - Dashboard Style with Consolidated Section Info */}
+        <div className="bg-white border-b p-3 flex justify-between items-center h-16 shadow-sm">
           <div className="flex items-center gap-4">
             {/* Sidebar Toggle */}
             {!isMobile && (
-              <Button variant="ghost" size="sm" onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className="text-white hover:bg-white/20">
+              <Button variant="ghost" size="sm" onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className="text-gray-700 hover:text-gray-900 hover:bg-gray-100">
                 <Menu className="h-5 w-5" />
               </Button>
             )}
-            <h1 className="text-xl font-bold text-white">Guided Help</h1>
+            <h1 className="text-xl font-bold text-gray-900">Guided Help</h1>
+          </div>
+          
+          {/* Center Section Info - Consolidated from Secondary Header */}
+          <div className="flex-1 max-w-2xl mx-8 text-center">
+            <div className="text-lg font-bold text-gray-900">
+              {currentSection === 1 ? 'Start Your Company Documents' : (businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup')}
+            </div>
+            <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
+              <span>Step {currentStep} of {steps.length === 0 ? 1 : steps.length}</span>
+              {currentStepData?.estimated_time_minutes && (
+                <span>• {currentStepData.estimated_time_minutes} min</span>
+              )}
+              {currentSectionData?.deadline_days && (
+                <span>• Due in {currentSectionData.deadline_days} days</span>
+              )}
+              <span>• {overallProgress}% Complete</span>
+              <span>• {Math.floor(totalTimeSpent / 60)} min invested</span>
+              {achievements.length > 0 && (
+                <div className="flex items-center gap-1">
+                  <Trophy className="w-4 h-4" />
+                  <span>{achievements.length}</span>
+                </div>
+              )}
+            </div>
           </div>
           
           <div className="flex items-center gap-3">
-            {/* Sync Icon */}
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            >
-              <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
-                <RefreshCw className="h-4 w-4" />
-              </Button>
-            </motion.div>
+            {/* Sync Icon with CloudSyncIndicator */}
+            <CloudSyncIndicator
+              status={syncStatus}
+              lastSaved={new Date(Date.now() - 30000)}
+              onForceSync={() => setSyncStatus('syncing')}
+              onShowHistory={() => console.log('Show sync history')}
+            />
 
             {/* Dark Mode Toggle */}
-            <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+            <Button variant="ghost" size="sm" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200">
               <Moon className="h-4 w-4" />
             </Button>
 
-            {/* Talk to Bizzy Button */}
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setBizzyOpen(true)} className="flex items-center gap-2 px-3 py-1.5 bg-white text-[#0088cc] rounded-lg hover:bg-gray-100 transition-all duration-200 font-medium shadow-sm hover:shadow-md text-sm">
-              <HelpCircle className="w-4 h-4" />
-              <span>{isMobile ? "Bizzy" : "Talk to Bizzy"}</span>
-            </motion.button>
-            
             {/* Notifications */}
             <div className="relative" onMouseEnter={() => setShowNotifications(true)} onMouseLeave={() => setShowNotifications(false)}>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="ghost" size="sm" className="relative text-white hover:bg-white/20 rounded-lg p-2 transition-all duration-200">
+                <Button variant="ghost" size="sm" className="relative text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200">
                   <Bell className="w-4 h-4" />
                   <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-1 right-1 flex h-3 w-3">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
@@ -629,7 +648,7 @@ const EnhancedGuidedHelp = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Button variant="ghost" className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 text-white hover:bg-white/20">
+                  <Button variant="ghost" className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 text-gray-700 hover:text-gray-900 hover:bg-gray-100">
                     <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                       <User className="w-3 h-3 text-white" />
                     </div>
@@ -643,42 +662,18 @@ const EnhancedGuidedHelp = () => {
                   Profile
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut} className="hover:bg-gray-50 text-red-600">
+                <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 text-red-600">
                   <LogOut className="w-4 h-4 mr-2" />
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
-        </div>
 
-        {/* Section Info Bar - Keep all existing functionality */}
-        <div className="bg-[#0088cc]/90 px-4 py-3 text-white border-b">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-xl font-bold">
-                {currentSection === 1 ? 'Start Your Company Documents' : (businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup')}
-              </h1>
-              <div className="flex items-center gap-4 text-sm opacity-90">
-                <span>Step {currentStep} of {steps.length === 0 ? 1 : steps.length}</span>
-                {currentStepData?.estimated_time_minutes && (
-                  <span>• {currentStepData.estimated_time_minutes} min</span>
-                )}
-                {currentSectionData?.deadline_days && (
-                  <span>• Due in {currentSectionData.deadline_days} days</span>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-4 text-sm">
-              <span>{overallProgress}% Complete</span>
-              <span>{Math.floor(totalTimeSpent / 60)} min invested</span>
-              {achievements.length > 0 && (
-                <div className="flex items-center gap-1">
-                  <Trophy className="w-4 h-4" />
-                  <span>{achievements.length}</span>
-                </div>
-              )}
-            </div>
+            {/* Talk to Bizzy Button */}
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setBizzyOpen(true)} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md text-sm">
+              <HelpCircle className="w-4 h-4" />
+              <span>{isMobile ? "Bizzy" : "Talk to Bizzy"}</span>
+            </motion.button>
           </div>
         </div>
 

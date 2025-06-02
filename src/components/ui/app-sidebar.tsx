@@ -56,9 +56,13 @@ export function AppSidebar() {
     <Sidebar className="border-r-0">
       <SidebarContent className="bg-gradient-to-b from-[#0088cc] to-[#006ba6] text-white">
         <SidebarGroup className="px-4 py-6">
-          <SidebarGroupLabel className="text-white/90 text-base font-semibold mb-4 px-0">
-            Navigation
-          </SidebarGroupLabel>
+          {/* Logo Section */}
+          <div className="mb-6 flex items-center justify-center">
+            <Link to="/dashboard" className="flex items-center justify-center">
+              <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
+            </Link>
+          </div>
+          
           <SidebarGroupContent>
             <SidebarMenu className="space-y-3">
               {items.map((item) => (
