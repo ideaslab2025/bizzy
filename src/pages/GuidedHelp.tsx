@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -397,7 +395,6 @@ const GuidedHelp = () => {
       console.log('Current step data:', {
         title: currentStepData.title,
         hasVideoUrl: !!currentStepData.video_url,
-        videoUrl: currentStepData.video_url,
         hasRichContent: !!currentStepData.rich_content,
         richContent: currentStepData.rich_content
       });
