@@ -25,6 +25,7 @@ const Index = () => {
   });
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
@@ -45,11 +46,24 @@ const Index = () => {
         x: window.innerWidth - 150,
         y: window.innerHeight - 150
       });
+      // Update header height on resize
+      updateHeaderHeight();
     };
     
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
+
+    // Function to calculate and set header height
+    const updateHeaderHeight = () => {
+      const header = document.querySelector('header');
+      if (header) {
+        setHeaderHeight(header.offsetHeight);
+      }
+    };
+
+    // Initial header height calculation
+    updateHeaderHeight();
     
     window.addEventListener('resize', handleResize);
     window.addEventListener('scroll', handleScroll);
@@ -81,7 +95,7 @@ const Index = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const yOffset = -100;
+      const yOffset = -headerHeight - 20; // Account for header height plus some padding
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({
         top: y,
@@ -116,7 +130,6 @@ const Index = () => {
     </div>
   );
 
-  // Pricing plans for homepage display only
   const plans = [
     {
       name: "Bronze",
@@ -347,8 +360,13 @@ const Index = () => {
         )}
       </header>
 
-      {/* Add top padding to account for fixed header */}
-      <div className="pt-20">
+      {/* Main Content Container with proper spacing for mobile */}
+      <div 
+        className="min-h-screen"
+        style={{ 
+          paddingTop: headerHeight > 0 ? `${headerHeight}px` : '80px'
+        }}
+      >
         {/* Hero Section */}
         <section className="py-2 md:py-6 pb-40 relative overflow-hidden">
           {/* Animated Gradient Mesh Background */}
