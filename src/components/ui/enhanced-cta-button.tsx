@@ -93,13 +93,17 @@ const AnimatedArrow = ({ direction = 'right' }: { direction?: 'right' | 'down' }
   );
 };
 
-interface EnhancedCTAButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface EnhancedCTAButtonProps {
   variant?: 'primary' | 'secondary' | 'outline';
   size?: 'sm' | 'default' | 'lg';
   loading?: boolean;
   showArrow?: boolean;
   arrowDirection?: 'right' | 'down';
   children: React.ReactNode;
+  className?: string;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 export const EnhancedCTAButton: React.FC<EnhancedCTAButtonProps> = ({
@@ -112,7 +116,7 @@ export const EnhancedCTAButton: React.FC<EnhancedCTAButtonProps> = ({
   onClick,
   children,
   disabled,
-  ...props
+  type = 'button',
 }) => {
   const { ripples, addRipple } = useRipple();
 
@@ -139,6 +143,7 @@ export const EnhancedCTAButton: React.FC<EnhancedCTAButtonProps> = ({
 
   return (
     <motion.button
+      type={type}
       className={cn(
         baseClasses,
         variantClasses[variant],
@@ -156,7 +161,6 @@ export const EnhancedCTAButton: React.FC<EnhancedCTAButtonProps> = ({
         scale: (disabled || loading) ? 1 : 0.98,
         transition: { type: "spring", stiffness: 400, damping: 10 }
       }}
-      {...props}
     >
       <span className="relative z-10 flex items-center justify-center">
         {loading ? (
