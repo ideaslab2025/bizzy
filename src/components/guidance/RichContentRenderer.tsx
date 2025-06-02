@@ -52,7 +52,7 @@ const parseRichContent = (content: any): RichContentBlock[] => {
         blocks.push({
           type: 'video',
           content: content.video_url,
-          title: content.title || 'Business guidance video'
+          title: content.title || 'Starting your Company Documents'
         });
       }
     }
@@ -113,7 +113,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
             className="prose prose-lg max-w-none"
           >
             <div 
-              className="text-lg leading-relaxed text-gray-700"
+              className="text-base sm:text-lg leading-relaxed text-gray-700"
               dangerouslySetInnerHTML={{ __html: block.content || '' }}
             />
           </motion.div>
@@ -127,14 +127,14 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
             key={index}
-            className="my-6"
+            className="my-4 sm:my-6"
           >
-            <div className="flex items-center gap-2 mb-4">
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700 gap-1">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
+              <Badge variant="secondary" className="bg-blue-100 text-blue-700 gap-1 text-xs sm:text-sm">
                 <Play className="w-3 h-3" />
                 Video Tutorial
               </Badge>
-              {block.title && <span className="text-sm text-gray-600">{block.title}</span>}
+              {block.title && <span className="text-xs sm:text-sm text-gray-600">{block.title}</span>}
             </div>
             
             <div className="relative w-full overflow-hidden rounded-lg bg-gray-100 shadow-lg" 
@@ -147,7 +147,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
                   allowFullScreen
                   loading="lazy"
-                  title={block.title || "Business guidance video"}
+                  title={block.title || "Starting your Company Documents"}
                   onLoad={() => console.log('Video iframe loaded successfully')}
                   onError={(e) => {
                     console.error('Failed to load video iframe:', block.content, e);
@@ -155,11 +155,11 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center p-6">
-                    <Play className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                    <p className="text-gray-600">Video not available</p>
-                    <p className="text-sm text-gray-500 mt-2">
-                      URL: {block.content ? block.content.substring(0, 50) + '...' : 'No URL provided'}
+                  <div className="text-center p-4 sm:p-6">
+                    <Play className="w-8 h-8 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-2 sm:mb-3" />
+                    <p className="text-sm sm:text-base text-gray-600">Video not available</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
+                      URL: {block.content ? block.content.substring(0, 30) + '...' : 'No URL provided'}
                     </p>
                   </div>
                 </div>
@@ -181,10 +181,10 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
       case 'alert':
         const AlertIcon = block.variant === 'warning' ? AlertTriangle : Info;
         return (
-          <Alert key={index} variant={block.variant as any || 'default'}>
+          <Alert key={index} variant={block.variant as any || 'default'} className="my-4">
             <AlertIcon className="h-4 w-4" />
-            <AlertTitle>{block.title}</AlertTitle>
-            <AlertDescription>{block.content}</AlertDescription>
+            <AlertTitle className="text-sm sm:text-base">{block.title}</AlertTitle>
+            <AlertDescription className="text-sm">{block.content}</AlertDescription>
           </Alert>
         );
         
@@ -194,10 +194,10 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             key={index}
-            className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded"
+            className="bg-blue-50 border-l-4 border-blue-500 p-3 sm:p-4 rounded my-4"
           >
-            <p className="flex items-start gap-2">
-              <Lightbulb className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
+            <p className="flex items-start gap-2 text-sm sm:text-base">
+              <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 mt-0.5 flex-shrink-0" />
               <span>{block.content}</span>
             </p>
           </motion.div>
@@ -208,7 +208,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
           <motion.div
             whileHover={{ scale: 1.02 }}
             key={index}
-            className="flex justify-center my-6"
+            className="flex justify-center my-4 sm:my-6"
           >
             <Button
               size="lg"
@@ -217,7 +217,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
                   window.open(block.action.url, '_blank');
                 }
               }}
-              className="gap-2"
+              className="gap-2 text-sm sm:text-base"
             >
               <ExternalLink className="w-4 h-4" />
               {block.label}
@@ -227,7 +227,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
         
       default:
         return (
-          <div key={index} className="text-gray-500 italic">
+          <div key={index} className="text-gray-500 italic text-sm">
             Unknown content type: {block.type}
           </div>
         );
@@ -235,11 +235,11 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {Array.isArray(blocks) && blocks.length > 0 ? (
         blocks.map(renderBlock)
       ) : (
-        <div className="text-gray-500 italic">No content blocks found</div>
+        <div className="text-gray-500 italic text-sm">No content blocks found</div>
       )}
     </div>
   );
@@ -278,14 +278,14 @@ const ChecklistBlock: React.FC<ChecklistBlockProps> = ({
   };
 
   return (
-    <Card className="bg-gray-50 border-2 border-gray-200">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <CheckCircle className="w-5 h-5" />
+    <Card className="bg-gray-50 border-2 border-gray-200 my-4">
+      <CardHeader className="pb-3 sm:pb-4">
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
           Action Checklist
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2 sm:space-y-3">
         {Array.isArray(items) && items.length > 0 ? (
           items.map((item) => {
             const isCompleted = completedItems.has(item.id);
@@ -293,7 +293,7 @@ const ChecklistBlock: React.FC<ChecklistBlockProps> = ({
               <motion.div
                 key={item.id}
                 whileHover={{ x: 4 }}
-                className="bg-white p-4 rounded-lg border flex items-start gap-3"
+                className="bg-white p-3 sm:p-4 rounded-lg border flex items-start gap-2 sm:gap-3"
               >
                 <Checkbox
                   checked={isCompleted}
@@ -302,13 +302,13 @@ const ChecklistBlock: React.FC<ChecklistBlockProps> = ({
                 />
                 <div className="flex-1">
                   <label className={cn(
-                    "font-medium cursor-pointer",
+                    "font-medium cursor-pointer text-sm sm:text-base",
                     isCompleted && "line-through text-gray-500"
                   )}>
                     {item.label}
                   </label>
                   {item.helpText && (
-                    <p className="text-sm text-gray-600 mt-1">{item.helpText}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 mt-1">{item.helpText}</p>
                   )}
                   {isCompleted && (
                     <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
@@ -321,7 +321,7 @@ const ChecklistBlock: React.FC<ChecklistBlockProps> = ({
             );
           })
         ) : (
-          <p className="text-gray-500 text-sm">No checklist items available</p>
+          <p className="text-gray-500 text-xs sm:text-sm">No checklist items available</p>
         )}
       </CardContent>
     </Card>

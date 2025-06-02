@@ -7,7 +7,6 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { CheckCircle, Play, ExternalLink, ChevronLeft, ChevronRight, SkipForward, User, LogOut, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { VimeoPlayer } from "@/components/guidance/VimeoPlayer";
 import type { Json } from "@/integrations/supabase/types";
 import { RichContentRenderer } from "@/components/guidance/RichContentRenderer";
 
@@ -533,15 +532,15 @@ const GuidedHelp = () => {
         </div>
 
         {/* Content - with padding bottom for fixed footer */}
-        <div className="flex-1 p-8 pb-32">
+        <div className="flex-1 p-4 sm:p-8 pb-32">
           {steps.length === 0 ? (
             // Show placeholder content when no steps exist
             <div className="max-w-4xl">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">
                 {sections.find(s => s.order_number === currentSection)?.title}
               </h2>
-              <Card className="mb-8">
-                <CardContent className="p-8">
+              <Card className="mb-6 sm:mb-8">
+                <CardContent className="p-6 sm:p-8">
                   <div className="prose max-w-none">
                     <p className="text-sm">
                       Content for this section is coming soon. You can still mark this section as complete to track your progress.
@@ -552,21 +551,13 @@ const GuidedHelp = () => {
             </div>
           ) : currentStepData ? (
             <div className="max-w-4xl">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">
                 {currentStepData.title}
               </h2>
 
-              {/* Video Section - only show if no rich_content or rich_content doesn't have video blocks */}
-              {currentStepData.video_url && !currentStepData.rich_content && (
-                <VimeoPlayer 
-                  videoUrl={currentStepData.video_url}
-                  title={`${currentStepData.title} Tutorial`}
-                />
-              )}
-
-              {/* Rich Content or Regular Content */}
-              <Card className="mb-8">
-                <CardContent className="p-8">
+              {/* Rich Content Section - video will be handled automatically by RichContentRenderer */}
+              <Card className="mb-6 sm:mb-8">
+                <CardContent className="p-6 sm:p-8">
                   {currentStepData.rich_content ? (
                     <RichContentRenderer 
                       content={currentStepData}
@@ -574,7 +565,7 @@ const GuidedHelp = () => {
                     />
                   ) : (
                     <div className="prose max-w-none">
-                      <p className="text-lg leading-relaxed text-gray-700">
+                      <p className="text-base sm:text-lg leading-relaxed text-gray-700">
                         {currentStepData.content}
                       </p>
                     </div>
@@ -591,7 +582,7 @@ const GuidedHelp = () => {
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-[#0088cc] hover:underline"
+                            className="flex items-center gap-2 text-[#0088cc] hover:underline text-sm sm:text-base"
                           >
                             <ExternalLink className="w-4 h-4" />
                             {link.title}
@@ -607,27 +598,28 @@ const GuidedHelp = () => {
         </div>
 
         {/* Fixed Floating Bottom Navigation */}
-        <div className="fixed bottom-0 left-80 right-0 bg-white/95 backdrop-blur-sm border-t shadow-lg p-6 flex justify-between items-center z-40">
+        <div className="fixed bottom-0 left-80 right-0 bg-white/95 backdrop-blur-sm border-t shadow-lg p-4 sm:p-6 flex justify-between items-center z-40">
           <Button
             variant="outline"
             onClick={prevStep}
             disabled={currentSection === 1 && currentStep === 1}
+            className="text-sm sm:text-base"
           >
             <ChevronLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
 
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3">
             {/* Show Mark Section Complete and Skip Section buttons on last step of any section OR when no steps exist */}
             {isLastStepInSection() && currentSectionData && (
               <>
                 <Button
                   onClick={() => toggleSectionCompleted(currentSectionData.id)}
-                  className={
+                  className={`text-sm sm:text-base ${
                     isCurrentSectionCompleted
                       ? "bg-gray-400 hover:bg-gray-500 text-white"
                       : "bg-green-600 hover:bg-green-700 text-white"
-                  }
+                  }`}
                 >
                   <CheckCircle className="w-4 h-4 mr-2" />
                   {isCurrentSectionCompleted ? 'Mark as Incomplete' : 'Mark Section as Complete'}
@@ -637,6 +629,7 @@ const GuidedHelp = () => {
                   variant="outline"
                   onClick={skipSection}
                   disabled={currentSection === sections.length}
+                  className="text-sm sm:text-base"
                 >
                   <SkipForward className="w-4 h-4 mr-2" />
                   Skip Section
@@ -647,7 +640,7 @@ const GuidedHelp = () => {
             <Button
               onClick={nextStep}
               disabled={currentSection === sections.length && (steps.length === 0 || currentStep === steps.length)}
-              className="bg-[#0088cc] hover:bg-[#0088cc]/90"
+              className="bg-[#0088cc] hover:bg-[#0088cc]/90 text-sm sm:text-base"
             >
               Next
               <ChevronRight className="w-4 h-4 ml-2" />
@@ -658,8 +651,8 @@ const GuidedHelp = () => {
 
       {/* Chatbot Modal */}
       {showChatbot && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg w-96 h-[500px] flex flex-col">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-md h-[500px] flex flex-col">
             <div className="flex items-center justify-between p-4 border-b bg-[#0088cc] text-white rounded-t-lg">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-white rounded-full overflow-hidden">
@@ -695,9 +688,9 @@ const GuidedHelp = () => {
               <div className="flex gap-2">
                 <input 
                   placeholder="Ask me anything..." 
-                  className="flex-1 px-3 py-2 border rounded-md"
+                  className="flex-1 px-3 py-2 border rounded-md text-sm"
                 />
-                <Button className="bg-[#0088cc] hover:bg-[#0088cc]/90">
+                <Button className="bg-[#0088cc] hover:bg-[#0088cc]/90 text-sm">
                   Send
                 </Button>
               </div>
