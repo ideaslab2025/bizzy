@@ -28,7 +28,6 @@ import type { EnhancedGuidanceSection, EnhancedGuidanceStep, UserAchievement, St
 import type { UserDocumentProgress } from "@/types/documents";
 import { StepContentSkeleton } from '@/components/ui/skeleton-loader';
 import { businessSections } from '@/data/businessSections';
-
 interface UserProgress {
   section_id: number;
   step_id: number;
@@ -65,12 +64,13 @@ const EnhancedGuidedHelp = () => {
   const [companyAge, setCompanyAge] = useState(0);
   const [stepLoading, setStepLoading] = useState(false);
   const [syncStatus, setSyncStatus] = useState<'typing' | 'uploading' | 'syncing' | 'synced' | 'offline' | 'error'>('synced');
-  const { toggleTheme } = useTheme();
+  const {
+    toggleTheme
+  } = useTheme();
 
   // Celebration states
   const [showMilestone, setShowMilestone] = useState<any>(null);
   const [achievementQueue, setAchievementQueue] = useState<any[]>([]);
-
   const calculateCompanyAge = async () => {
     if (!user) return;
     try {
@@ -482,7 +482,6 @@ const EnhancedGuidedHelp = () => {
       setCurrentStep(stepNumber);
     }
   };
-
   const completedStepIds = Array.from(completedSteps);
   const currentStepData = getCurrentStepData();
   const currentSectionData = sections.find(s => s.order_number === currentSection);
@@ -534,8 +533,7 @@ const EnhancedGuidedHelp = () => {
         </div>
       </div>
     </div>;
-  return (
-    <SidebarProvider>
+  return <SidebarProvider>
       <div className="min-h-screen bg-white flex w-full">
         {/* Mobile Menu Button */}
         {isMobile && <div className="fixed top-4 left-4 z-50">
@@ -562,73 +560,54 @@ const EnhancedGuidedHelp = () => {
           <div className={`fixed top-0 right-0 ${sidebarCollapsed ? 'left-0' : 'left-0 lg:left-64'} bg-white border-b p-3 flex justify-between items-center h-16 shadow-sm z-40 transition-all duration-300`}>
             <div className="flex items-center gap-4">
               {/* Fixed Sidebar Toggle using SidebarTrigger */}
-              {!isMobile && (
-                <TooltipProvider>
+              {!isMobile && <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <SidebarTrigger 
-                          className="text-gray-700 hover:text-gray-900 hover:bg-gray-100" 
-                          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                        />
+                      <motion.div whileHover={{
+                    scale: 1.05
+                  }} whileTap={{
+                    scale: 0.95
+                  }}>
+                        <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-gray-100" onClick={() => setSidebarCollapsed(!sidebarCollapsed)} />
                       </motion.div>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Toggle Sidebar</p>
                     </TooltipContent>
                   </Tooltip>
-                </TooltipProvider>
-              )}
-              <h1 className="text-xl font-bold text-gray-900">Guided Help</h1>
+                </TooltipProvider>}
+              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Guided Help</h1>
             </div>
             
             {/* Center Section Info - Consolidated from Secondary Header */}
             <div className="flex-1 max-w-2xl mx-8 text-center">
               <div className="text-lg font-semibold text-gray-900">
-                {currentSection === 1 ? 'Start Your Company Documents' : (businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup')}
+                {currentSection === 1 ? 'Start Your Company Documents' : businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup'}
               </div>
               <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
                 <span>Step {currentStep} of {steps.length === 0 ? 1 : steps.length}</span>
-                {currentStepData?.estimated_time_minutes && (
-                  <span>• {currentStepData.estimated_time_minutes} min</span>
-                )}
-                {currentSectionData?.deadline_days && (
-                  <span>• Due in {currentSectionData.deadline_days} days</span>
-                )}
+                {currentStepData?.estimated_time_minutes && <span>• {currentStepData.estimated_time_minutes} min</span>}
+                {currentSectionData?.deadline_days && <span>• Due in {currentSectionData.deadline_days} days</span>}
                 <span>• {overallProgress}% Complete</span>
                 <span>• {Math.floor(totalTimeSpent / 60)} min invested</span>
-                {achievements.length > 0 && (
-                  <div className="flex items-center gap-1">
+                {achievements.length > 0 && <div className="flex items-center gap-1">
                     <Trophy className="w-4 h-4" />
                     <span>{achievements.length}</span>
-                  </div>
-                )}
+                  </div>}
               </div>
             </div>
             
             <div className="flex items-center gap-3">
               {/* Sync Icon with CloudSyncIndicator */}
-              <CloudSyncIndicator
-                status={syncStatus}
-                lastSaved={new Date(Date.now() - 30000)}
-                onForceSync={() => setSyncStatus('syncing')}
-                onShowHistory={() => console.log('Show sync history')}
-              />
+              <CloudSyncIndicator status={syncStatus} lastSaved={new Date(Date.now() - 30000)} onForceSync={() => setSyncStatus('syncing')} onShowHistory={() => console.log('Show sync history')} />
 
               {/* Fixed Dark Mode Toggle */}
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={toggleTheme}
-                  className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200"
-                >
+              <motion.div whileHover={{
+              scale: 1.05
+            }} whileTap={{
+              scale: 0.95
+            }}>
+                <Button variant="ghost" size="sm" onClick={toggleTheme} className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200">
                   <Moon className="h-4 w-4" />
                 </Button>
               </motion.div>
@@ -636,21 +615,18 @@ const EnhancedGuidedHelp = () => {
               {/* Fixed Notifications with Click Functionality */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="relative text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200"
-                    >
+                  <motion.div whileHover={{
+                  scale: 1.05
+                }} whileTap={{
+                  scale: 0.95
+                }}>
+                    <Button variant="ghost" size="sm" className="relative text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200">
                       <Bell className="w-4 h-4" />
-                      <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute top-1 right-1 flex h-3 w-3"
-                      >
+                      <motion.span initial={{
+                      scale: 0
+                    }} animate={{
+                      scale: 1
+                    }} className="absolute top-1 right-1 flex h-3 w-3">
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
                         <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
                       </motion.span>
@@ -681,7 +657,11 @@ const EnhancedGuidedHelp = () => {
               {/* Account button */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <motion.div whileHover={{
+                  scale: 1.02
+                }} whileTap={{
+                  scale: 0.98
+                }}>
                     <Button variant="ghost" className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 text-gray-700 hover:text-gray-900 hover:bg-gray-100">
                       <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                         <User className="w-3 h-3 text-white" />
@@ -704,7 +684,11 @@ const EnhancedGuidedHelp = () => {
               </DropdownMenu>
 
               {/* Talk to Bizzy Button */}
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setBizzyOpen(true)} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md text-sm">
+              <motion.button whileHover={{
+              scale: 1.05
+            }} whileTap={{
+              scale: 0.95
+            }} onClick={() => setBizzyOpen(true)} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md text-sm">
                 <HelpCircle className="w-4 h-4" />
                 <span>{isMobile ? "Bizzy" : "Talk to Bizzy"}</span>
               </motion.button>
@@ -812,8 +796,6 @@ const EnhancedGuidedHelp = () => {
         {/* Bizzy AI Chat */}
         <BizzyChat isOpen={bizzyOpen} onClose={() => setBizzyOpen(false)} />
       </div>
-    </SidebarProvider>
-  );
+    </SidebarProvider>;
 };
-
 export default EnhancedGuidedHelp;
