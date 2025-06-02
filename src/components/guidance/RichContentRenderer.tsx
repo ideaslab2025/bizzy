@@ -136,11 +136,12 @@ const RichContentRenderer: React.FC<RichContentRendererProps> = React.memo(({ co
         );
 
       case 'heading':
-        const HeadingTag = `h${Math.min(block.level || 3, 6)}` as keyof JSX.IntrinsicElements;
+        const headingLevel = Math.min(block.level || 3, 6);
+        const HeadingComponent = `h${headingLevel}` as keyof JSX.IntrinsicElements;
         return (
-          <HeadingTag key={blockKey} className="text-xl font-semibold mb-4 mt-6">
+          <HeadingComponent key={blockKey} className="text-xl font-semibold mb-4 mt-6">
             {block.content}
-          </HeadingTag>
+          </HeadingComponent>
         );
 
       case 'text':
