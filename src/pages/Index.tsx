@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Menu, Star, User, LogOut, Check, Sparkles, Zap, Shield, Users, Building2, Crown } from "lucide-react";
@@ -10,7 +9,7 @@ import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import BizzyCharacter from "@/components/BizzyCharacter";
 import Testimonials from "@/components/Testimonials";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import StatisticsSection from "@/components/StatisticsSection";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 
@@ -28,6 +27,7 @@ const Index = () => {
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
     const floatingAnimation = () => {
       setFloatingPosition(prev => ({
@@ -406,6 +406,9 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Statistics Section - NEW: Added after testimonials */}
+      <StatisticsSection />
+
       {/* Pricing Section */}
       <section id="pricing" className="py-20 bg-gradient-to-br from-blue-800/50 to-blue-900/30">
         <div className="container mx-auto px-4">
@@ -464,34 +467,6 @@ const Index = () => {
                   </div>
                 </CardContent>
               </Card>)}
-          </div>
-
-          {/* Why Choose Bizzy */}
-          <div className="mt-20 text-center">
-            <h2 className="text-3xl font-bold text-white mb-8">Why Choose Bizzy?</h2>
-            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                  <Star className="w-8 h-8 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-white">Expert Guidance</h3>
-                <p className="text-blue-100/80">Professional guidance, pre-checked from business experts</p>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                  <Shield className="w-8 h-8 text-green-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-white">Compliance Assured</h3>
-                <p className="text-blue-100/80">Stay compliant with UK business regulations, with our extensive document library </p>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
-                  <Zap className="w-8 h-8 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-white">Fast Setup</h3>
-                <p className="text-blue-100/80">Get your business running in days, not weeks, with everything in one place</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
