@@ -54,7 +54,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="border-r-0">
-      <SidebarContent className="bg-gradient-to-b from-[#0088cc] to-[#006ba6] text-white">
+      <SidebarContent className="bg-gradient-to-b from-[#64b5f6] to-[#42a5f5] text-white">
         {/* Logo Section with White Background that extends to all edges */}
         <div className="bg-white p-6 flex items-center justify-center">
           <Link to="/dashboard" className="flex items-center justify-center">
@@ -73,24 +73,24 @@ export function AppSidebar() {
                       "transition-all duration-200 rounded-lg p-4 py-4 min-h-[56px] text-white/90 hover:text-white hover:bg-white/10",
                       "border border-transparent hover:border-white/20",
                       "group relative overflow-hidden text-left",
-                      location.pathname === item.url && "bg-white text-[#0088cc] shadow-lg hover:bg-white hover:text-[#0088cc] border-white"
+                      location.pathname === item.url && "bg-white text-[#64b5f6] shadow-lg hover:bg-white hover:text-[#64b5f6] border-white"
                     )}
                   >
                     <Link to={item.url} className="flex items-center gap-4 w-full">
                       <div className={cn(
                         "w-6 h-6 flex-shrink-0 transition-transform group-hover:scale-110",
-                        location.pathname === item.url ? "text-[#0088cc]" : "text-white/90 group-hover:text-white"
+                        location.pathname === item.url ? "text-[#64b5f6]" : "text-white/90 group-hover:text-white"
                       )}>
                         <item.icon className="w-6 h-6" />
                       </div>
                       <span className={cn(
                         "font-semibold text-base transition-colors",
-                        location.pathname === item.url ? "text-[#0088cc]" : "text-white/90 group-hover:text-white"
+                        location.pathname === item.url ? "text-[#64b5f6]" : "text-white/90 group-hover:text-white"
                       )}>
                         {item.title}
                       </span>
                       {location.pathname === item.url && (
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-10 bg-[#0088cc] rounded-l-full" />
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-10 bg-[#64b5f6] rounded-l-full" />
                       )}
                     </Link>
                   </SidebarMenuButton>
@@ -101,7 +101,7 @@ export function AppSidebar() {
         </SidebarGroup>
         
         {/* Bottom gradient overlay */}
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#006ba6] to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#42a5f5] to-transparent pointer-events-none" />
       </SidebarContent>
     </Sidebar>
   )
