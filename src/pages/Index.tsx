@@ -190,16 +190,16 @@ const Index = () => {
         }
       `}>
         <div className="container mx-auto py-0 flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 md:touch-target-none touch-target-large">
             <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-40" />
           </Link>
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex gap-6">
-            <a href="#about" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">About</a>
-            <a href="#features" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">Features</a>
-            <a href="#pricing" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">Pricing</a>
-            <a href="#faqs" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold">FAQs</a>
+            <a href="#about" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold touch-target-standard">About</a>
+            <a href="#features" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold touch-target-standard">Features</a>
+            <a href="#pricing" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold touch-target-standard">Pricing</a>
+            <a href="#faqs" className="text-[#3b82f6] hover:text-[#60a5fa] transition text-xl font-bold touch-target-standard">FAQs</a>
           </nav>
           
           <div className="flex gap-2 items-center">
@@ -208,7 +208,7 @@ const Index = () => {
                 {/* Desktop Account Dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className="hidden md:flex">
-                    <Button variant="ghost" className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[state=open]:bg-blue-900/30">
+                    <Button variant="ghost" className="flex items-center gap-2 text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[state=open]:bg-blue-900/30 touch-target-large">
                       <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-medium text-white">
                         {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
                       </div>
@@ -219,13 +219,13 @@ const Index = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg z-50">
                     <DropdownMenuItem asChild>
-                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer">
+                      <Link to="/dashboard" className="flex items-center gap-2 w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-2 py-2 cursor-pointer touch-target-standard">
                         <User className="h-4 w-4" />
                         Dashboard
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut} className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2">
+                    <DropdownMenuItem onClick={handleSignOut} className="flex items-center gap-2 text-red-600 focus:text-red-600 hover:bg-red-50 cursor-pointer px-2 py-2 touch-target-standard">
                       <LogOut className="h-4 w-4" />
                       Sign Out
                     </DropdownMenuItem>
@@ -234,17 +234,17 @@ const Index = () => {
               </> : <>
                 {/* Desktop Auth Buttons */}
                 <Link to="/login" className="hidden md:block">
-                  <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30">Log in</Button>
+                  <Button variant="ghost" className="text-[#1d4ed8] hover:text-[#3b82f6] hover:bg-blue-900/30 touch-target-large">Log in</Button>
                 </Link>
                 <Link to="/register" className="hidden md:block">
-                  <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Get Started</Button>
+                  <Button className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 touch-target-large">Get Started</Button>
                 </Link>
               </>}
             
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-md hover:bg-blue-900/30 transition-colors"
+              className="md:hidden p-3 rounded-md hover:bg-blue-900/30 transition-colors touch-target-large"
               aria-label="Toggle navigation menu"
             >
               <HamburgerIcon isOpen={isMobileMenuOpen} />
@@ -272,7 +272,7 @@ const Index = () => {
                 <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-16" />
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 rounded-md hover:bg-blue-900/30 transition-colors"
+                  className="p-3 rounded-md hover:bg-blue-900/30 transition-colors touch-target-large"
                   aria-label="Close menu"
                 >
                   <X className="w-6 h-6 text-[#3b82f6]" />
@@ -280,28 +280,28 @@ const Index = () => {
               </div>
 
               {/* Navigation Links */}
-              <nav className="flex flex-col p-6 space-y-6">
+              <nav className="flex flex-col p-6 space-y-2">
                 <button 
                   onClick={() => scrollToSection('about')}
-                  className="text-left text-xl font-bold text-[#3b82f6] hover:text-[#60a5fa] transition-colors py-2"
+                  className="text-left text-xl font-bold text-[#3b82f6] hover:text-[#60a5fa] transition-colors py-3 px-2 touch-target-large"
                 >
                   About
                 </button>
                 <button 
                   onClick={() => scrollToSection('features')}
-                  className="text-left text-xl font-bold text-[#3b82f6] hover:text-[#60a5fa] transition-colors py-2"
+                  className="text-left text-xl font-bold text-[#3b82f6] hover:text-[#60a5fa] transition-colors py-3 px-2 touch-target-large"
                 >
                   Features
                 </button>
                 <button 
                   onClick={() => scrollToSection('pricing')}
-                  className="text-left text-xl font-bold text-[#3b82f6] hover:text-[#60a5fa] transition-colors py-2"
+                  className="text-left text-xl font-bold text-[#3b82f6] hover:text-[#60a5fa] transition-colors py-3 px-2 touch-target-large"
                 >
                   Pricing
                 </button>
                 <button 
                   onClick={() => scrollToSection('faqs')}
-                  className="text-left text-xl font-bold text-[#3b82f6] hover:text-[#60a5fa] transition-colors py-2"
+                  className="text-left text-xl font-bold text-[#3b82f6] hover:text-[#60a5fa] transition-colors py-3 px-2 touch-target-large"
                 >
                   FAQs
                 </button>
@@ -309,7 +309,7 @@ const Index = () => {
                 {/* User-specific navigation */}
                 {user ? (
                   <>
-                    <div className="border-t border-blue-900/30 pt-6">
+                    <div className="border-t border-blue-900/30 pt-6 mt-4">
                       <div className="flex items-center gap-3 mb-6 p-3 rounded-lg bg-blue-900/20">
                         <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-sm font-medium text-white">
                           {user?.user_metadata?.company_name?.charAt(0)?.toUpperCase() || user?.user_metadata?.first_name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
@@ -324,23 +324,23 @@ const Index = () => {
                     </div>
                     <Link 
                       to="/dashboard" 
-                      className="text-xl font-bold text-white hover:text-[#60a5fa] transition-colors py-2 block"
+                      className="text-xl font-bold text-white hover:text-[#60a5fa] transition-colors py-3 px-2 block touch-target-large"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Dashboard
                     </Link>
                     <button 
                       onClick={handleSignOut}
-                      className="text-left text-xl font-bold text-red-400 hover:text-red-300 transition-colors py-2"
+                      className="text-left text-xl font-bold text-red-400 hover:text-red-300 transition-colors py-3 px-2 touch-target-large"
                     >
                       Sign Out
                     </button>
                   </>
                 ) : (
-                  <div className="border-t border-blue-900/30 pt-6 space-y-4">
+                  <div className="border-t border-blue-900/30 pt-6 mt-4 space-y-3">
                     <Link 
                       to="/login" 
-                      className="block text-xl font-bold text-[#1d4ed8] hover:text-[#3b82f6] transition-colors py-2"
+                      className="block text-xl font-bold text-[#1d4ed8] hover:text-[#3b82f6] transition-colors py-3 px-2 touch-target-large"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Log In
@@ -350,7 +350,7 @@ const Index = () => {
                       className="block"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      <Button className="w-full bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 text-lg py-3">
+                      <Button className="w-full bg-[#1d4ed8] hover:bg-[#1d4ed8]/80 text-lg py-4 touch-target-large">
                         Get Started
                       </Button>
                     </Link>
@@ -385,9 +385,9 @@ const Index = () => {
                   <span className="text-[#3b82f6]">busyness</span>
                 </h1>
                 <p className="text-xl mb-8 text-blue-100/80 max-w-2xl">All the steps for helping you after company setup, with personalised document templates, step-by-step process guidance and AI assistance</p>
-                <div className="flex flex-wrap gap-4">
-                  <Link to="/register">
-                    <EnhancedCTAButton size="lg" variant="primary" showArrow arrowDirection="right">
+                <div className="flex flex-col md:flex-row flex-wrap gap-4 touch-interaction-spacing">
+                  <Link to="/register" className="touch-target-cta">
+                    <EnhancedCTAButton size="lg" variant="primary" showArrow arrowDirection="right" className="w-full md:w-auto">
                       Start Your Journey
                     </EnhancedCTAButton>
                   </Link>
@@ -397,6 +397,7 @@ const Index = () => {
                     onClick={() => scrollToSection('features')}
                     showArrow 
                     arrowDirection="down"
+                    className="w-full md:w-auto touch-target-cta"
                   >
                     See How It Works
                   </EnhancedCTAButton>
@@ -543,8 +544,8 @@ const Index = () => {
             </div>
 
             {/* Pricing Cards */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-8xl mx-auto">
-              {plans.map((plan, index) => <Card key={plan.name} className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300`}>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-8xl mx-auto touch-interaction-spacing">
+              {plans.map((plan, index) => <Card key={plan.name} className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300 touch-target-card`}>
                   {plan.badge && <div className="absolute top-4 right-4">
                       {plan.badge}
                     </div>}
@@ -567,7 +568,7 @@ const Index = () => {
                   </CardHeader>
 
                   <CardContent className="pt-0">
-                    <Link to={`/pricing?plan=${plan.planId}`}>
+                    <Link to={`/pricing?plan=${plan.planId}`} className="touch-target-cta">
                       <EnhancedCTAButton 
                         variant="primary" 
                         size="lg" 
@@ -602,7 +603,7 @@ const Index = () => {
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Helping new business owners get going</h2>
             <p className="text-xl mb-8 text-blue-100/80 max-w-2xl mx-auto">Join thousands of UK startups who are saving time, reducing stress, and ensuring compliance with Bizzy's comprehensive platform.</p>
-            <Link to="/register">
+            <Link to="/register" className="touch-target-cta">
               <EnhancedCTAButton 
                 size="lg" 
                 variant="primary" 
@@ -619,9 +620,9 @@ const Index = () => {
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold mb-12 text-center text-[#3b82f6]">Frequently Asked Questions</h2>
             <div className="max-w-3xl mx-auto">
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="single" collapsible className="w-full touch-interaction-spacing">
                 <AccordionItem value="item-1" className="border-blue-900/30">
-                  <AccordionTrigger className="text-blue-100 hover:text-[#3b82f6]">What's included in the Bizzy platform?</AccordionTrigger>
+                  <AccordionTrigger className="text-blue-100 hover:text-[#3b82f6] touch-target-large">What's included in the Bizzy platform?</AccordionTrigger>
                   <AccordionContent className="text-blue-100/80">
                     Bizzy provides everything you need after forming your UK company: step-by-step guided walkthroughs for all business setup tasks (tax registration, banking, insurance, HR, compliance), a comprehensive library of legal document templates, AI-powered assistance, video tutorials, and direct links to official government services - all in one organized platform.
                   </AccordionContent>
@@ -676,50 +677,50 @@ const Index = () => {
         {/* Footer */}
         <footer className="bg-[#071629] border-t border-blue-900/30 py-12">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 touch-interaction-spacing">
               <div>
                 <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Product</h3>
-                <ul className="space-y-2">
-                  <li><a href="#features" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Features</a></li>
-                  <li><a href="#pricing" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Pricing</a></li>
-                  <li><a href="#faqs" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">FAQs</a></li>
+                <ul className="space-y-3">
+                  <li><a href="#features" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">Features</a></li>
+                  <li><a href="#pricing" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">Pricing</a></li>
+                  <li><a href="#faqs" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">FAQs</a></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Resources</h3>
-                <ul className="space-y-2">
-                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Blog</a></li>
-                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Guides</a></li>
-                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Support</a></li>
+                <ul className="space-y-3">
+                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">Blog</a></li>
+                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">Guides</a></li>
+                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">Support</a></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Company</h3>
-                <ul className="space-y-2">
-                  <li><a href="#about" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">About Us</a></li>
-                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Careers</a></li>
-                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Contact</a></li>
+                <ul className="space-y-3">
+                  <li><a href="#about" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">About Us</a></li>
+                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">Careers</a></li>
+                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">Contact</a></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-bold mb-4 text-[#3b82f6] text-2xl">Legal</h3>
-                <ul className="space-y-2">
-                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Terms</a></li>
-                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Privacy</a></li>
-                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Cookies</a></li>
-                  <li><a href="/disclaimer" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base">Disclaimer</a></li>
+                <ul className="space-y-3">
+                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">Terms</a></li>
+                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">Privacy</a></li>
+                  <li><a href="#" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">Cookies</a></li>
+                  <li><a href="/disclaimer" className="text-blue-100/70 hover:text-[#3b82f6] transition-colors text-base touch-target-standard">Disclaimer</a></li>
                 </ul>
               </div>
             </div>
-            <div className="border-t border-blue-900/50 mt-12 pt-8 flex justify-between items-center">
-              <p className="text-blue-100/70">© 2025 Bizzy. All rights reserved.</p>
-              <div className="flex gap-4">
-                <a href="#" aria-label="Twitter" className="text-[#3b82f6] hover:text-[#60a5fa] transition-colors">
+            <div className="border-t border-blue-900/50 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center touch-interaction-spacing">
+              <p className="text-blue-100/70 mb-4 md:mb-0">© 2025 Bizzy. All rights reserved.</p>
+              <div className="flex gap-6">
+                <a href="#" aria-label="Twitter" className="text-[#3b82f6] hover:text-[#60a5fa] transition-colors touch-target-icon">
                   <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
                   </svg>
                 </a>
-                <a href="#" aria-label="LinkedIn" className="text-[#3b82f6] hover:text-[#60a5fa] transition-colors">
+                <a href="#" aria-label="LinkedIn" className="text-[#3b82f6] hover:text-[#60a5fa] transition-colors touch-target-icon">
                   <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.3 1.5 4s1-2.4 2.5-2.4c1.6 0 2.5 1 2.6 2.5 0 1.4-1 2.5-2.6 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5v1.5c1-1.6 2.7-2.5 4.5-2.5 3.5 0 6 2.5 6 6.5v7.5h-5v-7c0-1-1-2-2-2h-1.5z"></path>
                   </svg>
