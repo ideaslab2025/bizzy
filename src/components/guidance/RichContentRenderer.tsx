@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -24,16 +23,20 @@ interface RichContentRendererProps {
   onChecklistComplete?: (stepId: number, itemId: string, completed: boolean) => void;
 }
 
+// Generate unique render ID for debugging
+const generateRenderId = () => Math.random().toString(36).substr(2, 9);
+
 // Enhanced parsing function to handle video_url at root level and prevent duplicates
 const parseRichContent = (content: any): RichContentBlock[] => {
-  console.log('RichContentRenderer received content:', content);
+  const renderId = generateRenderId();
+  console.log(`[${renderId}] RichContentRenderer parsing content for step:`, content?.title);
   
   const blocks: RichContentBlock[] = [];
   
   try {
     // First, check if there's a video_url at the root level
     if (content.video_url) {
-      console.log('Found video_url at root level:', content.video_url);
+      console.log(`[${renderId}] Found video_url at root level:`, content.video_url);
       
       blocks.push({
         type: 'video',
@@ -49,22 +52,22 @@ const parseRichContent = (content: any): RichContentBlock[] => {
         : content.rich_content;
       
       if (richContent?.blocks && Array.isArray(richContent.blocks)) {
-        console.log('Parsing rich_content blocks:', richContent.blocks.length);
-        richContent.blocks.forEach((block: any) => {
+        console.log(`[${renderId}] Parsing rich_content blocks:`, richContent.blocks.length);
+        richContent.blocks.forEach((block: any, index: number) => {
           // Skip if this is a video block and we already added one from video_url
           if (block.type === 'video' && content.video_url) {
-            console.log('Skipping duplicate video block from rich_content');
+            console.log(`[${renderId}] Skipping duplicate video block from rich_content at index ${index}`);
             return;
           }
           
           blocks.push(block);
         });
       } else if (Array.isArray(richContent)) {
-        console.log('Rich content is directly an array');
-        richContent.forEach((block: any) => {
+        console.log(`[${renderId}] Rich content is directly an array`);
+        richContent.forEach((block: any, index: number) => {
           // Skip if this is a video block and we already added one from video_url
           if (block.type === 'video' && content.video_url) {
-            console.log('Skipping duplicate video block from rich_content array');
+            console.log(`[${renderId}] Skipping duplicate video block from rich_content array at index ${index}`);
             return;
           }
           
@@ -75,27 +78,30 @@ const parseRichContent = (content: any): RichContentBlock[] => {
     
     // Fallback: if no blocks were found and no video_url, create a text block from content
     if (blocks.length === 0 && content.content) {
-      console.log('No rich content found, falling back to text content');
+      console.log(`[${renderId}] No rich content found, falling back to text content`);
       blocks.push({ 
         type: 'text', 
         content: content.content 
       });
     }
     
-    console.log('Final parsed blocks:', blocks);
+    console.log(`[${renderId}] Final parsed blocks count:`, blocks.length, 'Types:', blocks.map(b => b.type));
     return blocks;
     
   } catch (error) {
-    console.error('Error parsing rich content:', error);
+    console.error(`[${renderId}] Error parsing rich content:`, error);
     return [{ type: 'text', content: 'Error loading content' }];
   }
 };
 
-export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
+const RichContentRendererComponent: React.FC<RichContentRendererProps> = ({
   content,
   stepId,
   onChecklistComplete
 }) => {
+  const renderId = generateRenderId();
+  console.log(`[${renderId}] RichContentRenderer rendering for step:`, stepId, content?.title);
+  
   const blocks = parseRichContent(content);
 
   const renderBlock = (block: RichContentBlock, index: number) => {
@@ -117,13 +123,13 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
         );
 
       case 'video':
-        console.log('Rendering video block with content:', block.content);
+        console.log(`[${renderId}] Rendering video block ${index} with content:`, block.content);
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            key={index}
+            key={`video-${index}-${renderId}`}
             className="my-4 sm:my-6"
           >
             <div className="flex items-center gap-2 mb-3 sm:mb-4">
@@ -145,9 +151,9 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
                   allowFullScreen
                   loading="lazy"
                   title="Starting your Company Documents"
-                  onLoad={() => console.log('Video iframe loaded successfully')}
+                  onLoad={() => console.log(`[${renderId}] Video iframe loaded successfully`)}
                   onError={(e) => {
-                    console.error('Failed to load video iframe:', block.content, e);
+                    console.error(`[${renderId}] Failed to load video iframe:`, block.content, e);
                   }}
                 />
               ) : (
@@ -168,7 +174,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
       case 'checklist':
         return (
           <ChecklistBlock
-            key={index}
+            key={`checklist-${index}-${renderId}`}
             items={block.items || []}
             stepId={stepId}
             onComplete={onChecklistComplete}
@@ -178,7 +184,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
       case 'alert':
         const AlertIcon = block.variant === 'warning' ? AlertTriangle : Info;
         return (
-          <Alert key={index} variant={block.variant as any || 'default'} className="my-4">
+          <Alert key={`alert-${index}-${renderId}`} variant={block.variant as any || 'default'} className="my-4">
             <AlertIcon className="h-4 w-4" />
             <AlertTitle className="text-sm sm:text-base">{block.title}</AlertTitle>
             <AlertDescription className="text-sm">{block.content}</AlertDescription>
@@ -190,7 +196,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            key={index}
+            key={`tip-${index}-${renderId}`}
             className="bg-blue-50 border-l-4 border-blue-500 p-3 sm:p-4 rounded my-4"
           >
             <p className="flex items-start gap-2 text-sm sm:text-base">
@@ -204,7 +210,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
         return (
           <motion.div
             whileHover={{ scale: 1.02 }}
-            key={index}
+            key={`action-${index}-${renderId}`}
             className="flex justify-center my-4 sm:my-6"
           >
             <Button
@@ -224,7 +230,7 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
         
       default:
         return (
-          <div key={index} className="text-gray-500 italic text-sm">
+          <div key={`unknown-${index}-${renderId}`} className="text-gray-500 italic text-sm">
             Unknown content type: {block.type}
           </div>
         );
@@ -241,6 +247,24 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
     </div>
   );
 };
+
+// Memoize the component to prevent unnecessary re-renders
+export const RichContentRenderer = memo(RichContentRendererComponent, (prevProps, nextProps) => {
+  // Only re-render if the content or stepId changes
+  const contentChanged = JSON.stringify(prevProps.content) !== JSON.stringify(nextProps.content);
+  const stepIdChanged = prevProps.stepId !== nextProps.stepId;
+  
+  if (contentChanged || stepIdChanged) {
+    console.log('RichContentRenderer re-rendering due to prop changes:', {
+      contentChanged,
+      stepIdChanged,
+      stepId: nextProps.stepId
+    });
+    return false; // Re-render
+  }
+  
+  return true; // Skip re-render
+});
 
 // Checklist component
 interface ChecklistBlockProps {
