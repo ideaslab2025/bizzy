@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Pound, Star, Rocket, Clock } from 'lucide-react';
+import { PoundSterling, Star, Rocket, Clock } from 'lucide-react';
 
 interface StatisticItem {
   value: string;
@@ -14,7 +13,7 @@ const StatisticsSection: React.FC = () => {
     {
       value: "£850,000+",
       label: "Total Saved by Businesses",
-      icon: <Pound className="w-8 h-8" />,
+      icon: <PoundSterling className="w-8 h-8" />,
       description: "Money saved through efficient business setup"
     },
     {
