@@ -662,7 +662,7 @@ const EnhancedGuidedHelp = () => {
           <SwipeableStepContent onNext={nextStep} onPrev={prevStep} canGoNext={currentSection < sections.length || currentStep < steps.length} canGoPrev={currentSection > 1 || currentStep > 1} currentStep={currentStep} totalSteps={steps.length || 1}>
             {steps.length === 0 ? stepLoading ? <StepContentSkeleton /> : <div className="max-w-4xl">
                   <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                    {businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup'}
+                    Start Your Company Documents
                   </h2>
                   <Card className="mb-8">
                     <CardContent className="p-4 lg:p-8">
@@ -675,7 +675,7 @@ const EnhancedGuidedHelp = () => {
                   </Card>
                 </div> : currentStepData ? <motion.div key={`${currentSection}-${currentStep}`} className="max-w-4xl">
                 <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                  {currentStepData.title}
+                  {currentStepData.title === "Secure your Company documents" ? "Start Your Company Documents" : currentStepData.title}
                 </h2>
 
                 {/* Video Section */}
