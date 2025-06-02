@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,46 +12,72 @@ interface DemoContainerProps {
   className?: string;
 }
 
-// Simplified animation variants - static design
+// Advanced animation variants for sophisticated transitions
 const containerVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 50 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.4
+      duration: 0.6,
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const tabVariants = {
+  inactive: {
+    scale: 0.95,
+    opacity: 0.7,
+    y: 5,
+    filter: "blur(1px)"
+  },
+  active: {
+    scale: 1,
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 25
     }
   }
 };
 
 const contentVariants = {
   enter: (direction: number) => ({
-    x: direction > 0 ? 200 : -200,
-    opacity: 0
+    x: direction > 0 ? 400 : -400,
+    opacity: 0,
+    scale: 0.9,
+    rotateY: direction > 0 ? 15 : -15,
+    filter: "blur(4px)"
   }),
   center: {
+    zIndex: 1,
     x: 0,
     opacity: 1,
+    scale: 1,
+    rotateY: 0,
+    filter: "blur(0px)",
     transition: {
-      duration: 0.3,
-      ease: "easeOut"
+      type: "spring",
+      stiffness: 300,
+      damping: 30,
+      opacity: { duration: 0.2 }
     }
   },
   exit: (direction: number) => ({
-    x: direction < 0 ? 200 : -200,
+    zIndex: 0,
+    x: direction < 0 ? 400 : -400,
     opacity: 0,
+    scale: 0.9,
+    rotateY: direction < 0 ? 15 : -15,
+    filter: "blur(4px)",
     transition: {
       duration: 0.3
     }
   })
-};
-
-// Static screenshots from actual Bizzy platform
-const demoScreenshots = {
-  guidance: "/lovable-uploads/35ad1d99-4078-450d-ac41-27dce4da642c.png", // Using existing guidance image
-  documents: "/lovable-uploads/90f74494-efee-4fb1-9e17-f1398ff68008.png", // Using existing documents image
-  'ai-chat': "/lovable-uploads/a4589c72-9113-4641-a8bd-1d23e740ac0d.png", // Using existing AI image
-  dashboard: "/lovable-uploads/13ddab9c-cf4d-4451-99b7-a0e7c8d24062.png" // Using existing dashboard image
 };
 
 const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" }) => {
@@ -62,73 +88,39 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
     userProgress: {}
   });
 
-  // Demo tabs configuration with static content
+  // Motion values for advanced interactions
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useTransform(mouseY, [-300, 300], [5, -5]);
+  const rotateY = useTransform(mouseX, [-300, 300], [-5, 5]);
+
+  // Demo tabs configuration
   const demoTabs: DemoTab[] = useMemo(() => [
     {
       id: 'guidance',
       label: 'Step-by-Step Guidance',
       icon: <BookOpen className="w-5 h-5" />,
-      content: {
-        id: 'guidance',
-        title: 'Step-by-Step Business Setup',
-        description: 'Comprehensive guidance for UK business compliance and setup',
-        type: 'guidance',
-        content: {
-          screenshot: demoScreenshots.guidance,
-          features: ['VAT Registration', 'Tax Setup', 'Compliance Tracking', 'Deadline Management']
-        },
-        isLive: true
-      }
+      content: demoData.find(d => d.type === 'guidance') || demoData[0]
     },
     {
       id: 'documents',
       label: 'Document Templates',
       icon: <FileText className="w-5 h-5" />,
-      content: {
-        id: 'documents',
-        title: 'Professional Document Library',
-        description: 'Access hundreds of business documents and legal templates',
-        type: 'documents',
-        content: {
-          screenshot: demoScreenshots.documents,
-          features: ['Employment Contracts', 'Privacy Policies', 'Terms of Service', 'Invoice Templates']
-        },
-        isLive: true
-      }
+      content: demoData.find(d => d.type === 'documents') || demoData[0]
     },
     {
       id: 'ai-chat',
       label: 'AI Assistant',
       icon: <MessageCircle className="w-5 h-5" />,
-      content: {
-        id: 'ai-chat',
-        title: 'Bizzy AI Assistant',
-        description: 'Get instant help with business questions and guidance',
-        type: 'ai-chat',
-        content: {
-          screenshot: demoScreenshots['ai-chat'],
-          features: ['Instant Answers', 'Business Guidance', '24/7 Availability', 'UK Law Expertise']
-        },
-        isLive: true
-      }
+      content: demoData.find(d => d.type === 'ai-chat') || demoData[0]
     },
     {
       id: 'dashboard',
       label: 'Progress Dashboard',
       icon: <BarChart3 className="w-5 h-5" />,
-      content: {
-        id: 'dashboard',
-        title: 'Business Progress Overview',
-        description: 'Track your business setup progress and upcoming deadlines',
-        type: 'dashboard',
-        content: {
-          screenshot: demoScreenshots.dashboard,
-          features: ['Progress Tracking', 'Deadline Alerts', 'Task Management', 'Completion Analytics']
-        },
-        isLive: true
-      }
+      content: demoData.find(d => d.type === 'dashboard') || demoData[0]
     }
-  ], []);
+  ], [demoData]);
 
   const handleTabChange = useCallback((newTabId: string) => {
     const currentIndex = demoTabs.findIndex(tab => tab.id === demoState.activeTab);
@@ -142,6 +134,7 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
       isTransitioning: true
     }));
 
+    // Reset transition state after animation
     setTimeout(() => {
       setDemoState(prev => ({ ...prev, isTransitioning: false }));
     }, 300);
@@ -150,12 +143,27 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
   const activeTab = demoTabs.find(tab => tab.id === demoState.activeTab);
   const activeIndex = demoTabs.findIndex(tab => tab.id === demoState.activeTab);
 
+  const handleMouseMove = (event: React.MouseEvent) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    mouseX.set(event.clientX - centerX);
+    mouseY.set(event.clientY - centerY);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
   return (
     <motion.div
       className={`demo-container ${className}`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Demo Header */}
       <div className="text-center mb-8">
@@ -177,28 +185,35 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
         </motion.p>
       </div>
 
-      {/* Tab Navigation - Always visible, no hover effects */}
+      {/* Tab Navigation */}
       <motion.div 
         className="flex flex-wrap justify-center gap-2 md:gap-4 mb-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
-        {demoTabs.map((tab) => (
-          <Button
+        {demoTabs.map((tab, index) => (
+          <motion.div
             key={tab.id}
-            variant={demoState.activeTab === tab.id ? "default" : "outline"}
-            onClick={() => handleTabChange(tab.id)}
-            className={`flex items-center gap-2 transition-colors duration-200 font-medium ${
-              demoState.activeTab === tab.id 
-                ? 'bg-blue-600 text-white shadow-md border-blue-600' 
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-600'
-            }`}
-            disabled={demoState.isTransitioning}
+            variants={tabVariants}
+            animate={demoState.activeTab === tab.id ? "active" : "inactive"}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {tab.icon}
-            <span className="hidden sm:inline">{tab.label}</span>
-          </Button>
+            <Button
+              variant={demoState.activeTab === tab.id ? "default" : "outline"}
+              onClick={() => handleTabChange(tab.id)}
+              className={`flex items-center gap-2 transition-all duration-300 ${
+                demoState.activeTab === tab.id 
+                  ? 'bg-blue-600 text-white shadow-lg' 
+                  : 'hover:bg-blue-50 hover:border-blue-300'
+              }`}
+              disabled={demoState.isTransitioning}
+            >
+              {tab.icon}
+              <span className="hidden sm:inline">{tab.label}</span>
+            </Button>
+          </motion.div>
         ))}
       </motion.div>
 
@@ -211,7 +226,7 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
             const prevIndex = activeIndex > 0 ? activeIndex - 1 : demoTabs.length - 1;
             handleTabChange(demoTabs[prevIndex].id);
           }}
-          className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+          className="opacity-60 hover:opacity-100 transition-opacity"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
           Previous
@@ -237,73 +252,100 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
             const nextIndex = activeIndex < demoTabs.length - 1 ? activeIndex + 1 : 0;
             handleTabChange(demoTabs[nextIndex].id);
           }}
-          className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+          className="opacity-60 hover:opacity-100 transition-opacity"
         >
           Next
           <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
       </div>
 
-      {/* Demo Content Area - Static Screenshots */}
+      {/* Demo Content Area */}
       <div className="relative h-[600px] md:h-[700px] overflow-hidden">
-        <AnimatePresence mode="wait" custom={demoState.direction}>
-          {activeTab && (
-            <motion.div
-              key={demoState.activeTab}
-              custom={demoState.direction}
-              variants={contentVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              className="absolute inset-0"
-            >
-              <Card className="h-full p-6 md:p-8 bg-white border-2 border-gray-200 shadow-lg">
-                {/* Content Header */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
-                      {activeTab.icon}
+        <motion.div
+          className="demo-viewport h-full"
+          style={{
+            perspective: 1000,
+            rotateX,
+            rotateY
+          }}
+        >
+          <AnimatePresence mode="wait" custom={demoState.direction}>
+            {activeTab && (
+              <motion.div
+                key={demoState.activeTab}
+                custom={demoState.direction}
+                variants={contentVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="absolute inset-0"
+              >
+                <Card className="h-full p-6 md:p-8 bg-white/80 backdrop-blur-sm border-2 border-gray-200 shadow-2xl">
+                  {/* Content Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <motion.div
+                        className="p-3 bg-blue-100 rounded-lg"
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      >
+                        {activeTab.icon}
+                      </motion.div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900">{activeTab.content.title}</h3>
+                        <p className="text-gray-600">{activeTab.content.description}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900">{activeTab.content.title}</h3>
-                      <p className="text-gray-600">{activeTab.content.description}</p>
-                    </div>
+                    {activeTab.content.isLive && (
+                      <Badge className="bg-green-100 text-green-800 border-green-300">
+                        <motion.div
+                          className="w-2 h-2 bg-green-500 rounded-full mr-2"
+                          animate={{ opacity: [0.5, 1, 0.5] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                        Live Content
+                      </Badge>
+                    )}
                   </div>
-                  <Badge className="bg-green-100 text-green-800 border-green-300">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mr-2" />
-                    Live Platform
-                  </Badge>
-                </div>
 
-                {/* Static Screenshot Content */}
-                <div className="h-full pb-16">
-                  <div className="bg-gray-50 rounded-lg h-full p-4 flex flex-col">
-                    {/* Screenshot Display */}
-                    <div className="flex-1 bg-white rounded border p-4 mb-4 flex items-center justify-center">
-                      <img
-                        src={activeTab.content.content.screenshot}
-                        alt={`${activeTab.content.title} Interface`}
-                        className="max-w-full max-h-full object-contain rounded shadow-sm"
-                      />
+                  {/* Placeholder for Demo Content */}
+                  <motion.div
+                    className="h-full bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg flex items-center justify-center"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <div className="text-center">
+                      <motion.div
+                        className="text-6xl mb-4"
+                        animate={{ 
+                          scale: [1, 1.1, 1],
+                          rotate: [0, 5, -5, 0]
+                        }}
+                        transition={{ 
+                          duration: 4, 
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        🚀
+                      </motion.div>
+                      <p className="text-lg text-gray-600">
+                        Interactive {activeTab.label} Demo
+                      </p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Sophisticated demo content coming soon
+                      </p>
                     </div>
-                    
-                    {/* Feature List */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                      {activeTab.content.content.features.map((feature, index) => (
-                        <div key={index} className="bg-blue-50 text-blue-700 px-3 py-2 rounded text-sm font-medium text-center">
-                          {feature}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  </motion.div>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
 
-      {/* Demo Call-to-Action - Removed Reset Demo button */}
+      {/* Demo Controls */}
       <motion.div
         className="mt-6 text-center"
         initial={{ opacity: 0 }}
@@ -311,10 +353,13 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
         transition={{ delay: 0.6 }}
       >
         <p className="text-sm text-gray-500 mb-4">
-          Use navigation to explore different platform features
+          Use navigation or swipe to explore different features
         </p>
         <div className="flex justify-center gap-4">
-          <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button variant="outline" size="sm" className="opacity-75">
+            Reset Demo
+          </Button>
+          <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
             Try Full Platform
           </Button>
         </div>
