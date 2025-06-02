@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, X, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -29,35 +28,60 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import BizzyChat from "@/components/BizzyChat";
+import { useAuth } from "@/hooks/useAuth";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [bizzyOpen, setBizzyOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(false);
   const [hasNotifications] = useState(true);
   const [syncStatus, setSyncStatus] = useState<'typing' | 'uploading' | 'syncing' | 'synced' | 'offline' | 'error'>('synced');
 
-  // Listen for keyboard shortcut to open command palette
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setCommandPaletteOpen(true);
-      }
-    };
-
-    const handleOpenBizzy = () => {
-      setBizzyOpen(true);
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('openBizzy', handleOpenBizzy);
+    console.log("Setting up auth state listener...");
     
+    // Set up auth state listener first
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log('Auth state change:', event, session?.user?.email);
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
+    );
+
+    // Then check for existing session
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error('Error getting session:', error);
+      } else {
+        console.log('Initial session check:', session?.user?.email);
+      }
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('openBizzy', handleOpenBizzy);
+      console.log("Cleaning up auth listener");
+      subscription.unsubscribe();
     };
   }, []);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
 
   return (
     <SidebarProvider>
@@ -181,7 +205,7 @@ const Dashboard = () => {
                     </motion.div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
-                    <DropdownMenuItem className="hover:bg-gray-50">
+                    <DropdownMenuItem onClick={handleProfileClick} className="hover:bg-gray-50">
                       <User className="w-4 h-4 mr-2" />
                       Profile
                     </DropdownMenuItem>
@@ -190,7 +214,7 @@ const Dashboard = () => {
                       Settings
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="hover:bg-gray-50 text-red-600">
+                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-gray-50 text-red-600">
                       <LogOut className="w-4 h-4 mr-2" />
                       Logout
                     </DropdownMenuItem>

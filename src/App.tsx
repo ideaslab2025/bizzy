@@ -13,6 +13,7 @@ import ContentMigration from "./pages/ContentMigration";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import EmailVerification from "./pages/EmailVerification";
+import Profile from "./pages/Profile";
 import Onboarding from "./pages/Onboarding";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
@@ -43,6 +44,11 @@ function App() {
               <Route path="consultations" element={<div className="p-6"><h1 className="text-2xl font-bold">Consultations</h1><p>Coming soon...</p></div>} />
               <Route path="settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Settings</h1><p>Coming soon...</p></div>} />
             </Route>
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
             <Route path="/guided-help" element={<EnhancedGuidedHelp />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/content-migration" element={<ContentMigration />} />
