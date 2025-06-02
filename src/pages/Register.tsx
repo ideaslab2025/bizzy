@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -121,22 +120,21 @@ const Register = () => {
         console.log("User created successfully:", data.user);
         console.log("User metadata sent:", data.user.user_metadata);
         
-        // Check if email confirmation is required
+        // Always redirect to email verification page with professional messaging
+        const userEmail = encodeURIComponent(email.trim().toLowerCase());
+        
         if (!data.user.email_confirmed_at) {
-          toast.success("Account created! Please check your email for a confirmation link before logging in.");
+          // Email confirmation required - show verification page
+          toast.success("Account created successfully! Please check your email for verification.");
+          setTimeout(() => {
+            navigate(`/email-verification?email=${userEmail}`);
+          }, 1500);
         } else {
-          toast.success("Account created successfully! Redirecting to dashboard...");
-          // If email confirmation is disabled, redirect to dashboard
+          // Email confirmation disabled - redirect directly to dashboard  
+          toast.success("Account created successfully! Welcome to Bizzy!");
           setTimeout(() => {
             navigate("/dashboard");
           }, 1500);
-        }
-        
-        // If email confirmation is required, redirect to login page
-        if (!data.user.email_confirmed_at) {
-          setTimeout(() => {
-            navigate("/login");
-          }, 3000);
         }
       } else {
         console.error("No user data returned from registration");

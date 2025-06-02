@@ -12,6 +12,7 @@ import Pricing from "./pages/Pricing";
 import ContentMigration from "./pages/ContentMigration";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import EmailVerification from "./pages/EmailVerification";
 import Onboarding from "./pages/Onboarding";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
@@ -47,6 +48,7 @@ function App() {
             <Route path="/content-migration" element={<ContentMigration />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/email-verification" element={<EmailVerification />} />
             <Route path="/onboarding" element={
               <ProtectedRoute>
                 <Onboarding />
