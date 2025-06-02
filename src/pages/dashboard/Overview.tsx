@@ -2,6 +2,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { PersonalizedDashboard } from "@/components/dashboard/PersonalizedDashboard";
+import { DocumentStatusDashboard } from "@/components/dashboard/DocumentStatusDashboard";
+import { DocumentAnalytics } from "@/components/dashboard/charts/DocumentAnalytics";
 import { PullToRefresh } from "@/components/ui/pull-to-refresh";
 import { NeonGlow } from "@/components/ui/neon-glow";
 import { AnimatedCounter, CurrencyCounter, PercentageCounter } from "@/components/ui/animated-counter";
@@ -95,6 +97,12 @@ const Overview = () => {
             </div>
           </NeonGlow>
         </div>
+
+        {/* Document Analytics Section */}
+        <DocumentAnalytics userId={user.id} />
+
+        {/* Document Status Dashboard */}
+        <DocumentStatusDashboard userId={user.id} />
 
         {/* Main Dashboard */}
         <PersonalizedDashboard
