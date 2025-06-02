@@ -13,27 +13,27 @@ const DemoScrollIndicator: React.FC<DemoScrollIndicatorProps> = ({ className = "
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.5 }}
-      className={`flex flex-col items-center gap-2 ${className}`}
+      className={`flex flex-col items-center gap-3 ${className}`}
     >
-      <span className="text-sm text-blue-300 font-medium">
+      <span className="text-base text-blue-600 font-semibold">
         Interactive Demo Below
       </span>
       <motion.div
-        animate={{ y: [0, 5, 0] }}
+        animate={{ y: [0, 8, 0] }}
         transition={{ 
-          duration: 1.5, 
+          duration: 2, 
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 border border-blue-400/30"
+        className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 border-2 border-blue-300"
       >
-        <ChevronDown className="w-4 h-4 text-blue-400" />
+        <ChevronDown className="w-5 h-5 text-blue-600" />
       </motion.div>
       <motion.div
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ delay: 0.8, duration: 0.6 }}
-        className="w-12 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent"
+        className="w-16 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full"
       />
     </motion.div>
   );
