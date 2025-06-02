@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,9 +12,9 @@ interface DemoContainerProps {
   className?: string;
 }
 
-// Simplified animation variants for static demo
+// Advanced animation variants for sophisticated transitions
 const containerVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 50 },
   visible: {
     opacity: 1,
     y: 0,
@@ -25,37 +25,59 @@ const containerVariants = {
   }
 };
 
+const tabVariants = {
+  inactive: {
+    scale: 0.95,
+    opacity: 0.7,
+    y: 5,
+    filter: "blur(1px)"
+  },
+  active: {
+    scale: 1,
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 25
+    }
+  }
+};
+
 const contentVariants = {
   enter: (direction: number) => ({
-    x: direction > 0 ? 300 : -300,
-    opacity: 0
+    x: direction > 0 ? 400 : -400,
+    opacity: 0,
+    scale: 0.9,
+    rotateY: direction > 0 ? 15 : -15,
+    filter: "blur(4px)"
   }),
   center: {
     zIndex: 1,
     x: 0,
     opacity: 1,
+    scale: 1,
+    rotateY: 0,
+    filter: "blur(0px)",
     transition: {
       type: "spring",
       stiffness: 300,
-      damping: 30
+      damping: 30,
+      opacity: { duration: 0.2 }
     }
   },
   exit: (direction: number) => ({
     zIndex: 0,
-    x: direction < 0 ? 300 : -300,
+    x: direction < 0 ? 400 : -400,
     opacity: 0,
+    scale: 0.9,
+    rotateY: direction < 0 ? 15 : -15,
+    filter: "blur(4px)",
     transition: {
       duration: 0.3
     }
   })
-};
-
-// Static demo screenshots mapping
-const demoScreenshots = {
-  guidance: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=500&fit=crop",
-  documents: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&h=500&fit=crop", 
-  'ai-chat': "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&h=500&fit=crop",
-  dashboard: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop"
 };
 
 const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" }) => {
@@ -66,7 +88,13 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
     userProgress: {}
   });
 
-  // Demo tabs configuration with clear, always-visible styling
+  // Motion values for advanced interactions
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useTransform(mouseY, [-300, 300], [5, -5]);
+  const rotateY = useTransform(mouseX, [-300, 300], [-5, 5]);
+
+  // Demo tabs configuration
   const demoTabs: DemoTab[] = useMemo(() => [
     {
       id: 'guidance',
@@ -106,6 +134,7 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
       isTransitioning: true
     }));
 
+    // Reset transition state after animation
     setTimeout(() => {
       setDemoState(prev => ({ ...prev, isTransitioning: false }));
     }, 300);
@@ -114,17 +143,32 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
   const activeTab = demoTabs.find(tab => tab.id === demoState.activeTab);
   const activeIndex = demoTabs.findIndex(tab => tab.id === demoState.activeTab);
 
+  const handleMouseMove = (event: React.MouseEvent) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    mouseX.set(event.clientX - centerX);
+    mouseY.set(event.clientY - centerY);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
   return (
     <motion.div
       className={`demo-container ${className}`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Demo Header */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-8">
         <motion.h2 
-          className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+          className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -132,43 +176,49 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
           Experience Bizzy Live
         </motion.h2>
         <motion.p 
-          className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
+          className="text-lg text-gray-600 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          Explore our platform with real content and interactive features designed specifically for UK businesses
+          Explore our platform with real content and interactive features
         </motion.p>
       </div>
 
-      {/* Tab Navigation - Always visible, clear buttons */}
+      {/* Tab Navigation */}
       <motion.div 
-        className="flex flex-wrap justify-center gap-3 md:gap-6 mb-12"
+        className="flex flex-wrap justify-center gap-2 md:gap-4 mb-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
-        {demoTabs.map((tab) => (
-          <motion.div key={tab.id}>
+        {demoTabs.map((tab, index) => (
+          <motion.div
+            key={tab.id}
+            variants={tabVariants}
+            animate={demoState.activeTab === tab.id ? "active" : "inactive"}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             <Button
               variant={demoState.activeTab === tab.id ? "default" : "outline"}
               onClick={() => handleTabChange(tab.id)}
-              className={`flex items-center gap-3 px-6 py-4 text-base font-semibold border-2 transition-all duration-200 ${
+              className={`flex items-center gap-2 transition-all duration-300 ${
                 demoState.activeTab === tab.id 
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-lg' 
-                  : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400 hover:text-blue-600'
+                  ? 'bg-blue-600 text-white shadow-lg' 
+                  : 'hover:bg-blue-50 hover:border-blue-300'
               }`}
               disabled={demoState.isTransitioning}
             >
               {tab.icon}
-              <span className="hidden sm:inline font-medium">{tab.label}</span>
+              <span className="hidden sm:inline">{tab.label}</span>
             </Button>
           </motion.div>
         ))}
       </motion.div>
 
       {/* Navigation Arrows */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <Button
           variant="ghost"
           size="sm"
@@ -176,7 +226,7 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
             const prevIndex = activeIndex > 0 ? activeIndex - 1 : demoTabs.length - 1;
             handleTabChange(demoTabs[prevIndex].id);
           }}
-          className="text-gray-600 hover:text-gray-900 font-medium"
+          className="opacity-60 hover:opacity-100 transition-opacity"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
           Previous
@@ -186,7 +236,7 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
           {demoTabs.map((_, index) => (
             <motion.div
               key={index}
-              className={`w-3 h-3 rounded-full transition-colors ${
+              className={`w-2 h-2 rounded-full transition-colors ${
                 index === activeIndex ? 'bg-blue-600' : 'bg-gray-300'
               }`}
               animate={{ scale: index === activeIndex ? 1.2 : 1 }}
@@ -202,94 +252,115 @@ const DemoContainer: React.FC<DemoContainerProps> = ({ demoData, className = "" 
             const nextIndex = activeIndex < demoTabs.length - 1 ? activeIndex + 1 : 0;
             handleTabChange(demoTabs[nextIndex].id);
           }}
-          className="text-gray-600 hover:text-gray-900 font-medium"
+          className="opacity-60 hover:opacity-100 transition-opacity"
         >
           Next
           <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
       </div>
 
-      {/* Demo Content Area with Static Screenshots */}
+      {/* Demo Content Area */}
       <div className="relative h-[600px] md:h-[700px] overflow-hidden">
-        <AnimatePresence mode="wait" custom={demoState.direction}>
-          {activeTab && (
-            <motion.div
-              key={demoState.activeTab}
-              custom={demoState.direction}
-              variants={contentVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              className="absolute inset-0"
-            >
-              <Card className="h-full p-8 bg-white border-2 border-gray-200 shadow-xl">
-                {/* Content Header */}
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center gap-4">
-                    <div className="p-4 bg-blue-100 rounded-xl">
-                      {activeTab.icon}
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-900">{activeTab.content.title}</h3>
-                      <p className="text-gray-600 text-lg">{activeTab.content.description}</p>
-                    </div>
-                  </div>
-                  {activeTab.content.isLive && (
-                    <Badge className="bg-green-100 text-green-800 border-green-300 px-3 py-1">
+        <motion.div
+          className="demo-viewport h-full"
+          style={{
+            perspective: 1000,
+            rotateX,
+            rotateY
+          }}
+        >
+          <AnimatePresence mode="wait" custom={demoState.direction}>
+            {activeTab && (
+              <motion.div
+                key={demoState.activeTab}
+                custom={demoState.direction}
+                variants={contentVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="absolute inset-0"
+              >
+                <Card className="h-full p-6 md:p-8 bg-white/80 backdrop-blur-sm border-2 border-gray-200 shadow-2xl">
+                  {/* Content Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
                       <motion.div
-                        className="w-2 h-2 bg-green-500 rounded-full mr-2"
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      />
-                      Live Content
-                    </Badge>
-                  )}
-                </div>
-
-                {/* Static Screenshot Display */}
-                <div className="h-full pb-16">
-                  <div className="relative h-full bg-gray-50 rounded-lg overflow-hidden border-2 border-gray-200">
-                    <img
-                      src={demoScreenshots[demoState.activeTab as keyof typeof demoScreenshots]}
-                      alt={`${activeTab.label} Screenshot`}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4">
-                        <h4 className="font-semibold text-gray-900 mb-2">
-                          Professional {activeTab.label}
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          High-quality business tools designed specifically for UK entrepreneurs
-                        </p>
+                        className="p-3 bg-blue-100 rounded-lg"
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      >
+                        {activeTab.icon}
+                      </motion.div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900">{activeTab.content.title}</h3>
+                        <p className="text-gray-600">{activeTab.content.description}</p>
                       </div>
                     </div>
+                    {activeTab.content.isLive && (
+                      <Badge className="bg-green-100 text-green-800 border-green-300">
+                        <motion.div
+                          className="w-2 h-2 bg-green-500 rounded-full mr-2"
+                          animate={{ opacity: [0.5, 1, 0.5] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                        Live Content
+                      </Badge>
+                    )}
                   </div>
-                </div>
-              </Card>
-            </motion.div>
-          )}
-        </AnimatePresence>
+
+                  {/* Placeholder for Demo Content */}
+                  <motion.div
+                    className="h-full bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg flex items-center justify-center"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <div className="text-center">
+                      <motion.div
+                        className="text-6xl mb-4"
+                        animate={{ 
+                          scale: [1, 1.1, 1],
+                          rotate: [0, 5, -5, 0]
+                        }}
+                        transition={{ 
+                          duration: 4, 
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        🚀
+                      </motion.div>
+                      <p className="text-lg text-gray-600">
+                        Interactive {activeTab.label} Demo
+                      </p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Sophisticated demo content coming soon
+                      </p>
+                    </div>
+                  </motion.div>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
 
-      {/* Demo Call-to-Action */}
+      {/* Demo Controls */}
       <motion.div
-        className="mt-8 text-center"
+        className="mt-6 text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
       >
-        <p className="text-lg text-gray-600 mb-6">
-          Ready to see the full platform in action?
+        <p className="text-sm text-gray-500 mb-4">
+          Use navigation or swipe to explore different features
         </p>
         <div className="flex justify-center gap-4">
-          <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
-            Start Your Business Today
+          <Button variant="outline" size="sm" className="opacity-75">
+            Reset Demo
           </Button>
-          <Button variant="outline" size="lg" className="border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600 px-8 py-3">
-            Schedule a Demo
+          <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+            Try Full Platform
           </Button>
         </div>
       </motion.div>
