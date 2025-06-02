@@ -1,6 +1,8 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { EnhancedCTAButton } from "@/components/ui/enhanced-cta-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -385,11 +387,19 @@ const Index = () => {
                 <p className="text-xl mb-8 text-blue-100/80 max-w-2xl">All the steps for helping you after company setup, with personalised document templates, step-by-step process guidance and AI assistance</p>
                 <div className="flex flex-wrap gap-4">
                   <Link to="/register">
-                    <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">Start Your Journey</Button>
+                    <EnhancedCTAButton size="lg" variant="primary" showArrow arrowDirection="right">
+                      Start Your Journey
+                    </EnhancedCTAButton>
                   </Link>
-                  <Button size="lg" variant="outline" className="border-[#1d4ed8] text-[#3b82f6] hover:bg-blue-900/50 hover:text-[#60a5fa] hover:border-[#60a5fa]" onClick={() => scrollToSection('features')}>
+                  <EnhancedCTAButton 
+                    size="lg" 
+                    variant="secondary" 
+                    onClick={() => scrollToSection('features')}
+                    showArrow 
+                    arrowDirection="down"
+                  >
                     See How It Works
-                  </Button>
+                  </EnhancedCTAButton>
                 </div>
               </div>
               <div className="relative h-[500px] md:h-[600px] flex items-center justify-center -mt-32 overflow-visible z-20">
@@ -558,10 +568,15 @@ const Index = () => {
 
                   <CardContent className="pt-0">
                     <Link to={`/pricing?plan=${plan.planId}`}>
-                      <Button className={`w-full mb-8 py-6 text-lg font-semibold ${plan.buttonStyle}`}>
+                      <EnhancedCTAButton 
+                        variant="primary" 
+                        size="lg" 
+                        className="w-full mb-8"
+                        showArrow
+                      >
                         <Zap className="w-5 h-5 mr-2" />
                         Get Started
-                      </Button>
+                      </EnhancedCTAButton>
                     </Link>
 
                     <div className="space-y-4">
@@ -588,9 +603,13 @@ const Index = () => {
             <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Helping new business owners get going</h2>
             <p className="text-xl mb-8 text-blue-100/80 max-w-2xl mx-auto">Join thousands of UK startups who are saving time, reducing stress, and ensuring compliance with Bizzy's comprehensive platform.</p>
             <Link to="/register">
-              <Button size="lg" className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/80">
+              <EnhancedCTAButton 
+                size="lg" 
+                variant="primary" 
+                showArrow
+              >
                 Get Started Today
-              </Button>
+              </EnhancedCTAButton>
             </Link>
           </div>
         </section>
