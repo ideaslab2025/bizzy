@@ -544,17 +544,8 @@ const EnhancedGuidedHelp = () => {
           </div>}
 
         {/* Sidebar - Desktop */}
-        <div className={`hidden lg:flex transition-all duration-300 ${sidebarCollapsed ? 'w-16' : 'w-64'}`}>
-          {sidebarCollapsed ? (
-            <div className="bg-[#0088cc] h-full text-white flex flex-col items-center p-2">
-              <Button variant="ghost" size="sm" onClick={() => setSidebarCollapsed(false)} className="text-white hover:bg-white/20 mb-4">
-                <Menu className="h-5 w-5" />
-              </Button>
-              <div className="text-2xl font-bold">{overallProgress}%</div>
-            </div>
-          ) : (
-            sidebarContent
-          )}
+        <div className={`hidden lg:flex transition-all duration-300 ${sidebarCollapsed ? 'w-0' : 'w-64'} overflow-hidden`}>
+          {sidebarContent}
         </div>
 
         {/* Sidebar - Mobile Drawer */}
@@ -567,7 +558,7 @@ const EnhancedGuidedHelp = () => {
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
           {/* Fixed Floating Header - Dashboard Style */}
-          <div className="fixed top-0 right-0 left-0 lg:left-64 bg-white border-b p-3 flex justify-between items-center h-16 shadow-sm z-40 transition-all duration-300">
+          <div className={`fixed top-0 right-0 ${sidebarCollapsed ? 'left-0' : 'left-0 lg:left-64'} bg-white border-b p-3 flex justify-between items-center h-16 shadow-sm z-40 transition-all duration-300`}>
             <div className="flex items-center gap-4">
               {/* Fixed Sidebar Toggle using SidebarTrigger */}
               {!isMobile && (
@@ -598,7 +589,7 @@ const EnhancedGuidedHelp = () => {
               <div className="text-lg font-bold text-gray-900">
                 {currentSection === 1 ? 'Start Your Company Documents' : (businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup')}
               </div>
-              <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
+              <div className="flex items-center justify-center gap-4 text-sm font-medium text-gray-600">
                 <span>Step {currentStep} of {steps.length === 0 ? 1 : steps.length}</span>
                 {currentStepData?.estimated_time_minutes && (
                   <span>• {currentStepData.estimated_time_minutes} min</span>
@@ -722,7 +713,7 @@ const EnhancedGuidedHelp = () => {
           {/* Content with Smart Recommendations - Add padding top for fixed header */}
           <div className="flex-1 p-4 lg:p-6 pb-20 lg:pb-32 pt-20">
             {/* Smart Recommendations Panel */}
-            {user && completedStepIds.length >= 0 && <div className="mb-6">
+            {user && completedStepIds.length >= 0 && <div className="mb-6 mt-4">
                 <React.Suspense fallback={<div className="animate-pulse h-32 bg-gray-200 rounded"></div>}>
                   <SmartRecommendationsPanel userId={user.id} completedStepIds={completedStepIds} currentSectionCategory={currentSectionData?.color_theme || ''} companyAge={companyAge} onNavigateToStep={handleNavigateToStep} />
                 </React.Suspense>
@@ -780,7 +771,8 @@ const EnhancedGuidedHelp = () => {
           </div>
 
           {/* Fixed Floating Bottom Navigation */}
-          <div className={`fixed bottom-0 ${sidebarCollapsed ? 'left-16' : 'left-64'} right-0 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-t border-gray-200 shadow-lg p-3 lg:p-4 flex justify-between items-center z-40 transition-all duration-300`}>
+          <div className={`fixed bottom-0 ${sidebarCollapsed ? 'left-0' : 'left-0 lg:left-64'} right-0 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-t border-gray-200 shadow-lg p-3 lg:p-4 flex justify-between items-center z-40 transition-all duration-300`}>
+            {/* ... keep existing code (bottom navigation buttons) the same ... */}
             <Button variant="outline" onClick={prevStep} disabled={currentSection === 1 && currentStep === 1} size={isMobile ? "sm" : "default"}>
               <ChevronLeft className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
               <span className="text-xs lg:text-sm">Back</span>
