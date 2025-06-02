@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { PoundSterling, Star, Rocket, Clock } from 'lucide-react';
+import { AnimatedCounter } from './ui/AnimatedCounter';
 
 interface StatisticItem {
-  value: string;
+  value: React.ReactNode;
   label: string;
   icon: React.ReactNode;
   description?: string;
@@ -11,25 +13,25 @@ interface StatisticItem {
 const StatisticsSection: React.FC = () => {
   const statistics: StatisticItem[] = [
     {
-      value: "£850,000+",
+      value: <AnimatedCounter end={850000} prefix="£" suffix="+" separator="," duration={2500} />,
       label: "Total Saved by Businesses",
       icon: <PoundSterling className="w-8 h-8" />,
       description: "Money saved through efficient business setup"
     },
     {
-      value: "98.5%",
+      value: <AnimatedCounter end={98.5} suffix="%" decimals={1} duration={2000} />,
       label: "Customer Satisfaction",
       icon: <Star className="w-8 h-8" />,
       description: "Businesses rate us highly for service"
     },
     {
-      value: "1,200+",
+      value: <AnimatedCounter end={1200} suffix="+" separator="," duration={2200} />,
       label: "Companies Launched",
       icon: <Rocket className="w-8 h-8" />,
       description: "Successful business launches with Bizzy"
     },
     {
-      value: "24 hrs",
+      value: <AnimatedCounter end={24} suffix=" hrs" duration={1800} />,
       label: "Average Setup Time",
       icon: <Clock className="w-8 h-8" />,
       description: "Fast, efficient business setup process"
@@ -63,9 +65,14 @@ const StatisticsSection: React.FC = () => {
                 </div>
               </div>
 
-              {/* Value */}
+              {/* Animated Value */}
               <div className="text-center mb-3">
-                <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2">
+                <div 
+                  className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2"
+                  role="region"
+                  aria-live="polite"
+                  aria-label={`Statistic: ${stat.label}`}
+                >
                   {stat.value}
                 </div>
               </div>
