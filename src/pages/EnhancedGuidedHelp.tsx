@@ -777,7 +777,7 @@ const EnhancedGuidedHelp = () => {
           </div>
 
           {/* Fixed Floating Bottom Navigation */}
-          <div className={`fixed bottom-0 ${sidebarCollapsed ? 'left-16' : 'left-64'} right-0 bg-white/95 backdrop-blur-sm border-t shadow-lg p-3 lg:p-4 flex justify-between items-center z-40 transition-all duration-300`}>
+          <div className={`fixed bottom-0 ${sidebarCollapsed ? 'left-16' : 'left-64'} right-0 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-t border-gray-200 shadow-lg p-3 lg:p-4 flex justify-between items-center z-40 transition-all duration-300`}>
             <Button variant="outline" onClick={prevStep} disabled={currentSection === 1 && currentStep === 1} size={isMobile ? "sm" : "default"}>
               <ChevronLeft className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
               <span className="text-xs lg:text-sm">Back</span>
