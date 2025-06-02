@@ -566,8 +566,8 @@ const EnhancedGuidedHelp = () => {
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
-          {/* Main Header - Dashboard Style with Fixed Functionality */}
-          <div className="bg-white border-b p-3 flex justify-between items-center h-16 shadow-sm">
+          {/* Fixed Floating Header - Dashboard Style */}
+          <div className="fixed top-0 right-0 left-0 lg:left-64 bg-white border-b p-3 flex justify-between items-center h-16 shadow-sm z-40 transition-all duration-300">
             <div className="flex items-center gap-4">
               {/* Fixed Sidebar Toggle using SidebarTrigger */}
               {!isMobile && (
@@ -719,8 +719,8 @@ const EnhancedGuidedHelp = () => {
             </div>
           </div>
 
-          {/* Content with Smart Recommendations */}
-          <div className="flex-1 p-4 lg:p-6 pb-20 lg:pb-32">
+          {/* Content with Smart Recommendations - Add padding top for fixed header */}
+          <div className="flex-1 p-4 lg:p-6 pb-20 lg:pb-32 pt-20">
             {/* Smart Recommendations Panel */}
             {user && completedStepIds.length >= 0 && <div className="mb-6">
                 <React.Suspense fallback={<div className="animate-pulse h-32 bg-gray-200 rounded"></div>}>

@@ -44,7 +44,8 @@ const Overview = () => {
 
   return (
     <PullToRefresh onRefresh={handleOverviewRefresh}>
-      <div className="space-y-8">
+      {/* Add padding top to account for fixed header */}
+      <div className="space-y-8 pt-20">
         {/* Welcome Section with First-View Spotlight */}
         <section 
           className="text-center py-8"
