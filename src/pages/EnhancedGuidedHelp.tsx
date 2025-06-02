@@ -42,7 +42,6 @@ import { SmartRecommendationsPanel } from "@/components/guidance/SmartRecommenda
 import { SwipeableStepContent } from "@/components/guidance/SwipeableStepContent";
 import { MilestoneReached } from "@/components/celebrations/MilestoneReached";
 import { AchievementNotification } from "@/components/celebrations/AchievementNotification";
-import { BizzyVideoPlayer } from "@/components/guidance/BizzyVideoPlayer";
 import BizzyChat from "@/components/BizzyChat";
 import type { 
   EnhancedGuidanceSection, 
@@ -886,12 +885,23 @@ const EnhancedGuidedHelp = () => {
                   {currentStepData.title}
                 </h2>
 
-                {/* Video Section - Updated to use BizzyVideoPlayer */}
+                {/* Video Section */}
                 {currentStepData.video_url && (
-                  <BizzyVideoPlayer 
-                    videoUrl={currentStepData.video_url}
-                    title={`${currentStepData.title} Tutorial`}
-                  />
+                  <div className="mb-8">
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-4">
+                          <Button variant="outline" size="lg" className="gap-2">
+                            <Play className="w-5 h-5" />
+                            Watch Video Guide
+                          </Button>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          30-60 second video explanation
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
                 )}
 
                 {/* Enhanced Rich Content */}
