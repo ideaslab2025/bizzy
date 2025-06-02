@@ -3,7 +3,7 @@ import React from 'react';
 import { useDocuments } from '@/hooks/useDocuments';
 import { DashboardCardSkeleton } from '@/components/ui/skeleton-loader';
 import OverallProgressCard from './OverallProgressCard';
-import CategoryProgressCard from './CategoryProgressCard';
+import { CategoryProgressCard } from './CategoryProgressCard';
 import ProgressLegend from './ProgressLegend';
 
 interface ProgressCategory {
