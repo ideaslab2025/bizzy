@@ -23,7 +23,11 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
   isCompleted,
   onClick
 }) => {
-  const progress = section.total_steps > 0 ? (section.completed_steps / section.total_steps) : 0;
+  // Safely calculate progress with fallback values
+  const completedSteps = section.completed_steps || 0;
+  const totalSteps = section.total_steps || 0;
+  const progress = totalSteps > 0 ? (completedSteps / totalSteps) : 0;
+  const estimatedTime = section.estimated_time_minutes || 0;
   
   // Get the matching business section for icon
   const businessSection = businessSections.find(bs => bs.id === section.id);
@@ -114,7 +118,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
             {section.title}
           </h3>
           <p className="text-xs opacity-75 mt-1">
-            {section.completed_steps}/{section.total_steps} steps • {section.estimated_time_minutes || 0} min
+            {completedSteps}/{totalSteps} steps • {estimatedTime} min
           </p>
           {section.deadline_days && !isCompleted && (
             <p className="text-xs text-yellow-300 mt-1 flex items-center gap-1">
