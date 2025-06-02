@@ -24,6 +24,7 @@ import type { EnhancedGuidanceSection, EnhancedGuidanceStep, UserAchievement, St
 import type { UserDocumentProgress } from "@/types/documents";
 import { StepContentSkeleton } from '@/components/ui/skeleton-loader';
 import { businessSections } from '@/data/businessSections';
+
 interface UserProgress {
   section_id: number;
   step_id: number;
@@ -33,6 +34,7 @@ interface UserProgress {
 interface QuickWinStep extends EnhancedGuidanceStep {
   section_title: string;
 }
+
 const EnhancedGuidedHelp = () => {
   const {
     user,
@@ -63,34 +65,6 @@ const EnhancedGuidedHelp = () => {
   // Celebration states
   const [showMilestone, setShowMilestone] = useState<any>(null);
   const [achievementQueue, setAchievementQueue] = useState<any[]>([]);
-  const calculateCompanyAge = async () => {
-    if (!user) return;
-    try {
-      const {
-        data: profile
-      } = await supabase.from('profiles').select('created_at').eq('id', user.id).single();
-      if (profile?.created_at) {
-        const createdDate = new Date(profile.created_at);
-        const now = new Date();
-        const ageInDays = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
-        setCompanyAge(ageInDays);
-      }
-    } catch (error) {
-      console.error('Error calculating company age:', error);
-    }
-  };
-  useEffect(() => {
-    fetchSections();
-    fetchAllSteps();
-    if (user) {
-      fetchProgress();
-      fetchAchievements();
-      fetchQuickWins();
-      fetchTimeSpent();
-      setSessionStartTime(new Date());
-      calculateCompanyAge();
-    }
-  }, [user]);
 
   // Handle URL parameters for navigation
   useEffect(() => {
@@ -109,11 +83,13 @@ const EnhancedGuidedHelp = () => {
       setCurrentStep(stepNumber);
     }
   }, [searchParams]);
+
   useEffect(() => {
     if (currentSection) {
       fetchSteps(currentSection);
     }
   }, [currentSection]);
+
   useEffect(() => {
     if (steps.length > 0 && currentStep && user) {
       const currentStepData = steps.find(step => step.order_number === currentStep);
@@ -123,6 +99,7 @@ const EnhancedGuidedHelp = () => {
       }
     }
   }, [currentStep, steps, user]);
+
   const fetchSections = async () => {
     const {
       data,
@@ -134,6 +111,7 @@ const EnhancedGuidedHelp = () => {
       setSections(data);
     }
   };
+
   const fetchAllSteps = async () => {
     const {
       data,
@@ -149,6 +127,7 @@ const EnhancedGuidedHelp = () => {
       setAllSteps(typedSteps);
     }
   };
+
   const fetchSteps = async (sectionId: number) => {
     const {
       data,
@@ -168,6 +147,7 @@ const EnhancedGuidedHelp = () => {
       setCurrentStep(1);
     }
   };
+
   const fetchProgress = async () => {
     if (!user) return;
     const {
@@ -194,6 +174,7 @@ const EnhancedGuidedHelp = () => {
       setCompletedSteps(new Set(actuallyCompletedStepIds));
     }
   };
+
   const fetchAchievements = async () => {
     if (!user) return;
     const {
@@ -204,6 +185,7 @@ const EnhancedGuidedHelp = () => {
       setAchievements(data);
     }
   };
+
   const fetchQuickWins = async () => {
     if (!user) return;
     const {
@@ -224,6 +206,7 @@ const EnhancedGuidedHelp = () => {
       setQuickWins(quickWinsWithSection);
     }
   };
+
   const fetchTimeSpent = async () => {
     if (!user) return;
     const {
@@ -235,6 +218,7 @@ const EnhancedGuidedHelp = () => {
       setTotalTimeSpent(total);
     }
   };
+
   const saveStepProgress = async (stepId: number, sectionId: number) => {
     if (!user) return;
     const {
@@ -256,6 +240,7 @@ const EnhancedGuidedHelp = () => {
       });
     }
   };
+
   const saveAchievement = async (achievementType: string) => {
     if (!user) return;
     try {
@@ -267,6 +252,7 @@ const EnhancedGuidedHelp = () => {
       console.error('Error saving achievement:', error);
     }
   };
+
   const checkForAchievements = async () => {
     if (!user) return;
 
@@ -323,6 +309,7 @@ const EnhancedGuidedHelp = () => {
       localStorage.removeItem(`bizzy_section_${sectionId}_complete`);
     }
   };
+
   const toggleSectionCompleted = async (sectionId: number) => {
     if (!user) return;
     const isNowCompleted = !completedSections.has(sectionId) && !getSectionCompletionFromStorage(sectionId);
@@ -384,6 +371,7 @@ const EnhancedGuidedHelp = () => {
       setTimeout(() => checkForAchievements(), 500);
     }
   };
+
   const checkAndAutoCompleteSection = async (sectionId: number) => {
     if (!user || completedSections.has(sectionId)) return;
     const {
@@ -406,13 +394,16 @@ const EnhancedGuidedHelp = () => {
       setCompletedSections(prev => new Set([...prev, sectionId]));
     }
   };
+
   const isSectionCompleted = (sectionId: number) => {
     return completedSections.has(sectionId) || getSectionCompletionFromStorage(sectionId);
   };
+
   const isLastStepInSection = () => {
     if (steps.length === 0) return true;
     return currentStep === steps.length;
   };
+
   const nextStep = async () => {
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
@@ -425,6 +416,7 @@ const EnhancedGuidedHelp = () => {
       setCurrentStep(1);
     }
   };
+
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
@@ -434,12 +426,14 @@ const EnhancedGuidedHelp = () => {
       setCurrentStep(prevSectionSteps.length);
     }
   };
+
   const skipSection = () => {
     if (currentSection < sections.length) {
       setCurrentSection(currentSection + 1);
       setCurrentStep(1);
     }
   };
+
   const handleSignOut = async () => {
     try {
       await signOut();
@@ -447,26 +441,32 @@ const EnhancedGuidedHelp = () => {
       console.error('Error signing out:', error);
     }
   };
+
   const navigateToSection = (sectionOrderNumber: number) => {
     navigate(`/guided-help?section=${sectionOrderNumber}`);
   };
+
   const handleSidebarNavigation = (sectionOrderNumber: number) => {
     setCurrentSection(sectionOrderNumber);
     setCurrentStep(1);
   };
+
   const getCurrentStepData = () => {
     return steps.find(step => step.order_number === currentStep);
   };
+
   const getSectionProgress = (sectionId: number) => {
     const sectionSteps = allSteps.filter(step => step.section_id === sectionId);
     const completedSectionSteps = sectionSteps.filter(step => completedSteps.has(step.id));
     return sectionSteps.length > 0 ? completedSectionSteps.length / sectionSteps.length * 100 : 0;
   };
+
   const getOverallProgress = () => {
     const totalSteps = allSteps.length;
     const totalCompletedSteps = completedSteps.size;
     return totalSteps > 0 ? totalCompletedSteps / totalSteps * 100 : 0;
   };
+
   const handleNavigateToStep = (sectionId: number, stepNumber: number) => {
     const section = sections.find(s => s.id === sectionId);
     if (section) {
@@ -474,31 +474,33 @@ const EnhancedGuidedHelp = () => {
       setCurrentStep(stepNumber);
     }
   };
+
   const completedStepIds = Array.from(completedSteps);
   const currentStepData = getCurrentStepData();
   const currentSectionData = sections.find(s => s.order_number === currentSection);
   const sectionProgress = currentSectionData ? getSectionProgress(currentSectionData.id) : 0;
   const overallProgress = Math.round(getOverallProgress());
+
   const sidebarContent = <div className="bg-[#0088cc] h-full text-white flex flex-col">
       {/* Logo */}
       <div className="p-4 bg-white">
         <Link to="/dashboard" className="flex items-center justify-center">
-          <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-48" />
+          <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
         </Link>
       </div>
 
       {/* Progress Overview */}
-      <div className="p-4 bg-white/10 border-b border-white/20">
+      <div className="p-3 bg-white/10 border-b border-white/20">
         <div className="text-center">
-          <div className="text-3xl font-bold">{overallProgress}%</div>
-          <div className="text-sm opacity-80">Overall Progress</div>
+          <div className="text-2xl font-bold">{overallProgress}%</div>
+          <div className="text-xs opacity-80">Overall Progress</div>
         </div>
       </div>
 
       {/* Enhanced Progress Steps */}
-      <div className="flex-1 p-4 pt-2 overflow-y-auto">
-        <h2 className="text-lg font-semibold mb-4">Your Business Setup Journey</h2>
-        <div className="space-y-3">
+      <div className="flex-1 p-3 pt-2 overflow-y-auto">
+        <h2 className="text-base font-semibold mb-3">Your Business Setup Journey</h2>
+        <div className="space-y-2">
           {businessSections.map(section => {
           const isCompleted = isSectionCompleted(section.id);
           const isCurrent = currentSection === section.order_number;
@@ -525,6 +527,7 @@ const EnhancedGuidedHelp = () => {
         </div>
       </div>
     </div>;
+
   return <div className="min-h-screen bg-white flex">
       {/* Mobile Menu Button */}
       {isMobile && <div className="fixed top-4 left-4 z-50">
@@ -533,14 +536,14 @@ const EnhancedGuidedHelp = () => {
           </Button>
         </div>}
 
-      {/* Sidebar - Desktop */}
-      <div className="hidden lg:flex w-80">
+      {/* Sidebar - Desktop - Changed from w-80 to w-64 to match Dashboard */}
+      <div className="hidden lg:flex w-64">
         {sidebarContent}
       </div>
 
-      {/* Sidebar - Mobile Drawer */}
+      {/* Sidebar - Mobile Drawer - Changed width from w-80 to w-64 */}
       <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-        <SheetContent side="left" className="w-80 p-0">
+        <SheetContent side="left" className="w-64 p-0">
           {sidebarContent}
         </SheetContent>
       </Sheet>
@@ -550,8 +553,8 @@ const EnhancedGuidedHelp = () => {
         {/* Enhanced Progress Header */}
         {currentSectionData && <ProgressHeader currentSection={currentSectionData} currentStep={currentStep} totalSteps={steps.length} currentStepData={currentStepData} overallProgress={overallProgress} totalTimeSpent={totalTimeSpent} achievementCount={achievements.length} sectionProgress={sectionProgress} />}
 
-        {/* Top Bar - Mobile responsive with matching dashboard styling */}
-        <div className="bg-[#0088cc] border-b p-4 flex justify-between items-center">
+        {/* Top Bar - Mobile responsive with matching dashboard styling - Reduced padding from p-4 to p-3 */}
+        <div className="bg-[#0088cc] border-b p-3 flex justify-between items-center">
           <div className="flex-1">
             <h1 className="text-xl lg:text-2xl font-bold text-white">
               {currentSection === 1 ? 'Start Your Company Documents' : (businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup')}
@@ -706,8 +709,8 @@ const EnhancedGuidedHelp = () => {
           </SwipeableStepContent>
         </div>
 
-        {/* Fixed Floating Bottom Navigation - Mobile responsive */}
-        <div className="fixed bottom-0 left-0 lg:left-80 right-0 bg-white/95 backdrop-blur-sm border-t shadow-lg p-3 lg:p-6 flex justify-between items-center z-40">
+        {/* Fixed Floating Bottom Navigation - Mobile responsive - Updated left-80 to left-64 */}
+        <div className="fixed bottom-0 left-0 lg:left-64 right-0 bg-white/95 backdrop-blur-sm border-t shadow-lg p-3 lg:p-6 flex justify-between items-center z-40">
           <Button variant="outline" onClick={prevStep} disabled={currentSection === 1 && currentStep === 1} size={isMobile ? "sm" : "default"}>
             <ChevronLeft className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
             <span className="text-xs lg:text-sm">Back</span>
@@ -743,4 +746,5 @@ const EnhancedGuidedHelp = () => {
       <BizzyChat isOpen={bizzyOpen} onClose={() => setBizzyOpen(false)} />
     </div>;
 };
+
 export default EnhancedGuidedHelp;
