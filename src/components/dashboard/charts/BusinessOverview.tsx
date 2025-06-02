@@ -15,7 +15,7 @@ export const BusinessOverview: React.FC<BusinessOverviewProps> = ({ userId }) =>
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Business Setup Overview</CardTitle>
+          <CardTitle className="text-lg font-semibold">Business Setup Overview</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
@@ -60,7 +60,7 @@ export const BusinessOverview: React.FC<BusinessOverviewProps> = ({ userId }) =>
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Business Setup Overview</CardTitle>
+        <CardTitle className="text-lg font-semibold">Business Setup Overview</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
