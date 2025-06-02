@@ -33,7 +33,15 @@ export const useLiveGuidanceContent = () => {
       if (stepsError) throw stepsError;
 
       setSections(sectionsData || []);
-      setSteps(stepsData || []);
+      
+      // Transform steps data to match EnhancedGuidanceStep interface
+      const transformedSteps: EnhancedGuidanceStep[] = (stepsData || []).map(step => ({
+        ...step,
+        difficulty_level: step.difficulty_level as 'easy' | 'medium' | 'complex' | null,
+        step_type: step.step_type as 'action' | 'information' | 'decision' | 'external' | null
+      }));
+      
+      setSteps(transformedSteps);
       setError(null);
     } catch (err) {
       console.error('Error fetching guidance content:', err);
