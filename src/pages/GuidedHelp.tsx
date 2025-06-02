@@ -595,7 +595,7 @@ const GuidedHelp = () => {
             // Show placeholder content when no steps exist
             <div className="max-w-4xl">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">
-                {sections.find(s => s.order_number === currentSection)?.title}
+                Start Your Company Documents
               </h2>
               <Card className="mb-6 sm:mb-8">
                 <CardContent className="p-6 sm:p-8">
@@ -610,7 +610,7 @@ const GuidedHelp = () => {
           ) : currentStepData ? (
             <div className="max-w-4xl">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">
-                {currentStepData.title === "Secure your Company documents" ? "Starting your Company Documents" : currentStepData.title}
+                {currentStepData.title === "Secure your Company documents" ? "Start Your Company Documents" : currentStepData.title}
               </h2>
 
               {/* Rich Content Section - video will be handled automatically by RichContentRenderer */}
