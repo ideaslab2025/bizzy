@@ -73,6 +73,36 @@ const EnhancedGuidedHelp = () => {
   const [showMilestone, setShowMilestone] = useState<any>(null);
   const [achievementQueue, setAchievementQueue] = useState<any[]>([]);
 
+  const calculateCompanyAge = async () => {
+    if (!user) return;
+    try {
+      const {
+        data: profile
+      } = await supabase.from('profiles').select('created_at').eq('id', user.id).single();
+      if (profile?.created_at) {
+        const createdDate = new Date(profile.created_at);
+        const now = new Date();
+        const ageInDays = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+        setCompanyAge(ageInDays);
+      }
+    } catch (error) {
+      console.error('Error calculating company age:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSections();
+    fetchAllSteps();
+    if (user) {
+      fetchProgress();
+      fetchAchievements();
+      fetchQuickWins();
+      fetchTimeSpent();
+      setSessionStartTime(new Date());
+      calculateCompanyAge();
+    }
+  }, [user]);
+
   // Handle URL parameters for navigation
   useEffect(() => {
     const sectionParam = searchParams.get('section');
