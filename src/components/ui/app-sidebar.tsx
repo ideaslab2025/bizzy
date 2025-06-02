@@ -56,8 +56,8 @@ export function AppSidebar() {
     <Sidebar className="border-r-0">
       <SidebarContent className="bg-gradient-to-b from-[#0088cc] to-[#006ba6] text-white">
         <SidebarGroup className="px-4 py-6">
-          {/* Logo Section */}
-          <div className="mb-6 flex items-center justify-center">
+          {/* Logo Section with White Background */}
+          <div className="mb-6 flex items-center justify-center p-4 bg-white rounded-lg">
             <Link to="/dashboard" className="flex items-center justify-center">
               <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
             </Link>

@@ -73,8 +73,8 @@ const Dashboard = () => {
       <div className="min-h-screen flex w-full bg-gray-50">
         <AppSidebar />
         <main className="flex-1 relative">
-          {/* Enhanced Header */}
-          <header className="sticky top-0 z-40 h-16 bg-white backdrop-blur-sm border-b border-gray-200 shadow-sm">
+          {/* Enhanced Header with Fixed White Gradient Background */}
+          <header className="sticky top-0 z-40 h-16 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-b border-gray-200 shadow-sm">
             <div className="h-full px-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <TooltipProvider>
@@ -124,7 +124,7 @@ const Dashboard = () => {
                   onShowHistory={() => console.log('Show sync history')}
                 />
 
-                {/* Dark Mode Toggle - Replace ThemeToggle with Moon icon */}
+                {/* Dark Mode Toggle */}
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

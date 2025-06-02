@@ -20,7 +20,10 @@ import { SwipeableStepContent } from "@/components/guidance/SwipeableStepContent
 import { MilestoneReached } from "@/components/celebrations/MilestoneReached";
 import { AchievementNotification } from "@/components/celebrations/AchievementNotification";
 import { CloudSyncIndicator } from "@/components/ui/cloud-sync-indicator";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import BizzyChat from "@/components/BizzyChat";
+import { useTheme } from "@/hooks/useTheme";
 import type { EnhancedGuidanceSection, EnhancedGuidanceStep, UserAchievement, StepTimeTracking } from "@/types/guidance";
 import type { UserDocumentProgress } from "@/types/documents";
 import { StepContentSkeleton } from '@/components/ui/skeleton-loader';
@@ -59,10 +62,10 @@ const EnhancedGuidedHelp = () => {
   const [totalTimeSpent, setTotalTimeSpent] = useState(0);
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [bizzyOpen, setBizzyOpen] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [companyAge, setCompanyAge] = useState(0);
   const [stepLoading, setStepLoading] = useState(false);
   const [syncStatus, setSyncStatus] = useState<'typing' | 'uploading' | 'syncing' | 'synced' | 'offline' | 'error'>('synced');
+  const { toggleTheme } = useTheme();
 
   // Celebration states
   const [showMilestone, setShowMilestone] = useState<any>(null);
@@ -530,100 +533,136 @@ const EnhancedGuidedHelp = () => {
         </div>
       </div>
     </div>;
-  return <div className="min-h-screen bg-white flex">
-      {/* Mobile Menu Button */}
-      {isMobile && <div className="fixed top-4 left-4 z-50">
-          <Button variant="outline" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="bg-white shadow-md">
-            <Menu className="h-4 w-4" />
-          </Button>
-        </div>}
-
-      {/* Sidebar - Desktop */}
-      <div className={`hidden lg:flex transition-all duration-300 ${sidebarCollapsed ? 'w-16' : 'w-64'}`}>
-        {sidebarCollapsed ? (
-          <div className="bg-[#0088cc] h-full text-white flex flex-col items-center p-2">
-            <Button variant="ghost" size="sm" onClick={() => setSidebarCollapsed(false)} className="text-white hover:bg-white/20 mb-4">
-              <Menu className="h-5 w-5" />
+  return (
+    <SidebarProvider>
+      <div className="min-h-screen bg-white flex w-full">
+        {/* Mobile Menu Button */}
+        {isMobile && <div className="fixed top-4 left-4 z-50">
+            <Button variant="outline" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="bg-white shadow-md">
+              <Menu className="h-4 w-4" />
             </Button>
-            <div className="text-2xl font-bold">{overallProgress}%</div>
-          </div>
-        ) : (
-          sidebarContent
-        )}
-      </div>
+          </div>}
 
-      {/* Sidebar - Mobile Drawer */}
-      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-        <SheetContent side="left" className="w-64 p-0">
-          {sidebarContent}
-        </SheetContent>
-      </Sheet>
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Main Header - Dashboard Style with Consolidated Section Info */}
-        <div className="bg-white border-b p-3 flex justify-between items-center h-16 shadow-sm">
-          <div className="flex items-center gap-4">
-            {/* Sidebar Toggle */}
-            {!isMobile && (
-              <Button variant="ghost" size="sm" onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className="text-gray-700 hover:text-gray-900 hover:bg-gray-100">
+        {/* Sidebar - Desktop */}
+        <div className={`hidden lg:flex transition-all duration-300 ${sidebarCollapsed ? 'w-16' : 'w-64'}`}>
+          {sidebarCollapsed ? (
+            <div className="bg-[#0088cc] h-full text-white flex flex-col items-center p-2">
+              <Button variant="ghost" size="sm" onClick={() => setSidebarCollapsed(false)} className="text-white hover:bg-white/20 mb-4">
                 <Menu className="h-5 w-5" />
               </Button>
-            )}
-            <h1 className="text-xl font-bold text-gray-900">Guided Help</h1>
-          </div>
-          
-          {/* Center Section Info - Consolidated from Secondary Header */}
-          <div className="flex-1 max-w-2xl mx-8 text-center">
-            <div className="text-lg font-bold text-gray-900">
-              {currentSection === 1 ? 'Start Your Company Documents' : (businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup')}
+              <div className="text-2xl font-bold">{overallProgress}%</div>
             </div>
-            <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
-              <span>Step {currentStep} of {steps.length === 0 ? 1 : steps.length}</span>
-              {currentStepData?.estimated_time_minutes && (
-                <span>• {currentStepData.estimated_time_minutes} min</span>
+          ) : (
+            sidebarContent
+          )}
+        </div>
+
+        {/* Sidebar - Mobile Drawer */}
+        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+          <SheetContent side="left" className="w-64 p-0">
+            {sidebarContent}
+          </SheetContent>
+        </Sheet>
+
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Main Header - Dashboard Style with Fixed Functionality */}
+          <div className="bg-white border-b p-3 flex justify-between items-center h-16 shadow-sm">
+            <div className="flex items-center gap-4">
+              {/* Fixed Sidebar Toggle using SidebarTrigger */}
+              {!isMobile && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-gray-100" />
+                      </motion.div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Toggle Sidebar</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
-              {currentSectionData?.deadline_days && (
-                <span>• Due in {currentSectionData.deadline_days} days</span>
-              )}
-              <span>• {overallProgress}% Complete</span>
-              <span>• {Math.floor(totalTimeSpent / 60)} min invested</span>
-              {achievements.length > 0 && (
-                <div className="flex items-center gap-1">
-                  <Trophy className="w-4 h-4" />
-                  <span>{achievements.length}</span>
-                </div>
-              )}
+              <h1 className="text-xl font-bold text-gray-900">Guided Help</h1>
             </div>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            {/* Sync Icon with CloudSyncIndicator */}
-            <CloudSyncIndicator
-              status={syncStatus}
-              lastSaved={new Date(Date.now() - 30000)}
-              onForceSync={() => setSyncStatus('syncing')}
-              onShowHistory={() => console.log('Show sync history')}
-            />
+            
+            {/* Center Section Info - Consolidated from Secondary Header */}
+            <div className="flex-1 max-w-2xl mx-8 text-center">
+              <div className="text-lg font-bold text-gray-900">
+                {currentSection === 1 ? 'Start Your Company Documents' : (businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup')}
+              </div>
+              <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
+                <span>Step {currentStep} of {steps.length === 0 ? 1 : steps.length}</span>
+                {currentStepData?.estimated_time_minutes && (
+                  <span>• {currentStepData.estimated_time_minutes} min</span>
+                )}
+                {currentSectionData?.deadline_days && (
+                  <span>• Due in {currentSectionData.deadline_days} days</span>
+                )}
+                <span>• {overallProgress}% Complete</span>
+                <span>• {Math.floor(totalTimeSpent / 60)} min invested</span>
+                {achievements.length > 0 && (
+                  <div className="flex items-center gap-1">
+                    <Trophy className="w-4 h-4" />
+                    <span>{achievements.length}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              {/* Sync Icon with CloudSyncIndicator */}
+              <CloudSyncIndicator
+                status={syncStatus}
+                lastSaved={new Date(Date.now() - 30000)}
+                onForceSync={() => setSyncStatus('syncing')}
+                onShowHistory={() => console.log('Show sync history')}
+              />
 
-            {/* Dark Mode Toggle */}
-            <Button variant="ghost" size="sm" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200">
-              <Moon className="h-4 w-4" />
-            </Button>
-
-            {/* Notifications */}
-            <div className="relative" onMouseEnter={() => setShowNotifications(true)} onMouseLeave={() => setShowNotifications(false)}>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="ghost" size="sm" className="relative text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200">
-                  <Bell className="w-4 h-4" />
-                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-1 right-1 flex h-3 w-3">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
-                  </motion.span>
+              {/* Fixed Dark Mode Toggle */}
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={toggleTheme}
+                  className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200"
+                >
+                  <Moon className="h-4 w-4" />
                 </Button>
               </motion.div>
 
-              {showNotifications && !isMobile && <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+              {/* Fixed Notifications with Click Functionality */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="relative text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200"
+                    >
+                      <Bell className="w-4 h-4" />
+                      <motion.span
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute top-1 right-1 flex h-3 w-3"
+                      >
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
+                      </motion.span>
+                    </Button>
+                  </motion.div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
                   <div className="p-4 border-b border-gray-100 bg-gray-50">
                     <h3 className="font-semibold text-gray-900">Notifications</h3>
                   </div>
@@ -641,138 +680,140 @@ const EnhancedGuidedHelp = () => {
                       <p className="text-gray-600">Your meeting is scheduled for tomorrow at 2 PM</p>
                     </div>
                   </div>
-                </div>}
-            </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            {/* Account button */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Button variant="ghost" className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 text-gray-700 hover:text-gray-900 hover:bg-gray-100">
-                    <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                      <User className="w-3 h-3 text-white" />
-                    </div>
-                    <span className="font-medium hidden md:inline-block text-sm">Account</span>
-                  </Button>
-                </motion.div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
-                <DropdownMenuItem className="hover:bg-gray-50">
-                  <User className="w-4 h-4 mr-2" />
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 text-red-600">
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Talk to Bizzy Button */}
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setBizzyOpen(true)} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md text-sm">
-              <HelpCircle className="w-4 h-4" />
-              <span>{isMobile ? "Bizzy" : "Talk to Bizzy"}</span>
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Content with Smart Recommendations */}
-        <div className="flex-1 p-4 lg:p-6 pb-20 lg:pb-32">
-          {/* Smart Recommendations Panel */}
-          {user && completedStepIds.length >= 0 && <div className="mb-6">
-              <React.Suspense fallback={<div className="animate-pulse h-32 bg-gray-200 rounded"></div>}>
-                <SmartRecommendationsPanel userId={user.id} completedStepIds={completedStepIds} currentSectionCategory={currentSectionData?.color_theme || ''} companyAge={companyAge} onNavigateToStep={handleNavigateToStep} />
-              </React.Suspense>
-            </div>}
-
-          {/* Quick Wins Panel */}
-          <QuickWinsPanel quickWins={quickWins} onNavigateToStep={handleNavigateToStep} />
-
-          {/* Step Content */}
-          <SwipeableStepContent onNext={nextStep} onPrev={prevStep} canGoNext={currentSection < sections.length || currentStep < steps.length} canGoPrev={currentSection > 1 || currentStep > 1} currentStep={currentStep} totalSteps={steps.length || 1}>
-            {steps.length === 0 ? stepLoading ? <StepContentSkeleton /> : <div className="max-w-4xl">
-                  <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                    Start Your Company Documents
-                  </h2>
-                  <Card className="mb-8">
-                    <CardContent className="p-4 lg:p-8">
-                      <div className="prose max-w-none">
-                        <p className="text-base lg:text-lg text-gray-600">
-                          {businessSections.find(s => s.order_number === currentSection)?.description || 'Content for this section is coming soon. You can still mark this section as complete to track your progress.'}
-                        </p>
+              {/* Account button */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button variant="ghost" className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 text-gray-700 hover:text-gray-900 hover:bg-gray-100">
+                      <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                        <User className="w-3 h-3 text-white" />
                       </div>
+                      <span className="font-medium hidden md:inline-block text-sm">Account</span>
+                    </Button>
+                  </motion.div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
+                  <DropdownMenuItem className="hover:bg-gray-50">
+                    <User className="w-4 h-4 mr-2" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 text-red-600">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Talk to Bizzy Button */}
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setBizzyOpen(true)} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md text-sm">
+                <HelpCircle className="w-4 h-4" />
+                <span>{isMobile ? "Bizzy" : "Talk to Bizzy"}</span>
+              </motion.button>
+            </div>
+          </div>
+
+          {/* Content with Smart Recommendations */}
+          <div className="flex-1 p-4 lg:p-6 pb-20 lg:pb-32">
+            {/* Smart Recommendations Panel */}
+            {user && completedStepIds.length >= 0 && <div className="mb-6">
+                <React.Suspense fallback={<div className="animate-pulse h-32 bg-gray-200 rounded"></div>}>
+                  <SmartRecommendationsPanel userId={user.id} completedStepIds={completedStepIds} currentSectionCategory={currentSectionData?.color_theme || ''} companyAge={companyAge} onNavigateToStep={handleNavigateToStep} />
+                </React.Suspense>
+              </div>}
+
+            {/* Quick Wins Panel */}
+            <QuickWinsPanel quickWins={quickWins} onNavigateToStep={handleNavigateToStep} />
+
+            {/* Step Content */}
+            <SwipeableStepContent onNext={nextStep} onPrev={prevStep} canGoNext={currentSection < sections.length || currentStep < steps.length} canGoPrev={currentSection > 1 || currentStep > 1} currentStep={currentStep} totalSteps={steps.length || 1}>
+              {steps.length === 0 ? stepLoading ? <StepContentSkeleton /> : <div className="max-w-4xl">
+                    <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
+                      Start Your Company Documents
+                    </h2>
+                    <Card className="mb-8">
+                      <CardContent className="p-4 lg:p-8">
+                        <div className="prose max-w-none">
+                          <p className="text-base lg:text-lg text-gray-600">
+                            {businessSections.find(s => s.order_number === currentSection)?.description || 'Content for this section is coming soon. You can still mark this section as complete to track your progress.'}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div> : currentStepData ? <motion.div key={`${currentSection}-${currentStep}`} className="max-w-4xl">
+                  <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
+                    {currentSection === 1 ? "Start Your Company Documents" : currentStepData.title}
+                  </h2>
+
+                  {/* Video Section */}
+                  {currentStepData.video_url && <div className="mb-8">
+                      <Card>
+                        
+                      </Card>
+                    </div>}
+
+                  {/* Enhanced Rich Content */}
+                  <Card className="mb-8">
+                    <CardContent className="p-8">
+                      <RichContentRenderer content={currentStepData} stepId={currentStepData.id} />
+
+                      {/* External Links */}
+                      {currentStepData.external_links && Array.isArray(currentStepData.external_links) && currentStepData.external_links.length > 0 && <div className="mt-6 pt-6 border-t">
+                          <h3 className="font-semibold mb-3">Helpful Resources:</h3>
+                          <div className="space-y-2">
+                            {(currentStepData.external_links as any[]).map((link, index) => <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#0088cc] hover:underline">
+                                <ExternalLink className="w-4 h-4" />
+                                {link.title}
+                              </a>)}
+                          </div>
+                        </div>}
                     </CardContent>
                   </Card>
-                </div> : currentStepData ? <motion.div key={`${currentSection}-${currentStep}`} className="max-w-4xl">
-                <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                  {currentSection === 1 ? "Start Your Company Documents" : currentStepData.title}
-                </h2>
+                </motion.div> : stepLoading ? <StepContentSkeleton /> : null}
+            </SwipeableStepContent>
+          </div>
 
-                {/* Video Section */}
-                {currentStepData.video_url && <div className="mb-8">
-                    <Card>
-                      
-                    </Card>
-                  </div>}
-
-                {/* Enhanced Rich Content */}
-                <Card className="mb-8">
-                  <CardContent className="p-8">
-                    <RichContentRenderer content={currentStepData} stepId={currentStepData.id} />
-
-                    {/* External Links */}
-                    {currentStepData.external_links && Array.isArray(currentStepData.external_links) && currentStepData.external_links.length > 0 && <div className="mt-6 pt-6 border-t">
-                        <h3 className="font-semibold mb-3">Helpful Resources:</h3>
-                        <div className="space-y-2">
-                          {(currentStepData.external_links as any[]).map((link, index) => <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#0088cc] hover:underline">
-                              <ExternalLink className="w-4 h-4" />
-                              {link.title}
-                            </a>)}
-                        </div>
-                      </div>}
-                  </CardContent>
-                </Card>
-              </motion.div> : stepLoading ? <StepContentSkeleton /> : null}
-          </SwipeableStepContent>
-        </div>
-
-        {/* Fixed Floating Bottom Navigation */}
-        <div className={`fixed bottom-0 ${sidebarCollapsed ? 'left-16' : 'left-64'} right-0 bg-white/95 backdrop-blur-sm border-t shadow-lg p-3 lg:p-4 flex justify-between items-center z-40 transition-all duration-300`}>
-          <Button variant="outline" onClick={prevStep} disabled={currentSection === 1 && currentStep === 1} size={isMobile ? "sm" : "default"}>
-            <ChevronLeft className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-            <span className="text-xs lg:text-sm">Back</span>
-          </Button>
-
-          <div className="flex gap-2 lg:gap-3">
-            {isLastStepInSection() && currentSectionData && <>
-                <Button onClick={() => toggleSectionCompleted(currentSectionData.id)} className={isSectionCompleted(currentSectionData.id) ? "bg-gray-400 hover:bg-gray-500 text-white text-xs lg:text-sm px-2 lg:px-4" : "bg-green-600 hover:bg-green-700 text-white text-xs lg:text-sm px-2 lg:px-4"} size={isMobile ? "sm" : "default"}>
-                  <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-                  {isMobile ? isSectionCompleted(currentSectionData.id) ? 'Incomplete' : 'Complete' : isSectionCompleted(currentSectionData.id) ? 'Mark as Incomplete' : 'Mark Section as Complete'}
-                </Button>
-                
-                <Button variant="outline" onClick={skipSection} disabled={currentSection === sections.length} size={isMobile ? "sm" : "default"}>
-                  <SkipForward className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-                  <span className="text-xs lg:text-sm">{isMobile ? 'Skip' : 'Skip Section'}</span>
-                </Button>
-              </>}
-            
-            <Button onClick={nextStep} disabled={currentSection === sections.length && (steps.length === 0 || currentStep === steps.length)} className="bg-[#0088cc] hover:bg-[#0088cc]/90 text-xs lg:text-sm px-2 lg:px-4" size={isMobile ? "sm" : "default"}>
-              <span className="text-xs lg:text-sm">Next</span>
-              <ChevronRight className="w-3 h-3 lg:w-4 lg:h-4 ml-1 lg:ml-2" />
+          {/* Fixed Floating Bottom Navigation */}
+          <div className={`fixed bottom-0 ${sidebarCollapsed ? 'left-16' : 'left-64'} right-0 bg-white/95 backdrop-blur-sm border-t shadow-lg p-3 lg:p-4 flex justify-between items-center z-40 transition-all duration-300`}>
+            <Button variant="outline" onClick={prevStep} disabled={currentSection === 1 && currentStep === 1} size={isMobile ? "sm" : "default"}>
+              <ChevronLeft className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+              <span className="text-xs lg:text-sm">Back</span>
             </Button>
+
+            <div className="flex gap-2 lg:gap-3">
+              {isLastStepInSection() && currentSectionData && <>
+                  <Button onClick={() => toggleSectionCompleted(currentSectionData.id)} className={isSectionCompleted(currentSectionData.id) ? "bg-gray-400 hover:bg-gray-500 text-white text-xs lg:text-sm px-2 lg:px-4" : "bg-green-600 hover:bg-green-700 text-white text-xs lg:text-sm px-2 lg:px-4"} size={isMobile ? "sm" : "default"}>
+                    <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                    {isMobile ? isSectionCompleted(currentSectionData.id) ? 'Incomplete' : 'Complete' : isSectionCompleted(currentSectionData.id) ? 'Mark as Incomplete' : 'Mark Section as Complete'}
+                  </Button>
+                  
+                  <Button variant="outline" onClick={skipSection} disabled={currentSection === sections.length} size={isMobile ? "sm" : "default"}>
+                    <SkipForward className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                    <span className="text-xs lg:text-sm">{isMobile ? 'Skip' : 'Skip Section'}</span>
+                  </Button>
+                </>}
+              
+              <Button onClick={nextStep} disabled={currentSection === sections.length && (steps.length === 0 || currentStep === steps.length)} className="bg-[#0088cc] hover:bg-[#0088cc]/90 text-xs lg:text-sm px-2 lg:px-4" size={isMobile ? "sm" : "default"}>
+                <span className="text-xs lg:text-sm">Next</span>
+                <ChevronRight className="w-3 h-3 lg:w-4 lg:h-4 ml-1 lg:ml-2" />
+              </Button>
+            </div>
           </div>
         </div>
+
+        {/* Celebration Components */}
+        {showMilestone && <MilestoneReached milestone={showMilestone} onClose={() => setShowMilestone(null)} />}
+
+        {achievementQueue.map((achievement, index) => <AchievementNotification key={achievement.id} achievement={achievement} onClose={() => setAchievementQueue(prev => prev.filter((_, i) => i !== index))} />)}
+
+        {/* Bizzy AI Chat */}
+        <BizzyChat isOpen={bizzyOpen} onClose={() => setBizzyOpen(false)} />
       </div>
-
-      {/* Celebration Components */}
-      {showMilestone && <MilestoneReached milestone={showMilestone} onClose={() => setShowMilestone(null)} />}
-
-      {achievementQueue.map((achievement, index) => <AchievementNotification key={achievement.id} achievement={achievement} onClose={() => setAchievementQueue(prev => prev.filter((_, i) => i !== index))} />)}
-
-      {/* Bizzy AI Chat */}
-      <BizzyChat isOpen={bizzyOpen} onClose={() => setBizzyOpen(false)} />
-    </div>;
+    </SidebarProvider>
+  );
 };
 
 export default EnhancedGuidedHelp;
