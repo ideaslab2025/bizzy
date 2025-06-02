@@ -578,7 +578,10 @@ const EnhancedGuidedHelp = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-gray-100" />
+                        <SidebarTrigger 
+                          className="text-gray-700 hover:text-gray-900 hover:bg-gray-100" 
+                          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                        />
                       </motion.div>
                     </TooltipTrigger>
                     <TooltipContent>
