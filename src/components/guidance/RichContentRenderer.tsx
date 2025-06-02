@@ -1,3 +1,4 @@
+
 import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -135,7 +136,7 @@ const RichContentRendererComponent: React.FC<RichContentRendererProps> = ({
             <div className="flex items-center gap-2 mb-3 sm:mb-4">
               <Badge variant="secondary" className="bg-blue-100 text-blue-700 gap-1 text-xs sm:text-sm">
                 <Play className="w-3 h-3" />
-                Video Tutorial
+                Bizzy Video Tutorial
               </Badge>
               <span className="text-xs sm:text-sm text-gray-600">{block.title || 'Starting your Company Documents'}</span>
             </div>
