@@ -1,4 +1,5 @@
 
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -390,6 +391,21 @@ const GuidedHelp = () => {
 
   const currentStepData = getCurrentStepData();
   
+  // Debug logging - moved outside JSX
+  useEffect(() => {
+    if (currentStepData) {
+      console.log('Current step data:', {
+        title: currentStepData.title,
+        hasVideoUrl: !!currentStepData.video_url,
+        videoUrl: currentStepData.video_url,
+        hasRichContent: !!currentStepData.rich_content,
+        richContent: currentStepData.rich_content
+      });
+      console.log('Rendering content for step:', currentStepData.title);
+      console.log('Rich content check:', currentStepData.rich_content || currentStepData.video_url);
+    }
+  }, [currentStepData]);
+  
   // Helper function to safely parse external links
   const getExternalLinks = (links: Json): Array<{ title: string; url: string }> => {
     if (Array.isArray(links)) {
@@ -596,15 +612,6 @@ const GuidedHelp = () => {
             </div>
           ) : currentStepData ? (
             <div className="max-w-4xl">
-              {/* Debug logging */}
-              {console.log('Current step data:', {
-                title: currentStepData.title,
-                hasVideoUrl: !!currentStepData.video_url,
-                videoUrl: currentStepData.video_url,
-                hasRichContent: !!currentStepData.rich_content,
-                richContent: currentStepData.rich_content
-              })}
-              
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">
                 {currentStepData.title === "Secure your Company documents" ? "Starting your Company Documents" : currentStepData.title}
               </h2>
@@ -612,9 +619,6 @@ const GuidedHelp = () => {
               {/* Rich Content Section - video will be handled automatically by RichContentRenderer */}
               <Card className="mb-6 sm:mb-8">
                 <CardContent className="p-6 sm:p-8">
-                  {console.log('Rendering content for step:', currentStepData.title)}
-                  {console.log('Rich content check:', currentStepData.rich_content || currentStepData.video_url)}
-                  
                   {currentStepData.rich_content || currentStepData.video_url ? (
                     <RichContentRenderer 
                       content={currentStepData}
