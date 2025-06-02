@@ -12,7 +12,8 @@ import {
   FileText, 
   CheckCircle, 
   AlertTriangle,
-  Info
+  Info,
+  Play
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { RichContentBlock } from '@/types/guidance';
@@ -83,6 +84,53 @@ export const RichContentRenderer: React.FC<RichContentRendererProps> = ({
               className="text-lg leading-relaxed text-gray-700"
               dangerouslySetInnerHTML={{ __html: block.content || '' }}
             />
+          </motion.div>
+        );
+
+      case 'video':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            key={index}
+            className="mb-8"
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <Badge variant="secondary" className="bg-blue-100 text-blue-700 gap-1">
+                <Play className="w-3 h-3" />
+                Video Tutorial
+              </Badge>
+              {block.title && <span className="text-sm text-gray-600">{block.title}</span>}
+            </div>
+            
+            <div className="relative rounded-lg overflow-hidden shadow-lg bg-gray-100">
+              {block.content && block.content.includes('synthesia.io') ? (
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    src={block.content}
+                    className="absolute top-0 left-0 w-full h-full rounded-lg"
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+                    allowFullScreen
+                    title={block.title || "Business guidance video"}
+                    onError={() => console.error('Video iframe failed to load:', block.content)}
+                  />
+                </div>
+              ) : (
+                <div className="aspect-video">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center p-6">
+                      <Play className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-gray-600">Video not available</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        URL: {block.content ? block.content.substring(0, 50) + '...' : 'No URL provided'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </motion.div>
         );
         

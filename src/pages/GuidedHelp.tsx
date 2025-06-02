@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { VimeoPlayer } from "@/components/guidance/VimeoPlayer";
 import type { Json } from "@/integrations/supabase/types";
+import { RichContentRenderer } from "@/components/guidance/RichContentRenderer";
 
 interface GuidanceSection {
   id: number;
@@ -26,6 +27,7 @@ interface GuidanceStep {
   video_url?: string;
   external_links: Json;
   order_number: number;
+  rich_content?: boolean;
 }
 
 interface UserProgress {
@@ -554,25 +556,32 @@ const GuidedHelp = () => {
                 {currentStepData.title}
               </h2>
 
-              {/* Video Section */}
-              {currentStepData.video_url && (
+              {/* Video Section - only show if no rich_content or rich_content doesn't have video blocks */}
+              {currentStepData.video_url && !currentStepData.rich_content && (
                 <VimeoPlayer 
                   videoUrl={currentStepData.video_url}
                   title={`${currentStepData.title} Tutorial`}
                 />
               )}
 
-              {/* Content */}
+              {/* Rich Content or Regular Content */}
               <Card className="mb-8">
                 <CardContent className="p-8">
-                  <div className="prose max-w-none">
-                    <p className="text-lg leading-relaxed text-gray-700">
-                      {currentStepData.content}
-                    </p>
-                  </div>
+                  {currentStepData.rich_content ? (
+                    <RichContentRenderer 
+                      content={currentStepData}
+                      stepId={currentStepData.id}
+                    />
+                  ) : (
+                    <div className="prose max-w-none">
+                      <p className="text-lg leading-relaxed text-gray-700">
+                        {currentStepData.content}
+                      </p>
+                    </div>
+                  )}
 
-                  {/* External Links */}
-                  {getExternalLinks(currentStepData.external_links).length > 0 && (
+                  {/* External Links - only show if not using rich content */}
+                  {!currentStepData.rich_content && getExternalLinks(currentStepData.external_links).length > 0 && (
                     <div className="mt-6 pt-6 border-t">
                       <h3 className="font-semibold mb-3">Helpful Resources:</h3>
                       <div className="space-y-2">

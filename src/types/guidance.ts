@@ -57,7 +57,7 @@ export interface StepTip {
 }
 
 export interface RichContentBlock {
-  type: 'text' | 'checklist' | 'alert' | 'tip' | 'documents' | 'action_button';
+  type: 'text' | 'checklist' | 'alert' | 'tip' | 'documents' | 'action_button' | 'video';
   content?: string;
   title?: string;
   variant?: string;
