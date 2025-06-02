@@ -11,9 +11,10 @@ interface CategoryData {
 
 interface CategoryProgressCardProps {
   category: CategoryData;
+  onViewDetails?: (categoryId: string) => void;
 }
 
-export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ category }) => {
+export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ category, onViewDetails }) => {
   const percentage = category.totalDocuments > 0 
     ? Math.round((category.completedDocuments / category.totalDocuments) * 100) 
     : 0;
@@ -40,8 +41,17 @@ export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ cate
     return '#EF4444'; // red
   };
 
+  const handleClick = () => {
+    if (onViewDetails) {
+      onViewDetails(category.id);
+    }
+  };
+
   return (
-    <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg border hover:shadow-md transition-shadow">
+    <div 
+      className="flex flex-col items-center p-4 bg-gray-50 rounded-lg border hover:shadow-md transition-shadow cursor-pointer"
+      onClick={handleClick}
+    >
       {/* Circular Progress with Icon */}
       <div className="relative w-24 h-24 mb-3">
         {/* Background Circle */}
