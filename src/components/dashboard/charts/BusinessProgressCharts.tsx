@@ -9,6 +9,7 @@ import ProgressLegend from './ProgressLegend';
 interface ProgressCategory {
   id: string;
   name: string;
+  type: string; // Added the missing type property
   description: string;
   totalDocuments: number;
   completedDocuments: number;
@@ -38,6 +39,7 @@ const BusinessProgressCharts: React.FC<{ userId: string }> = ({ userId }) => {
     {
       id: 'legal',
       name: 'Legal & Compliance',
+      type: 'legal', // Set the type property
       description: 'Company registration and legal documents',
       totalDocuments: documents.filter(doc => 
         doc.category.toLowerCase().includes('legal') || 
@@ -60,6 +62,7 @@ const BusinessProgressCharts: React.FC<{ userId: string }> = ({ userId }) => {
     {
       id: 'finance',
       name: 'Finance & Tax',
+      type: 'finance', // Set the type property
       description: 'Tax registration and financial setup',
       totalDocuments: documents.filter(doc => 
         doc.category.toLowerCase().includes('finance') || 
@@ -84,6 +87,7 @@ const BusinessProgressCharts: React.FC<{ userId: string }> = ({ userId }) => {
     {
       id: 'hr',
       name: 'HR & Employment',
+      type: 'hr', // Set the type property
       description: 'Employment contracts and HR policies',
       totalDocuments: documents.filter(doc => 
         doc.category.toLowerCase().includes('hr') || 
@@ -108,6 +112,7 @@ const BusinessProgressCharts: React.FC<{ userId: string }> = ({ userId }) => {
     {
       id: 'governance',
       name: 'Governance & Admin',
+      type: 'governance', // Set the type property
       description: 'Business governance and administration',
       totalDocuments: documents.filter(doc => 
         doc.category.toLowerCase().includes('governance') || 
