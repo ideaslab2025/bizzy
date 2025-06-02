@@ -137,7 +137,7 @@ const RichContentRendererComponent: React.FC<RichContentRendererProps> = ({
                 <Play className="w-3 h-3" />
                 Bizzy Video Tutorial
               </Badge>
-              <span className="text-xs sm:text-sm text-gray-600">{block.title || 'Start Your Company Documents'}</span>
+              <span className="text-xs sm:text-sm text-gray-600">Start Your Company Documents</span>
             </div>
             
             <div className="relative w-full overflow-hidden rounded-lg bg-gray-100 shadow-lg" 
@@ -150,7 +150,7 @@ const RichContentRendererComponent: React.FC<RichContentRendererProps> = ({
                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
                   allowFullScreen
                   loading="lazy"
-                  title="Starting your Company Documents"
+                  title="Start Your Company Documents"
                   onLoad={() => console.log(`[${renderId}] Video iframe loaded successfully`)}
                   onError={(e) => {
                     console.error(`[${renderId}] Failed to load video iframe:`, block.content, e);

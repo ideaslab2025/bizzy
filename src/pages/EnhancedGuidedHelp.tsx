@@ -554,7 +554,7 @@ const EnhancedGuidedHelp = () => {
         <div className="bg-[#0088cc] border-b p-4 flex justify-between items-center">
           <div className="flex-1">
             <h1 className="text-xl lg:text-2xl font-bold text-white">
-              {businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup'}
+              {currentSection === 1 ? 'Start Your Company Documents' : (businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup')}
             </h1>
             <p className="text-white/90 text-sm lg:text-base">
               Step {currentStep} of {steps.length === 0 ? 1 : steps.length}
@@ -675,7 +675,7 @@ const EnhancedGuidedHelp = () => {
                   </Card>
                 </div> : currentStepData ? <motion.div key={`${currentSection}-${currentStep}`} className="max-w-4xl">
                 <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                  {currentStepData.title === "Secure your Company documents" ? "Start Your Company Documents" : currentStepData.title}
+                  {currentSection === 1 ? "Start Your Company Documents" : currentStepData.title}
                 </h2>
 
                 {/* Video Section */}
