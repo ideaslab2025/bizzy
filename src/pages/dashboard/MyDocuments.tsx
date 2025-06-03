@@ -26,24 +26,27 @@ const MyDocuments = () => {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
       <div className="space-y-6">
-        <div className="px-4 lg:px-0">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="px-0">
+          <div className="flex items-center gap-3 mb-3">
             <FolderOpen className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">My Documents</h1>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base">
+          <p className="text-gray-600 dark:text-gray-400 text-base">
             Upload and manage your personal files securely
           </p>
         </div>
 
-        {/* Upload Section */}
-        <div className="px-4 lg:px-0">
+        {/* Upload Section with better mobile touch targets */}
+        <div className="px-0">
           <Collapsible open={showUpload} onOpenChange={setShowUpload}>
             <CollapsibleTrigger asChild>
-              <Button variant="outline" className="w-full mb-4 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700">
-                <Upload className="w-4 h-4 mr-2" />
+              <Button 
+                variant="outline" 
+                className="w-full mb-4 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 min-h-[52px] text-base py-4"
+              >
+                <Upload className="w-5 h-5 mr-3" />
                 Upload New File
-                <ChevronDown className={`w-4 h-4 ml-2 transition-transform ${showUpload ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-5 h-5 ml-3 transition-transform ${showUpload ? 'rotate-180' : ''}`} />
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="mb-6">
@@ -59,13 +62,13 @@ const MyDocuments = () => {
           </Collapsible>
         </div>
 
-        {/* Files List */}
-        <div className="px-4 lg:px-0">
+        {/* Files List with improved mobile layout */}
+        <div className="px-0">
           <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="text-lg text-gray-900 dark:text-white">Your Files</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 md:p-6">
               <UserFilesList refreshTrigger={refreshTrigger} />
             </CardContent>
           </Card>

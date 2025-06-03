@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, HelpCircle, Moon, RefreshCw, Menu } from "lucide-react";
@@ -72,10 +73,10 @@ const Dashboard = () => {
       <div className="min-h-screen flex w-full bg-gray-50">
         <AppSidebar />
         <main className="flex-1 relative">
-          {/* Enhanced Header with Fixed White Gradient Background */}
-          <header className="sticky top-0 z-40 h-16 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-            <div className="h-full px-6 flex items-center justify-between">
-              <div className="flex items-center gap-4">
+          {/* Enhanced Header with Sticky Navigation and Improved Mobile Touch Targets */}
+          <header className="sticky top-0 z-40 h-16 md:h-16 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+            <div className="h-full px-4 md:px-6 flex items-center justify-between">
+              <div className="flex items-center gap-3 md:gap-4">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -83,7 +84,7 @@ const Dashboard = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200" />
+                        <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200 p-3 min-h-[44px] min-w-[44px] touch-manipulation" />
                       </motion.div>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -91,15 +92,15 @@ const Dashboard = () => {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">
                   Dashboard
                 </h1>
               </div>
               
-              {/* Center Search */}
-              <div className="flex-1 max-w-md mx-8">
+              {/* Center Search - Hidden on small screens to save space */}
+              <div className="hidden md:flex flex-1 max-w-md mx-8">
                 <motion.div 
-                  className="relative"
+                  className="relative w-full"
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -107,14 +108,30 @@ const Dashboard = () => {
                   <input
                     type="text"
                     placeholder="Search documents, guides..."
-                    className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-md"
+                    className="w-full pl-10 pr-4 py-3 h-12 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-md text-base"
                     onClick={() => setCommandPaletteOpen(true)}
                   />
                 </motion.div>
               </div>
 
-              {/* Right Actions */}
-              <div className="flex items-center gap-3">
+              {/* Right Actions with Better Mobile Touch Targets */}
+              <div className="flex items-center gap-2 md:gap-3">
+                {/* Search button for mobile */}
+                <motion.div
+                  className="md:hidden"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => setCommandPaletteOpen(true)}
+                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                  >
+                    <Search className="h-5 w-5" />
+                  </Button>
+                </motion.div>
+
                 {/* Cloud Sync Indicator */}
                 <CloudSyncIndicator
                   status={syncStatus}
@@ -130,15 +147,15 @@ const Dashboard = () => {
                 >
                   <Button 
                     variant="ghost" 
-                    size="sm" 
+                    size="icon"
                     onClick={toggleTheme}
-                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200"
+                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
                   >
-                    <Moon className="h-4 w-4" />
+                    <Moon className="h-5 w-5" />
                   </Button>
                 </motion.div>
                 
-                {/* Enhanced Notifications with proper hover */}
+                {/* Enhanced Notifications with proper hover and mobile touch */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -147,15 +164,15 @@ const Dashboard = () => {
                     >
                       <Button 
                         variant="ghost" 
-                        size="sm" 
-                        className="relative rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 hover:text-gray-900 hover:shadow-md"
+                        size="icon"
+                        className="relative rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 hover:text-gray-900 hover:shadow-md min-h-[44px] min-w-[44px]"
                       >
                         <Bell className="w-5 h-5" />
                         {hasNotifications && (
                           <motion.span
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
-                            className="absolute top-1 right-1 flex h-3 w-3"
+                            className="absolute top-2 right-2 flex h-3 w-3"
                           >
                             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
                             <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
@@ -168,7 +185,7 @@ const Dashboard = () => {
                     <div className="p-4 border-b border-gray-100">
                       <h3 className="font-semibold text-gray-900">Notifications</h3>
                     </div>
-                    <DropdownMenuItem className="p-4 hover:bg-gray-50">
+                    <DropdownMenuItem className="p-4 hover:bg-gray-50 min-h-[60px]">
                       <div>
                         <p className="font-medium text-gray-900">Welcome to Bizzy!</p>
                         <p className="text-sm text-gray-500 mt-1">Complete your profile to get started</p>
@@ -177,7 +194,7 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced User Menu with proper hover */}
+                {/* Enhanced User Menu with better mobile touch targets */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -186,7 +203,7 @@ const Dashboard = () => {
                     >
                       <Button 
                         variant="ghost" 
-                        className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-md text-gray-700 hover:text-gray-900"
+                        className="flex items-center gap-2 rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-md text-gray-700 hover:text-gray-900 min-h-[44px]"
                       >
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                           <User className="w-4 h-4 text-white" />
@@ -197,43 +214,44 @@ const Dashboard = () => {
                     </motion.div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
-                    <DropdownMenuItem onClick={handleProfileClick} className="hover:bg-gray-50">
-                      <User className="w-4 h-4 mr-2" />
+                    <DropdownMenuItem onClick={handleProfileClick} className="hover:bg-gray-50 p-4 min-h-[48px]">
+                      <User className="w-4 h-4 mr-3" />
                       Profile
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="hover:bg-gray-50">
-                      <Settings className="w-4 h-4 mr-2" />
+                    <DropdownMenuItem className="hover:bg-gray-50 p-4 min-h-[48px]">
+                      <Settings className="w-4 h-4 mr-3" />
                       Settings
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 text-red-600 hover:text-red-700">
-                      <LogOut className="w-4 h-4 mr-2" />
+                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 text-red-600 hover:text-red-700 p-4 min-h-[48px]">
+                      <LogOut className="w-4 h-4 mr-3" />
                       Logout
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced Talk to Bizzy Button - Made smaller to match Guided Help */}
+                {/* Enhanced Talk to Bizzy Button with better mobile sizing */}
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setBizzyOpen(true)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow-md"
+                  className="flex items-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 text-sm md:text-sm font-medium shadow-sm hover:shadow-md min-h-[44px] touch-manipulation"
                 >
                   <HelpCircle className="w-4 h-4" />
-                  <span>Talk to Bizzy</span>
+                  <span className="hidden sm:inline">Talk to Bizzy</span>
+                  <span className="sm:hidden">Help</span>
                 </motion.button>
               </div>
             </div>
           </header>
           
-          {/* Main Content */}
-          <div className="p-6 bg-gray-50 min-h-[calc(100vh-4rem)]">
+          {/* Main Content with better mobile padding */}
+          <div className="p-4 md:p-6 bg-gray-50 min-h-[calc(100vh-4rem)]">
             <Outlet />
           </div>
           
-          {/* Enhanced Recently Viewed Sidebar */}
-          <div className="fixed right-4 top-1/2 -translate-y-1/2 z-30">
+          {/* Enhanced Recently Viewed Sidebar - Hidden on mobile for better UX */}
+          <div className="hidden lg:block fixed right-4 top-1/2 -translate-y-1/2 z-30">
             <RecentlyViewed 
               showSearch={true}
               groupByTime={true}
@@ -255,7 +273,7 @@ const Dashboard = () => {
         onClose={() => setBizzyOpen(false)} 
       />
       
-      {/* FAQ Trigger Button */}
+      {/* FAQ Trigger Button - Better mobile positioning */}
       <FAQTrigger onClick={() => setFaqOpen(true)} />
       
       {/* Contextual FAQ */}
