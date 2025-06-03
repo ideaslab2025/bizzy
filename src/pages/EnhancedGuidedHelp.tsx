@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
@@ -581,15 +582,15 @@ const EnhancedGuidedHelp = () => {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>}
-              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Guided Help</h1>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Guided Help</h1>
             </div>
             
             {/* Center Section Info - Consolidated from Secondary Header */}
             <div className="flex-1 max-w-2xl mx-8 text-center">
-              <div className="text-lg font-semibold text-gray-900">
+              <div className="text-base md:text-lg font-semibold text-gray-900">
                 {currentSection === 1 ? 'Start Your Company Documents' : businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup'}
               </div>
-              <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
+              <div className="flex items-center justify-center gap-4 text-xs md:text-sm text-gray-600">
                 <span>Step {currentStep} of {steps.length === 0 ? 1 : steps.length}</span>
                 {currentStepData?.estimated_time_minutes && <span>• {currentStepData.estimated_time_minutes} min</span>}
                 {currentSectionData?.deadline_days && <span>• Due in {currentSectionData.deadline_days} days</span>}
@@ -718,20 +719,20 @@ const EnhancedGuidedHelp = () => {
             <div className="px-4 lg:px-6">
               <SwipeableStepContent onNext={nextStep} onPrev={prevStep} canGoNext={currentSection < sections.length || currentStep < steps.length} canGoPrev={currentSection > 1 || currentStep > 1} currentStep={currentStep} totalSteps={steps.length || 1}>
                 {steps.length === 0 ? stepLoading ? <StepContentSkeleton /> : <div className="max-w-4xl">
-                    <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
+                    <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
                       Start Your Company Documents
                     </h2>
                     <Card className="mb-8">
                       <CardContent className="p-4 lg:p-8">
                         <div className="prose max-w-none">
-                          <p className="text-base lg:text-lg text-gray-600">
+                          <p className="text-base leading-relaxed text-gray-600">
                             {businessSections.find(s => s.order_number === currentSection)?.description || 'Content for this section is coming soon. You can still mark this section as complete to track your progress.'}
                           </p>
                         </div>
                       </CardContent>
                     </Card>
                   </div> : currentStepData ? <motion.div key={`${currentSection}-${currentStep}`} className="max-w-4xl">
-                  <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
+                  <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
                     {currentSection === 1 ? "Start Your Company Documents" : currentStepData.title}
                   </h2>
 
@@ -744,14 +745,14 @@ const EnhancedGuidedHelp = () => {
 
                   {/* Enhanced Rich Content */}
                   <Card className="mb-8">
-                    <CardContent className="p-8">
+                    <CardContent className="p-4 md:p-6 lg:p-8">
                       <RichContentRenderer content={currentStepData} stepId={currentStepData.id} />
 
                       {/* External Links */}
                       {currentStepData.external_links && Array.isArray(currentStepData.external_links) && currentStepData.external_links.length > 0 && <div className="mt-6 pt-6 border-t">
-                          <h3 className="font-semibold mb-3">Helpful Resources:</h3>
+                          <h3 className="text-lg font-semibold mb-3">Helpful Resources:</h3>
                           <div className="space-y-2">
-                            {(currentStepData.external_links as any[]).map((link, index) => <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#0088cc] hover:underline">
+                            {(currentStepData.external_links as any[]).map((link, index) => <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#0088cc] hover:underline text-base">
                                 <ExternalLink className="w-4 h-4" />
                                 {link.title}
                               </a>)}
@@ -766,7 +767,6 @@ const EnhancedGuidedHelp = () => {
 
           {/* Fixed Floating Bottom Navigation */}
           <div className={`fixed bottom-0 ${sidebarCollapsed ? 'left-0' : 'left-0 lg:left-64'} right-0 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-t border-gray-200 shadow-lg p-3 lg:p-4 flex justify-between items-center z-40 transition-all duration-300`}>
-            {/* ... keep existing code (bottom navigation buttons) the same ... */}
             <Button variant="outline" onClick={prevStep} disabled={currentSection === 1 && currentStep === 1} size={isMobile ? "sm" : "default"}>
               <ChevronLeft className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
               <span className="text-xs lg:text-sm">Back</span>

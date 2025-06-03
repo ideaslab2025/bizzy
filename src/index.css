@@ -77,6 +77,34 @@
 
   body {
     @apply bg-background text-foreground transition-colors duration-300;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  /* Typography Hierarchy */
+  h1 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-bold;
+    line-height: 1.2;
+  }
+  
+  h2 {
+    @apply text-xl md:text-2xl lg:text-3xl font-semibold;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    @apply text-lg md:text-xl lg:text-2xl font-semibold;
+    line-height: 1.4;
+  }
+  
+  h4 {
+    @apply text-base md:text-lg font-medium;
+    line-height: 1.4;
+  }
+  
+  p {
+    @apply text-base;
+    line-height: 1.6;
   }
   
   /* Dark mode image adjustments */
@@ -452,6 +480,33 @@
   .dark .glass-navbar {
     background: rgba(17, 25, 40, 0.85);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Text utilities for consistent formatting */
+  .text-body {
+    @apply text-base leading-relaxed;
+  }
+  
+  .text-caption {
+    @apply text-sm leading-normal;
+  }
+  
+  .text-small {
+    @apply text-xs leading-normal;
+  }
+  
+  /* Container utilities for text overflow */
+  .text-container {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  .text-truncate-multiline {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 
