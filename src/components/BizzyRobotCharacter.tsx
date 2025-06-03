@@ -1,10 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePersonalization } from '@/contexts/PersonalizationContext';
-import { RobotCustomization } from '@/components/personalization/RobotCustomization';
+import { MobileRobotCustomization } from '@/components/personalization/MobileRobotCustomization';
 
 type AnimationState = 'idle' | 'celebration' | 'encouraging' | 'speaking';
 
@@ -21,127 +21,152 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
   onClick,
   className
 }) => {
-  const { personalization, incrementClicks } = usePersonalization();
+  const { personalization, incrementClicks, isMobile } = usePersonalization();
   const [currentState, setCurrentState] = useState<AnimationState>(animationState);
   const [isBlinking, setIsBlinking] = useState(false);
   const [showSpeechBubble, setShowSpeechBubble] = useState(true);
   const [showCustomization, setShowCustomization] = useState(false);
+  const [announcementText, setAnnouncementText] = useState('');
 
-  // Get theme colors
-  const getThemeColors = () => {
+  // Memoize theme colors to prevent recalculation
+  const themeColors = useMemo(() => {
     const themes = {
-      blue: { primary: 'from-blue-500 to-blue-600', secondary: 'bg-blue-400', accent: 'bg-blue-300' },
-      green: { primary: 'from-green-500 to-green-600', secondary: 'bg-green-400', accent: 'bg-green-300' },
-      purple: { primary: 'from-purple-500 to-purple-600', secondary: 'bg-purple-400', accent: 'bg-purple-300' },
-      orange: { primary: 'from-orange-500 to-orange-600', secondary: 'bg-orange-400', accent: 'bg-orange-300' }
+      blue: { 
+        primary: personalization.preferences.highContrast ? 'bg-blue-600' : 'from-blue-500 to-blue-600', 
+        secondary: 'bg-blue-400', 
+        accent: 'bg-blue-300' 
+      },
+      green: { 
+        primary: personalization.preferences.highContrast ? 'bg-green-600' : 'from-green-500 to-green-600', 
+        secondary: 'bg-green-400', 
+        accent: 'bg-green-300' 
+      },
+      purple: { 
+        primary: personalization.preferences.highContrast ? 'bg-purple-600' : 'from-purple-500 to-purple-600', 
+        secondary: 'bg-purple-400', 
+        accent: 'bg-purple-300' 
+      },
+      orange: { 
+        primary: personalization.preferences.highContrast ? 'bg-orange-600' : 'from-orange-500 to-orange-600', 
+        secondary: 'bg-orange-400', 
+        accent: 'bg-orange-300' 
+      }
     };
     return themes[personalization.colorTheme];
-  };
-
-  const themeColors = getThemeColors();
+  }, [personalization.colorTheme, personalization.preferences.highContrast]);
 
   // Blink animation effect
   useEffect(() => {
+    if (personalization.preferences.reducedMotion) return;
+
     const blinkInterval = setInterval(() => {
       setIsBlinking(true);
       setTimeout(() => setIsBlinking(false), 150);
     }, 3500);
 
     return () => clearInterval(blinkInterval);
-  }, []);
+  }, [personalization.preferences.reducedMotion]);
 
   // Update animation state when prop changes
   useEffect(() => {
     setCurrentState(animationState);
   }, [animationState]);
 
-  const handleRobotClick = () => {
-    incrementClicks();
-    setCurrentState('celebration');
-    onClick?.();
-    
-    // Return to idle after celebration
-    setTimeout(() => {
-      setCurrentState('idle');
-    }, 2000);
-  };
+  // Screen reader announcements
+  useEffect(() => {
+    if (personalization.accessibility.screenReaderEnabled && message) {
+      setAnnouncementText(message);
+      const timeout = setTimeout(() => setAnnouncementText(''), 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [message, personalization.accessibility.screenReaderEnabled]);
 
-  const getAnimationSpeed = () => {
+  const getAnimationSpeed = useCallback(() => {
     return personalization.preferences.animationSpeed === 'reduced' ? 2 : 1;
-  };
+  }, [personalization.preferences.animationSpeed]);
 
-  const robotVariants = {
+  const robotVariants = useMemo(() => ({
     idle: {
-      scale: [1, 1.02, 1],
-      rotate: [0, -1, 1, 0],
+      scale: personalization.preferences.reducedMotion ? [1] : [1, 1.02, 1],
+      rotate: personalization.preferences.reducedMotion ? [0] : [0, -1, 1, 0],
       transition: {
         scale: {
           duration: 3 * getAnimationSpeed(),
-          repeat: Infinity,
+          repeat: personalization.preferences.reducedMotion ? 0 : Infinity,
           ease: "easeInOut"
         },
         rotate: {
           duration: 4 * getAnimationSpeed(),
-          repeat: Infinity,
+          repeat: personalization.preferences.reducedMotion ? 0 : Infinity,
           ease: "easeInOut"
         }
       }
     },
     celebration: {
-      scale: [1, 1.1, 1],
-      rotate: [0, 5, -5, 0],
-      y: [0, -10, 0],
+      scale: personalization.preferences.reducedMotion ? [1] : [1, 1.1, 1],
+      rotate: personalization.preferences.reducedMotion ? [0] : [0, 5, -5, 0],
+      y: personalization.preferences.reducedMotion ? [0] : [0, -10, 0],
       transition: {
         duration: 0.6 * getAnimationSpeed(),
-        repeat: personalization.preferences.celebrationIntensity === 'full' ? 3 : 1,
+        repeat: personalization.preferences.celebrationIntensity === 'full' && !personalization.preferences.reducedMotion ? 3 : 1,
         ease: "easeInOut"
       }
     },
     encouraging: {
-      scale: 1.05,
-      y: -5,
+      scale: personalization.preferences.reducedMotion ? 1 : 1.05,
+      y: personalization.preferences.reducedMotion ? 0 : -5,
       transition: {
         duration: 0.5 * getAnimationSpeed(),
         ease: "easeOut"
       }
     }
-  };
+  }), [personalization.preferences, getAnimationSpeed]);
 
-  const armVariants = {
-    idle: {
-      rotate: [0, 5, -5, 0],
-      transition: {
-        duration: 2 * getAnimationSpeed(),
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
-    },
-    celebration: {
-      rotate: [-45, -30, -45],
-      y: [-5, 0, -5],
-      transition: {
-        duration: 0.3 * getAnimationSpeed(),
-        repeat: personalization.preferences.celebrationIntensity === 'full' ? 6 : 2,
-        ease: "easeInOut"
-      }
-    },
-    encouraging: {
-      rotate: -30,
-      y: -3,
-      transition: {
-        duration: 0.5 * getAnimationSpeed(),
-        ease: "easeOut"
-      }
+  const handleRobotClick = useCallback(() => {
+    incrementClicks();
+    setCurrentState('celebration');
+    onClick?.();
+    
+    // Return to idle after celebration
+    const timeout = setTimeout(() => {
+      setCurrentState('idle');
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, [incrementClicks, onClick]);
+
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleRobotClick();
     }
-  };
+  }, [handleRobotClick]);
+
+  const robotSize = useMemo(() => {
+    const baseSize = isMobile ? 'w-16 h-16' : 'w-20 h-20';
+    return personalization.accessibility.touchTargetSize === 'large' ? 'w-20 h-20' : baseSize;
+  }, [isMobile, personalization.accessibility.touchTargetSize]);
+
+  const touchTargetSize = personalization.accessibility.touchTargetSize === 'large' ? 'min-h-[52px] min-w-[52px]' : 'min-h-[44px] min-w-[44px]';
+  const textSize = personalization.preferences.textSize === 'large' ? 'text-base' : 'text-sm';
 
   return (
     <div className={cn("relative flex flex-col items-center", className)}>
+      {/* Screen reader announcements */}
+      <div 
+        aria-live="polite" 
+        aria-atomic="true" 
+        className="sr-only"
+      >
+        {announcementText}
+      </div>
+
       {/* Customization Button */}
       <button
         onClick={() => setShowCustomization(true)}
-        className="absolute -top-2 -right-2 z-10 w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
+        className={`absolute -top-2 -right-2 z-10 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${touchTargetSize}`}
         title="Customize your companion"
+        aria-label="Open companion customization settings"
       >
         <Settings className="w-4 h-4 text-gray-600" />
       </button>
@@ -153,10 +178,16 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
             initial={{ opacity: 0, y: 10, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
-            transition={{ duration: 0.3 }}
-            className="relative bg-white dark:bg-gray-800 rounded-2xl px-4 py-3 mb-4 shadow-lg border border-gray-200 dark:border-gray-700 max-w-xs text-center"
+            transition={{ duration: personalization.preferences.reducedMotion ? 0.1 : 0.3 }}
+            className={`relative bg-white dark:bg-gray-800 rounded-2xl px-4 py-3 mb-4 shadow-lg border border-gray-200 dark:border-gray-700 max-w-xs text-center ${
+              personalization.preferences.highContrast ? 'border-2 border-black' : ''
+            }`}
+            role="status"
+            aria-live="polite"
           >
-            <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">
+            <p className={`${textSize} text-gray-700 dark:text-gray-300 font-medium ${
+              personalization.preferences.highContrast ? 'font-bold text-black dark:text-white' : ''
+            }`}>
               {message}
             </p>
             {/* Speech bubble arrow */}
@@ -166,7 +197,8 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
             {/* Close button */}
             <button
               onClick={() => setShowSpeechBubble(false)}
-              className="absolute -top-2 -right-2 w-6 h-6 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+              className={`absolute -top-2 -right-2 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${touchTargetSize}`}
+              aria-label="Close message"
             >
               ×
             </button>
@@ -177,22 +209,29 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
       {/* Robot Character */}
       <motion.div
         variants={robotVariants}
-        animate={personalization.preferences.reducedMotion ? 'idle' : currentState}
+        animate={currentState}
         onClick={handleRobotClick}
-        className="relative cursor-pointer select-none"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        onKeyDown={handleKeyPress}
+        className={`relative cursor-pointer select-none focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 rounded-full ${touchTargetSize}`}
+        whileHover={personalization.preferences.reducedMotion ? {} : { scale: 1.05 }}
+        whileTap={personalization.preferences.reducedMotion ? {} : { scale: 0.95 }}
+        role="button"
+        tabIndex={0}
+        aria-label={`Click ${personalization.robotName} for encouragement`}
       >
         {/* Robot Body */}
         <div className="relative">
           {/* Head */}
-          <div className={`w-20 h-20 bg-gradient-to-br ${themeColors.primary} rounded-2xl relative mx-auto mb-2 shadow-lg`}>
+          <div className={`${robotSize} ${
+            personalization.preferences.highContrast ? themeColors.primary : `bg-gradient-to-br ${themeColors.primary}`
+          } rounded-2xl relative mx-auto mb-2 shadow-lg`}>
             {/* Eyes */}
-            <div className="flex justify-center items-center pt-4 gap-2">
+            <div className="flex justify-center items-center pt-3 gap-2">
               <motion.div
                 animate={isBlinking ? { scaleY: 0.1 } : { scaleY: 1 }}
                 transition={{ duration: 0.1 }}
                 className="w-3 h-3 bg-white rounded-full"
+                aria-hidden="true"
               >
                 <div className="w-2 h-2 bg-blue-900 rounded-full mt-0.5 ml-0.5"></div>
               </motion.div>
@@ -200,6 +239,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
                 animate={isBlinking ? { scaleY: 0.1 } : { scaleY: 1 }}
                 transition={{ duration: 0.1 }}
                 className="w-3 h-3 bg-white rounded-full"
+                aria-hidden="true"
               >
                 <div className="w-2 h-2 bg-blue-900 rounded-full mt-0.5 ml-0.5"></div>
               </motion.div>
@@ -207,49 +247,62 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
             
             {/* Mouth */}
             <motion.div
-              animate={currentState === 'celebration' ? { scaleX: 1.2 } : { scaleX: 1 }}
+              animate={currentState === 'celebration' && !personalization.preferences.reducedMotion ? { scaleX: 1.2 } : { scaleX: 1 }}
               className="w-6 h-2 bg-white rounded-full mx-auto mt-2"
+              aria-hidden="true"
             ></motion.div>
 
             {/* Antenna */}
-            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2" aria-hidden="true">
               <div className={`w-1 h-4 ${themeColors.secondary} rounded-full`}></div>
               <div className="w-2 h-2 bg-yellow-400 rounded-full -mt-1 -ml-0.5"></div>
             </div>
           </div>
 
           {/* Body */}
-          <div className={`w-16 h-20 bg-gradient-to-br ${themeColors.primary} rounded-xl mx-auto relative shadow-lg`}>
+          <div className={`w-14 h-16 ${
+            personalization.preferences.highContrast ? themeColors.primary : `bg-gradient-to-br ${themeColors.primary}`
+          } rounded-xl mx-auto relative shadow-lg`}>
             {/* Chest Panel */}
-            <div className={`w-8 h-8 ${themeColors.accent} rounded-lg mx-auto pt-2 relative`}>
-              <div className={`w-4 h-1 ${themeColors.secondary} rounded-full mx-auto mb-1`}></div>
+            <div className={`w-6 h-6 ${themeColors.accent} rounded-lg mx-auto pt-2 relative`} aria-hidden="true">
               <div className={`w-3 h-1 ${themeColors.secondary} rounded-full mx-auto mb-1`}></div>
+              <div className={`w-2 h-1 ${themeColors.secondary} rounded-full mx-auto mb-1`}></div>
               <div className={`w-2 h-1 ${themeColors.secondary} rounded-full mx-auto`}></div>
             </div>
 
             {/* Arms */}
             <motion.div
-              variants={armVariants}
-              animate={personalization.preferences.reducedMotion ? 'idle' : currentState}
-              className={`absolute -left-4 top-2 w-3 h-8 ${themeColors.secondary} rounded-full origin-top`}
+              animate={currentState === 'celebration' && !personalization.preferences.reducedMotion ? {
+                rotate: [-45, -30, -45],
+                y: [-5, 0, -5],
+                transition: { duration: 0.3, repeat: 3 }
+              } : {}}
+              className={`absolute -left-3 top-2 w-2 h-6 ${themeColors.secondary} rounded-full origin-top`}
+              aria-hidden="true"
             ></motion.div>
             <motion.div
-              variants={armVariants}
-              animate={personalization.preferences.reducedMotion ? 'idle' : currentState}
-              className={`absolute -right-4 top-2 w-3 h-8 ${themeColors.secondary} rounded-full origin-top`}
+              animate={currentState === 'celebration' && !personalization.preferences.reducedMotion ? {
+                rotate: [-45, -30, -45],
+                y: [-5, 0, -5],
+                transition: { duration: 0.3, repeat: 3 }
+              } : {}}
+              className={`absolute -right-3 top-2 w-2 h-6 ${themeColors.secondary} rounded-full origin-top`}
               style={{ scaleX: -1 }}
+              aria-hidden="true"
             ></motion.div>
           </div>
 
           {/* Legs */}
-          <div className="flex justify-center gap-2 mt-1">
-            <div className={`w-3 h-8 ${themeColors.secondary} rounded-full`}></div>
-            <div className={`w-3 h-8 ${themeColors.secondary} rounded-full`}></div>
+          <div className="flex justify-center gap-2 mt-1" aria-hidden="true">
+            <div className={`w-2 h-6 ${themeColors.secondary} rounded-full`}></div>
+            <div className={`w-2 h-6 ${themeColors.secondary} rounded-full`}></div>
           </div>
 
           {/* Celebration Effects */}
           <AnimatePresence>
-            {currentState === 'celebration' && personalization.preferences.celebrationIntensity === 'full' && (
+            {currentState === 'celebration' && 
+             personalization.preferences.celebrationIntensity === 'full' && 
+             !personalization.preferences.reducedMotion && (
               <>
                 {[...Array(6)].map((_, i) => (
                   <motion.div
@@ -273,6 +326,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
                       ease: "easeOut"
                     }}
                     className="absolute top-1/2 left-1/2 w-2 h-2 bg-yellow-400 rounded-full"
+                    aria-hidden="true"
                   />
                 ))}
               </>
@@ -286,13 +340,15 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center max-w-xs"
+        className={`${textSize} text-gray-500 dark:text-gray-400 mt-2 text-center max-w-xs ${
+          personalization.preferences.highContrast ? 'font-semibold text-gray-900 dark:text-gray-100' : ''
+        }`}
       >
         Click {personalization.robotName} for encouragement!
       </motion.p>
 
       {/* Customization Modal */}
-      <RobotCustomization 
+      <MobileRobotCustomization 
         isOpen={showCustomization}
         onClose={() => setShowCustomization(false)}
       />

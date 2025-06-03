@@ -9,6 +9,9 @@ interface PersonalizationData {
     celebrationIntensity: 'full' | 'minimal';
     messageFrequency: 'frequent' | 'occasional';
     reducedMotion: boolean;
+    highContrast: boolean;
+    textSize: 'normal' | 'large';
+    soundEnabled: boolean;
   };
   interaction: {
     totalClicks: number;
@@ -16,6 +19,11 @@ interface PersonalizationData {
     favoriteMessages: string[];
     sessionStartTime: string | null;
     lastVisit: string | null;
+  };
+  accessibility: {
+    screenReaderEnabled: boolean;
+    keyboardNavigation: boolean;
+    touchTargetSize: 'normal' | 'large';
   };
 }
 
@@ -27,6 +35,7 @@ interface PersonalizationContextType {
   isFirstVisit: boolean;
   isReturningUser: boolean;
   sessionDuration: number;
+  isMobile: boolean;
 }
 
 const defaultPersonalization: PersonalizationData = {
@@ -36,7 +45,10 @@ const defaultPersonalization: PersonalizationData = {
     animationSpeed: "normal",
     celebrationIntensity: "full",
     messageFrequency: "frequent",
-    reducedMotion: false
+    reducedMotion: false,
+    highContrast: false,
+    textSize: "normal",
+    soundEnabled: false
   },
   interaction: {
     totalClicks: 0,
@@ -44,6 +56,11 @@ const defaultPersonalization: PersonalizationData = {
     favoriteMessages: [],
     sessionStartTime: new Date().toISOString(),
     lastVisit: null
+  },
+  accessibility: {
+    screenReaderEnabled: false,
+    keyboardNavigation: false,
+    touchTargetSize: "normal"
   }
 };
 
@@ -64,6 +81,41 @@ interface PersonalizationProviderProps {
 export const PersonalizationProvider: React.FC<PersonalizationProviderProps> = ({ children }) => {
   const [personalization, setPersonalization] = useState<PersonalizationData>(defaultPersonalization);
   const [sessionDuration, setSessionDuration] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Detect system accessibility preferences
+  useEffect(() => {
+    const detectAccessibilityPreferences = () => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
+      
+      if (prefersReducedMotion || prefersHighContrast) {
+        setPersonalization(prev => ({
+          ...prev,
+          preferences: {
+            ...prev.preferences,
+            reducedMotion: prefersReducedMotion,
+            highContrast: prefersHighContrast,
+            animationSpeed: prefersReducedMotion ? 'reduced' : prev.preferences.animationSpeed,
+            celebrationIntensity: prefersReducedMotion ? 'minimal' : prev.preferences.celebrationIntensity
+          }
+        }));
+      }
+    };
+
+    detectAccessibilityPreferences();
+  }, []);
 
   useEffect(() => {
     // Load from localStorage on mount
@@ -71,15 +123,23 @@ export const PersonalizationProvider: React.FC<PersonalizationProviderProps> = (
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setPersonalization({
+        // Merge with defaults to ensure new properties exist
+        const merged = {
+          ...defaultPersonalization,
           ...parsed,
+          preferences: { ...defaultPersonalization.preferences, ...parsed.preferences },
+          accessibility: { ...defaultPersonalization.accessibility, ...parsed.accessibility },
           interaction: {
+            ...defaultPersonalization.interaction,
             ...parsed.interaction,
             sessionStartTime: new Date().toISOString()
           }
-        });
+        };
+        setPersonalization(merged);
       } catch (error) {
         console.error('Error loading personalization data:', error);
+        // Reset to defaults if corrupted
+        localStorage.removeItem('bizzy_personalization');
       }
     }
 
@@ -93,7 +153,11 @@ export const PersonalizationProvider: React.FC<PersonalizationProviderProps> = (
 
   useEffect(() => {
     // Save to localStorage whenever personalization changes
-    localStorage.setItem('bizzy_personalization', JSON.stringify(personalization));
+    try {
+      localStorage.setItem('bizzy_personalization', JSON.stringify(personalization));
+    } catch (error) {
+      console.error('Error saving personalization data:', error);
+    }
   }, [personalization]);
 
   const updatePersonalization = (updates: Partial<PersonalizationData>) => {
@@ -101,7 +165,8 @@ export const PersonalizationProvider: React.FC<PersonalizationProviderProps> = (
       ...prev,
       ...updates,
       preferences: { ...prev.preferences, ...updates.preferences },
-      interaction: { ...prev.interaction, ...updates.interaction }
+      interaction: { ...prev.interaction, ...updates.interaction },
+      accessibility: { ...prev.accessibility, ...updates.accessibility }
     }));
   };
 
@@ -138,7 +203,8 @@ export const PersonalizationProvider: React.FC<PersonalizationProviderProps> = (
       updateLastInteraction,
       isFirstVisit,
       isReturningUser,
-      sessionDuration
+      sessionDuration,
+      isMobile
     }}>
       {children}
     </PersonalizationContext.Provider>
