@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePersonalization } from '@/contexts/PersonalizationContext';
 import { MobileRobotCustomization } from '@/components/personalization/MobileRobotCustomization';
+import RobotChatInterface from '@/components/RobotChatInterface';
 
 type AnimationState = 'idle' | 'celebration' | 'encouraging' | 'speaking';
 
@@ -142,6 +142,16 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
     }
   }, [handleRobotClick]);
 
+  const handleChatMessage = useCallback((message: string) => {
+    setCurrentState('speaking');
+    console.log('Bizzy received message:', message);
+    
+    // Return to idle after speaking animation
+    setTimeout(() => {
+      setCurrentState('idle');
+    }, 3000);
+  }, []);
+
   const robotSize = useMemo(() => {
     const baseSize = isMobile ? 'w-16 h-16' : 'w-20 h-20';
     return personalization.accessibility.touchTargetSize === 'large' ? 'w-20 h-20' : baseSize;
@@ -170,6 +180,12 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
       >
         <Settings className="w-4 h-4 text-gray-600" />
       </button>
+
+      {/* Integrated Chat Interface */}
+      <RobotChatInterface 
+        onMessageSent={handleChatMessage}
+        className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20"
+      />
 
       {/* Speech Bubble */}
       <AnimatePresence>
@@ -217,7 +233,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
         whileTap={personalization.preferences.reducedMotion ? {} : { scale: 0.95 }}
         role="button"
         tabIndex={0}
-        aria-label={`Click ${personalization.robotName} for encouragement`}
+        aria-label={`Click ${personalization.robotName} for encouragement or start chatting`}
       >
         {/* Robot Body */}
         <div className="relative">
@@ -245,9 +261,20 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
               </motion.div>
             </div>
             
-            {/* Mouth */}
+            {/* Mouth - Changes based on speaking state */}
             <motion.div
-              animate={currentState === 'celebration' && !personalization.preferences.reducedMotion ? { scaleX: 1.2 } : { scaleX: 1 }}
+              animate={
+                currentState === 'speaking' && !personalization.preferences.reducedMotion
+                  ? { scaleX: [1, 1.3, 1], scaleY: [1, 0.7, 1] }
+                  : currentState === 'celebration' && !personalization.preferences.reducedMotion 
+                  ? { scaleX: 1.2 } 
+                  : { scaleX: 1 }
+              }
+              transition={
+                currentState === 'speaking' 
+                  ? { duration: 0.5, repeat: Infinity } 
+                  : {}
+              }
               className="w-6 h-2 bg-white rounded-full mx-auto mt-2"
               aria-hidden="true"
             ></motion.div>
@@ -344,7 +371,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
           personalization.preferences.highContrast ? 'font-semibold text-gray-900 dark:text-gray-100' : ''
         }`}
       >
-        Click {personalization.robotName} for encouragement!
+        Click {personalization.robotName} to chat or get encouragement!
       </motion.p>
 
       {/* Customization Modal */}

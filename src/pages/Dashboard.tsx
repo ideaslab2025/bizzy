@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Bell, Search, User, ChevronDown, Settings, LogOut, HelpCircle, Moon, RefreshCw, Menu, Bot } from "lucide-react";
+import { Bell, Search, User, ChevronDown, Settings, LogOut, Moon, RefreshCw, Menu, Bot } from "lucide-react";
 import { motion } from "framer-motion";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
@@ -26,7 +25,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import BizzyChat from "@/components/BizzyChat";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { toast } from "@/components/ui/sonner";
@@ -36,7 +34,6 @@ const Dashboard = () => {
   const { signOut } = useAuth();
   const { toggleTheme } = useTheme();
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const [bizzyOpen, setBizzyOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(false);
   const [hasNotifications] = useState(true);
   const [syncStatus, setSyncStatus] = useState<'typing' | 'uploading' | 'syncing' | 'synced' | 'offline' | 'error'>('synced');
@@ -318,7 +315,7 @@ const Dashboard = () => {
                       </motion.div>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Progress Companion</p>
+                      <p>Talk to Bizzy</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -358,18 +355,6 @@ const Dashboard = () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-
-                {/* Enhanced Talk to Bizzy Button with Proper Styling */}
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setBizzyOpen(true)}
-                  className="flex items-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg transition-all duration-200 text-sm md:text-sm font-medium shadow-sm hover:shadow-md min-h-[44px] touch-manipulation"
-                >
-                  <HelpCircle className="w-4 h-4" />
-                  <span className="hidden sm:inline">Talk to Bizzy</span>
-                  <span className="sm:hidden">Help</span>
-                </motion.button>
               </div>
             </div>
           </header>
@@ -396,12 +381,6 @@ const Dashboard = () => {
         onOpenChange={setCommandPaletteOpen}
       />
       
-      {/* Bizzy AI Chat */}
-      <BizzyChat 
-        isOpen={bizzyOpen} 
-        onClose={() => setBizzyOpen(false)} 
-      />
-      
       {/* FAQ Trigger Button - Bottom Right Only with Consistent Styling */}
       <div className="fixed bottom-6 right-6 z-50">
         <FAQTrigger onClick={() => setFaqOpen(true)} />
@@ -412,7 +391,7 @@ const Dashboard = () => {
         isOpen={faqOpen}
         onClose={() => setFaqOpen(false)}
         currentPage={window.location.pathname}
-        onContactSupport={() => setBizzyOpen(true)}
+        onContactSupport={() => console.log('Contact support')}
       />
       
       {/* Global Keyboard Handlers */}
