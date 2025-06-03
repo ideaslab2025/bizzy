@@ -1,80 +1,90 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CategoryProgressCard } from './CategoryProgressCard';
-import { useDocuments } from '@/hooks/useDocuments';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { motion } from 'framer-motion';
+import { 
+  TrendingUp, 
+  Users, 
+  FileText, 
+  CheckCircle,
+  Clock,
+  ArrowRight
+} from 'lucide-react';
 
 interface BusinessOverviewProps {
   userId: string;
 }
 
 export const BusinessOverview: React.FC<BusinessOverviewProps> = ({ userId }) => {
-  const { documents, progress, loading } = useDocuments();
+  // Mock data - in a real app this would come from your API
+  const overviewData = {
+    totalTasks: 45,
+    completedTasks: 32,
+    documentsGenerated: 12,
+    timeSpent: 24 // hours
+  };
 
-  if (loading) {
-    return (
-      <Card>
+  const completionRate = Math.round((overviewData.completedTasks / overviewData.totalTasks) * 100);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
+      <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold">Business Setup Overview</CardTitle>
+          <CardTitle className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-blue-600" />
+            Business Overview
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex flex-col items-center p-4 bg-gray-50 rounded-lg border">
-                <div className="w-24 h-24 bg-gray-200 rounded-full animate-pulse mb-3"></div>
-                <div className="h-4 bg-gray-200 rounded w-16 animate-pulse mb-1"></div>
-                <div className="h-3 bg-gray-200 rounded w-12 animate-pulse"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Total Progress */}
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-3 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-blue-600 dark:text-blue-400" />
               </div>
-            ))}
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{completionRate}%</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Overall Progress</div>
+              <Progress value={completionRate} className="mt-2" />
+            </div>
+
+            {/* Tasks Completed */}
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-3 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {overviewData.completedTasks}/{overviewData.totalTasks}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Tasks Completed</div>
+            </div>
+
+            {/* Documents Generated */}
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-3 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                <FileText className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{overviewData.documentsGenerated}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Documents Generated</div>
+            </div>
+
+            {/* Time Invested */}
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-3 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
+                <Clock className="w-8 h-8 text-orange-600 dark:text-orange-400" />
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{overviewData.timeSpent}h</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Time Invested</div>
+            </div>
           </div>
         </CardContent>
       </Card>
-    );
-  }
-
-  // Calculate completion data by category
-  const completedDocIds = progress.filter(p => p.completed_at).map(p => p.document_id);
-  
-  const categories = ['finance', 'hr', 'legal', 'compliance', 'governance'];
-  const categoryData = categories.map(categoryType => {
-    const categoryDocs = documents.filter(doc => doc.category === categoryType);
-    const completedCategoryDocs = categoryDocs.filter(doc => completedDocIds.includes(doc.id));
-    
-    const categoryNames: Record<string, string> = {
-      'finance': 'Finance & Tax',
-      'hr': 'HR & Employment',
-      'legal': 'Legal Setup',
-      'compliance': 'Compliance',
-      'governance': 'Governance'
-    };
-    
-    return {
-      id: categoryType,
-      name: categoryNames[categoryType] || categoryType,
-      type: categoryType,
-      completedDocuments: completedCategoryDocs.length,
-      totalDocuments: categoryDocs.length
-    };
-  }).filter(cat => cat.totalDocuments > 0);
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold">Business Setup Overview</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {categoryData.map(category => (
-            <CategoryProgressCard key={category.id} category={category} />
-          ))}
-        </div>
-        
-        {categoryData.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            No document categories available
-          </div>
-        )}
-      </CardContent>
-    </Card>
+    </motion.div>
   );
 };
