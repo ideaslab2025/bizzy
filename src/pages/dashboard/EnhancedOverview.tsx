@@ -11,11 +11,15 @@ import { motion } from 'framer-motion';
 import { 
   TrendingUp, Clock, FileText, Calendar, Award, 
   Zap, ArrowRight, CheckCircle, AlertTriangle,
-  Target, PlayCircle, BookOpen, BarChart3
+  Target, PlayCircle, BookOpen, BarChart3,
+  Brain, Timeline, Users
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { businessSections } from '@/data/businessSections';
 import { SimpleDocumentAnalytics } from '@/components/dashboard/charts/SimpleDocumentAnalytics';
+import { BusinessHistoryTimeline } from '@/components/dashboard/charts/BusinessHistoryTimeline';
+import { ProgressPortraits } from '@/components/dashboard/charts/ProgressPortraits';
+import { SuccessPredictionPanel } from '@/components/dashboard/charts/SuccessPredictionPanel';
 
 interface DashboardAnalytics {
   overallProgress: number;
@@ -186,7 +190,6 @@ const EnhancedOverview: React.FC = () => {
     }
   };
 
-  // Extended sections data with icons for the visual journey map
   const navigateToSection = (sectionId: number) => {
     navigate(`/guided-help?section=${sectionId}`);
   };
@@ -232,9 +235,9 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Tab Navigation */}
+      {/* Enhanced Tab Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <Target className="w-4 h-4" />
             Business Overview
@@ -242,6 +245,14 @@ const EnhancedOverview: React.FC = () => {
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
             Document Analytics
+          </TabsTrigger>
+          <TabsTrigger value="timeline" className="flex items-center gap-2">
+            <Timeline className="w-4 h-4" />
+            Business Timeline
+          </TabsTrigger>
+          <TabsTrigger value="ai-insights" className="flex items-center gap-2">
+            <Brain className="w-4 h-4" />
+            AI Insights
           </TabsTrigger>
         </TabsList>
 
@@ -358,6 +369,9 @@ const EnhancedOverview: React.FC = () => {
               color="orange"
             />
           </div>
+
+          {/* Progress Portraits Section */}
+          <ProgressPortraits />
 
           {/* Action Cards Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -518,10 +532,10 @@ const EnhancedOverview: React.FC = () => {
                   <Button
                     variant="outline"
                     className="h-20 flex-col gap-2"
-                    onClick={() => {/* TODO: Navigate to help */}}
+                    onClick={() => setActiveTab('ai-insights')}
                   >
-                    <AlertTriangle className="w-5 h-5" strokeWidth={2} />
-                    <span className="text-sm">Get Help</span>
+                    <Brain className="w-5 h-5" strokeWidth={2} />
+                    <span className="text-sm">AI Insights</span>
                   </Button>
                 </div>
               </CardContent>
@@ -531,6 +545,14 @@ const EnhancedOverview: React.FC = () => {
 
         <TabsContent value="analytics" className="space-y-6">
           <SimpleDocumentAnalytics userId={user.id} />
+        </TabsContent>
+
+        <TabsContent value="timeline" className="space-y-6">
+          <BusinessHistoryTimeline />
+        </TabsContent>
+
+        <TabsContent value="ai-insights" className="space-y-6">
+          <SuccessPredictionPanel />
         </TabsContent>
       </Tabs>
     </div>

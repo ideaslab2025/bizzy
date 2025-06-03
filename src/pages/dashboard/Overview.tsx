@@ -1,10 +1,12 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { PersonalizedDashboard } from "@/components/dashboard/PersonalizedDashboard";
 import { DocumentStatusDashboard } from "@/components/dashboard/DocumentStatusDashboard";
 import { BusinessOverview } from "@/components/dashboard/charts/BusinessOverview";
 import { SimpleDocumentAnalytics } from "@/components/dashboard/charts/SimpleDocumentAnalytics";
+import { BusinessHistoryTimeline } from "@/components/dashboard/charts/BusinessHistoryTimeline";
+import { ProgressPortraits } from "@/components/dashboard/charts/ProgressPortraits";
+import { SuccessPredictionPanel } from "@/components/dashboard/charts/SuccessPredictionPanel";
 import { PullToRefresh } from "@/components/ui/pull-to-refresh";
 import { NeonGlow } from "@/components/ui/neon-glow";
 import { AnimatedCounter, CurrencyCounter, PercentageCounter } from "@/components/ui/animated-counter";
@@ -99,6 +101,15 @@ const Overview = () => {
             </div>
           </NeonGlow>
         </div>
+
+        {/* AI Success Prediction Panel */}
+        <SuccessPredictionPanel />
+
+        {/* Business History Timeline */}
+        <BusinessHistoryTimeline />
+
+        {/* Progress Portraits */}
+        <ProgressPortraits />
 
         {/* Business Overview Section */}
         <BusinessOverview userId={user.id} />
