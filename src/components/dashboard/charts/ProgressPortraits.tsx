@@ -1,276 +1,178 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { motion } from 'framer-motion';
 import { 
-  Receipt, 
-  Users, 
-  Building2, 
-  FileText, 
+  CheckCircle, 
+  Clock, 
   ArrowRight,
-  Clock,
-  CheckCircle,
-  AlertTriangle,
-  Target
+  Rocket,
+  Banknote,
+  Users,
+  Scale,
+  RefreshCw,
+  Shield,
+  Umbrella,
+  TrendingUp,
+  Monitor,
+  ChevronRight
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-interface ComplianceArea {
-  id: string;
-  title: string;
-  description: string;
-  category: 'tax' | 'hr' | 'financial' | 'legal' | 'sector';
-  completionPercentage: number;
-  status: 'complete' | 'in-progress' | 'urgent' | 'not-started';
-  tasks: {
-    completed: number;
-    total: number;
-  };
-  urgentDeadline?: string;
-  estimatedTimeToComplete: string;
-  icon: React.ReactNode;
+interface ProgressPortraitsProps {
+  className?: string;
 }
 
-const mockProgressData: ComplianceArea[] = [
-  {
-    id: '1',
-    title: 'Tax Setup',
-    description: 'Corporation Tax, VAT, and PAYE registration',
-    category: 'tax',
-    completionPercentage: 85,
-    status: 'in-progress',
-    tasks: { completed: 6, total: 7 },
-    urgentDeadline: '15 days',
-    estimatedTimeToComplete: '2 hours',
-    icon: <Receipt className="w-6 h-6" />
-  },
-  {
-    id: '2',
-    title: 'HR Compliance',
-    description: 'Employee policies, insurance, and workplace setup',
-    category: 'hr',
-    completionPercentage: 60,
-    status: 'in-progress',
-    tasks: { completed: 3, total: 5 },
-    estimatedTimeToComplete: '4 hours',
-    icon: <Users className="w-6 h-6" />
-  },
-  {
-    id: '3',
-    title: 'Financial Management',
-    description: 'Banking setup, accounting software, and bookkeeping',
-    category: 'financial',
-    completionPercentage: 95,
-    status: 'in-progress',
-    tasks: { completed: 8, total: 8 },
-    estimatedTimeToComplete: '1 hour',
-    icon: <Building2 className="w-6 h-6" />
-  },
-  {
-    id: '4',
-    title: 'Legal Requirements',
-    description: 'Company registrations, licenses, and compliance',
-    category: 'legal',
-    completionPercentage: 40,
-    status: 'urgent',
-    tasks: { completed: 2, total: 6 },
-    urgentDeadline: '7 days',
-    estimatedTimeToComplete: '6 hours',
-    icon: <FileText className="w-6 h-6" />
-  },
-  {
-    id: '5',
-    title: 'Sector-Specific Requirements',
-    description: 'Industry regulations, licenses, and sector compliance',
-    category: 'sector',
-    completionPercentage: 0,
-    status: 'not-started',
-    tasks: { completed: 0, total: 5 },
-    estimatedTimeToComplete: '8 hours',
-    icon: <Target className="w-6 h-6" />
-  }
-];
-
-const CircularProgress: React.FC<{ percentage: number; size: number; status: ComplianceArea['status'] }> = ({ 
-  percentage, 
-  size, 
-  status 
-}) => {
-  const radius = (size - 8) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const strokeDasharray = circumference;
-  const strokeDashoffset = circumference - (percentage / 100) * circumference;
-
-  const getProgressColor = () => {
-    switch (status) {
-      case 'complete':
-        return '#10b981'; // green
-      case 'in-progress':
-        return '#3b82f6'; // blue
-      case 'urgent':
-        return '#ef4444'; // red
-      case 'not-started':
-        return '#6b7280'; // gray
-      default:
-        return '#6b7280';
-    }
+export const ProgressPortraits: React.FC<ProgressPortraitsProps> = ({ className }) => {
+  // Mock progress data - in a real app this would come from your state management
+  const progressData = {
+    1: 0, // Launch Essentials
+    2: 0, // Financial Setup
+    3: 0, // Employment & HR
+    4: 0, // Legal & Compliance
+    5: 0, // Ongoing Operations
+    6: 0, // Data Protection & GDPR
+    7: 0, // Insurance & Risk Management
+    8: 0, // Business Growth & Scaling
+    9: 0, // Technology & Systems
+    10: 0 // Sector-Specific Requirements
   };
+
+  const complianceCategories = [
+    {
+      id: 1,
+      title: "Launch Essentials",
+      icon: Rocket,
+      progress: progressData[1] || 0,
+      iconColor: "text-blue-600",
+      bgColor: "bg-blue-50"
+    },
+    {
+      id: 2,
+      title: "Financial Setup", 
+      icon: Banknote,
+      progress: progressData[2] || 0,
+      iconColor: "text-green-600",
+      bgColor: "bg-green-50"
+    },
+    {
+      id: 3,
+      title: "Employment & HR",
+      icon: Users, 
+      progress: progressData[3] || 0,
+      iconColor: "text-orange-600",
+      bgColor: "bg-orange-50"
+    },
+    {
+      id: 4,
+      title: "Legal & Compliance",
+      icon: Scale,
+      progress: progressData[4] || 0,
+      iconColor: "text-red-600", 
+      bgColor: "bg-red-50"
+    },
+    {
+      id: 5,
+      title: "Ongoing Operations",
+      icon: RefreshCw,
+      progress: progressData[5] || 0,
+      iconColor: "text-purple-600",
+      bgColor: "bg-purple-50"
+    },
+    {
+      id: 6,
+      title: "Data Protection & GDPR",
+      icon: Shield,
+      progress: progressData[6] || 0,
+      iconColor: "text-indigo-600",
+      bgColor: "bg-indigo-50"
+    },
+    {
+      id: 7,
+      title: "Insurance & Risk Management",
+      icon: Umbrella,
+      progress: progressData[7] || 0,
+      iconColor: "text-amber-600",
+      bgColor: "bg-amber-50"
+    },
+    {
+      id: 8,
+      title: "Business Growth & Scaling",
+      icon: TrendingUp,
+      progress: progressData[8] || 0,
+      iconColor: "text-emerald-600",
+      bgColor: "bg-emerald-50"
+    },
+    {
+      id: 9,
+      title: "Technology & Systems",
+      icon: Monitor,
+      progress: progressData[9] || 0,
+      iconColor: "text-sky-600",
+      bgColor: "bg-sky-50"
+    },
+    {
+      id: 10,
+      title: "Sector-Specific Requirements",
+      icon: Monitor,
+      progress: progressData[10] || 0,
+      iconColor: "text-rose-600",
+      bgColor: "bg-rose-50"
+    }
+  ];
 
   return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg
-        width={size}
-        height={size}
-        className="transform -rotate-90"
-      >
-        {/* Background circle */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke="#e5e7eb"
-          strokeWidth="4"
-          fill="transparent"
-        />
-        {/* Progress circle */}
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke={getProgressColor()}
-          strokeWidth="4"
-          fill="transparent"
-          strokeDasharray={strokeDasharray}
-          strokeDashoffset={strokeDashoffset}
-          strokeLinecap="round"
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset }}
-          transition={{ duration: 1, ease: "easeInOut" }}
-        />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-lg font-bold text-gray-900">{percentage}%</span>
-      </div>
-    </div>
-  );
-};
-
-export const ProgressPortraits: React.FC = () => {
-  const getStatusBadge = (status: ComplianceArea['status']) => {
-    switch (status) {
-      case 'complete':
-        return <Badge className="bg-green-100 text-green-800 border-green-200">Complete</Badge>;
-      case 'in-progress':
-        return <Badge className="bg-blue-100 text-blue-800 border-blue-200">In Progress</Badge>;
-      case 'urgent':
-        return <Badge className="bg-red-100 text-red-800 border-red-200">Urgent</Badge>;
-      case 'not-started':
-        return <Badge className="bg-gray-100 text-gray-800 border-gray-200">Not Started</Badge>;
-      default:
-        return <Badge variant="secondary">Unknown</Badge>;
-    }
-  };
-
-  const getStatusIcon = (status: ComplianceArea['status']) => {
-    switch (status) {
-      case 'complete':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'in-progress':
-        return <Clock className="w-4 h-4 text-blue-500" />;
-      case 'urgent':
-        return <AlertTriangle className="w-4 h-4 text-red-500" />;
-      case 'not-started':
-        return <Clock className="w-4 h-4 text-gray-500" />;
-      default:
-        return <Clock className="w-4 h-4 text-gray-500" />;
-    }
-  };
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-xl">
-          <Users className="w-5 h-5" />
-          Compliance Progress Overview
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {mockProgressData.map((area, index) => (
-            <motion.div
-              key={area.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="p-6 rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                    {area.icon}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={cn("space-y-6", className)}
+    >
+      <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            Compliance Progress Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {complianceCategories.slice(0, 9).map((category, index) => {
+              const IconComponent = category.icon;
+              return (
+                <motion.div
+                  key={category.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex flex-col items-center p-4 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-200"
+                >
+                  <div className={cn(
+                    "w-12 h-12 rounded-full flex items-center justify-center mb-3",
+                    category.bgColor
+                  )}>
+                    <IconComponent className={cn("w-6 h-6", category.iconColor)} strokeWidth={2} />
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 text-base">{area.title}</h3>
-                    <p className="text-sm text-gray-600">{area.description}</p>
+                  <h4 className="text-sm font-medium text-center text-gray-900 dark:text-gray-100 mb-2 leading-tight">
+                    {category.title}
+                  </h4>
+                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 mb-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-500" 
+                      style={{ width: `${category.progress}%` }}
+                    ></div>
                   </div>
-                </div>
-                {getStatusBadge(area.status)}
-              </div>
-
-              {/* Enhanced Progress Bar Section with Better Visibility */}
-              <div className="mb-6 space-y-3 bg-gray-50 p-4 rounded-lg border">
-                <div className="flex justify-between text-sm font-medium">
-                  <span className="text-gray-700">Progress</span>
-                  <span className="text-gray-900 font-semibold">{area.completionPercentage}%</span>
-                </div>
-                <div className="relative">
-                  <Progress 
-                    value={area.completionPercentage} 
-                    className="h-4 bg-gray-300 border border-gray-400"
-                  />
-                  {/* Add a visible border around the progress bar for better definition */}
-                  <div className="absolute inset-0 rounded-full border border-gray-400 pointer-events-none"></div>
-                </div>
-                <div className="flex justify-between text-xs text-gray-600">
-                  <span className="font-medium">{area.tasks.completed}/{area.tasks.total} tasks completed</span>
-                  <span>Est. time: {area.estimatedTimeToComplete}</span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between mb-4">
-                <CircularProgress 
-                  percentage={area.completionPercentage} 
-                  size={80} 
-                  status={area.status}
-                />
-                <div className="text-right">
-                  <div className="flex items-center gap-2 mb-2">
-                    {getStatusIcon(area.status)}
-                    <span className="text-sm font-medium">
-                      {area.tasks.completed}/{area.tasks.total} tasks
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    Est. time: {area.estimatedTimeToComplete}
-                  </p>
-                  {area.urgentDeadline && (
-                    <p className="text-sm text-red-600 font-medium">
-                      Deadline: {area.urgentDeadline}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" size="sm">
-                Continue Tasks
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </motion.div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+                  <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+                    {category.progress}%
+                  </span>
+                </motion.div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
