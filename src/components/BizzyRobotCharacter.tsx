@@ -119,6 +119,13 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
         duration: 0.5 * getAnimationSpeed(),
         ease: "easeOut"
       }
+    },
+    speaking: {
+      scale: personalization.preferences.reducedMotion ? 1 : 1.02,
+      transition: {
+        duration: 0.3 * getAnimationSpeed(),
+        ease: "easeInOut"
+      }
     }
   }), [personalization.preferences, getAnimationSpeed]);
 
@@ -171,21 +178,30 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
         {announcementText}
       </div>
 
-      {/* Customization Button */}
-      <button
+      {/* Enhanced Customization Button */}
+      <motion.button
         onClick={() => setShowCustomization(true)}
-        className={`absolute -top-2 -right-2 z-10 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${touchTargetSize}`}
-        title="Customize your companion"
+        className={`absolute -top-3 -right-3 z-10 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md border border-gray-200 dark:border-gray-600 ${touchTargetSize}`}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        title="Robot Settings"
         aria-label="Open companion customization settings"
       >
-        <Settings className="w-4 h-4 text-gray-600" />
-      </button>
+        <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        
+        {/* Settings label */}
+        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+          Robot Settings
+        </div>
+      </motion.button>
 
-      {/* Integrated Chat Interface */}
-      <RobotChatInterface 
-        onMessageSent={handleChatMessage}
-        className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20"
-      />
+      {/* Integrated Chat Interface - Positioned better */}
+      <div className="absolute -top-6 -right-16 z-20">
+        <RobotChatInterface 
+          onMessageSent={handleChatMessage}
+          className=""
+        />
+      </div>
 
       {/* Speech Bubble */}
       <AnimatePresence>
@@ -206,7 +222,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
             }`}>
               {message}
             </p>
-            {/* Speech bubble arrow */}
+            {/* Speech bubble arrow pointing toward robot */}
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
               <div className="w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-white dark:border-t-gray-800"></div>
             </div>
@@ -222,7 +238,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Robot Character */}
+      {/* Robot Character - Enhanced with speaking animation */}
       <motion.div
         variants={robotVariants}
         animate={currentState}
@@ -261,19 +277,23 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
               </motion.div>
             </div>
             
-            {/* Mouth - Changes based on speaking state */}
+            {/* Mouth - Enhanced for speaking animation */}
             <motion.div
               animate={
                 currentState === 'speaking' && !personalization.preferences.reducedMotion
-                  ? { scaleX: [1, 1.3, 1], scaleY: [1, 0.7, 1] }
+                  ? { 
+                      scaleX: [1, 1.3, 1], 
+                      scaleY: [1, 0.7, 1],
+                      borderRadius: ['50%', '40%', '50%']
+                    }
                   : currentState === 'celebration' && !personalization.preferences.reducedMotion 
-                  ? { scaleX: 1.2 } 
-                  : { scaleX: 1 }
+                  ? { scaleX: 1.2, scaleY: 0.8 } 
+                  : { scaleX: 1, scaleY: 1 }
               }
               transition={
                 currentState === 'speaking' 
-                  ? { duration: 0.5, repeat: Infinity } 
-                  : {}
+                  ? { duration: 0.5, repeat: Infinity, ease: "easeInOut" } 
+                  : { duration: 0.3 }
               }
               className="w-6 h-2 bg-white rounded-full mx-auto mt-2"
               aria-hidden="true"
@@ -282,7 +302,14 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
             {/* Antenna */}
             <div className="absolute -top-2 left-1/2 transform -translate-x-1/2" aria-hidden="true">
               <div className={`w-1 h-4 ${themeColors.secondary} rounded-full`}></div>
-              <div className="w-2 h-2 bg-yellow-400 rounded-full -mt-1 -ml-0.5"></div>
+              <motion.div 
+                className="w-2 h-2 bg-yellow-400 rounded-full -mt-1 -ml-0.5"
+                animate={currentState === 'speaking' ? {
+                  scale: [1, 1.2, 1],
+                  boxShadow: ['0 0 0 0 rgba(251, 191, 36, 0)', '0 0 0 4px rgba(251, 191, 36, 0.3)', '0 0 0 0 rgba(251, 191, 36, 0)']
+                } : {}}
+                transition={currentState === 'speaking' ? { duration: 1, repeat: Infinity } : {}}
+              ></motion.div>
             </div>
           </div>
 
@@ -303,6 +330,9 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
                 rotate: [-45, -30, -45],
                 y: [-5, 0, -5],
                 transition: { duration: 0.3, repeat: 3 }
+              } : currentState === 'speaking' && !personalization.preferences.reducedMotion ? {
+                rotate: [-30, -35, -30],
+                transition: { duration: 0.8, repeat: Infinity, ease: "easeInOut" }
               } : {}}
               className={`absolute -left-3 top-2 w-2 h-6 ${themeColors.secondary} rounded-full origin-top`}
               aria-hidden="true"
@@ -312,9 +342,11 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
                 rotate: [-45, -30, -45],
                 y: [-5, 0, -5],
                 transition: { duration: 0.3, repeat: 3 }
+              } : currentState === 'speaking' && !personalization.preferences.reducedMotion ? {
+                rotate: [30, 35, 30],
+                transition: { duration: 0.8, repeat: Infinity, ease: "easeInOut" }
               } : {}}
               className={`absolute -right-3 top-2 w-2 h-6 ${themeColors.secondary} rounded-full origin-top`}
-              style={{ scaleX: -1 }}
               aria-hidden="true"
             ></motion.div>
           </div>

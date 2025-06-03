@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, MessageCircle } from 'lucide-react';
+import { Send, MessageCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type Message = {
@@ -71,6 +71,7 @@ export const RobotChatInterface: React.FC<RobotChatInterfaceProps> = ({
   const [newMessage, setNewMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -78,9 +79,11 @@ export const RobotChatInterface: React.FC<RobotChatInterfaceProps> = ({
     e.preventDefault();
     if (!newMessage.trim()) return;
 
+    setHasError(false);
+
     // Add user message
     const userMessage: Message = {
-      id: messages.length + 1,
+      id: Date.now(),
       text: newMessage,
       isUser: true,
       timestamp: new Date()
@@ -91,19 +94,34 @@ export const RobotChatInterface: React.FC<RobotChatInterfaceProps> = ({
     setNewMessage("");
     setIsTyping(true);
 
-    // Simulate robot thinking time
-    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
 
-    // Generate bot response
-    const botMessage: Message = {
-      id: messages.length + 2,
-      text: generateResponse(userMessage.text),
-      isUser: false,
-      timestamp: new Date()
-    };
+      // Generate bot response
+      const botMessage: Message = {
+        id: Date.now() + 1,
+        text: generateResponse(userMessage.text),
+        isUser: false,
+        timestamp: new Date()
+      };
 
-    setIsTyping(false);
-    setMessages(prev => [...prev, botMessage]);
+      setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error('Chat error:', error);
+      setHasError(true);
+      
+      const errorMessage: Message = {
+        id: Date.now() + 1,
+        text: "Sorry, I encountered an error. Please try again.",
+        isUser: false,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   const generateResponse = (userInput: string): string => {
@@ -133,27 +151,71 @@ export const RobotChatInterface: React.FC<RobotChatInterfaceProps> = ({
     }
   }, [isOpen]);
 
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   return (
     <div className={`relative ${className}`}>
-      {/* Chat Toggle Button */}
+      {/* Enhanced Chat Toggle Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="absolute -top-12 right-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg transition-all duration-200 z-10"
+        className="relative bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg transition-all duration-200 z-10 min-w-[48px] min-h-[48px]"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        aria-label="Toggle chat with Bizzy"
+        animate={!isOpen ? { 
+          scale: [1, 1.05, 1],
+          transition: { duration: 2, repeat: Infinity }
+        } : {}}
+        aria-label={isOpen ? "Close chat with Bizzy" : "Chat with Bizzy"}
+        title={isOpen ? "Close chat" : "Chat with Bizzy"}
       >
-        <MessageCircle className="w-5 h-5" />
+        <AnimatePresence mode="wait">
+          {isOpen ? (
+            <motion.div
+              key="close"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <X className="w-5 h-5" />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="chat"
+              initial={{ rotate: 90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: -90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <MessageCircle className="w-5 h-5" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        {/* Chat label */}
+        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap">
+          Chat with Bizzy
+        </div>
       </motion.button>
 
-      {/* Chat Interface */}
+      {/* Enhanced Chat Interface */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.3 }}
             className="absolute -top-96 left-1/2 transform -translate-x-1/2 w-80 h-80 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-20"
           >
             {/* Chat Header */}
@@ -163,16 +225,16 @@ export const RobotChatInterface: React.FC<RobotChatInterfaceProps> = ({
                   <MessageCircle className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="font-medium">Chat with Bizzy</h3>
+                  <h3 className="font-semibold">Chat with Bizzy</h3>
                   <p className="text-xs text-blue-100">Your business assistant</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-white/80 hover:text-white transition-colors"
+                className="text-white/80 hover:text-white transition-colors p-1 rounded"
                 aria-label="Close chat"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -187,13 +249,14 @@ export const RobotChatInterface: React.FC<RobotChatInterfaceProps> = ({
                     transition={{ duration: 0.3 }}
                     className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
                   >
-                    {/* Speech Bubble */}
+                    {/* Enhanced Speech Bubble */}
                     <div
-                      className={`max-w-[80%] rounded-2xl px-3 py-2 relative ${
+                      className={`max-w-[85%] rounded-2xl px-4 py-3 relative shadow-md ${
                         message.isUser
-                          ? 'bg-blue-600 text-white rounded-br-md'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-md'
+                          ? 'bg-blue-600 text-white rounded-br-md ml-4'
+                          : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-md mr-4 border border-gray-100 dark:border-gray-600'
                       }`}
+                      title={message.timestamp.toLocaleTimeString()}
                     >
                       <p className="text-sm leading-relaxed">{message.text}</p>
                       
@@ -202,24 +265,25 @@ export const RobotChatInterface: React.FC<RobotChatInterfaceProps> = ({
                         className={`absolute bottom-0 w-0 h-0 ${
                           message.isUser
                             ? 'right-0 border-l-[12px] border-t-[8px] border-l-transparent border-t-blue-600'
-                            : 'left-0 border-r-[12px] border-t-[8px] border-r-transparent border-t-gray-100 dark:border-t-gray-700'
+                            : 'left-0 border-r-[12px] border-t-[8px] border-r-transparent border-t-white dark:border-t-gray-700'
                         }`}
                       />
                     </div>
                   </motion.div>
                 ))}
 
-                {/* Typing Indicator */}
+                {/* Enhanced Typing Indicator */}
                 <AnimatePresence>
                   {isTyping && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="flex justify-start"
+                      className="flex justify-start mr-4"
                     >
-                      <div className="bg-gray-100 dark:bg-gray-700 rounded-2xl rounded-bl-md px-4 py-3 relative">
-                        <div className="flex space-x-1">
+                      <div className="bg-white dark:bg-gray-700 rounded-2xl rounded-bl-md px-4 py-3 relative shadow-md border border-gray-100 dark:border-gray-600">
+                        <div className="flex items-center space-x-1">
+                          <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">Bizzy is typing</span>
                           <motion.div
                             animate={{ scale: [1, 1.2, 1] }}
                             transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
@@ -238,7 +302,7 @@ export const RobotChatInterface: React.FC<RobotChatInterfaceProps> = ({
                         </div>
                         
                         {/* Typing Bubble Tail */}
-                        <div className="absolute bottom-0 left-0 border-r-[12px] border-t-[8px] border-r-transparent border-t-gray-100 dark:border-t-gray-700 w-0 h-0" />
+                        <div className="absolute bottom-0 left-0 border-r-[12px] border-t-[8px] border-r-transparent border-t-white dark:border-t-gray-700 w-0 h-0" />
                       </div>
                     </motion.div>
                   )}
@@ -247,27 +311,48 @@ export const RobotChatInterface: React.FC<RobotChatInterfaceProps> = ({
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Input Area */}
+              {/* Enhanced Input Area */}
               <form onSubmit={handleSendMessage} className="p-3 border-t border-gray-200 dark:border-gray-600">
-                <div className="flex gap-2">
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Ask Bizzy anything..."
-                    className="flex-1 bg-gray-100 dark:bg-gray-700 border-0 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
-                    disabled={isTyping}
-                  />
-                  <Button 
-                    type="submit" 
-                    size="sm"
-                    className="bg-blue-600 hover:bg-blue-700 rounded-full p-2 min-w-[36px]"
-                    disabled={!newMessage.trim() || isTyping}
-                  >
-                    <Send className="w-4 h-4" />
-                  </Button>
+                <div className="relative flex gap-2">
+                  <div className="flex-1 relative">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      placeholder="Ask Bizzy anything about your business setup..."
+                      className={`w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-full pl-4 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 transition-all ${
+                        hasError ? 'ring-2 ring-red-500' : ''
+                      }`}
+                      disabled={isTyping}
+                    />
+                    <Button 
+                      type="submit" 
+                      size="sm"
+                      className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 rounded-full p-2 min-w-[32px] h-8"
+                      disabled={!newMessage.trim() || isTyping}
+                      aria-label="Send message"
+                    >
+                      <Send className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
+                
+                {/* Error message */}
+                {hasError && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-red-500 text-xs mt-1 text-center"
+                  >
+                    Message failed to send. Please try again.
+                  </motion.p>
+                )}
+                
+                {/* Keyboard shortcut hint */}
+                <p className="text-xs text-gray-400 text-center mt-1">
+                  Press Enter to send • Esc to close
+                </p>
               </form>
             </div>
           </motion.div>
