@@ -8,6 +8,7 @@ import Documents from "./pages/dashboard/Documents";
 import MyDocuments from "./pages/dashboard/MyDocuments";
 import DocumentCustomizer from "./pages/dashboard/DocumentCustomizer";
 import EnhancedGuidedHelp from "./pages/EnhancedGuidedHelp";
+import ProgressCompanion from "./pages/ProgressCompanion";
 import Pricing from "./pages/Pricing";
 import ContentMigration from "./pages/ContentMigration";
 import Login from "./pages/Login";
@@ -50,6 +51,11 @@ function App() {
               </ProtectedRoute>
             } />
             <Route path="/guided-help" element={<EnhancedGuidedHelp />} />
+            <Route path="/progress-companion" element={
+              <ProtectedRoute>
+                <ProgressCompanion />
+              </ProtectedRoute>
+            } />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/content-migration" element={<ContentMigration />} />
             <Route path="/login" element={<Login />} />

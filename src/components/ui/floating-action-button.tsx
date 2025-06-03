@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X, FileText, CheckCircle, HelpCircle, Search, Home, MoreHorizontal } from 'lucide-react';
+import { Plus, X, FileText, CheckCircle, HelpCircle, Search, Home, MoreHorizontal, Bot } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -336,6 +337,22 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
               className="absolute inset-0 bg-blue-400 rounded-full"
             />
           )}
+        </motion.div>
+
+        {/* Progress Companion Button - Fixed position next to help button */}
+        <motion.div
+          className="fixed bottom-6 right-20 z-50"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.5, type: "spring", stiffness: 300, damping: 20 }}
+        >
+          <Button
+            size="lg"
+            className="w-12 h-12 rounded-full shadow-xl bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 animate-pulse hover:animate-none transition-all duration-200"
+            onClick={() => navigate('/progress-companion')}
+          >
+            <Bot className="w-6 h-6 text-white" />
+          </Button>
         </motion.div>
       </div>
     </>
