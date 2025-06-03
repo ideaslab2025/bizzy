@@ -159,17 +159,17 @@ const ProgressCompanionContent = () => {
     personalization.accessibility.touchTargetSize === 'large' 
       ? 'min-h-[52px] min-w-[52px] p-4' 
       : 'min-h-[44px] min-w-[44px] p-3'
-  } text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`;
+  } text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`;
 
   return (
     <div className={`min-h-screen ${
       personalization.preferences.highContrast 
         ? 'bg-white text-black' 
-        : 'bg-gray-50'
+        : 'bg-gray-50 dark:bg-gray-900'
     }`}>
-      {/* Header */}
-      <header className={`sticky top-0 z-40 h-16 bg-white border-b shadow-sm ${
-        personalization.preferences.highContrast ? 'border-black border-2' : 'border-gray-200'
+      {/* Header with Fixed Styling */}
+      <header className={`sticky top-0 z-40 h-16 bg-white dark:bg-gray-800 border-b shadow-sm ${
+        personalization.preferences.highContrast ? 'border-black border-2' : 'border-gray-200 dark:border-gray-700'
       }`}>
         <div className="h-full px-4 md:px-6 flex items-center gap-4">
           <Button 
@@ -193,7 +193,7 @@ const ProgressCompanionContent = () => {
             <h1 className={`text-lg md:text-2xl font-bold tracking-tight truncate ${
               personalization.preferences.textSize === 'large' ? 'text-xl md:text-3xl' : ''
             } ${
-              personalization.preferences.highContrast ? 'text-black' : 'text-gray-900'
+              personalization.preferences.highContrast ? 'text-black dark:text-white' : 'text-gray-900 dark:text-gray-100'
             }`}>
               Your Business Setup Companion
             </h1>
@@ -226,7 +226,7 @@ const ProgressCompanionContent = () => {
               />
             </div>
 
-            {/* Progress Tracking Dashboard */}
+            {/* Progress Tracking Dashboard with Consistent Colors */}
             <div className={personalization.preferences.textSize === 'large' ? 'text-lg' : ''}>
               <ProgressTrackingDashboard
                 onProgressUpdate={handleProgressUpdate}

@@ -30,13 +30,13 @@ export const FAQTrigger: React.FC<FAQTriggerProps> = ({ onClick }) => {
             <Button
               onClick={onClick}
               size="icon"
-              className="h-14 w-14 rounded-full bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 shadow-lg hover:shadow-xl border border-gray-200 transition-all duration-200"
+              className="h-14 w-14 rounded-full bg-white hover:bg-gray-50 active:bg-gray-100 text-gray-700 hover:text-gray-900 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-300 dark:hover:text-gray-100 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-600 transition-all duration-200"
             >
               <HelpCircle className="w-6 h-6" />
             </Button>
           </motion.div>
         </TooltipTrigger>
-        <TooltipContent side="left">
+        <TooltipContent side="left" className="bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900">
           <p>Need Help? View FAQs</p>
         </TooltipContent>
       </Tooltip>

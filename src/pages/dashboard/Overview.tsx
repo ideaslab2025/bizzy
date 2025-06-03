@@ -56,7 +56,7 @@ const Overview = () => {
           data-spotlight-id="dashboard-welcome"
           data-spotlight-message="Welcome to Bizzy! This is your command center. Start exploring your business journey here."
         >
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4 leading-tight">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4 leading-tight">
             Welcome back! 👋
           </h1>
           <p className="text-base md:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-4 leading-relaxed">
@@ -69,7 +69,7 @@ const Overview = () => {
           <NeonGlow color="blue" hover>
             <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] md:min-h-[140px] flex flex-col justify-center">
               <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 leading-tight">Tasks Completed</h3>
-              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
+              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
                 <AnimatedCounter value={42} />
               </div>
             </div>
@@ -78,7 +78,7 @@ const Overview = () => {
           <NeonGlow color="green" hover>
             <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] md:min-h-[140px] flex flex-col justify-center">
               <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 leading-tight">Progress</h3>
-              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
+              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
                 <PercentageCounter value={78.5} />
               </div>
             </div>
@@ -87,7 +87,7 @@ const Overview = () => {
           <NeonGlow color="purple" hover>
             <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] md:min-h-[140px] flex flex-col justify-center">
               <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 leading-tight">Time Saved</h3>
-              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
+              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
                 <AnimatedCounter value={125} suffix=" hrs" />
               </div>
             </div>
@@ -96,7 +96,7 @@ const Overview = () => {
           <NeonGlow color="pink" hover>
             <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] md:min-h-[140px] flex flex-col justify-center">
               <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 leading-tight">Money Saved</h3>
-              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
+              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
                 <CurrencyCounter value={2450} />
               </div>
             </div>
@@ -131,7 +131,7 @@ const Overview = () => {
           onNavigateToGuidedHelp={handleNavigateToGuidedHelp}
         />
 
-        {/* Action Buttons with Mobile-Optimized Layout */}
+        {/* Action Buttons with Mobile-Optimized Layout and Fixed Colors */}
         <div 
           className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4 mt-6 md:mt-8 justify-center"
           data-spotlight-first-view="true"
@@ -140,7 +140,7 @@ const Overview = () => {
         >
           <NeonGlow color="blue" pulse hover>
             <button 
-              className="w-full sm:w-auto px-6 py-4 bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-medium text-base transition-all duration-300 hover:bg-blue-700 dark:hover:bg-blue-600 min-h-[48px] touch-manipulation"
+              className="w-full sm:w-auto px-6 py-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg font-medium text-base transition-all duration-300 min-h-[48px] touch-manipulation"
               onClick={handleNavigateToGuidedHelp}
             >
               Continue Journey
@@ -148,13 +148,13 @@ const Overview = () => {
           </NeonGlow>
           
           <NeonGlow color="green" hover>
-            <button className="w-full sm:w-auto px-6 py-4 bg-green-600 dark:bg-green-500 text-white rounded-lg font-medium text-base transition-all duration-300 hover:bg-green-700 dark:hover:bg-green-600 min-h-[48px] touch-manipulation">
+            <button className="w-full sm:w-auto px-6 py-4 bg-green-600 hover:bg-green-700 active:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-lg font-medium text-base transition-all duration-300 min-h-[48px] touch-manipulation">
               Download Documents
             </button>
           </NeonGlow>
           
           <NeonGlow color="rainbow" hover>
-            <button className="w-full sm:w-auto px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white rounded-lg font-medium text-base transition-all duration-300 min-h-[48px] touch-manipulation">
+            <button className="w-full sm:w-auto px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 dark:from-purple-600 dark:to-pink-600 dark:hover:from-purple-700 dark:hover:to-pink-700 text-white rounded-lg font-medium text-base transition-all duration-300 min-h-[48px] touch-manipulation">
               Premium Features
             </button>
           </NeonGlow>

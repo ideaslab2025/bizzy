@@ -74,11 +74,11 @@ const Dashboard = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50">
+      <div className="min-h-screen flex w-full bg-gray-50 dark:bg-gray-900">
         <AppSidebar />
         <main className="flex-1 relative">
-          {/* Enhanced Header with Robot Icon in Top Navigation */}
-          <header className="sticky top-0 z-40 h-16 md:h-16 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+          {/* Enhanced Header with Consistent Styling */}
+          <header className="sticky top-0 z-40 h-16 md:h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
             <div className="h-full px-4 md:px-6 flex items-center justify-between">
               <div className="flex items-center gap-3 md:gap-4">
                 <TooltipProvider>
@@ -88,7 +88,7 @@ const Dashboard = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-white/50 transition-all duration-200 p-3 min-h-[44px] min-w-[44px] touch-manipulation" />
+                        <SidebarTrigger className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 p-3 min-h-[44px] min-w-[44px] touch-manipulation" />
                       </motion.div>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -96,7 +96,7 @@ const Dashboard = () => {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
                   Dashboard
                 </h1>
               </div>
@@ -108,17 +108,17 @@ const Dashboard = () => {
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="text"
                     placeholder="Search documents, guides..."
-                    className="w-full pl-10 pr-4 py-3 h-12 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-md text-base"
+                    className="w-full pl-10 pr-4 py-3 h-12 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-md text-base text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                     onClick={() => setCommandPaletteOpen(true)}
                   />
                 </motion.div>
               </div>
 
-              {/* Right Actions with Robot Icon */}
+              {/* Right Actions with Consistent Styling */}
               <div className="flex items-center gap-2 md:gap-3">
                 {/* Search button for mobile */}
                 <motion.div
@@ -130,7 +130,7 @@ const Dashboard = () => {
                     variant="ghost" 
                     size="icon"
                     onClick={() => setCommandPaletteOpen(true)}
-                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                    className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
                   >
                     <Search className="h-5 w-5" />
                   </Button>
@@ -153,7 +153,7 @@ const Dashboard = () => {
                     variant="ghost" 
                     size="icon"
                     onClick={toggleTheme}
-                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                    className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
                   >
                     <Moon className="h-5 w-5" />
                   </Button>
@@ -169,7 +169,7 @@ const Dashboard = () => {
                       <Button 
                         variant="ghost" 
                         size="icon"
-                        className="relative rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 hover:text-gray-900 hover:shadow-md min-h-[44px] min-w-[44px]"
+                        className="relative rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:shadow-md min-h-[44px] min-w-[44px]"
                       >
                         <Bell className="w-5 h-5" />
                         {hasNotifications && (
@@ -185,20 +185,20 @@ const Dashboard = () => {
                       </Button>
                     </motion.div>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
-                    <div className="p-4 border-b border-gray-100">
-                      <h3 className="font-semibold text-gray-900">Notifications</h3>
+                  <DropdownMenuContent align="end" className="w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg z-50">
+                    <div className="p-4 border-b border-gray-100 dark:border-gray-700">
+                      <h3 className="font-semibold text-gray-900 dark:text-gray-100">Notifications</h3>
                     </div>
-                    <DropdownMenuItem className="p-4 hover:bg-gray-50 min-h-[60px]">
+                    <DropdownMenuItem className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 min-h-[60px]">
                       <div>
-                        <p className="font-medium text-gray-900">Welcome to Bizzy!</p>
-                        <p className="text-sm text-gray-500 mt-1">Complete your profile to get started</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">Welcome to Bizzy!</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Complete your profile to get started</p>
                       </div>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Robot Button - Now in Top Navigation */}
+                {/* Robot Button - Now in Top Navigation with Consistent Styling */}
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -210,7 +210,7 @@ const Dashboard = () => {
                           variant="ghost" 
                           size="icon"
                           onClick={handleRobotClick}
-                          className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                          className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
                           aria-label="Open Progress Companion"
                         >
                           <Bot className="w-5 h-5" />
@@ -232,7 +232,7 @@ const Dashboard = () => {
                     >
                       <Button 
                         variant="ghost" 
-                        className="flex items-center gap-2 rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-md text-gray-700 hover:text-gray-900 min-h-[44px]"
+                        className="flex items-center gap-2 rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-md text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 min-h-[44px]"
                       >
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                           <User className="w-4 h-4 text-white" />
@@ -242,29 +242,29 @@ const Dashboard = () => {
                       </Button>
                     </motion.div>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
-                    <DropdownMenuItem onClick={handleProfileClick} className="hover:bg-gray-50 p-4 min-h-[48px]">
+                  <DropdownMenuContent align="end" className="w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg z-50">
+                    <DropdownMenuItem onClick={handleProfileClick} className="hover:bg-gray-50 dark:hover:bg-gray-700 p-4 min-h-[48px] text-gray-900 dark:text-gray-100">
                       <User className="w-4 h-4 mr-3" />
                       Profile
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="hover:bg-gray-50 p-4 min-h-[48px]">
+                    <DropdownMenuItem className="hover:bg-gray-50 dark:hover:bg-gray-700 p-4 min-h-[48px] text-gray-900 dark:text-gray-100">
                       <Settings className="w-4 h-4 mr-3" />
                       Settings
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 text-red-600 hover:text-red-700 p-4 min-h-[48px]">
+                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 p-4 min-h-[48px]">
                       <LogOut className="w-4 h-4 mr-3" />
                       Logout
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced Talk to Bizzy Button */}
+                {/* Enhanced Talk to Bizzy Button with Proper Styling */}
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setBizzyOpen(true)}
-                  className="flex items-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 text-sm md:text-sm font-medium shadow-sm hover:shadow-md min-h-[44px] touch-manipulation"
+                  className="flex items-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg transition-all duration-200 text-sm md:text-sm font-medium shadow-sm hover:shadow-md min-h-[44px] touch-manipulation"
                 >
                   <HelpCircle className="w-4 h-4" />
                   <span className="hidden sm:inline">Talk to Bizzy</span>
@@ -275,7 +275,7 @@ const Dashboard = () => {
           </header>
           
           {/* Main Content */}
-          <div className="p-4 md:p-6 bg-gray-50 min-h-[calc(100vh-4rem)]">
+          <div className="p-4 md:p-6 bg-gray-50 dark:bg-gray-900 min-h-[calc(100vh-4rem)]">
             <Outlet />
           </div>
           
@@ -302,7 +302,7 @@ const Dashboard = () => {
         onClose={() => setBizzyOpen(false)} 
       />
       
-      {/* FAQ Trigger Button - Bottom Right Only */}
+      {/* FAQ Trigger Button - Bottom Right Only with Consistent Styling */}
       <div className="fixed bottom-6 right-6 z-50">
         <FAQTrigger onClick={() => setFaqOpen(true)} />
       </div>
