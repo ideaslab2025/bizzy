@@ -134,12 +134,12 @@ export const ProgressPortraits: React.FC<ProgressPortraitsProps> = ({ className 
       <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
         <CardHeader className="pb-4">
           <CardTitle className="text-xl font-bold text-gray-900 dark:text-gray-100">
-            Compliance Progress Overview
+            Progress
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {complianceCategories.slice(0, 9).map((category, index) => {
+            {complianceCategories.map((category, index) => {
               const IconComponent = category.icon;
               return (
                 <motion.div
