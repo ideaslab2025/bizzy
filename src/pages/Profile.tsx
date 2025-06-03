@@ -7,9 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { User, Save, ArrowLeft, Lock, Eye, EyeOff, Shield, Mail } from "lucide-react";
+import { User, Save, ArrowLeft, Lock, Eye, EyeOff, Shield, Mail, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import EmailPreferences from "@/components/profile/EmailPreferences";
+import AccountDeletion from "@/components/profile/AccountDeletion";
 
 interface ProfileData {
   id: string;
@@ -298,7 +299,7 @@ const Profile = () => {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <User className="w-4 h-4" />
               Profile
@@ -310,6 +311,10 @@ const Profile = () => {
             <TabsTrigger value="email" className="flex items-center gap-2">
               <Mail className="w-4 h-4" />
               Email Preferences
+            </TabsTrigger>
+            <TabsTrigger value="account" className="flex items-center gap-2">
+              <Trash2 className="w-4 h-4" />
+              Account
             </TabsTrigger>
           </TabsList>
 
@@ -582,6 +587,10 @@ const Profile = () => {
 
           <TabsContent value="email" className="space-y-6">
             <EmailPreferences />
+          </TabsContent>
+
+          <TabsContent value="account" className="space-y-6">
+            <AccountDeletion />
           </TabsContent>
         </Tabs>
       </div>
