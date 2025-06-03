@@ -1,14 +1,15 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { User, Save, ArrowLeft, Lock, Eye, EyeOff, Shield } from "lucide-react";
+import { User, Save, ArrowLeft, Lock, Eye, EyeOff, Shield, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import EmailPreferences from "@/components/profile/EmailPreferences";
 
 interface ProfileData {
   id: string;
@@ -296,105 +297,163 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          {/* Profile Information Card */}
-          <div className="md:col-span-2 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Personal Information</CardTitle>
-                <CardDescription>
-                  Update your personal details and business information
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input
-                      id="firstName"
-                      value={profileData.first_name}
-                      onChange={(e) => handleInputChange('first_name', e.target.value)}
-                      placeholder="Enter your first name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input
-                      id="lastName"
-                      value={profileData.last_name}
-                      onChange={(e) => handleInputChange('last_name', e.target.value)}
-                      placeholder="Enter your last name"
-                    />
-                  </div>
-                </div>
+        <Tabs defaultValue="profile" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="profile" className="flex items-center gap-2">
+              <User className="w-4 h-4" />
+              Profile
+            </TabsTrigger>
+            <TabsTrigger value="security" className="flex items-center gap-2">
+              <Lock className="w-4 h-4" />
+              Security
+            </TabsTrigger>
+            <TabsTrigger value="email" className="flex items-center gap-2">
+              <Mail className="w-4 h-4" />
+              Email Preferences
+            </TabsTrigger>
+          </TabsList>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={user?.email || ""}
-                    disabled
-                    className="bg-gray-100"
-                  />
-                  <p className="text-xs text-gray-500">
-                    Email address cannot be changed from this page
-                  </p>
-                </div>
+          <TabsContent value="profile" className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-3">
+              {/* Profile Information Card */}
+              <div className="md:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Personal Information</CardTitle>
+                    <CardDescription>
+                      Update your personal details and business information
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="firstName">First Name</Label>
+                        <Input
+                          id="firstName"
+                          value={profileData.first_name}
+                          onChange={(e) => handleInputChange('first_name', e.target.value)}
+                          placeholder="Enter your first name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName">Last Name</Label>
+                        <Input
+                          id="lastName"
+                          value={profileData.last_name}
+                          onChange={(e) => handleInputChange('last_name', e.target.value)}
+                          placeholder="Enter your last name"
+                        />
+                      </div>
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="companyName">Company Name</Label>
-                  <Input
-                    id="companyName"
-                    value={profileData.company_name}
-                    onChange={(e) => handleInputChange('company_name', e.target.value)}
-                    placeholder="Enter your company name"
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email Address</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={user?.email || ""}
+                        disabled
+                        className="bg-gray-100"
+                      />
+                      <p className="text-xs text-gray-500">
+                        Email address cannot be changed from this page
+                      </p>
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="businessType">Business Type</Label>
-                  <Input
-                    id="businessType"
-                    value={profileData.business_type}
-                    onChange={(e) => handleInputChange('business_type', e.target.value)}
-                    placeholder="e.g., Limited Company, Sole Trader, Partnership"
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="companyName">Company Name</Label>
+                      <Input
+                        id="companyName"
+                        value={profileData.company_name}
+                        onChange={(e) => handleInputChange('company_name', e.target.value)}
+                        placeholder="Enter your company name"
+                      />
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={profileData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
-                    placeholder="Enter your phone number"
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="businessType">Business Type</Label>
+                      <Input
+                        id="businessType"
+                        value={profileData.business_type}
+                        onChange={(e) => handleInputChange('business_type', e.target.value)}
+                        placeholder="e.g., Limited Company, Sole Trader, Partnership"
+                      />
+                    </div>
 
-                <div className="pt-4">
-                  <Button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/90"
-                  >
-                    {saving ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        Saving...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4 mr-2" />
-                        Save Changes
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={profileData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        placeholder="Enter your phone number"
+                      />
+                    </div>
 
+                    <div className="pt-4">
+                      <Button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="bg-[#1d4ed8] hover:bg-[#1d4ed8]/90"
+                      >
+                        {saving ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                            Saving...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="w-4 h-4 mr-2" />
+                            Save Changes
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Account Summary Card */}
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Account Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Account Status</p>
+                      <p className="text-sm text-green-600">Active</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Member Since</p>
+                      <p className="text-sm text-gray-600">{formatDate(profileData.created_at)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">User ID</p>
+                      <p className="text-xs text-gray-500 font-mono break-all">{profileData.id}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Business Compliance</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Keep your business information up to date to ensure compliance with UK regulations.
+                    </p>
+                    <Button variant="outline" className="w-full">
+                      View Compliance Status
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="security" className="space-y-6">
             {/* Password Change Card */}
             <Card>
               <CardHeader>
@@ -519,45 +578,12 @@ const Profile = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </TabsContent>
 
-          {/* Account Summary Card */}
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Account Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <p className="text-sm font-medium text-gray-700">Account Status</p>
-                  <p className="text-sm text-green-600">Active</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-700">Member Since</p>
-                  <p className="text-sm text-gray-600">{formatDate(profileData.created_at)}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-700">User ID</p>
-                  <p className="text-xs text-gray-500 font-mono break-all">{profileData.id}</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Business Compliance</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 mb-4">
-                  Keep your business information up to date to ensure compliance with UK regulations.
-                </p>
-                <Button variant="outline" className="w-full">
-                  View Compliance Status
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+          <TabsContent value="email" className="space-y-6">
+            <EmailPreferences />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
