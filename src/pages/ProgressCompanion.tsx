@@ -1,15 +1,20 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BizzyRobotCharacter from '@/components/BizzyRobotCharacter';
 import { ProgressTrackingDashboard } from '@/components/progress/ProgressTrackingDashboard';
 import { MilestoneReached } from '@/components/celebrations/MilestoneReached';
+import { PersonalizationProvider, usePersonalization } from '@/contexts/PersonalizationContext';
+import { useSmartMessaging } from '@/hooks/useSmartMessaging';
 
-const ProgressCompanion = () => {
+const ProgressCompanionContent = () => {
   const navigate = useNavigate();
-  const [robotMessage, setRobotMessage] = useState("Hi! I'm here to help you track your business setup progress!");
+  const { personalization, sessionDuration } = usePersonalization();
+  const { getWelcomeMessage, getEncouragingMessage, getContextualMessage, getSessionMessage } = useSmartMessaging();
+  
+  const [robotMessage, setRobotMessage] = useState("");
   const [robotAnimationState, setRobotAnimationState] = useState<'idle' | 'celebration' | 'encouraging'>('idle');
   const [activeMilestone, setActiveMilestone] = useState<{
     type: 'section_complete' | 'first_section' | 'halfway' | 'all_complete' | 'quick_wins';
@@ -17,21 +22,35 @@ const ProgressCompanion = () => {
     description: string;
   } | null>(null);
 
+  // Initialize with welcome message
+  useEffect(() => {
+    setRobotMessage(getWelcomeMessage());
+  }, [getWelcomeMessage]);
+
+  // Check for session messages
+  useEffect(() => {
+    const sessionMsg = getSessionMessage(sessionDuration);
+    if (sessionMsg && sessionDuration > 0) {
+      setRobotMessage(sessionMsg);
+      setRobotAnimationState('encouraging');
+      setTimeout(() => setRobotAnimationState('idle'), 3000);
+    }
+  }, [sessionDuration, getSessionMessage]);
+
   const handleBackClick = () => {
     navigate('/dashboard');
   };
 
   const handleRobotClick = () => {
-    const encouragingMessages = [
-      "You're doing great! Keep up the excellent work!",
-      "Every step forward is progress toward your business goals!",
-      "I believe in your success! You've got this!",
-      "Your business journey is inspiring! Stay focused!",
-      "Progress, not perfection! You're on the right track!"
-    ];
+    const encouragingMessage = getEncouragingMessage({
+      progressLevel: 35, // This would come from actual progress data
+      timeOfDay: 'afternoon',
+      sessionDuration,
+      completedSections: 2,
+      isStuck: false
+    });
     
-    const randomMessage = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
-    setRobotMessage(randomMessage);
+    setRobotMessage(encouragingMessage);
     setRobotAnimationState('encouraging');
     
     setTimeout(() => {
@@ -85,7 +104,8 @@ const ProgressCompanion = () => {
   };
 
   const handleSectionComplete = (sectionName: string) => {
-    setRobotMessage(`Congratulations! You've completed the ${sectionName} section! 🌟`);
+    const contextualMessage = getContextualMessage(sectionName, 'completed');
+    setRobotMessage(contextualMessage);
     setRobotAnimationState('celebration');
     
     setTimeout(() => {
@@ -152,6 +172,14 @@ const ProgressCompanion = () => {
         />
       )}
     </div>
+  );
+};
+
+const ProgressCompanion = () => {
+  return (
+    <PersonalizationProvider>
+      <ProgressCompanionContent />
+    </PersonalizationProvider>
   );
 };
 

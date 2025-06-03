@@ -1,7 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { usePersonalization } from '@/contexts/PersonalizationContext';
+import { RobotCustomization } from '@/components/personalization/RobotCustomization';
 
 type AnimationState = 'idle' | 'celebration' | 'encouraging' | 'speaking';
 
@@ -14,13 +17,28 @@ interface BizzyRobotCharacterProps {
 
 export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
   animationState = 'idle',
-  message = "Hi! I'm here to help you track your business setup progress!",
+  message,
   onClick,
   className
 }) => {
+  const { personalization, incrementClicks } = usePersonalization();
   const [currentState, setCurrentState] = useState<AnimationState>(animationState);
   const [isBlinking, setIsBlinking] = useState(false);
   const [showSpeechBubble, setShowSpeechBubble] = useState(true);
+  const [showCustomization, setShowCustomization] = useState(false);
+
+  // Get theme colors
+  const getThemeColors = () => {
+    const themes = {
+      blue: { primary: 'from-blue-500 to-blue-600', secondary: 'bg-blue-400', accent: 'bg-blue-300' },
+      green: { primary: 'from-green-500 to-green-600', secondary: 'bg-green-400', accent: 'bg-green-300' },
+      purple: { primary: 'from-purple-500 to-purple-600', secondary: 'bg-purple-400', accent: 'bg-purple-300' },
+      orange: { primary: 'from-orange-500 to-orange-600', secondary: 'bg-orange-400', accent: 'bg-orange-300' }
+    };
+    return themes[personalization.colorTheme];
+  };
+
+  const themeColors = getThemeColors();
 
   // Blink animation effect
   useEffect(() => {
@@ -38,6 +56,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
   }, [animationState]);
 
   const handleRobotClick = () => {
+    incrementClicks();
     setCurrentState('celebration');
     onClick?.();
     
@@ -47,18 +66,22 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
     }, 2000);
   };
 
+  const getAnimationSpeed = () => {
+    return personalization.preferences.animationSpeed === 'reduced' ? 2 : 1;
+  };
+
   const robotVariants = {
     idle: {
       scale: [1, 1.02, 1],
       rotate: [0, -1, 1, 0],
       transition: {
         scale: {
-          duration: 3,
+          duration: 3 * getAnimationSpeed(),
           repeat: Infinity,
           ease: "easeInOut"
         },
         rotate: {
-          duration: 4,
+          duration: 4 * getAnimationSpeed(),
           repeat: Infinity,
           ease: "easeInOut"
         }
@@ -69,8 +92,8 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
       rotate: [0, 5, -5, 0],
       y: [0, -10, 0],
       transition: {
-        duration: 0.6,
-        repeat: 3,
+        duration: 0.6 * getAnimationSpeed(),
+        repeat: personalization.preferences.celebrationIntensity === 'full' ? 3 : 1,
         ease: "easeInOut"
       }
     },
@@ -78,7 +101,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
       scale: 1.05,
       y: -5,
       transition: {
-        duration: 0.5,
+        duration: 0.5 * getAnimationSpeed(),
         ease: "easeOut"
       }
     }
@@ -88,7 +111,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
     idle: {
       rotate: [0, 5, -5, 0],
       transition: {
-        duration: 2,
+        duration: 2 * getAnimationSpeed(),
         repeat: Infinity,
         ease: "easeInOut"
       }
@@ -97,8 +120,8 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
       rotate: [-45, -30, -45],
       y: [-5, 0, -5],
       transition: {
-        duration: 0.3,
-        repeat: 6,
+        duration: 0.3 * getAnimationSpeed(),
+        repeat: personalization.preferences.celebrationIntensity === 'full' ? 6 : 2,
         ease: "easeInOut"
       }
     },
@@ -106,7 +129,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
       rotate: -30,
       y: -3,
       transition: {
-        duration: 0.5,
+        duration: 0.5 * getAnimationSpeed(),
         ease: "easeOut"
       }
     }
@@ -114,6 +137,15 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
 
   return (
     <div className={cn("relative flex flex-col items-center", className)}>
+      {/* Customization Button */}
+      <button
+        onClick={() => setShowCustomization(true)}
+        className="absolute -top-2 -right-2 z-10 w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
+        title="Customize your companion"
+      >
+        <Settings className="w-4 h-4 text-gray-600" />
+      </button>
+
       {/* Speech Bubble */}
       <AnimatePresence>
         {showSpeechBubble && message && (
@@ -145,7 +177,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
       {/* Robot Character */}
       <motion.div
         variants={robotVariants}
-        animate={currentState}
+        animate={personalization.preferences.reducedMotion ? 'idle' : currentState}
         onClick={handleRobotClick}
         className="relative cursor-pointer select-none"
         whileHover={{ scale: 1.05 }}
@@ -154,7 +186,7 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
         {/* Robot Body */}
         <div className="relative">
           {/* Head */}
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl relative mx-auto mb-2 shadow-lg">
+          <div className={`w-20 h-20 bg-gradient-to-br ${themeColors.primary} rounded-2xl relative mx-auto mb-2 shadow-lg`}>
             {/* Eyes */}
             <div className="flex justify-center items-center pt-4 gap-2">
               <motion.div
@@ -181,43 +213,43 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
 
             {/* Antenna */}
             <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-              <div className="w-1 h-4 bg-blue-400 rounded-full"></div>
+              <div className={`w-1 h-4 ${themeColors.secondary} rounded-full`}></div>
               <div className="w-2 h-2 bg-yellow-400 rounded-full -mt-1 -ml-0.5"></div>
             </div>
           </div>
 
           {/* Body */}
-          <div className="w-16 h-20 bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl mx-auto relative shadow-lg">
+          <div className={`w-16 h-20 bg-gradient-to-br ${themeColors.primary} rounded-xl mx-auto relative shadow-lg`}>
             {/* Chest Panel */}
-            <div className="w-8 h-8 bg-blue-300 rounded-lg mx-auto pt-2 relative">
-              <div className="w-4 h-1 bg-blue-600 rounded-full mx-auto mb-1"></div>
-              <div className="w-3 h-1 bg-blue-600 rounded-full mx-auto mb-1"></div>
-              <div className="w-2 h-1 bg-blue-600 rounded-full mx-auto"></div>
+            <div className={`w-8 h-8 ${themeColors.accent} rounded-lg mx-auto pt-2 relative`}>
+              <div className={`w-4 h-1 ${themeColors.secondary} rounded-full mx-auto mb-1`}></div>
+              <div className={`w-3 h-1 ${themeColors.secondary} rounded-full mx-auto mb-1`}></div>
+              <div className={`w-2 h-1 ${themeColors.secondary} rounded-full mx-auto`}></div>
             </div>
 
             {/* Arms */}
             <motion.div
               variants={armVariants}
-              animate={currentState}
-              className="absolute -left-4 top-2 w-3 h-8 bg-blue-400 rounded-full origin-top"
+              animate={personalization.preferences.reducedMotion ? 'idle' : currentState}
+              className={`absolute -left-4 top-2 w-3 h-8 ${themeColors.secondary} rounded-full origin-top`}
             ></motion.div>
             <motion.div
               variants={armVariants}
-              animate={currentState}
-              className="absolute -right-4 top-2 w-3 h-8 bg-blue-400 rounded-full origin-top"
+              animate={personalization.preferences.reducedMotion ? 'idle' : currentState}
+              className={`absolute -right-4 top-2 w-3 h-8 ${themeColors.secondary} rounded-full origin-top`}
               style={{ scaleX: -1 }}
             ></motion.div>
           </div>
 
           {/* Legs */}
           <div className="flex justify-center gap-2 mt-1">
-            <div className="w-3 h-8 bg-blue-400 rounded-full"></div>
-            <div className="w-3 h-8 bg-blue-400 rounded-full"></div>
+            <div className={`w-3 h-8 ${themeColors.secondary} rounded-full`}></div>
+            <div className={`w-3 h-8 ${themeColors.secondary} rounded-full`}></div>
           </div>
 
           {/* Celebration Effects */}
           <AnimatePresence>
-            {currentState === 'celebration' && (
+            {currentState === 'celebration' && personalization.preferences.celebrationIntensity === 'full' && (
               <>
                 {[...Array(6)].map((_, i) => (
                   <motion.div
@@ -256,8 +288,14 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
         transition={{ delay: 1 }}
         className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center max-w-xs"
       >
-        Click me for encouragement!
+        Click {personalization.robotName} for encouragement!
       </motion.p>
+
+      {/* Customization Modal */}
+      <RobotCustomization 
+        isOpen={showCustomization}
+        onClose={() => setShowCustomization(false)}
+      />
     </div>
   );
 };
