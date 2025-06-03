@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X, FileText, CheckCircle, HelpCircle, Search, Home, MoreHorizontal, Bot } from 'lucide-react';
+import { Plus, X, FileText, CheckCircle, HelpCircle, Search, Home, Bot } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -27,9 +27,6 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [position, setPosition] = useState({ x: 20, y: 20 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   
   const navigate = useNavigate();
   const location = useLocation();
@@ -105,7 +102,6 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         icon: FileText,
         label: 'Add Document',
         action: () => {
-          // Trigger document creation
           console.log('Creating new document...');
         },
         color: 'bg-orange-500',
@@ -118,24 +114,21 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         icon: CheckCircle,
         label: 'Mark Complete',
         action: () => {
-          // Mark current step as complete
           console.log('Marking step as complete...');
         },
         color: 'bg-green-500',
       });
     }
 
-    return baseActions.slice(0, 4); // Limit to 4 actions
+    return baseActions.slice(0, 4);
   };
 
   const actions = getContextualActions();
 
   const handleMainClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!isDragging) {
-      setIsExpanded(!isExpanded);
-      trigger('selection');
-    }
+    setIsExpanded(!isExpanded);
+    trigger('selection');
   };
 
   const handleActionClick = (action: FABAction, e: React.MouseEvent) => {
@@ -143,58 +136,6 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     action.action();
     setIsExpanded(false);
     trigger('success');
-  };
-
-  const handleLongPress = () => {
-    trigger('warning');
-    // Show options menu
-  };
-
-  // Drag handling
-  const handleDragStart = (e: React.PointerEvent) => {
-    setIsDragging(true);
-    const rect = e.currentTarget.getBoundingClientRect();
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-    e.currentTarget.setPointerCapture(e.pointerId);
-  };
-
-  const handleDragMove = (e: React.PointerEvent) => {
-    if (!isDragging) return;
-    
-    const newX = e.clientX - dragOffset.x;
-    const newY = e.clientY - dragOffset.y;
-    
-    // Keep within screen bounds
-    const maxX = window.innerWidth - 56;
-    const maxY = window.innerHeight - 56;
-    
-    const clampedPosition = {
-      x: Math.max(20, Math.min(maxX - 20, newX)),
-      y: Math.max(20, Math.min(maxY - 20, newY)),
-    };
-    
-    setPosition(clampedPosition);
-    onDrag?.(clampedPosition);
-  };
-
-  const handleDragEnd = (e: React.PointerEvent) => {
-    if (isDragging) {
-      setIsDragging(false);
-      e.currentTarget.releasePointerCapture(e.pointerId);
-      
-      // Magnetic snap to edges
-      const centerX = position.x + 28;
-      const screenWidth = window.innerWidth;
-      
-      if (centerX < screenWidth / 2) {
-        setPosition(prev => ({ ...prev, x: 20 }));
-      } else {
-        setPosition(prev => ({ ...prev, x: screenWidth - 76 }));
-      }
-    }
   };
 
   if (!isVisible) return null;
@@ -215,7 +156,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
       </AnimatePresence>
 
       {/* FAB Container */}
-      <div className={cn("fixed z-50", className)}>
+      <div className={cn("fixed bottom-6 right-6 z-50", className)}>
         {/* Action Buttons */}
         <AnimatePresence>
           {isExpanded && (
@@ -277,13 +218,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
 
         {/* Main FAB */}
         <motion.div
-          style={{
-            position: 'fixed',
-            bottom: position.y,
-            right: position.x,
-          }}
           animate={{
-            scale: isDragging ? 1.1 : 1,
             rotate: isExpanded ? 45 : 0,
           }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -293,15 +228,9 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             size="lg"
             className={cn(
               "w-14 h-14 rounded-full shadow-xl bg-blue-600 hover:bg-blue-700",
-              "transition-all duration-200",
-              isDragging && "cursor-grabbing",
-              !isDragging && "cursor-pointer"
+              "transition-all duration-200"
             )}
             onClick={handleMainClick}
-            onPointerDown={handleDragStart}
-            onPointerMove={handleDragMove}
-            onPointerUp={handleDragEnd}
-            style={{ touchAction: 'none' }}
           >
             <AnimatePresence mode="wait">
               {isExpanded ? (
@@ -338,23 +267,24 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             />
           )}
         </motion.div>
-
-        {/* Progress Companion Button - Fixed position next to help button */}
-        <motion.div
-          className="fixed bottom-6 right-20 z-50"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.5, type: "spring", stiffness: 300, damping: 20 }}
-        >
-          <Button
-            size="lg"
-            className="w-12 h-12 rounded-full shadow-xl bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 animate-pulse hover:animate-none transition-all duration-200"
-            onClick={() => navigate('/progress-companion')}
-          >
-            <Bot className="w-6 h-6 text-white" />
-          </Button>
-        </motion.div>
       </div>
+
+      {/* Progress Companion Button - Fixed position next to main FAB */}
+      <motion.div
+        className="fixed bottom-6 right-24 z-50"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.5, type: "spring", stiffness: 300, damping: 20 }}
+      >
+        <Button
+          size="lg"
+          className="w-14 h-14 rounded-full shadow-xl bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 animate-pulse hover:animate-none transition-all duration-200"
+          onClick={() => navigate('/progress-companion')}
+          aria-label="Open Progress Companion"
+        >
+          <Bot className="w-6 h-6 text-white" />
+        </Button>
+      </motion.div>
     </>
   );
 };

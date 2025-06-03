@@ -12,6 +12,7 @@ import { CloudSyncIndicator } from "@/components/ui/cloud-sync-indicator";
 import { ContextualFAQ } from "@/components/ui/contextual-faq";
 import { FAQTrigger } from "@/components/ui/faq-trigger";
 import { UndoKeyboardHandler } from "@/components/ui/undo-toast";
+import { FloatingActionButton } from "@/components/ui/floating-action-button";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -283,6 +284,9 @@ const Dashboard = () => {
         currentPage={window.location.pathname}
         onContactSupport={() => setBizzyOpen(true)}
       />
+      
+      {/* Floating Action Button with Progress Companion */}
+      <FloatingActionButton />
       
       {/* Global Keyboard Handlers */}
       <UndoKeyboardHandler />
