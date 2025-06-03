@@ -138,6 +138,11 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     trigger('success');
   };
 
+  const handleRobotClick = () => {
+    navigate('/progress-companion');
+    trigger('light');
+  };
+
   if (!isVisible) return null;
 
   return (
@@ -155,136 +160,132 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         )}
       </AnimatePresence>
 
-      {/* FAB Container */}
-      <div className={cn("fixed bottom-6 right-6 z-50", className)}>
-        {/* Action Buttons */}
-        <AnimatePresence>
-          {isExpanded && (
-            <div className="absolute bottom-16 right-0">
-              {actions.map((action, index) => (
-                <motion.div
-                  key={action.id}
-                  initial={{ 
-                    opacity: 0, 
-                    scale: 0.3,
-                    x: 20,
-                    y: 20,
-                  }}
-                  animate={{ 
-                    opacity: 1, 
-                    scale: 1,
-                    x: Math.cos((index * Math.PI) / (actions.length - 1) + Math.PI) * 80,
-                    y: Math.sin((index * Math.PI) / (actions.length - 1) + Math.PI) * 80,
-                  }}
-                  exit={{ 
-                    opacity: 0, 
-                    scale: 0.3,
-                    x: 20,
-                    y: 20,
-                  }}
-                  transition={{ 
-                    delay: index * 0.05,
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20,
-                  }}
-                  className="absolute"
-                >
-                  <Button
-                    size="sm"
-                    className={cn(
-                      "w-12 h-12 rounded-full shadow-lg",
-                      action.color || "bg-gray-600",
-                      "hover:scale-110 transition-transform"
-                    )}
-                    onClick={(e) => handleActionClick(action, e)}
-                  >
-                    <action.icon className="w-5 h-5 text-white" />
-                  </Button>
-                  
-                  {/* Action Label */}
-                  <motion.div
-                    initial={{ opacity: 0, x: 10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="absolute right-14 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs whitespace-nowrap"
-                  >
-                    {action.label}
-                  </motion.div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </AnimatePresence>
-
-        {/* Main FAB */}
-        <motion.div
-          animate={{
-            rotate: isExpanded ? 45 : 0,
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="relative"
-        >
-          <Button
-            size="lg"
-            className={cn(
-              "w-14 h-14 rounded-full shadow-xl bg-blue-600 hover:bg-blue-700",
-              "transition-all duration-200"
-            )}
-            onClick={handleMainClick}
-          >
-            <AnimatePresence mode="wait">
-              {isExpanded ? (
-                <motion.div
-                  key="close"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <X className="w-6 h-6 text-white" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="plus"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Plus className="w-6 h-6 text-white" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </Button>
-
-          {/* Ripple effect */}
-          {isExpanded && (
-            <motion.div
-              initial={{ scale: 0, opacity: 0.5 }}
-              animate={{ scale: 2, opacity: 0 }}
-              transition={{ duration: 0.6 }}
-              className="absolute inset-0 bg-blue-400 rounded-full"
-            />
-          )}
-        </motion.div>
-      </div>
-
-      {/* Progress Companion Button - Fixed position next to main FAB */}
-      <motion.div
-        className="fixed bottom-6 right-24 z-50"
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.5, type: "spring", stiffness: 300, damping: 20 }}
-      >
+      {/* Bottom Navigation Container */}
+      <div className="fixed bottom-6 right-6 z-50 flex gap-3">
+        {/* Progress Companion Button - Static, no animation */}
         <Button
           size="lg"
-          className="w-14 h-14 rounded-full shadow-xl bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 animate-pulse hover:animate-none transition-all duration-200"
-          onClick={() => navigate('/progress-companion')}
+          className="w-14 h-14 rounded-full shadow-xl bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all duration-200 hover:scale-105"
+          onClick={handleRobotClick}
           aria-label="Open Progress Companion"
         >
           <Bot className="w-6 h-6 text-white" />
         </Button>
-      </motion.div>
+
+        {/* Main FAB Container */}
+        <div className={cn("relative", className)}>
+          {/* Action Buttons */}
+          <AnimatePresence>
+            {isExpanded && (
+              <div className="absolute bottom-16 right-0">
+                {actions.map((action, index) => (
+                  <motion.div
+                    key={action.id}
+                    initial={{ 
+                      opacity: 0, 
+                      scale: 0.3,
+                      x: 20,
+                      y: 20,
+                    }}
+                    animate={{ 
+                      opacity: 1, 
+                      scale: 1,
+                      x: Math.cos((index * Math.PI) / (actions.length - 1) + Math.PI) * 80,
+                      y: Math.sin((index * Math.PI) / (actions.length - 1) + Math.PI) * 80,
+                    }}
+                    exit={{ 
+                      opacity: 0, 
+                      scale: 0.3,
+                      x: 20,
+                      y: 20,
+                    }}
+                    transition={{ 
+                      delay: index * 0.05,
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 20,
+                    }}
+                    className="absolute"
+                  >
+                    <Button
+                      size="sm"
+                      className={cn(
+                        "w-12 h-12 rounded-full shadow-lg",
+                        action.color || "bg-gray-600",
+                        "hover:scale-110 transition-transform"
+                      )}
+                      onClick={(e) => handleActionClick(action, e)}
+                    >
+                      <action.icon className="w-5 h-5 text-white" />
+                    </Button>
+                    
+                    {/* Action Label */}
+                    <motion.div
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="absolute right-14 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs whitespace-nowrap"
+                    >
+                      {action.label}
+                    </motion.div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* Main FAB */}
+          <motion.div
+            animate={{
+              rotate: isExpanded ? 45 : 0,
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="relative"
+          >
+            <Button
+              size="lg"
+              className={cn(
+                "w-14 h-14 rounded-full shadow-xl bg-blue-600 hover:bg-blue-700",
+                "transition-all duration-200"
+              )}
+              onClick={handleMainClick}
+            >
+              <AnimatePresence mode="wait">
+                {isExpanded ? (
+                  <motion.div
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <X className="w-6 h-6 text-white" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="plus"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Plus className="w-6 h-6 text-white" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Button>
+
+            {/* Ripple effect */}
+            {isExpanded && (
+              <motion.div
+                initial={{ scale: 0, opacity: 0.5 }}
+                animate={{ scale: 2, opacity: 0 }}
+                transition={{ duration: 0.6 }}
+                className="absolute inset-0 bg-blue-400 rounded-full"
+              />
+            )}
+          </motion.div>
+        </div>
+      </div>
     </>
   );
 };

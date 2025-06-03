@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, HelpCircle, Moon, RefreshCw, Menu } from "lucide-react";
@@ -274,8 +273,10 @@ const Dashboard = () => {
         onClose={() => setBizzyOpen(false)} 
       />
       
-      {/* FAQ Trigger Button - Better mobile positioning */}
-      <FAQTrigger onClick={() => setFaqOpen(true)} />
+      {/* FAQ Trigger Button - Repositioned to avoid conflict */}
+      <div className="fixed bottom-6 left-6 z-50">
+        <FAQTrigger onClick={() => setFaqOpen(true)} />
+      </div>
       
       {/* Contextual FAQ */}
       <ContextualFAQ
