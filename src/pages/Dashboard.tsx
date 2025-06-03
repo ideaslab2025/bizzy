@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, HelpCircle, Moon, RefreshCw, Menu, Bot } from "lucide-react";
@@ -77,7 +76,7 @@ const Dashboard = () => {
       <div className="min-h-screen flex w-full bg-gray-50 dark:bg-gray-900">
         <AppSidebar />
         <main className="flex-1 relative">
-          {/* Enhanced Header with Consistent Styling */}
+          {/* Enhanced Header with White Text and Icons */}
           <header className="sticky top-0 z-40 h-16 md:h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
             <div className="h-full px-4 md:px-6 flex items-center justify-between">
               <div className="flex items-center gap-3 md:gap-4">
@@ -88,7 +87,7 @@ const Dashboard = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <SidebarTrigger className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 p-3 min-h-[44px] min-w-[44px] touch-manipulation" />
+                        <SidebarTrigger className="text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 transition-all duration-200 p-3 min-h-[44px] min-w-[44px] touch-manipulation" />
                       </motion.div>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -96,7 +95,7 @@ const Dashboard = () => {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+                <h1 className="text-xl md:text-2xl font-bold text-white dark:text-white tracking-tight">
                   Dashboard
                 </h1>
               </div>
@@ -118,7 +117,7 @@ const Dashboard = () => {
                 </motion.div>
               </div>
 
-              {/* Right Actions with Consistent Styling */}
+              {/* Right Actions with White Icons */}
               <div className="flex items-center gap-2 md:gap-3">
                 {/* Search button for mobile */}
                 <motion.div
@@ -130,7 +129,7 @@ const Dashboard = () => {
                     variant="ghost" 
                     size="icon"
                     onClick={() => setCommandPaletteOpen(true)}
-                    className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                    className="text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
                   >
                     <Search className="h-5 w-5" />
                   </Button>
@@ -153,7 +152,7 @@ const Dashboard = () => {
                     variant="ghost" 
                     size="icon"
                     onClick={toggleTheme}
-                    className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                    className="text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
                   >
                     <Moon className="h-5 w-5" />
                   </Button>
@@ -169,7 +168,7 @@ const Dashboard = () => {
                       <Button 
                         variant="ghost" 
                         size="icon"
-                        className="relative rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:shadow-md min-h-[44px] min-w-[44px]"
+                        className="relative rounded-lg p-3 transition-all duration-200 hover:bg-gray-700 dark:hover:bg-gray-600 text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 hover:shadow-md min-h-[44px] min-w-[44px]"
                       >
                         <Bell className="w-5 h-5" />
                         {hasNotifications && (
@@ -198,7 +197,7 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Robot Button - Now in Top Navigation with Consistent Styling */}
+                {/* Robot Button - Now in Top Navigation with White Styling */}
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -210,7 +209,7 @@ const Dashboard = () => {
                           variant="ghost" 
                           size="icon"
                           onClick={handleRobotClick}
-                          className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                          className="text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
                           aria-label="Open Progress Companion"
                         >
                           <Bot className="w-5 h-5" />
@@ -223,7 +222,7 @@ const Dashboard = () => {
                   </Tooltip>
                 </TooltipProvider>
 
-                {/* Enhanced User Menu */}
+                {/* Enhanced User Menu with White Styling */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -232,7 +231,7 @@ const Dashboard = () => {
                     >
                       <Button 
                         variant="ghost" 
-                        className="flex items-center gap-2 rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-md text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 min-h-[44px]"
+                        className="flex items-center gap-2 rounded-lg p-3 transition-all duration-200 hover:bg-gray-700 dark:hover:bg-gray-600 hover:shadow-md text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 min-h-[44px]"
                       >
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                           <User className="w-4 h-4 text-white" />

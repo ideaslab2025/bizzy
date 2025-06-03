@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -61,9 +60,9 @@ const mockProgressData: ComplianceArea[] = [
     description: 'Banking setup, accounting software, and bookkeeping',
     category: 'financial',
     completionPercentage: 95,
-    status: 'complete',
+    status: 'in-progress',
     tasks: { completed: 8, total: 8 },
-    estimatedTimeToComplete: 'Complete',
+    estimatedTimeToComplete: '1 hour',
     icon: <Building2 className="w-6 h-6" />
   },
   {
@@ -230,12 +229,11 @@ export const ProgressPortraits: React.FC = () => {
                 </div>
               </div>
 
-              {area.status !== 'complete' && (
-                <Button className="w-full" size="sm">
-                  Continue Tasks
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              )}
+              {/* Show Continue Tasks button for all sections, including Financial Management */}
+              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" size="sm">
+                Continue Tasks
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
             </motion.div>
           ))}
         </div>
