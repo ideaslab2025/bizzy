@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -210,7 +211,7 @@ const EnhancedOverview: React.FC = () => {
 
   if (loading || !analytics) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-gray-200 rounded w-1/3"></div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -224,50 +225,75 @@ const EnhancedOverview: React.FC = () => {
   }
 
   return (
-    <div className="p-8 space-y-8">
-      {/* Welcome Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8">
+      {/* Welcome Header with Mobile Typography */}
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-xl md:text-3xl font-bold mb-2 md:mb-3 leading-tight">
           Welcome back! 
         </h1>
-        <p className="text-gray-600">
+        <p className="text-sm md:text-base text-gray-600 leading-relaxed">
           You're {Math.round(analytics.overallProgress)}% through your business setup journey
         </p>
       </div>
 
-      {/* Enhanced Tab Navigation */}
+      {/* Enhanced Tab Navigation with Mobile-Optimized Headers */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <Target className="w-4 h-4" />
-            Business Overview
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-1 md:gap-0 h-auto md:h-10">
+          <TabsTrigger 
+            value="overview" 
+            className="flex flex-col md:flex-row items-center gap-1 md:gap-2 px-2 md:px-3 py-2 md:py-2 text-xs md:text-sm min-h-[48px] md:min-h-[40px]"
+          >
+            <Target className="w-3 h-3 md:w-4 md:h-4" />
+            <span className="text-center leading-tight">
+              Business<br className="md:hidden" />
+              <span className="md:ml-1">Overview</span>
+            </span>
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <BarChart3 className="w-4 h-4" />
-            Document Analytics
+          <TabsTrigger 
+            value="analytics" 
+            className="flex flex-col md:flex-row items-center gap-1 md:gap-2 px-2 md:px-3 py-2 md:py-2 text-xs md:text-sm min-h-[48px] md:min-h-[40px]"
+          >
+            <BarChart3 className="w-3 h-3 md:w-4 md:h-4" />
+            <span className="text-center leading-tight">
+              Document<br className="md:hidden" />
+              <span className="md:ml-1">Analytics</span>
+            </span>
           </TabsTrigger>
-          <TabsTrigger value="timeline" className="flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
-            Business Timeline
+          <TabsTrigger 
+            value="timeline" 
+            className="flex flex-col md:flex-row items-center gap-1 md:gap-2 px-2 md:px-3 py-2 md:py-2 text-xs md:text-sm min-h-[48px] md:min-h-[40px]"
+          >
+            <Calendar className="w-3 h-3 md:w-4 md:h-4" />
+            <span className="text-center leading-tight">
+              Business<br className="md:hidden" />
+              <span className="md:ml-1">Timeline</span>
+            </span>
           </TabsTrigger>
-          <TabsTrigger value="ai-insights" className="flex items-center gap-2">
-            <Brain className="w-4 h-4" />
-            AI Insights
+          <TabsTrigger 
+            value="ai-insights" 
+            className="flex flex-col md:flex-row items-center gap-1 md:gap-2 px-2 md:px-3 py-2 md:py-2 text-xs md:text-sm min-h-[48px] md:min-h-[40px]"
+          >
+            <Brain className="w-3 h-3 md:w-4 md:h-4" />
+            <span className="text-center leading-tight">
+              AI<br className="md:hidden" />
+              <span className="md:ml-1">Insights</span>
+            </span>
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-8">
-          {/* Visual Journey Map - Compact layout with solid arrow lines */}
-          <Card className="p-6">
-            <CardHeader className="px-0 pt-0">
-              <CardTitle className="flex items-center gap-2">
-                <Target className="w-5 h-5" />
-                Your Business Setup Journey
+        <TabsContent value="overview" className="space-y-6 md:space-y-8 mt-6">
+          {/* Visual Journey Map - Mobile-Optimized Icon Layout */}
+          <Card className="p-4 md:p-6">
+            <CardHeader className="px-0 pt-0 pb-4 md:pb-6">
+              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+                <Target className="w-4 h-4 md:w-5 md:h-5" />
+                <span className="leading-tight">Your Business Setup Journey</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="px-0">
               <div className="w-full">
-                <div className="grid grid-cols-5 gap-2 lg:gap-4">
+                {/* Mobile-First Responsive Grid for Icons */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-2 lg:gap-4">
                   {businessSections.map((section, index) => {
                     const IconComponent = section.icon;
                     const completion = analytics?.completionBySection[section.id] || 0;
@@ -279,13 +305,13 @@ const EnhancedOverview: React.FC = () => {
                       <React.Fragment key={section.id}>
                         <div className="flex flex-col items-center">
                           <motion.div
-                            className="flex flex-col items-center cursor-pointer w-full"
+                            className="flex flex-col items-center cursor-pointer w-full touch-manipulation"
                             whileHover={{ scale: 1.05 }}
                             onClick={() => navigateToSection(section.id)}
                           >
-                            {/* Section node */}
+                            {/* Section node with responsive sizing */}
                             <div className={cn(
-                              "w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all mb-2 relative z-10 bg-white",
+                              "w-12 h-12 md:w-14 md:h-14 lg:w-12 lg:h-12 rounded-full flex items-center justify-center border-4 transition-all mb-3 md:mb-2 relative z-10 bg-white min-h-[48px] min-w-[48px]",
                               isCompleted ? 
                                 "border-green-500" :
                               isCurrent ? 
@@ -293,11 +319,11 @@ const EnhancedOverview: React.FC = () => {
                                 "border-gray-300"
                             )}>
                               {isCompleted ? (
-                                <CheckCircle className="w-6 h-6 text-green-500" strokeWidth={2} />
+                                <CheckCircle className="w-6 h-6 md:w-7 md:h-7 lg:w-6 lg:h-6 text-green-500" strokeWidth={2} />
                               ) : (
                                 <IconComponent 
                                   className={cn(
-                                    "w-6 h-6",
+                                    "w-6 h-6 md:w-7 md:h-7 lg:w-6 lg:h-6",
                                     isCurrent ? "text-blue-500" : section.iconColor
                                   )} 
                                   strokeWidth={2} 
@@ -305,15 +331,18 @@ const EnhancedOverview: React.FC = () => {
                               )}
                             </div>
                             
-                            <p className="text-xs lg:text-sm text-center font-medium leading-tight">{section.title}</p>
-                            <p className="text-xs text-gray-500">
+                            {/* Mobile-optimized text with responsive sizing */}
+                            <p className="text-xs md:text-sm lg:text-xs text-center font-medium leading-tight px-1 max-w-full">
+                              {section.title}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">
                               {Math.round(completion)}%
                             </p>
                           </motion.div>
 
-                          {/* Solid arrow line underneath each section except the last */}
+                          {/* Connection lines - hidden on mobile for cleaner look */}
                           {isNext && (
-                            <div className="mt-4 w-full flex justify-center">
+                            <div className="hidden lg:block mt-4 w-full flex justify-center">
                               <div className={cn(
                                 "h-1 w-full bg-gradient-to-r relative",
                                 isCompleted ? 
@@ -338,33 +367,33 @@ const EnhancedOverview: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {/* Stats Grid with Mobile-Optimized Layout */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
             <StatCard
               title="Overall Progress"
               value={`${Math.round(analytics.overallProgress)}%`}
-              icon={<TrendingUp className="w-5 h-5" strokeWidth={2} />}
+              icon={<TrendingUp className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />}
               trend={analytics.completedSteps > 0 ? `${analytics.completedSteps} steps completed` : undefined}
               color="blue"
             />
             <StatCard
               title="Documents"
               value={`${analytics.documentsCompleted}/${analytics.totalDocuments}`}
-              icon={<FileText className="w-5 h-5" strokeWidth={2} />}
+              icon={<FileText className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />}
               trend={analytics.documentsCompleted > 0 ? `${Math.round((analytics.documentsCompleted / analytics.totalDocuments) * 100)}% complete` : undefined}
               color="green"
             />
             <StatCard
               title="Time Invested"
               value={`${analytics.totalHours}h`}
-              icon={<Clock className="w-5 h-5" strokeWidth={2} />}
+              icon={<Clock className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />}
               trend="Estimated time saved: 20h"
               color="purple"
             />
             <StatCard
               title="Next Milestone"
               value={analytics.currentSection?.title || 'Complete!'}
-              icon={<Target className="w-5 h-5" strokeWidth={2} />}
+              icon={<Target className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />}
               trend={analytics.currentSection ? `${analytics.currentSection.estimated_time_minutes} min remaining` : undefined}
               color="orange"
             />
@@ -373,22 +402,22 @@ const EnhancedOverview: React.FC = () => {
           {/* Progress Portraits Section */}
           <ProgressPortraits />
 
-          {/* Action Cards Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Action Cards Row with Mobile-Optimized Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             {/* Quick Wins */}
             <Card className="border-green-200 bg-green-50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-green-800">
-                  <Zap className="w-5 h-5" strokeWidth={2} />
-                  Quick Wins Available
-                  <Badge variant="secondary" className="ml-auto">
+              <CardHeader className="pb-4 md:pb-6">
+                <CardTitle className="flex items-center gap-2 text-green-800 text-base md:text-lg">
+                  <Zap className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />
+                  <span>Quick Wins Available</span>
+                  <Badge variant="secondary" className="ml-auto text-xs">
                     {quickWins.length}
                   </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {quickWins.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4">
+                  <p className="text-gray-500 text-center py-4 text-sm md:text-base">
                     No quick wins available - great job staying on top of things!
                   </p>
                 ) : (
@@ -397,15 +426,15 @@ const EnhancedOverview: React.FC = () => {
                       <Button
                         key={task.id}
                         variant="outline"
-                        className="w-full justify-between hover:bg-green-100"
+                        className="w-full justify-between hover:bg-green-100 min-h-[52px] p-3"
                         onClick={() => navigateToStep(task.section_id, task.order_number)}
                       >
-                        <div className="text-left">
-                          <div className="font-medium">{task.title}</div>
-                          <div className="text-sm text-gray-600">{task.section_title}</div>
+                        <div className="text-left flex-1">
+                          <div className="font-medium text-sm md:text-base leading-tight">{task.title}</div>
+                          <div className="text-xs md:text-sm text-gray-600 mt-1">{task.section_title}</div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-500">{task.estimated_time_minutes}min</span>
+                        <div className="flex items-center gap-2 ml-3">
+                          <span className="text-xs md:text-sm text-gray-500">{task.estimated_time_minutes}min</span>
                           <ArrowRight className="w-4 h-4" strokeWidth={2} />
                         </div>
                       </Button>
@@ -417,9 +446,9 @@ const EnhancedOverview: React.FC = () => {
 
             {/* Continue Current Section */}
             <Card className="border-blue-200 bg-blue-50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-blue-800">
-                  <PlayCircle className="w-5 h-5" strokeWidth={2} />
+              <CardHeader className="pb-4 md:pb-6">
+                <CardTitle className="flex items-center gap-2 text-blue-800 text-base md:text-lg">
+                  <PlayCircle className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />
                   Continue Your Journey
                 </CardTitle>
               </CardHeader>
@@ -427,11 +456,11 @@ const EnhancedOverview: React.FC = () => {
                 {analytics.currentSection ? (
                   <div className="space-y-4">
                     <div>
-                      <h3 className="font-semibold text-lg">{analytics.currentSection.title}</h3>
-                      <p className="text-sm text-gray-600 mt-1">{analytics.currentSection.description}</p>
+                      <h3 className="font-semibold text-base md:text-lg leading-tight">{analytics.currentSection.title}</h3>
+                      <p className="text-xs md:text-sm text-gray-600 mt-2 leading-relaxed">{analytics.currentSection.description}</p>
                       
                       <div className="mt-3">
-                        <div className="flex justify-between text-sm mb-1">
+                        <div className="flex justify-between text-xs md:text-sm mb-2">
                           <span>Progress</span>
                           <span>{Math.round(analytics.completionBySection[analytics.currentSection.id])}%</span>
                         </div>
@@ -440,7 +469,7 @@ const EnhancedOverview: React.FC = () => {
                     </div>
                     
                     <Button 
-                      className="w-full"
+                      className="w-full min-h-[48px]"
                       onClick={() => navigateToSection(analytics.currentSection.id)}
                     >
                       Continue Section
@@ -449,38 +478,38 @@ const EnhancedOverview: React.FC = () => {
                   </div>
                 ) : (
                   <div className="text-center py-4">
-                    <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-2" strokeWidth={2} />
-                    <p className="font-semibold">Congratulations!</p>
-                    <p className="text-sm text-gray-600">You've completed all sections</p>
+                    <CheckCircle className="w-10 h-10 md:w-12 md:h-12 text-green-500 mx-auto mb-2" strokeWidth={2} />
+                    <p className="font-semibold text-sm md:text-base">Congratulations!</p>
+                    <p className="text-xs md:text-sm text-gray-600 mt-1">You've completed all sections</p>
                   </div>
                 )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Bottom Row - Recent Activity & Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Bottom Row - Recent Activity & Quick Actions with Mobile Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             {/* Recent Activity */}
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" strokeWidth={2} />
+              <CardHeader className="pb-4 md:pb-6">
+                <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+                  <Clock className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />
                   Recent Activity
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {analytics.recentActivities.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4">
+                  <p className="text-gray-500 text-center py-4 text-sm md:text-base">
                     No recent activity. Start your first section to see progress here!
                   </p>
                 ) : (
                   <div className="space-y-3">
                     {analytics.recentActivities.map((activity, index) => (
-                      <div key={index} className="flex items-center gap-3 p-2 rounded hover:bg-gray-50">
+                      <div key={index} className="flex items-center gap-3 p-2 rounded hover:bg-gray-50 min-h-[48px]">
                         <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" strokeWidth={2} />
                         <div className="flex-1">
-                          <p className="font-medium text-sm">{activity.title}</p>
-                          <p className="text-xs text-gray-500">{activity.section}</p>
+                          <p className="font-medium text-sm md:text-base leading-tight">{activity.title}</p>
+                          <p className="text-xs md:text-sm text-gray-500 mt-1">{activity.section}</p>
                         </div>
                         <span className="text-xs text-gray-400">
                           {new Date(activity.completedAt).toLocaleDateString()}
@@ -492,50 +521,50 @@ const EnhancedOverview: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* Quick Actions */}
+            {/* Quick Actions with Mobile-Optimized Grid */}
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="w-5 h-5" strokeWidth={2} />
+              <CardHeader className="pb-4 md:pb-6">
+                <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+                  <BookOpen className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />
                   Quick Actions
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 md:gap-4">
                   <Button
                     variant="outline"
-                    className="h-20 flex-col gap-2"
+                    className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
                     onClick={() => navigate('/dashboard/documents')}
                   >
-                    <FileText className="w-5 h-5" strokeWidth={2} />
-                    <span className="text-sm">Documents</span>
+                    <FileText className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
+                    <span className="text-xs md:text-sm font-medium">Documents</span>
                   </Button>
                   
                   <Button
                     variant="outline"
-                    className="h-20 flex-col gap-2"
+                    className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
                     onClick={() => navigate('/guided-help')}
                   >
-                    <Target className="w-5 h-5" strokeWidth={2} />
-                    <span className="text-sm">Guide</span>
+                    <Target className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
+                    <span className="text-xs md:text-sm font-medium">Guide</span>
                   </Button>
                   
                   <Button
                     variant="outline"
-                    className="h-20 flex-col gap-2"
+                    className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
                     onClick={() => setActiveTab('analytics')}
                   >
-                    <BarChart3 className="w-5 h-5" strokeWidth={2} />
-                    <span className="text-sm">Analytics</span>
+                    <BarChart3 className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
+                    <span className="text-xs md:text-sm font-medium">Analytics</span>
                   </Button>
                   
                   <Button
                     variant="outline"
-                    className="h-20 flex-col gap-2"
+                    className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
                     onClick={() => setActiveTab('ai-insights')}
                   >
-                    <Brain className="w-5 h-5" strokeWidth={2} />
-                    <span className="text-sm">AI Insights</span>
+                    <Brain className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
+                    <span className="text-xs md:text-sm font-medium">AI Insights</span>
                   </Button>
                 </div>
               </CardContent>
@@ -543,15 +572,15 @@ const EnhancedOverview: React.FC = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="analytics" className="space-y-6">
+        <TabsContent value="analytics" className="space-y-6 mt-6">
           <SimpleDocumentAnalytics userId={user.id} />
         </TabsContent>
 
-        <TabsContent value="timeline" className="space-y-6">
+        <TabsContent value="timeline" className="space-y-6 mt-6">
           <BusinessHistoryTimeline />
         </TabsContent>
 
-        <TabsContent value="ai-insights" className="space-y-6">
+        <TabsContent value="ai-insights" className="space-y-6 mt-6">
           <SuccessPredictionPanel />
         </TabsContent>
       </Tabs>
@@ -576,17 +605,17 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, color })
   };
 
   return (
-    <Card>
-      <CardContent className="p-6">
+    <Card className="touch-manipulation">
+      <CardContent className="p-4 md:p-6">
         <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-600">{title}</p>
-            <p className="text-2xl font-bold mt-1">{value}</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs md:text-sm font-medium text-gray-600 leading-tight">{title}</p>
+            <p className="text-lg md:text-2xl font-bold mt-1 leading-tight truncate">{value}</p>
             {trend && (
-              <p className="text-xs text-gray-500 mt-1">{trend}</p>
+              <p className="text-xs text-gray-500 mt-1 leading-tight">{trend}</p>
             )}
           </div>
-          <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${colorClasses[color]}`}>
+          <div className={`w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center flex-shrink-0 ml-3 ${colorClasses[color]}`}>
             {icon}
           </div>
         </div>

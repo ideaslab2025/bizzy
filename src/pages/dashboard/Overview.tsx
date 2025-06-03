@@ -56,47 +56,47 @@ const Overview = () => {
           data-spotlight-id="dashboard-welcome"
           data-spotlight-message="Welcome to Bizzy! This is your command center. Start exploring your business journey here."
         >
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4 leading-tight">
             Welcome back! 👋
           </h1>
-          <p className="text-base md:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-4">
+          <p className="text-base md:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-4 leading-relaxed">
             Let's continue building your business together
           </p>
         </section>
 
-        {/* Stats Section with better mobile layout */}
+        {/* Stats Section with Mobile-Optimized Icon Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           <NeonGlow color="blue" hover>
-            <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] flex flex-col justify-center">
-              <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Tasks Completed</h3>
-              <div className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] md:min-h-[140px] flex flex-col justify-center">
+              <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 leading-tight">Tasks Completed</h3>
+              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
                 <AnimatedCounter value={42} />
               </div>
             </div>
           </NeonGlow>
           
           <NeonGlow color="green" hover>
-            <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] flex flex-col justify-center">
-              <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Progress</h3>
-              <div className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] md:min-h-[140px] flex flex-col justify-center">
+              <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 leading-tight">Progress</h3>
+              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
                 <PercentageCounter value={78.5} />
               </div>
             </div>
           </NeonGlow>
           
           <NeonGlow color="purple" hover>
-            <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] flex flex-col justify-center">
-              <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Time Saved</h3>
-              <div className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] md:min-h-[140px] flex flex-col justify-center">
+              <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 leading-tight">Time Saved</h3>
+              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
                 <AnimatedCounter value={125} suffix=" hrs" />
               </div>
             </div>
           </NeonGlow>
           
           <NeonGlow color="pink" hover>
-            <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] flex flex-col justify-center">
-              <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Money Saved</h3>
-              <div className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 touch-manipulation min-h-[120px] md:min-h-[140px] flex flex-col justify-center">
+              <h3 className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 leading-tight">Money Saved</h3>
+              <div className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
                 <CurrencyCounter value={2450} />
               </div>
             </div>
@@ -131,7 +131,7 @@ const Overview = () => {
           onNavigateToGuidedHelp={handleNavigateToGuidedHelp}
         />
 
-        {/* Action Buttons with better mobile layout */}
+        {/* Action Buttons with Mobile-Optimized Layout */}
         <div 
           className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4 mt-6 md:mt-8 justify-center"
           data-spotlight-first-view="true"
