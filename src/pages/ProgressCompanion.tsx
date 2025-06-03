@@ -1,15 +1,30 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import BizzyRobotCharacter from '@/components/BizzyRobotCharacter';
 
 const ProgressCompanion = () => {
   const navigate = useNavigate();
+  const [robotMessage, setRobotMessage] = useState("Hi! I'm here to help you track your business setup progress!");
 
   const handleBackClick = () => {
     navigate('/dashboard');
+  };
+
+  const handleRobotClick = () => {
+    const encouragingMessages = [
+      "You're doing great! Keep up the excellent work!",
+      "Every step forward is progress toward your business goals!",
+      "I believe in your success! You've got this!",
+      "Your business journey is inspiring! Stay focused!",
+      "Progress, not perfection! You're on the right track!"
+    ];
+    
+    const randomMessage = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
+    setRobotMessage(randomMessage);
   };
 
   return (
@@ -40,11 +55,13 @@ const ProgressCompanion = () => {
       {/* Main Content */}
       <main className="p-4 md:p-8">
         <div className="max-w-4xl mx-auto">
-          {/* Welcome Section */}
-          <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-              <Bot className="w-10 h-10 text-white" />
-            </div>
+          {/* Robot Character Section */}
+          <div className="text-center mb-12">
+            <BizzyRobotCharacter
+              message={robotMessage}
+              onClick={handleRobotClick}
+              className="mb-6"
+            />
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Progress Companion Coming Soon!
             </h2>
@@ -55,7 +72,7 @@ const ProgressCompanion = () => {
 
           {/* Feature Preview Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <Card className="border-blue-200 bg-blue-50">
+            <Card className="border-blue-200 bg-blue-50 hover:shadow-lg transition-shadow duration-200">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-blue-800 text-lg">
                   <Bot className="w-5 h-5" />
@@ -69,7 +86,7 @@ const ProgressCompanion = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-green-200 bg-green-50">
+            <Card className="border-green-200 bg-green-50 hover:shadow-lg transition-shadow duration-200">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-green-800 text-lg">
                   <Bot className="w-5 h-5" />
@@ -83,7 +100,7 @@ const ProgressCompanion = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-purple-200 bg-purple-50">
+            <Card className="border-purple-200 bg-purple-50 hover:shadow-lg transition-shadow duration-200">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-purple-800 text-lg">
                   <Bot className="w-5 h-5" />
@@ -97,6 +114,34 @@ const ProgressCompanion = () => {
               </CardContent>
             </Card>
           </div>
+
+          {/* Interactive Demo Section */}
+          <Card className="mb-8 border-2 border-dashed border-gray-300 bg-gray-50">
+            <CardContent className="p-8 text-center">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                Try Interacting with Your Companion!
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Click on the robot above to see how it will celebrate your progress milestones!
+              </p>
+              <div className="flex justify-center gap-4 flex-wrap">
+                <Button
+                  variant="outline"
+                  onClick={() => setRobotMessage("Let's tackle your next business milestone together!")}
+                  className="min-h-[44px]"
+                >
+                  Set New Goal
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setRobotMessage("Amazing progress! You're 25% closer to launch!")}
+                  className="min-h-[44px]"
+                >
+                  View Progress
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Call to Action */}
           <div className="text-center">
