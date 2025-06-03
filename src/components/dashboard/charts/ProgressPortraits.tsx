@@ -219,18 +219,22 @@ export const ProgressPortraits: React.FC = () => {
                 {getStatusBadge(area.status)}
               </div>
 
-              {/* Progress Bar Section - Now prominently displayed for all sections including Sector-Specific */}
-              <div className="mb-4 space-y-3">
+              {/* Enhanced Progress Bar Section with Better Visibility */}
+              <div className="mb-6 space-y-3 bg-gray-50 p-4 rounded-lg border">
                 <div className="flex justify-between text-sm font-medium">
                   <span className="text-gray-700">Progress</span>
-                  <span className="text-gray-900">{area.completionPercentage}%</span>
+                  <span className="text-gray-900 font-semibold">{area.completionPercentage}%</span>
                 </div>
-                <Progress 
-                  value={area.completionPercentage} 
-                  className="h-3 bg-gray-200"
-                />
+                <div className="relative">
+                  <Progress 
+                    value={area.completionPercentage} 
+                    className="h-4 bg-gray-300 border border-gray-400"
+                  />
+                  {/* Add a visible border around the progress bar for better definition */}
+                  <div className="absolute inset-0 rounded-full border border-gray-400 pointer-events-none"></div>
+                </div>
                 <div className="flex justify-between text-xs text-gray-600">
-                  <span>{area.tasks.completed}/{area.tasks.total} tasks completed</span>
+                  <span className="font-medium">{area.tasks.completed}/{area.tasks.total} tasks completed</span>
                   <span>Est. time: {area.estimatedTimeToComplete}</span>
                 </div>
               </div>
