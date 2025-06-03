@@ -1,6 +1,7 @@
+
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Bell, Search, User, ChevronDown, Settings, LogOut, HelpCircle, Moon, RefreshCw, Menu } from "lucide-react";
+import { Bell, Search, User, ChevronDown, Settings, LogOut, HelpCircle, Moon, RefreshCw, Menu, Bot } from "lucide-react";
 import { motion } from "framer-motion";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
@@ -11,7 +12,6 @@ import { CloudSyncIndicator } from "@/components/ui/cloud-sync-indicator";
 import { ContextualFAQ } from "@/components/ui/contextual-faq";
 import { FAQTrigger } from "@/components/ui/faq-trigger";
 import { UndoKeyboardHandler } from "@/components/ui/undo-toast";
-import { FloatingActionButton } from "@/components/ui/floating-action-button";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -63,6 +63,10 @@ const Dashboard = () => {
     toast.success('Overview updated');
   };
 
+  const handleRobotClick = () => {
+    navigate('/progress-companion');
+  };
+
   // Mock data for now - in a real app this would come from user profile
   const completedStepIds = [1, 2, 3]; // Example completed steps
   const currentSectionCategory = "foundation"; // Example category
@@ -73,7 +77,7 @@ const Dashboard = () => {
       <div className="min-h-screen flex w-full bg-gray-50">
         <AppSidebar />
         <main className="flex-1 relative">
-          {/* Enhanced Header with Sticky Navigation and Improved Mobile Touch Targets */}
+          {/* Enhanced Header with Robot Icon in Top Navigation */}
           <header className="sticky top-0 z-40 h-16 md:h-16 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-b border-gray-200 shadow-sm">
             <div className="h-full px-4 md:px-6 flex items-center justify-between">
               <div className="flex items-center gap-3 md:gap-4">
@@ -114,7 +118,7 @@ const Dashboard = () => {
                 </motion.div>
               </div>
 
-              {/* Right Actions with Better Mobile Touch Targets */}
+              {/* Right Actions with Robot Icon */}
               <div className="flex items-center gap-2 md:gap-3">
                 {/* Search button for mobile */}
                 <motion.div
@@ -155,7 +159,7 @@ const Dashboard = () => {
                   </Button>
                 </motion.div>
                 
-                {/* Enhanced Notifications with proper hover and mobile touch */}
+                {/* Enhanced Notifications */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -194,7 +198,32 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced User Menu with better mobile touch targets */}
+                {/* Robot Button - Now in Top Navigation */}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          onClick={handleRobotClick}
+                          className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                          aria-label="Open Progress Companion"
+                        >
+                          <Bot className="w-5 h-5" />
+                        </Button>
+                      </motion.div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Progress Companion</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                {/* Enhanced User Menu */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -230,7 +259,7 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Enhanced Talk to Bizzy Button with better mobile sizing */}
+                {/* Enhanced Talk to Bizzy Button */}
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -245,7 +274,7 @@ const Dashboard = () => {
             </div>
           </header>
           
-          {/* Main Content with better mobile padding */}
+          {/* Main Content */}
           <div className="p-4 md:p-6 bg-gray-50 min-h-[calc(100vh-4rem)]">
             <Outlet />
           </div>
@@ -273,8 +302,8 @@ const Dashboard = () => {
         onClose={() => setBizzyOpen(false)} 
       />
       
-      {/* FAQ Trigger Button - Repositioned to avoid conflict */}
-      <div className="fixed bottom-6 left-6 z-50">
+      {/* FAQ Trigger Button - Bottom Right Only */}
+      <div className="fixed bottom-6 right-6 z-50">
         <FAQTrigger onClick={() => setFaqOpen(true)} />
       </div>
       
@@ -285,9 +314,6 @@ const Dashboard = () => {
         currentPage={window.location.pathname}
         onContactSupport={() => setBizzyOpen(true)}
       />
-      
-      {/* Floating Action Button with Progress Companion */}
-      <FloatingActionButton />
       
       {/* Global Keyboard Handlers */}
       <UndoKeyboardHandler />
