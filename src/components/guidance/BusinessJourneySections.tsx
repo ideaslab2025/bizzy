@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -27,15 +26,15 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
 }) => {
   const getSectionStatus = (section: BusinessSection) => {
     const progress = sectionsProgress[section.id] || 0;
-    console.log(`Section ${section.id} progress from props:`, progress);
+    console.log(`Section ${section.id} (${section.title}) progress from props:`, progress);
     
     // Enhanced fallback - check for both completion and progress in localStorage
     const isCompletedInStorage = localStorage.getItem(`bizzy_section_${section.id}_complete`) === 'true';
     const storedProgress = localStorage.getItem(`bizzy_section_${section.id}_progress`);
     const progressFromStorage = storedProgress ? parseInt(storedProgress, 10) : 0;
     
-    console.log(`Section ${section.id} localStorage complete:`, isCompletedInStorage);
-    console.log(`Section ${section.id} localStorage progress:`, progressFromStorage);
+    console.log(`Section ${section.id} (${section.title}) localStorage complete:`, isCompletedInStorage);
+    console.log(`Section ${section.id} (${section.title}) localStorage progress:`, progressFromStorage);
     
     // Use the highest value between props and localStorage
     let finalProgress = Math.max(progress, progressFromStorage);
@@ -43,7 +42,7 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
       finalProgress = 100;
     }
     
-    console.log(`Section ${section.id} final progress:`, finalProgress);
+    console.log(`Section ${section.id} (${section.title}) final progress:`, finalProgress);
     
     const isCompleted = finalProgress >= 100;
     const isInProgress = finalProgress > 0 && finalProgress < 100;
@@ -122,15 +121,21 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                       
                       <CardContent className="pt-0">
                         <div className="space-y-4">
-                          {status.progress > 0 && (
-                            <div className="space-y-2">
-                              <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">Progress</span>
-                                <span className="font-medium">{Math.round(status.progress)}%</span>
-                              </div>
-                              <Progress value={status.progress} className="h-2" />
+                          {/* ALWAYS show progress bar for ALL sections including Sector-Specific Requirements */}
+                          <div className="space-y-2 bg-gray-50 p-3 rounded-lg border">
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-600 font-medium">Progress</span>
+                              <span className="font-semibold text-gray-900">{Math.round(status.progress)}%</span>
                             </div>
-                          )}
+                            <div className="relative">
+                              <Progress value={status.progress} className="h-3 bg-gray-200 border border-gray-300" />
+                              <div className="absolute inset-0 rounded-full border border-gray-300 pointer-events-none"></div>
+                            </div>
+                            <div className="flex justify-between text-xs text-gray-600">
+                              <span className="font-medium">{Math.floor(status.progress / 10)}/{section.subcategories.length} tasks completed</span>
+                              <span>Est. time: {section.estimatedTime}</span>
+                            </div>
+                          </div>
                           
                           <div className="space-y-2">
                             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
@@ -267,15 +272,21 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                       
                       <CardContent className="pt-0">
                         <div className="space-y-4">
-                          {status.progress > 0 && (
-                            <div className="space-y-2">
-                              <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">Progress</span>
-                                <span className="font-medium">{Math.round(status.progress)}%</span>
-                              </div>
-                              <Progress value={status.progress} className="h-2" />
+                          {/* ALWAYS show progress bar for ALL sections including Sector-Specific Requirements */}
+                          <div className="space-y-2 bg-gray-50 p-3 rounded-lg border">
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-600 font-medium">Progress</span>
+                              <span className="font-semibold text-gray-900">{Math.round(status.progress)}%</span>
                             </div>
-                          )}
+                            <div className="relative">
+                              <Progress value={status.progress} className="h-3 bg-gray-200 border border-gray-300" />
+                              <div className="absolute inset-0 rounded-full border border-gray-300 pointer-events-none"></div>
+                            </div>
+                            <div className="flex justify-between text-xs text-gray-600">
+                              <span className="font-medium">{Math.floor(status.progress / 10)}/{section.subcategories.length} tasks completed</span>
+                              <span>Est. time: {section.estimatedTime}</span>
+                            </div>
+                          </div>
                           
                           <div className="space-y-2">
                             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
@@ -365,7 +376,7 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
               const actualIndex = index + 6;
               const isLastSection = section.id === 10; // Explicitly check for section 10
               
-              console.log(`Section ${section.id} is last section:`, isLastSection); // Debug
+              console.log(`Section ${section.id} (${section.title}) is last section:`, isLastSection); // Debug
               
               return (
                 <div key={section.id} className="relative">
@@ -415,15 +426,21 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                       
                       <CardContent className="pt-0">
                         <div className="space-y-4">
-                          {status.progress > 0 && (
-                            <div className="space-y-2">
-                              <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">Progress</span>
-                                <span className="font-medium">{Math.round(status.progress)}%</span>
-                              </div>
-                              <Progress value={status.progress} className="h-2" />
+                          {/* FORCE DISPLAY progress bar for ALL sections including Sector-Specific Requirements (section 10) */}
+                          <div className="space-y-2 bg-gray-50 p-3 rounded-lg border">
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-600 font-medium">Progress</span>
+                              <span className="font-semibold text-gray-900">{Math.round(status.progress)}%</span>
                             </div>
-                          )}
+                            <div className="relative">
+                              <Progress value={status.progress} className="h-3 bg-gray-200 border border-gray-300" />
+                              <div className="absolute inset-0 rounded-full border border-gray-300 pointer-events-none"></div>
+                            </div>
+                            <div className="flex justify-between text-xs text-gray-600">
+                              <span className="font-medium">{Math.floor(status.progress / 10)}/{section.subcategories.length} tasks completed</span>
+                              <span>Est. time: {section.estimatedTime}</span>
+                            </div>
+                          </div>
                           
                           <div className="space-y-2">
                             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
@@ -553,15 +570,21 @@ export const BusinessJourneySections: React.FC<BusinessJourneySectionsProps> = (
                   
                   <CardContent className="pt-0">
                     <div className="space-y-4">
-                      {status.progress > 0 && (
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">Progress</span>
-                            <span className="font-medium">{Math.round(status.progress)}%</span>
-                          </div>
-                          <Progress value={status.progress} className="h-2" />
+                      {/* ALWAYS show progress bar for mobile/tablet view too */}
+                      <div className="space-y-2 bg-gray-50 p-3 rounded-lg border">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600 font-medium">Progress</span>
+                          <span className="font-semibold text-gray-900">{Math.round(status.progress)}%</span>
                         </div>
-                      )}
+                        <div className="relative">
+                          <Progress value={status.progress} className="h-3 bg-gray-200 border border-gray-300" />
+                          <div className="absolute inset-0 rounded-full border border-gray-300 pointer-events-none"></div>
+                        </div>
+                        <div className="flex justify-between text-xs text-gray-600">
+                          <span className="font-medium">{Math.floor(status.progress / 10)}/{section.subcategories.length} tasks completed</span>
+                          <span>Est. time: {section.estimatedTime}</span>
+                        </div>
+                      </div>
                       
                       <div className="space-y-2">
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
