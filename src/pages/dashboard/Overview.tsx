@@ -1,7 +1,6 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { PersonalizedDashboard } from "@/components/dashboard/PersonalizedDashboard";
 import { DocumentStatusDashboard } from "@/components/dashboard/DocumentStatusDashboard";
 import { BusinessOverview } from "@/components/dashboard/charts/BusinessOverview";
 import { SimpleDocumentAnalytics } from "@/components/dashboard/charts/SimpleDocumentAnalytics";
@@ -26,10 +25,6 @@ const Overview = () => {
     );
   }
 
-  const handleNavigateToStep = (sectionId: number, stepNumber: number) => {
-    navigate(`/guided-help?section=${sectionId}&step=${stepNumber}`);
-  };
-
   const handleNavigateToGuidedHelp = () => {
     navigate('/guided-help');
   };
@@ -39,11 +34,6 @@ const Overview = () => {
     await new Promise(resolve => setTimeout(resolve, 1200));
     toast.success('Overview updated');
   };
-
-  // Mock data for now - in a real app this would come from user profile
-  const completedStepIds = [1, 2, 3]; // Example completed steps
-  const currentSectionCategory = "foundation"; // Example category
-  const companyAge = 30; // Example company age in days
 
   return (
     <PullToRefresh onRefresh={handleOverviewRefresh}>
@@ -120,16 +110,6 @@ const Overview = () => {
 
         {/* Document Status Dashboard */}
         <DocumentStatusDashboard userId={user.id} />
-
-        {/* Main Dashboard */}
-        <PersonalizedDashboard
-          userId={user.id}
-          completedStepIds={completedStepIds}
-          currentSectionCategory={currentSectionCategory}
-          companyAge={companyAge}
-          onNavigateToStep={handleNavigateToStep}
-          onNavigateToGuidedHelp={handleNavigateToGuidedHelp}
-        />
 
         {/* Action Buttons with Mobile-Optimized Layout and Fixed Colors */}
         <div 
