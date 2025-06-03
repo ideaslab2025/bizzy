@@ -96,12 +96,6 @@ const Overview = () => {
         {/* AI Success Prediction Panel */}
         <SuccessPredictionPanel />
 
-        {/* Business History Timeline */}
-        <BusinessHistoryTimeline />
-
-        {/* Progress Portraits */}
-        <ProgressPortraits />
-
         {/* Business Overview Section */}
         <BusinessOverview userId={user.id} />
 
