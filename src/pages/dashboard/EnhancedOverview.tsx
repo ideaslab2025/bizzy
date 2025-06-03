@@ -12,7 +12,7 @@ import {
   TrendingUp, Clock, FileText, Calendar, Award, 
   Zap, ArrowRight, CheckCircle, AlertTriangle,
   Target, PlayCircle, BookOpen, BarChart3,
-  Brain, Timeline, Users
+  Brain, Users
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { businessSections } from '@/data/businessSections';
@@ -247,7 +247,7 @@ const EnhancedOverview: React.FC = () => {
             Document Analytics
           </TabsTrigger>
           <TabsTrigger value="timeline" className="flex items-center gap-2">
-            <Timeline className="w-4 h-4" />
+            <Calendar className="w-4 h-4" />
             Business Timeline
           </TabsTrigger>
           <TabsTrigger value="ai-insights" className="flex items-center gap-2">
