@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, HelpCircle, Moon, RefreshCw, Menu, Bot } from "lucide-react";
@@ -40,6 +41,43 @@ const Dashboard = () => {
   const [hasNotifications] = useState(true);
   const [syncStatus, setSyncStatus] = useState<'typing' | 'uploading' | 'syncing' | 'synced' | 'offline' | 'error'>('synced');
 
+  // Mock notifications data - in a real app this would come from your state management
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      type: 'welcome',
+      title: 'Welcome to Bizzy!',
+      message: 'Complete your profile to get started',
+      timestamp: new Date(),
+      read: false
+    },
+    {
+      id: 2,
+      type: 'document_completion',
+      title: 'Document Ready',
+      message: 'Your business registration form is ready for review',
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      read: false
+    },
+    {
+      id: 3,
+      type: 'tax_deadline',
+      title: 'Tax Deadline Reminder',
+      message: 'VAT registration deadline is approaching in 7 days',
+      timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
+      read: false
+    },
+    {
+      id: 4,
+      type: 'progress_update',
+      title: 'Progress Milestone',
+      message: 'You\'ve completed 25% of your business setup',
+      categoryId: 'foundation',
+      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
+      read: false
+    }
+  ]);
+
   const handleSignOut = async () => {
     try {
       console.log("Initiating logout...");
@@ -64,6 +102,48 @@ const Dashboard = () => {
 
   const handleRobotClick = () => {
     navigate('/progress-companion');
+  };
+
+  const markAsRead = (notificationId: number) => {
+    setNotifications(prev => 
+      prev.map(notification => 
+        notification.id === notificationId 
+          ? { ...notification, read: true }
+          : notification
+      )
+    );
+  };
+
+  const handleNotificationClick = (notification: any) => {
+    // Mark notification as read
+    markAsRead(notification.id);
+    
+    // Navigate based on notification type
+    switch(notification.type) {
+      case 'document_completion':
+        navigate('/dashboard/documents');
+        toast.success('Navigating to documents');
+        break;
+      case 'tax_deadline':
+        navigate('/dashboard', { state: { scrollTo: 'tax-section' } });
+        toast.success('Navigating to tax section');
+        break;
+      case 'progress_update':
+        if (notification.categoryId) {
+          navigate(`/guided-help?section=${notification.categoryId}`);
+        } else {
+          navigate('/dashboard');
+        }
+        toast.success('Navigating to progress section');
+        break;
+      case 'welcome':
+        navigate('/profile');
+        toast.success('Navigating to profile');
+        break;
+      default:
+        navigate('/dashboard');
+        break;
+    }
   };
 
   // Mock data for now - in a real app this would come from user profile
@@ -158,7 +238,7 @@ const Dashboard = () => {
                   </Button>
                 </motion.div>
                 
-                {/* Enhanced Notifications */}
+                {/* Enhanced Notifications with Click Navigation */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -188,12 +268,33 @@ const Dashboard = () => {
                     <div className="p-4 border-b border-gray-100 dark:border-gray-700">
                       <h3 className="font-semibold text-gray-900 dark:text-gray-100">Notifications</h3>
                     </div>
-                    <DropdownMenuItem className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 min-h-[60px]">
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-gray-100">Welcome to Bizzy!</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Complete your profile to get started</p>
-                      </div>
-                    </DropdownMenuItem>
+                    {notifications.map((notification) => (
+                      <DropdownMenuItem 
+                        key={notification.id}
+                        className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 min-h-[60px] cursor-pointer transition-all duration-200 border-l-4 border-transparent hover:border-blue-500"
+                        onClick={() => handleNotificationClick(notification)}
+                      >
+                        <div className="w-full">
+                          <div className="flex items-start justify-between mb-1">
+                            <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+                              {notification.title}
+                            </p>
+                            {!notification.read && (
+                              <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 ml-2 mt-1"></div>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                            {notification.message}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-500">
+                            {notification.timestamp.toLocaleTimeString([], { 
+                              hour: '2-digit', 
+                              minute: '2-digit' 
+                            })}
+                          </p>
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
 
