@@ -5,11 +5,17 @@ import { ArrowLeft, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BizzyRobotCharacter from '@/components/BizzyRobotCharacter';
 import { ProgressTrackingDashboard } from '@/components/progress/ProgressTrackingDashboard';
+import { MilestoneReached } from '@/components/celebrations/MilestoneReached';
 
 const ProgressCompanion = () => {
   const navigate = useNavigate();
   const [robotMessage, setRobotMessage] = useState("Hi! I'm here to help you track your business setup progress!");
   const [robotAnimationState, setRobotAnimationState] = useState<'idle' | 'celebration' | 'encouraging'>('idle');
+  const [activeMilestone, setActiveMilestone] = useState<{
+    type: 'section_complete' | 'first_section' | 'halfway' | 'all_complete' | 'quick_wins';
+    title: string;
+    description: string;
+  } | null>(null);
 
   const handleBackClick = () => {
     navigate('/dashboard');
@@ -38,6 +44,39 @@ const ProgressCompanion = () => {
       setRobotMessage(`Amazing! You've reached ${overallProgress}% completion! 🎉`);
       setRobotAnimationState('celebration');
       
+      // Show milestone celebration for major milestones
+      if (overallProgress === 20) {
+        setActiveMilestone({
+          type: 'first_section',
+          title: 'Getting Started! 🎯',
+          description: 'Great start! You\'re building solid foundations for your business!'
+        });
+      } else if (overallProgress === 40) {
+        setActiveMilestone({
+          type: 'quick_wins',
+          title: 'Quick Win Champion! ⚡',
+          description: 'You\'re making excellent progress! Keep up the momentum!'
+        });
+      } else if (overallProgress === 60) {
+        setActiveMilestone({
+          type: 'halfway',
+          title: 'Halfway Hero! 🏆',
+          description: 'You\'re halfway there! Your business is really taking shape!'
+        });
+      } else if (overallProgress === 80) {
+        setActiveMilestone({
+          type: 'section_complete',
+          title: 'Nearly There! 🎖️',
+          description: 'So close! Just a few more steps to complete your business setup!'
+        });
+      } else if (overallProgress === 100) {
+        setActiveMilestone({
+          type: 'all_complete',
+          title: 'Business Setup Master! 👑',
+          description: 'Congratulations! You\'ve completed your entire business setup journey!'
+        });
+      }
+      
       setTimeout(() => {
         setRobotAnimationState('idle');
         setRobotMessage("What would you like to work on next?");
@@ -53,6 +92,10 @@ const ProgressCompanion = () => {
       setRobotAnimationState('idle');
       setRobotMessage("Ready to tackle the next section?");
     }, 5000);
+  };
+
+  const handleCloseMilestone = () => {
+    setActiveMilestone(null);
   };
 
   return (
@@ -100,6 +143,14 @@ const ProgressCompanion = () => {
           />
         </div>
       </main>
+
+      {/* Milestone Celebration Modal */}
+      {activeMilestone && (
+        <MilestoneReached 
+          milestone={activeMilestone} 
+          onClose={handleCloseMilestone} 
+        />
+      )}
     </div>
   );
 };
