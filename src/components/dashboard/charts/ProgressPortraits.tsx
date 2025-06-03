@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { motion } from 'framer-motion';
 import { 
   Receipt, 
@@ -11,14 +13,15 @@ import {
   ArrowRight,
   Clock,
   CheckCircle,
-  AlertTriangle
+  AlertTriangle,
+  Target
 } from 'lucide-react';
 
 interface ComplianceArea {
   id: string;
   title: string;
   description: string;
-  category: 'tax' | 'hr' | 'financial' | 'legal';
+  category: 'tax' | 'hr' | 'financial' | 'legal' | 'sector';
   completionPercentage: number;
   status: 'complete' | 'in-progress' | 'urgent' | 'not-started';
   tasks: {
@@ -76,6 +79,17 @@ const mockProgressData: ComplianceArea[] = [
     urgentDeadline: '7 days',
     estimatedTimeToComplete: '6 hours',
     icon: <FileText className="w-6 h-6" />
+  },
+  {
+    id: '5',
+    title: 'Sector-Specific Requirements',
+    description: 'Industry regulations, licenses, and sector compliance',
+    category: 'sector',
+    completionPercentage: 0,
+    status: 'not-started',
+    tasks: { completed: 0, total: 5 },
+    estimatedTimeToComplete: '8 hours',
+    icon: <Target className="w-6 h-6" />
   }
 ];
 
@@ -205,6 +219,22 @@ export const ProgressPortraits: React.FC = () => {
                 {getStatusBadge(area.status)}
               </div>
 
+              {/* Progress Bar Section - Now prominently displayed for all sections including Sector-Specific */}
+              <div className="mb-4 space-y-3">
+                <div className="flex justify-between text-sm font-medium">
+                  <span className="text-gray-700">Progress</span>
+                  <span className="text-gray-900">{area.completionPercentage}%</span>
+                </div>
+                <Progress 
+                  value={area.completionPercentage} 
+                  className="h-3 bg-gray-200"
+                />
+                <div className="flex justify-between text-xs text-gray-600">
+                  <span>{area.tasks.completed}/{area.tasks.total} tasks completed</span>
+                  <span>Est. time: {area.estimatedTimeToComplete}</span>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between mb-4">
                 <CircularProgress 
                   percentage={area.completionPercentage} 
@@ -229,7 +259,6 @@ export const ProgressPortraits: React.FC = () => {
                 </div>
               </div>
 
-              {/* Show Continue Tasks button for all sections, including Financial Management */}
               <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" size="sm">
                 Continue Tasks
                 <ArrowRight className="w-4 h-4 ml-2" />
