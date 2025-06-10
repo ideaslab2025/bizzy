@@ -55,15 +55,8 @@ export function AppSidebar() {
   return (
     <Sidebar className="border-r-0 w-[240px] max-w-[240px]">
       <SidebarContent className="bg-[#0088cc] text-white h-screen sticky top-0">
-        {/* Compact Logo Section with White Background */}
-        <div className="bg-white p-3 flex items-center justify-center">
-          <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-16 w-auto" />
-          </Link>
-        </div>
-        
-        <SidebarGroup className="px-3 py-4">
-          <SidebarGroupContent>
+        <SidebarGroup className="px-3 py-6 h-full">
+          <SidebarGroupContent className="h-full">
             <SidebarMenu className="space-y-2">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
