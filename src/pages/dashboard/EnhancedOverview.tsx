@@ -259,8 +259,8 @@ const EnhancedOverview: React.FC = () => {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 md:space-y-8 mt-6">
-          {/* Stats Grid with Mobile-Optimized Layout - Updated to use real progress data */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+          {/* Stats Grid with Mobile-Optimized Layout - Updated to use real progress data and removed Next Milestone */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
             <StatCard
               title="Overall Progress"
               value={`${overallBusinessProgress}%`}
@@ -281,13 +281,6 @@ const EnhancedOverview: React.FC = () => {
               icon={<Clock className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />}
               trend="Estimated time saved: 20h"
               color="purple"
-            />
-            <StatCard
-              title="Next Milestone"
-              value={analytics.currentSection?.title || 'Complete!'}
-              icon={<Target className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />}
-              trend={analytics.currentSection ? `${analytics.currentSection.estimated_time_minutes} min remaining` : undefined}
-              color="orange"
             />
           </div>
 
@@ -378,88 +371,37 @@ const EnhancedOverview: React.FC = () => {
             </Card>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader className="pb-4 md:pb-6">
-                <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-                  <Clock className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {analytics.recentActivities.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4 text-sm md:text-base">
-                    No recent activity. Start your first section to see progress here!
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {analytics.recentActivities.map((activity, index) => (
-                      <div key={index} className="flex items-center gap-3 p-2 rounded hover:bg-gray-50 min-h-[48px]">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" strokeWidth={2} />
-                        <div className="flex-1">
-                          <p className="font-medium text-sm md:text-base leading-tight">{activity.title}</p>
-                          <p className="text-xs md:text-sm text-gray-500 mt-1">{activity.section}</p>
-                        </div>
-                        <span className="text-xs text-gray-400">
-                          {new Date(activity.completedAt).toLocaleDateString()}
-                        </span>
+          {/* Recent Activity - Single Card */}
+          <Card>
+            <CardHeader className="pb-4 md:pb-6">
+              <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+                <Clock className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />
+                Recent Activity
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {analytics.recentActivities.length === 0 ? (
+                <p className="text-gray-500 text-center py-4 text-sm md:text-base">
+                  No recent activity. Start your first section to see progress here!
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {analytics.recentActivities.map((activity, index) => (
+                    <div key={index} className="flex items-center gap-3 p-2 rounded hover:bg-gray-50 min-h-[48px]">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" strokeWidth={2} />
+                      <div className="flex-1">
+                        <p className="font-medium text-sm md:text-base leading-tight">{activity.title}</p>
+                        <p className="text-xs md:text-sm text-gray-500 mt-1">{activity.section}</p>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions with Mobile-Optimized Grid */}
-            <Card>
-              <CardHeader className="pb-4 md:pb-6">
-                <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-                  <BookOpen className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />
-                  Quick Actions
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-3 md:gap-4">
-                  <Button
-                    variant="outline"
-                    className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
-                    onClick={() => navigate('/dashboard/documents')}
-                  >
-                    <FileText className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
-                    <span className="text-xs md:text-sm font-medium">Documents</span>
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
-                    onClick={() => navigate('/guided-help')}
-                  >
-                    <Target className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
-                    <span className="text-xs md:text-sm font-medium">Guide</span>
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
-                    onClick={() => navigate('/dashboard/consultations')}
-                  >
-                    <Users className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
-                    <span className="text-xs md:text-sm font-medium">Consult</span>
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
-                    onClick={() => navigate('/profile')}
-                  >
-                    <Users className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
-                    <span className="text-xs md:text-sm font-medium">Profile</span>
-                  </Button>
+                      <span className="text-xs text-gray-400">
+                        {new Date(activity.completedAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
