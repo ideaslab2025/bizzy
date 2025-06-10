@@ -15,7 +15,6 @@ import {
   Users
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { SimpleDocumentAnalytics } from '@/components/dashboard/charts/SimpleDocumentAnalytics';
 import { BusinessHistoryTimeline } from '@/components/dashboard/charts/BusinessHistoryTimeline';
 import { ProgressPortraits } from '@/components/dashboard/charts/ProgressPortraits';
 import { OverallBusinessProgress } from '@/components/dashboard/charts/OverallBusinessProgress';
@@ -244,9 +243,9 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Enhanced Tab Navigation with Mobile-Optimized Headers - Updated to 2 columns */}
+      {/* Enhanced Tab Navigation with Mobile-Optimized Headers - Updated to 1 column */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 gap-1 md:gap-0 h-auto md:h-10">
+        <TabsList className="grid w-full grid-cols-1 gap-1 md:gap-0 h-auto md:h-10">
           <TabsTrigger 
             value="overview" 
             className="flex flex-col md:flex-row items-center gap-1 md:gap-2 px-2 md:px-3 py-2 md:py-2 text-xs md:text-sm min-h-[48px] md:min-h-[40px]"
@@ -255,16 +254,6 @@ const EnhancedOverview: React.FC = () => {
             <span className="text-center leading-tight">
               Business<br className="md:hidden" />
               <span className="md:ml-1">Overview</span>
-            </span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="analytics" 
-            className="flex flex-col md:flex-row items-center gap-1 md:gap-2 px-2 md:px-3 py-2 md:py-2 text-xs md:text-sm min-h-[48px] md:min-h-[40px]"
-          >
-            <BarChart3 className="w-3 h-3 md:w-4 md:h-4" />
-            <span className="text-center leading-tight">
-              Document<br className="md:hidden" />
-              <span className="md:ml-1">Analytics</span>
             </span>
           </TabsTrigger>
         </TabsList>
@@ -453,28 +442,24 @@ const EnhancedOverview: React.FC = () => {
                   <Button
                     variant="outline"
                     className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
-                    onClick={() => setActiveTab('analytics')}
-                  >
-                    <BarChart3 className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
-                    <span className="text-xs md:text-sm font-medium">Analytics</span>
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
                     onClick={() => navigate('/dashboard/consultations')}
                   >
                     <Users className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
                     <span className="text-xs md:text-sm font-medium">Consult</span>
                   </Button>
+                  
+                  <Button
+                    variant="outline"
+                    className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
+                    onClick={() => navigate('/profile')}
+                  >
+                    <Users className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
+                    <span className="text-xs md:text-sm font-medium">Profile</span>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
           </div>
-        </TabsContent>
-
-        <TabsContent value="analytics" className="space-y-6 mt-6">
-          <SimpleDocumentAnalytics userId={user.id} />
         </TabsContent>
       </Tabs>
     </div>
