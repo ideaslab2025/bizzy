@@ -302,9 +302,6 @@ const EnhancedOverview: React.FC = () => {
             />
           </div>
 
-          {/* Overall Business Progress Section */}
-          <OverallBusinessProgress />
-
           {/* Progress Portraits Section */}
           <ProgressPortraits />
 
