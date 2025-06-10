@@ -7,10 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { User, Save, ArrowLeft, Lock, Eye, EyeOff, Shield, Mail, Trash2 } from "lucide-react";
+import { User, Save, ArrowLeft, Lock, Eye, EyeOff, Shield, Mail, Trash2, Building } from "lucide-react";
 import { Link } from "react-router-dom";
 import EmailPreferences from "@/components/profile/EmailPreferences";
 import AccountDeletion from "@/components/profile/AccountDeletion";
+import { BusinessHistoryTimeline } from "@/components/dashboard/charts/BusinessHistoryTimeline";
 
 interface ProfileData {
   id: string;
@@ -299,10 +300,14 @@ const Profile = () => {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <User className="w-4 h-4" />
               Profile
+            </TabsTrigger>
+            <TabsTrigger value="business" className="flex items-center gap-2">
+              <Building className="w-4 h-4" />
+              Your Business
             </TabsTrigger>
             <TabsTrigger value="security" className="flex items-center gap-2">
               <Lock className="w-4 h-4" />
@@ -456,6 +461,14 @@ const Profile = () => {
                 </Card>
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="business" className="space-y-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Business Journey</h2>
+              <p className="text-gray-600">Track your business setup progress and important milestones</p>
+            </div>
+            <BusinessHistoryTimeline />
           </TabsContent>
 
           <TabsContent value="security" className="space-y-6">

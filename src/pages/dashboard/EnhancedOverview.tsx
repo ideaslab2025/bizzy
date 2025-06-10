@@ -244,9 +244,9 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Enhanced Tab Navigation with Mobile-Optimized Headers - Updated to 3 columns */}
+      {/* Enhanced Tab Navigation with Mobile-Optimized Headers - Updated to 2 columns */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 gap-1 md:gap-0 h-auto md:h-10">
+        <TabsList className="grid w-full grid-cols-2 gap-1 md:gap-0 h-auto md:h-10">
           <TabsTrigger 
             value="overview" 
             className="flex flex-col md:flex-row items-center gap-1 md:gap-2 px-2 md:px-3 py-2 md:py-2 text-xs md:text-sm min-h-[48px] md:min-h-[40px]"
@@ -265,16 +265,6 @@ const EnhancedOverview: React.FC = () => {
             <span className="text-center leading-tight">
               Document<br className="md:hidden" />
               <span className="md:ml-1">Analytics</span>
-            </span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="timeline" 
-            className="flex flex-col md:flex-row items-center gap-1 md:gap-2 px-2 md:px-3 py-2 md:py-2 text-xs md:text-sm min-h-[48px] md:min-h-[40px]"
-          >
-            <Calendar className="w-3 h-3 md:w-4 md:h-4" />
-            <span className="text-center leading-tight">
-              Business<br className="md:hidden" />
-              <span className="md:ml-1">Timeline</span>
             </span>
           </TabsTrigger>
         </TabsList>
@@ -488,10 +478,6 @@ const EnhancedOverview: React.FC = () => {
 
         <TabsContent value="analytics" className="space-y-6 mt-6">
           <SimpleDocumentAnalytics userId={user.id} />
-        </TabsContent>
-
-        <TabsContent value="timeline" className="space-y-6 mt-6">
-          <BusinessHistoryTimeline />
         </TabsContent>
       </Tabs>
     </div>

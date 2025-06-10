@@ -50,7 +50,7 @@ export const useOverallBusinessProgress = () => {
       if (docsError) throw docsError;
 
       // Fetch user's completion progress
-      const { data: progressData, error: progressError } = await supabase
+      const { data: userProgress, error: progressError } = await supabase
         .from('user_document_progress')
         .select('document_id, is_completed')
         .eq('user_id', user.id)
@@ -58,7 +58,7 @@ export const useOverallBusinessProgress = () => {
 
       if (progressError) throw progressError;
 
-      const completedDocumentIds = new Set(progressData?.map(p => p.document_id) || []);
+      const completedDocumentIds = new Set(userProgress?.map(p => p.document_id) || []);
       
       // Calculate category breakdown
       const categoryBreakdown: BusinessProgressData['categoryBreakdown'] = {};
@@ -97,7 +97,7 @@ export const useOverallBusinessProgress = () => {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, progressData.overallPercentage]);
 
   // Subscribe to real-time updates
   useEffect(() => {
