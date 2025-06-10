@@ -19,16 +19,16 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
 
     trackPageLoad();
 
-    // Web Vitals tracking
+    // Web Vitals tracking - using correct import method
     const trackVitals = async () => {
       try {
-        const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
+        const { onCLS, onFID, onFCP, onLCP, onTTFB } = await import('web-vitals');
         
-        getCLS(console.log);
-        getFID(console.log);
-        getFCP(console.log);
-        getLCP(console.log);
-        getTTFB(console.log);
+        onCLS(console.log);
+        onFID(console.log);
+        onFCP(console.log);
+        onLCP(console.log);
+        onTTFB(console.log);
       } catch (error) {
         console.warn('Web Vitals not available:', error);
       }

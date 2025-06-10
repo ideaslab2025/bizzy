@@ -35,7 +35,7 @@ export const useOptimizedDocuments = (options: UseOptimizedDocumentsOptions = {}
       setLoading(true);
       setError(null);
 
-      // Build optimized query
+      // Build optimized query - include all required Document properties
       let query = supabase
         .from('documents')
         .select(`
@@ -43,11 +43,15 @@ export const useOptimizedDocuments = (options: UseOptimizedDocumentsOptions = {}
           title,
           description,
           category,
+          subcategory,
           file_type,
+          file_size,
           is_required,
           template_url,
           keywords,
-          customizable_fields
+          customizable_fields,
+          created_at,
+          updated_at
         `)
         .limit(limit);
 
@@ -85,9 +89,19 @@ export const useOptimizedDocuments = (options: UseOptimizedDocumentsOptions = {}
     const startTime = performance.now();
 
     try {
+      // Include all required UserDocumentProgress properties
       const { data, error } = await supabase
         .from('user_document_progress')
-        .select('document_id, viewed, customized, downloaded, completed_at')
+        .select(`
+          id,
+          user_id,
+          document_id,
+          viewed,
+          customized,
+          downloaded,
+          completed_at,
+          created_at
+        `)
         .eq('user_id', user.id);
 
       if (error) throw error;
