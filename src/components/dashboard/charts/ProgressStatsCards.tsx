@@ -12,10 +12,10 @@ export const ProgressStatsCards: React.FC<ProgressStatsCardsProps> = ({ userId }
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[...Array(4)].map((_, i) => (
-          <Card key={i}>
-            <CardContent className="p-6">
+          <Card key={i} className="h-32">
+            <CardContent className="p-6 h-full flex flex-col justify-center">
               <div className="animate-pulse">
                 <div className="h-8 bg-gray-200 rounded mb-2"></div>
                 <div className="h-4 bg-gray-200 rounded"></div>
@@ -46,7 +46,8 @@ export const ProgressStatsCards: React.FC<ProgressStatsCardsProps> = ({ userId }
       color: 'blue',
       bgColor: 'bg-blue-50',
       borderColor: 'border-blue-200',
-      textColor: 'text-blue-900'
+      textColor: 'text-blue-900',
+      icon: '📄'
     },
     {
       value: completedDocuments,
@@ -54,7 +55,8 @@ export const ProgressStatsCards: React.FC<ProgressStatsCardsProps> = ({ userId }
       color: 'green',
       bgColor: 'bg-green-50',
       borderColor: 'border-green-200',
-      textColor: 'text-green-900'
+      textColor: 'text-green-900',
+      icon: '✅'
     },
     {
       value: remainingDocuments,
@@ -62,7 +64,8 @@ export const ProgressStatsCards: React.FC<ProgressStatsCardsProps> = ({ userId }
       color: 'orange',
       bgColor: 'bg-orange-50',
       borderColor: 'border-orange-200',
-      textColor: 'text-orange-900'
+      textColor: 'text-orange-900',
+      icon: '⏳'
     },
     {
       value: `${completionPercentage}%`,
@@ -70,21 +73,28 @@ export const ProgressStatsCards: React.FC<ProgressStatsCardsProps> = ({ userId }
       color: 'purple',
       bgColor: 'bg-purple-50',
       borderColor: 'border-purple-200',
-      textColor: 'text-purple-900'
+      textColor: 'text-purple-900',
+      icon: '📊'
     }
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
-          <Card key={index} className={`${stat.bgColor} ${stat.borderColor} border`}>
-            <CardContent className="p-6">
-              <div className={`text-3xl font-bold ${stat.textColor} mb-1`}>
-                {stat.value}
+          <Card 
+            key={index} 
+            className={`${stat.bgColor} ${stat.borderColor} border hover:shadow-md transition-shadow duration-200 h-32`}
+          >
+            <CardContent className="p-6 h-full flex flex-col justify-between">
+              <div className="flex items-start justify-between">
+                <span className="text-2xl">{stat.icon}</span>
+                <div className={`text-3xl font-bold ${stat.textColor}`}>
+                  {stat.value}
+                </div>
               </div>
-              <div className={`text-sm ${stat.textColor} opacity-75`}>
+              <div className={`text-sm font-medium ${stat.textColor} opacity-80`}>
                 {stat.label}
               </div>
             </CardContent>
@@ -97,12 +107,12 @@ export const ProgressStatsCards: React.FC<ProgressStatsCardsProps> = ({ userId }
         <Card className="bg-red-50 border-red-200 border">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <span className="text-2xl">🚨</span>
-              <div>
+              <span className="text-2xl flex-shrink-0">🚨</span>
+              <div className="flex-1">
                 <div className="font-semibold text-red-900">
                   {criticalRemaining} Critical Document{criticalRemaining !== 1 ? 's' : ''} Remaining
                 </div>
-                <div className="text-sm text-red-700">
+                <div className="text-sm text-red-700 mt-1">
                   These are required regulatory documents that need immediate attention
                 </div>
               </div>

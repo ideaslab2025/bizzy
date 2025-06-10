@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useDocuments } from '@/hooks/useDocuments';
 import { DashboardCardSkeleton } from '@/components/ui/skeleton-loader';
@@ -9,7 +8,7 @@ import ProgressLegend from './ProgressLegend';
 interface ProgressCategory {
   id: string;
   name: string;
-  type: string; // Added the missing type property
+  type: string;
   description: string;
   totalDocuments: number;
   completedDocuments: number;
@@ -25,21 +24,20 @@ const BusinessProgressCharts: React.FC<{ userId: string }> = ({ userId }) => {
     return (
       <div className="space-y-6">
         <DashboardCardSkeleton />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <DashboardCardSkeleton key={i} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="h-44 bg-gray-200 rounded-lg animate-pulse" />
           ))}
         </div>
       </div>
     );
   }
 
-  // Transform documents into progress categories with better filtering
   const progressCategories: ProgressCategory[] = [
     {
       id: 'legal',
       name: 'Legal & Compliance',
-      type: 'legal', // Set the type property
+      type: 'legal',
       description: 'Company registration and legal documents',
       totalDocuments: documents.filter(doc => 
         doc.category.toLowerCase().includes('legal') || 
@@ -62,7 +60,7 @@ const BusinessProgressCharts: React.FC<{ userId: string }> = ({ userId }) => {
     {
       id: 'finance',
       name: 'Finance & Tax',
-      type: 'finance', // Set the type property
+      type: 'finance',
       description: 'Tax registration and financial setup',
       totalDocuments: documents.filter(doc => 
         doc.category.toLowerCase().includes('finance') || 
@@ -87,7 +85,7 @@ const BusinessProgressCharts: React.FC<{ userId: string }> = ({ userId }) => {
     {
       id: 'hr',
       name: 'HR & Employment',
-      type: 'hr', // Set the type property
+      type: 'hr',
       description: 'Employment contracts and HR policies',
       totalDocuments: documents.filter(doc => 
         doc.category.toLowerCase().includes('hr') || 
@@ -112,7 +110,7 @@ const BusinessProgressCharts: React.FC<{ userId: string }> = ({ userId }) => {
     {
       id: 'governance',
       name: 'Governance & Admin',
-      type: 'governance', // Set the type property
+      type: 'governance',
       description: 'Business governance and administration',
       totalDocuments: documents.filter(doc => 
         doc.category.toLowerCase().includes('governance') || 
@@ -166,8 +164,8 @@ const BusinessProgressCharts: React.FC<{ userId: string }> = ({ userId }) => {
         overallProgress={overallProgress}
       />
 
-      {/* Category Progress Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Category Progress Grid - Improved alignment */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {progressCategories.map(category => (
           <CategoryProgressCard 
             key={category.id}

@@ -19,8 +19,8 @@ export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ cate
     ? Math.round((category.completedDocuments / category.totalDocuments) * 100) 
     : 0;
   
-  // Circular progress calculation - smaller size
-  const circumference = 2 * Math.PI * 45; // radius = 45
+  // Circular progress calculation
+  const circumference = 2 * Math.PI * 40; // radius = 40 for better consistency
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   const getCategoryIcon = (categoryType: string) => {
@@ -49,28 +49,28 @@ export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ cate
 
   return (
     <div 
-      className="flex flex-col items-center p-3 bg-gray-50 rounded-lg border hover:shadow-md transition-shadow cursor-pointer h-32"
+      className="flex flex-col items-center justify-between p-6 bg-white border border-gray-200 rounded-lg hover:shadow-lg hover:border-gray-300 transition-all duration-200 cursor-pointer h-44 w-full"
       onClick={handleClick}
     >
-      {/* Circular Progress with Icon - smaller size */}
-      <div className="relative w-20 h-20 mb-2">
+      {/* Circular Progress with Icon */}
+      <div className="relative w-20 h-20 mb-4 flex-shrink-0">
         {/* Background Circle */}
         <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100">
           <circle
             cx="50"
             cy="50"
-            r="45"
+            r="40"
             stroke="#E5E7EB"
-            strokeWidth="8"
+            strokeWidth="6"
             fill="none"
           />
           {/* Progress Circle */}
           <circle
             cx="50"
             cy="50"
-            r="45"
+            r="40"
             stroke={getProgressColor(percentage)}
-            strokeWidth="8"
+            strokeWidth="6"
             fill="none"
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
@@ -79,24 +79,26 @@ export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ cate
           />
         </svg>
         
-        {/* Category Icon - smaller */}
+        {/* Category Icon */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-lg">{getCategoryIcon(category.type)}</span>
+          <span className="text-xl">{getCategoryIcon(category.type)}</span>
         </div>
         
-        {/* Percentage Label - smaller */}
-        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
-          <span className="text-xs font-medium text-gray-600 bg-white px-1.5 py-0.5 rounded shadow text-center">
+        {/* Percentage Label */}
+        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+          <span className="text-sm font-semibold text-gray-700 bg-white px-2 py-1 rounded-md shadow-sm border border-gray-200">
             {percentage}%
           </span>
         </div>
       </div>
 
-      {/* Category Info - much smaller fonts */}
-      <div className="text-center">
-        <h3 className="text-xs font-medium text-gray-900 mb-1 leading-tight">{category.name}</h3>
-        <p className="text-xs text-gray-500">
-          {category.completedDocuments}/{category.totalDocuments}
+      {/* Category Info */}
+      <div className="text-center flex-1 flex flex-col justify-end">
+        <h3 className="text-sm font-semibold text-gray-900 mb-2 leading-tight line-clamp-2">
+          {category.name}
+        </h3>
+        <p className="text-xs text-gray-500 font-medium">
+          {category.completedDocuments}/{category.totalDocuments} complete
         </p>
       </div>
     </div>
