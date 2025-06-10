@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
@@ -21,7 +20,7 @@ import { SwipeableStepContent } from "@/components/guidance/SwipeableStepContent
 import { MilestoneReached } from "@/components/celebrations/MilestoneReached";
 import { AchievementNotification } from "@/components/celebrations/AchievementNotification";
 import { CloudSyncIndicator } from "@/components/ui/cloud-sync-indicator";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger, Sidebar, SidebarContent, SidebarInset } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import BizzyChat from "@/components/BizzyChat";
 import { useTheme } from "@/hooks/useTheme";
@@ -493,95 +492,168 @@ const EnhancedGuidedHelp = () => {
   const currentSectionData = sections.find(s => s.order_number === currentSection);
   const sectionProgress = currentSectionData ? getSectionProgress(currentSectionData.id) : 0;
   const overallProgress = Math.round(getOverallProgress());
-  const sidebarContent = <div className="bg-[#0088cc] h-full text-white flex flex-col">
-      {/* Logo - Adjusted to match dashboard height */}
-      <div className="p-6 bg-white flex items-center justify-center">
-        <Link to="/dashboard" className="flex items-center justify-center">
-          <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
-        </Link>
-      </div>
-
-      {/* Progress Overview */}
-      <div className="p-4 bg-white/10 border-b border-white/20">
-        <div className="text-center">
-          <div className="text-2xl font-bold">{overallProgress}%</div>
-          <div className="text-sm opacity-80">Overall Progress</div>
+  const sidebarContent = (
+    <Sidebar className="border-r-0 w-[240px] max-w-[240px]">
+      <SidebarContent className="bg-[#0088cc] text-white h-screen sticky top-0">
+        {/* Logo - Matching dashboard height */}
+        <div className="p-6 bg-white flex items-center justify-center">
+          <Link to="/dashboard" className="flex items-center justify-center">
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
+          </Link>
         </div>
-      </div>
 
-      {/* Enhanced Progress Steps */}
-      <div className="flex-1 p-4 pt-2 overflow-y-auto">
-        <h2 className="text-base font-semibold mb-4">Your Business Setup Journey</h2>
-        <div className="space-y-3">
-          {businessSections.map(section => {
-          const isCompleted = isSectionCompleted(section.id);
-          const isCurrent = currentSection === section.order_number;
-          return <SidebarSection key={section.id} section={{
-            id: section.id,
-            title: section.title,
-            description: section.description,
-            order_number: section.order_number,
-            icon: section.iconColor,
-            emoji: undefined,
-            estimated_time_minutes: parseInt(section.estimatedTime),
-            priority_order: section.order_number,
-            deadline_days: section.deadline ? parseInt(section.deadline.split(' ')[0]) : undefined,
-            color_theme: section.iconColor.replace('text-', '').replace('-600', ''),
-            created_at: new Date().toISOString(),
-            total_steps: allSteps.filter(step => step.section_id === section.id).length,
-            completed_steps: allSteps.filter(step => step.section_id === section.id && completedSteps.has(step.id)).length,
-            progress: getSectionProgress(section.id)
-          }} isActive={isCurrent} isCompleted={isCompleted} onClick={() => {
-            handleSidebarNavigation(section.order_number);
-            setMobileMenuOpen(false);
-          }} />;
-        })}
+        {/* Progress Overview */}
+        <div className="p-4 bg-white/10 border-b border-white/20">
+          <div className="text-center">
+            <div className="text-2xl font-bold">{overallProgress}%</div>
+            <div className="text-sm opacity-80">Overall Progress</div>
+          </div>
         </div>
-      </div>
-    </div>;
-  return <SidebarProvider>
+
+        {/* Enhanced Progress Steps */}
+        <div className="flex-1 p-4 pt-2 overflow-y-auto">
+          <h2 className="text-base font-semibold mb-4">Your Business Setup Journey</h2>
+          <div className="space-y-3">
+            {businessSections.map(section => {
+              const isCompleted = isSectionCompleted(section.id);
+              const isCurrent = currentSection === section.order_number;
+              return (
+                <SidebarSection 
+                  key={section.id} 
+                  section={{
+                    id: section.id,
+                    title: section.title,
+                    description: section.description,
+                    order_number: section.order_number,
+                    icon: section.iconColor,
+                    emoji: undefined,
+                    estimated_time_minutes: parseInt(section.estimatedTime),
+                    priority_order: section.order_number,
+                    deadline_days: section.deadline ? parseInt(section.deadline.split(' ')[0]) : undefined,
+                    color_theme: section.iconColor.replace('text-', '').replace('-600', ''),
+                    created_at: new Date().toISOString(),
+                    total_steps: allSteps.filter(step => step.section_id === section.id).length,
+                    completed_steps: allSteps.filter(step => step.section_id === section.id && completedSteps.has(step.id)).length,
+                    progress: getSectionProgress(section.id)
+                  }} 
+                  isActive={isCurrent} 
+                  isCompleted={isCompleted} 
+                  onClick={() => {
+                    handleSidebarNavigation(section.order_number);
+                    setMobileMenuOpen(false);
+                  }} 
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Bottom gradient overlay */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0088cc] to-transparent pointer-events-none" />
+      </SidebarContent>
+    </Sidebar>
+  );
+
+  return (
+    <SidebarProvider>
       <div className="min-h-screen bg-white flex w-full">
-        {/* Mobile Menu Button */}
-        {isMobile && <div className="fixed top-4 left-4 z-50">
-            <Button variant="outline" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="bg-white shadow-md">
-              <Menu className="h-4 w-4" />
-            </Button>
-          </div>}
-
-        {/* Sidebar - Desktop */}
-        <div className={`hidden lg:flex transition-all duration-300 ${sidebarCollapsed ? 'w-0' : 'w-64'} overflow-hidden`}>
-          {sidebarContent}
-        </div>
+        {/* Sidebar - Using the same approach as dashboard */}
+        {sidebarContent}
 
         {/* Sidebar - Mobile Drawer */}
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <SheetContent side="left" className="w-64 p-0">
-            {sidebarContent}
+            <div className="bg-[#0088cc] h-full text-white flex flex-col">
+              {/* Logo - Adjusted to match dashboard height */}
+              <div className="p-6 bg-white flex items-center justify-center">
+                <Link to="/dashboard" className="flex items-center justify-center">
+                  <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
+                </Link>
+              </div>
+
+              {/* Progress Overview */}
+              <div className="p-4 bg-white/10 border-b border-white/20">
+                <div className="text-center">
+                  <div className="text-2xl font-bold">{overallProgress}%</div>
+                  <div className="text-sm opacity-80">Overall Progress</div>
+                </div>
+              </div>
+
+              {/* Enhanced Progress Steps */}
+              <div className="flex-1 p-4 pt-2 overflow-y-auto">
+                <h2 className="text-base font-semibold mb-4">Your Business Setup Journey</h2>
+                <div className="space-y-3">
+                  {businessSections.map(section => {
+                    const isCompleted = isSectionCompleted(section.id);
+                    const isCurrent = currentSection === section.order_number;
+                    return (
+                      <SidebarSection 
+                        key={section.id} 
+                        section={{
+                          id: section.id,
+                          title: section.title,
+                          description: section.description,
+                          order_number: section.order_number,
+                          icon: section.iconColor,
+                          emoji: undefined,
+                          estimated_time_minutes: parseInt(section.estimatedTime),
+                          priority_order: section.order_number,
+                          deadline_days: section.deadline ? parseInt(section.deadline.split(' ')[0]) : undefined,
+                          color_theme: section.iconColor.replace('text-', '').replace('-600', ''),
+                          created_at: new Date().toISOString(),
+                          total_steps: allSteps.filter(step => step.section_id === section.id).length,
+                          completed_steps: allSteps.filter(step => step.section_id === section.id && completedSteps.has(step.id)).length,
+                          progress: getSectionProgress(section.id)
+                        }} 
+                        isActive={isCurrent} 
+                        isCompleted={isCompleted} 
+                        onClick={() => {
+                          handleSidebarNavigation(section.order_number);
+                          setMobileMenuOpen(false);
+                        }} 
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
           </SheetContent>
         </Sheet>
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col">
+        {/* Main Content Area - Using SidebarInset for consistency */}
+        <SidebarInset className="flex-1">
+          {/* Mobile Menu Button */}
+          {isMobile && (
+            <div className="fixed top-4 left-4 z-50">
+              <Button 
+                variant="outline" 
+                size="icon" 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+                className="bg-white shadow-md"
+              >
+                <Menu className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+
           {/* Fixed Floating Header - Dashboard Style */}
-          <div className={`fixed top-0 right-0 ${sidebarCollapsed ? 'left-0' : 'left-0 lg:left-64'} bg-white border-b p-3 flex justify-between items-center h-16 shadow-sm z-40 transition-all duration-300`}>
+          <div className="fixed top-0 right-0 left-0 md:left-64 bg-white border-b p-3 flex justify-between items-center h-16 shadow-sm z-40 transition-all duration-300">
             <div className="flex items-center gap-4">
               {/* Fixed Sidebar Toggle using SidebarTrigger */}
-              {!isMobile && <TooltipProvider>
+              {!isMobile && (
+                <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <motion.div whileHover={{
-                    scale: 1.05
-                  }} whileTap={{
-                    scale: 0.95
-                  }}>
-                        <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-gray-100" onClick={() => setSidebarCollapsed(!sidebarCollapsed)} />
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-gray-100" />
                       </motion.div>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Toggle Sidebar</p>
                     </TooltipContent>
                   </Tooltip>
-                </TooltipProvider>}
+                </TooltipProvider>
+              )}
               <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Guided Help</h1>
             </div>
             
@@ -596,24 +668,32 @@ const EnhancedGuidedHelp = () => {
                 {currentSectionData?.deadline_days && <span>• Due in {currentSectionData.deadline_days} days</span>}
                 <span>• {overallProgress}% Complete</span>
                 <span>• {Math.floor(totalTimeSpent / 60)} min invested</span>
-                {achievements.length > 0 && <div className="flex items-center gap-1">
+                {achievements.length > 0 && (
+                  <div className="flex items-center gap-1">
                     <Trophy className="w-4 h-4" />
                     <span>{achievements.length}</span>
-                  </div>}
+                  </div>
+                )}
               </div>
             </div>
             
             <div className="flex items-center gap-3">
               {/* Sync Icon with CloudSyncIndicator */}
-              <CloudSyncIndicator status={syncStatus} lastSaved={new Date(Date.now() - 30000)} onForceSync={() => setSyncStatus('syncing')} onShowHistory={() => console.log('Show sync history')} />
+              <CloudSyncIndicator 
+                status={syncStatus} 
+                lastSaved={new Date(Date.now() - 30000)} 
+                onForceSync={() => setSyncStatus('syncing')} 
+                onShowHistory={() => console.log('Show sync history')} 
+              />
 
               {/* Fixed Dark Mode Toggle */}
-              <motion.div whileHover={{
-              scale: 1.05
-            }} whileTap={{
-              scale: 0.95
-            }}>
-                <Button variant="ghost" size="sm" onClick={toggleTheme} className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={toggleTheme} 
+                  className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200"
+                >
                   <Moon className="h-4 w-4" />
                 </Button>
               </motion.div>
@@ -621,18 +701,18 @@ const EnhancedGuidedHelp = () => {
               {/* Fixed Notifications with Click Functionality */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <motion.div whileHover={{
-                  scale: 1.05
-                }} whileTap={{
-                  scale: 0.95
-                }}>
-                    <Button variant="ghost" size="sm" className="relative text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200">
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="relative text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-200"
+                    >
                       <Bell className="w-4 h-4" />
-                      <motion.span initial={{
-                      scale: 0
-                    }} animate={{
-                      scale: 1
-                    }} className="absolute top-1 right-1 flex h-3 w-3">
+                      <motion.span 
+                        initial={{ scale: 0 }} 
+                        animate={{ scale: 1 }} 
+                        className="absolute top-1 right-1 flex h-3 w-3"
+                      >
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
                         <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
                       </motion.span>
@@ -663,11 +743,7 @@ const EnhancedGuidedHelp = () => {
               {/* Account button */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <motion.div whileHover={{
-                  scale: 1.02
-                }} whileTap={{
-                  scale: 0.98
-                }}>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button variant="ghost" className="flex items-center gap-2 rounded-lg p-2 transition-all duration-200 text-gray-700 hover:text-gray-900 hover:bg-gray-100">
                       <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                         <User className="w-3 h-3 text-white" />
@@ -690,11 +766,12 @@ const EnhancedGuidedHelp = () => {
               </DropdownMenu>
 
               {/* Talk to Bizzy Button */}
-              <motion.button whileHover={{
-              scale: 1.05
-            }} whileTap={{
-              scale: 0.95
-            }} onClick={() => setBizzyOpen(true)} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md text-sm">
+              <motion.button 
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }} 
+                onClick={() => setBizzyOpen(true)} 
+                className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md text-sm"
+              >
                 <HelpCircle className="w-4 h-4" />
                 <span>{isMobile ? "Bizzy" : "Talk to Bizzy"}</span>
               </motion.button>
@@ -704,11 +781,19 @@ const EnhancedGuidedHelp = () => {
           {/* Content with Smart Recommendations - Add more padding top for fixed header */}
           <div className="flex-1 pb-20 lg:pb-32 pt-24">
             {/* Smart Recommendations Panel - Aligned with header */}
-            {user && completedStepIds.length >= 0 && <div className="mb-6 mt-8 px-4 lg:px-6">
+            {user && completedStepIds.length >= 0 && (
+              <div className="mb-6 mt-8 px-4 lg:px-6">
                 <React.Suspense fallback={<div className="animate-pulse h-32 bg-gray-200 rounded"></div>}>
-                  <SmartRecommendationsPanel userId={user.id} completedStepIds={completedStepIds} currentSectionCategory={currentSectionData?.color_theme || ''} companyAge={companyAge} onNavigateToStep={handleNavigateToStep} />
+                  <SmartRecommendationsPanel 
+                    userId={user.id} 
+                    completedStepIds={completedStepIds} 
+                    currentSectionCategory={currentSectionData?.color_theme || ''} 
+                    companyAge={companyAge} 
+                    onNavigateToStep={handleNavigateToStep} 
+                  />
                 </React.Suspense>
-              </div>}
+              </div>
+            )}
 
             {/* Quick Wins Panel */}
             <div className="px-4 lg:px-6">
@@ -717,90 +802,155 @@ const EnhancedGuidedHelp = () => {
 
             {/* Step Content */}
             <div className="px-4 lg:px-6">
-              <SwipeableStepContent onNext={nextStep} onPrev={prevStep} canGoNext={currentSection < sections.length || currentStep < steps.length} canGoPrev={currentSection > 1 || currentStep > 1} currentStep={currentStep} totalSteps={steps.length || 1}>
-                {steps.length === 0 ? stepLoading ? <StepContentSkeleton /> : <div className="max-w-4xl">
+              <SwipeableStepContent 
+                onNext={nextStep} 
+                onPrev={prevStep} 
+                canGoNext={currentSection < sections.length || currentStep < steps.length} 
+                canGoPrev={currentSection > 1 || currentStep > 1} 
+                currentStep={currentStep} 
+                totalSteps={steps.length || 1}
+              >
+                {steps.length === 0 ? (
+                  stepLoading ? (
+                    <StepContentSkeleton />
+                  ) : (
+                    <div className="max-w-4xl">
+                      <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
+                        Start Your Company Documents
+                      </h2>
+                      <Card className="mb-8">
+                        <CardContent className="p-4 lg:p-8">
+                          <div className="prose max-w-none">
+                            <p className="text-base leading-relaxed text-gray-600">
+                              {businessSections.find(s => s.order_number === currentSection)?.description || 'Content for this section is coming soon. You can still mark this section as complete to track your progress.'}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  )
+                ) : currentStepData ? (
+                  <motion.div key={`${currentSection}-${currentStep}`} className="max-w-4xl">
                     <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                      Start Your Company Documents
+                      {currentSection === 1 ? "Start Your Company Documents" : currentStepData.title}
                     </h2>
+
+                    {/* Video Section */}
+                    {currentStepData.video_url && (
+                      <div className="mb-8">
+                        <Card>
+                          
+                        </Card>
+                      </div>
+                    )}
+
+                    {/* Enhanced Rich Content */}
                     <Card className="mb-8">
-                      <CardContent className="p-4 lg:p-8">
-                        <div className="prose max-w-none">
-                          <p className="text-base leading-relaxed text-gray-600">
-                            {businessSections.find(s => s.order_number === currentSection)?.description || 'Content for this section is coming soon. You can still mark this section as complete to track your progress.'}
-                          </p>
-                        </div>
+                      <CardContent className="p-4 md:p-6 lg:p-8">
+                        <RichContentRenderer content={currentStepData} stepId={currentStepData.id} />
+
+                        {/* External Links */}
+                        {currentStepData.external_links && Array.isArray(currentStepData.external_links) && currentStepData.external_links.length > 0 && (
+                          <div className="mt-6 pt-6 border-t">
+                            <h3 className="text-lg font-semibold mb-3">Helpful Resources:</h3>
+                            <div className="space-y-2">
+                              {(currentStepData.external_links as any[]).map((link, index) => (
+                                <a 
+                                  key={index} 
+                                  href={link.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  className="flex items-center gap-2 text-[#0088cc] hover:underline text-base"
+                                >
+                                  <ExternalLink className="w-4 h-4" />
+                                  {link.title}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
-                  </div> : currentStepData ? <motion.div key={`${currentSection}-${currentStep}`} className="max-w-4xl">
-                  <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                    {currentSection === 1 ? "Start Your Company Documents" : currentStepData.title}
-                  </h2>
-
-                  {/* Video Section */}
-                  {currentStepData.video_url && <div className="mb-8">
-                      <Card>
-                        
-                      </Card>
-                    </div>}
-
-                  {/* Enhanced Rich Content */}
-                  <Card className="mb-8">
-                    <CardContent className="p-4 md:p-6 lg:p-8">
-                      <RichContentRenderer content={currentStepData} stepId={currentStepData.id} />
-
-                      {/* External Links */}
-                      {currentStepData.external_links && Array.isArray(currentStepData.external_links) && currentStepData.external_links.length > 0 && <div className="mt-6 pt-6 border-t">
-                          <h3 className="text-lg font-semibold mb-3">Helpful Resources:</h3>
-                          <div className="space-y-2">
-                            {(currentStepData.external_links as any[]).map((link, index) => <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#0088cc] hover:underline text-base">
-                                <ExternalLink className="w-4 h-4" />
-                                {link.title}
-                              </a>)}
-                          </div>
-                        </div>}
-                    </CardContent>
-                  </Card>
-                </motion.div> : stepLoading ? <StepContentSkeleton /> : null}
-            </SwipeableStepContent>
+                  </motion.div>
+                ) : stepLoading ? (
+                  <StepContentSkeleton />
+                ) : null}
+              </SwipeableStepContent>
             </div>
           </div>
 
           {/* Fixed Floating Bottom Navigation */}
-          <div className={`fixed bottom-0 ${sidebarCollapsed ? 'left-0' : 'left-0 lg:left-64'} right-0 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-t border-gray-200 shadow-lg p-3 lg:p-4 flex justify-between items-center z-40 transition-all duration-300`}>
-            <Button variant="outline" onClick={prevStep} disabled={currentSection === 1 && currentStep === 1} size={isMobile ? "sm" : "default"}>
+          <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-t border-gray-200 shadow-lg p-3 lg:p-4 flex justify-between items-center z-40 transition-all duration-300">
+            <Button 
+              variant="outline" 
+              onClick={prevStep} 
+              disabled={currentSection === 1 && currentStep === 1} 
+              size={isMobile ? "sm" : "default"}
+            >
               <ChevronLeft className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
               <span className="text-xs lg:text-sm">Back</span>
             </Button>
 
             <div className="flex gap-2 lg:gap-3">
-              {isLastStepInSection() && currentSectionData && <>
-                  <Button onClick={() => toggleSectionCompleted(currentSectionData.id)} className={isSectionCompleted(currentSectionData.id) ? "bg-gray-400 hover:bg-gray-500 text-white text-xs lg:text-sm px-2 lg:px-4" : "bg-green-600 hover:bg-green-700 text-white text-xs lg:text-sm px-2 lg:px-4"} size={isMobile ? "sm" : "default"}>
+              {isLastStepInSection() && currentSectionData && (
+                <>
+                  <Button 
+                    onClick={() => toggleSectionCompleted(currentSectionData.id)} 
+                    className={
+                      isSectionCompleted(currentSectionData.id) 
+                        ? "bg-gray-400 hover:bg-gray-500 text-white text-xs lg:text-sm px-2 lg:px-4" 
+                        : "bg-green-600 hover:bg-green-700 text-white text-xs lg:text-sm px-2 lg:px-4"
+                    } 
+                    size={isMobile ? "sm" : "default"}
+                  >
                     <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-                    {isMobile ? isSectionCompleted(currentSectionData.id) ? 'Incomplete' : 'Complete' : isSectionCompleted(currentSectionData.id) ? 'Mark as Incomplete' : 'Mark Section as Complete'}
+                    {isMobile 
+                      ? (isSectionCompleted(currentSectionData.id) ? 'Incomplete' : 'Complete') 
+                      : (isSectionCompleted(currentSectionData.id) ? 'Mark as Incomplete' : 'Mark Section as Complete')
+                    }
                   </Button>
                   
-                  <Button variant="outline" onClick={skipSection} disabled={currentSection === sections.length} size={isMobile ? "sm" : "default"}>
+                  <Button 
+                    variant="outline" 
+                    onClick={skipSection} 
+                    disabled={currentSection === sections.length} 
+                    size={isMobile ? "sm" : "default"}
+                  >
                     <SkipForward className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
                     <span className="text-xs lg:text-sm">{isMobile ? 'Skip' : 'Skip Section'}</span>
                   </Button>
-                </>}
+                </>
+              )}
               
-              <Button onClick={nextStep} disabled={currentSection === sections.length && (steps.length === 0 || currentStep === steps.length)} className="bg-[#0088cc] hover:bg-[#0088cc]/90 text-xs lg:text-sm px-2 lg:px-4" size={isMobile ? "sm" : "default"}>
+              <Button 
+                onClick={nextStep} 
+                disabled={currentSection === sections.length && (steps.length === 0 || currentStep === steps.length)} 
+                className="bg-[#0088cc] hover:bg-[#0088cc]/90 text-xs lg:text-sm px-2 lg:px-4" 
+                size={isMobile ? "sm" : "default"}
+              >
                 <span className="text-xs lg:text-sm">Next</span>
                 <ChevronRight className="w-3 h-3 lg:w-4 lg:h-4 ml-1 lg:ml-2" />
               </Button>
             </div>
           </div>
-        </div>
+        </SidebarInset>
 
         {/* Celebration Components */}
         {showMilestone && <MilestoneReached milestone={showMilestone} onClose={() => setShowMilestone(null)} />}
 
-        {achievementQueue.map((achievement, index) => <AchievementNotification key={achievement.id} achievement={achievement} onClose={() => setAchievementQueue(prev => prev.filter((_, i) => i !== index))} />)}
+        {achievementQueue.map((achievement, index) => (
+          <AchievementNotification 
+            key={achievement.id} 
+            achievement={achievement} 
+            onClose={() => setAchievementQueue(prev => prev.filter((_, i) => i !== index))} 
+          />
+        ))}
 
         {/* Bizzy AI Chat */}
         <BizzyChat isOpen={bizzyOpen} onClose={() => setBizzyOpen(false)} />
       </div>
-    </SidebarProvider>;
+    </SidebarProvider>
+  );
 };
+
 export default EnhancedGuidedHelp;
