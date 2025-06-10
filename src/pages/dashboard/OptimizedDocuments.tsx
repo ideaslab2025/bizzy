@@ -1,8 +1,8 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useOptimizedDocuments } from '@/hooks/useOptimizedDocuments';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DocumentFilters } from '@/components/documents/DocumentFilters';
 import { DocumentPreview } from '@/components/documents/DocumentPreview';
 import { VirtualizedDocumentList } from '@/components/documents/VirtualizedDocumentList';
@@ -14,9 +14,18 @@ import type { Document } from '@/types/documents';
 const OptimizedDocuments = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [previewDocument, setPreviewDocument] = useState<Document | null>(null);
+
+  // Initialize category from URL parameters
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category');
+    if (categoryFromUrl) {
+      setSelectedCategory(categoryFromUrl);
+    }
+  }, [searchParams]);
 
   const {
     documents,
@@ -30,6 +39,17 @@ const OptimizedDocuments = () => {
     limit: 100,
     enableCache: true
   });
+
+  const handleCategoryChange = useCallback((category: string | null) => {
+    setSelectedCategory(category);
+    
+    // Update URL parameters
+    if (category) {
+      setSearchParams({ category });
+    } else {
+      setSearchParams({});
+    }
+  }, [setSearchParams]);
 
   const handleViewDetails = useCallback((document: Document) => {
     setPreviewDocument(document);
@@ -76,10 +96,10 @@ const OptimizedDocuments = () => {
   const documentsContent = (
     <div className="space-y-6">
       <div className="px-4 lg:px-0">
-        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
           Document Library
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm lg:text-base">
+        <p className="text-gray-600 mt-2 text-sm lg:text-base">
           Access templates, forms, and guides to help set up your business
         </p>
         
@@ -100,7 +120,7 @@ const OptimizedDocuments = () => {
           searchQuery={searchQuery}
           selectedCategory={selectedCategory}
           onSearchChange={setSearchQuery}
-          onCategoryChange={setSelectedCategory}
+          onCategoryChange={handleCategoryChange}
           documentCount={documents.length}
         />
       </div>
