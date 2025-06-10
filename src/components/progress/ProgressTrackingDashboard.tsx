@@ -5,6 +5,7 @@ import { CircularProgressRing } from './CircularProgressRing';
 import { useProgress } from '@/contexts/ProgressContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { OverallBusinessProgress } from '@/components/dashboard/charts/OverallBusinessProgress';
 
 interface ProgressTrackingDashboardProps {
   onProgressUpdate?: (overallProgress: number) => void;
@@ -15,11 +16,14 @@ export const ProgressTrackingDashboard: React.FC<ProgressTrackingDashboardProps>
   onProgressUpdate,
   onSectionComplete
 }) => {
-  const { categoryProgress, loading } = useProgress();
-
-  const overallCompleted = categoryProgress.reduce((sum, cat) => sum + cat.completed, 0);
-  const overallTotal = categoryProgress.reduce((sum, cat) => sum + cat.total, 0);
-  const overallPercentage = overallTotal > 0 ? Math.round((overallCompleted / overallTotal) * 100) : 0;
+  const { 
+    categoryProgress, 
+    loading, 
+    overallBusinessProgress,
+    totalDocuments,
+    totalCompletedDocuments,
+    refreshOverallProgress
+  } = useProgress();
 
   const nextCategory = categoryProgress.find(cat => cat.percentage > 0 && cat.percentage < 100) || 
                       categoryProgress.find(cat => cat.percentage === 0);
@@ -51,7 +55,10 @@ export const ProgressTrackingDashboard: React.FC<ProgressTrackingDashboardProps>
 
   return (
     <div className="space-y-6">
-      {/* Overall Progress Section */}
+      {/* Overall Business Progress Section */}
+      <OverallBusinessProgress showCategoryBreakdown={false} />
+
+      {/* Current Section Progress */}
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Your Business Setup Progress</CardTitle>
@@ -60,7 +67,7 @@ export const ProgressTrackingDashboard: React.FC<ProgressTrackingDashboardProps>
           <div className="flex flex-col md:flex-row items-center justify-center gap-8">
             <div className="flex flex-col items-center">
               <CircularProgressRing 
-                percentage={overallPercentage}
+                percentage={overallBusinessProgress}
                 size={140}
                 strokeWidth={10}
               />
@@ -71,10 +78,10 @@ export const ProgressTrackingDashboard: React.FC<ProgressTrackingDashboardProps>
                 className="mt-4 text-center"
               >
                 <div className="text-lg font-semibold text-gray-900">
-                  {overallCompleted} of {overallTotal} documents completed
+                  {totalCompletedDocuments} of {totalDocuments} documents completed
                 </div>
                 <div className="text-sm text-gray-600 mt-1">
-                  Estimated time remaining: {formatTime(overallTotal - overallCompleted)}
+                  Estimated time remaining: {formatTime(totalDocuments - totalCompletedDocuments)}
                 </div>
               </motion.div>
             </div>
@@ -182,7 +189,8 @@ export const ProgressTrackingDashboard: React.FC<ProgressTrackingDashboardProps>
               variant="outline"
               size="sm"
               onClick={() => {
-                onProgressUpdate?.(overallPercentage);
+                onProgressUpdate?.(overallBusinessProgress);
+                refreshOverallProgress();
               }}
             >
               Refresh Progress

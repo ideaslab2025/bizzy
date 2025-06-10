@@ -18,6 +18,8 @@ import { cn } from '@/lib/utils';
 import { SimpleDocumentAnalytics } from '@/components/dashboard/charts/SimpleDocumentAnalytics';
 import { BusinessHistoryTimeline } from '@/components/dashboard/charts/BusinessHistoryTimeline';
 import { ProgressPortraits } from '@/components/dashboard/charts/ProgressPortraits';
+import { OverallBusinessProgress } from '@/components/dashboard/charts/OverallBusinessProgress';
+import { useProgress } from '@/contexts/ProgressContext';
 import { logger } from '@/utils/secureLogger';
 
 interface DashboardAnalytics {
@@ -47,6 +49,8 @@ interface QuickWin {
 const EnhancedOverview: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { overallBusinessProgress, totalDocuments, totalCompletedDocuments } = useProgress();
+  
   const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null);
   const [quickWins, setQuickWins] = useState<QuickWin[]>([]);
   const [deadlines, setDeadlines] = useState<any[]>([]);
@@ -236,7 +240,7 @@ const EnhancedOverview: React.FC = () => {
           Welcome back! 
         </h1>
         <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-          You're {Math.round(analytics.overallProgress)}% through your business setup journey
+          You're {overallBusinessProgress}% through your business setup journey
         </p>
       </div>
 
@@ -276,25 +280,25 @@ const EnhancedOverview: React.FC = () => {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 md:space-y-8 mt-6">
-          {/* Stats Grid with Mobile-Optimized Layout */}
+          {/* Stats Grid with Mobile-Optimized Layout - Updated to use real progress data */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
             <StatCard
               title="Overall Progress"
-              value={`${Math.round(analytics.overallProgress)}%`}
+              value={`${overallBusinessProgress}%`}
               icon={<TrendingUp className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />}
-              trend={analytics.completedSteps > 0 ? `${analytics.completedSteps} steps completed` : undefined}
+              trend={totalCompletedDocuments > 0 ? `${totalCompletedDocuments} documents completed` : undefined}
               color="blue"
             />
             <StatCard
               title="Documents"
-              value={`${analytics.documentsCompleted}/${analytics.totalDocuments}`}
+              value={`${totalCompletedDocuments}/${totalDocuments}`}
               icon={<FileText className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />}
-              trend={analytics.documentsCompleted > 0 ? `${Math.round((analytics.documentsCompleted / analytics.totalDocuments) * 100)}% complete` : undefined}
+              trend={totalCompletedDocuments > 0 ? `${overallBusinessProgress}% complete` : undefined}
               color="green"
             />
             <StatCard
               title="Time Invested"
-              value={`${analytics.totalHours}h`}
+              value={`${Math.round((totalCompletedDocuments * 15) / 60)}h`}
               icon={<Clock className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />}
               trend="Estimated time saved: 20h"
               color="purple"
@@ -308,10 +312,12 @@ const EnhancedOverview: React.FC = () => {
             />
           </div>
 
+          {/* Overall Business Progress Section */}
+          <OverallBusinessProgress />
+
           {/* Progress Portraits Section */}
           <ProgressPortraits />
 
-          {/* Action Cards Row with Mobile-Optimized Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             {/* Quick Wins */}
             <Card className="border-green-200 bg-green-50">
@@ -396,7 +402,6 @@ const EnhancedOverview: React.FC = () => {
             </Card>
           </div>
 
-          {/* Bottom Row - Recent Activity & Quick Actions with Mobile Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             {/* Recent Activity */}
             <Card>
