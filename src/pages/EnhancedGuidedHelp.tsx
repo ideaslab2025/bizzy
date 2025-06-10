@@ -4,11 +4,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { CheckCircle, Play, ExternalLink, ChevronLeft, ChevronRight, SkipForward, User, LogOut, Bell, Trophy, Menu, Rocket, Banknote, Users, Scale, RefreshCw, Shield, Umbrella, TrendingUp, Monitor, Briefcase, HelpCircle, Moon } from "lucide-react";
+import { CheckCircle, Play, ExternalLink, ChevronLeft, ChevronRight, SkipForward, User, LogOut, Bell, Trophy, Menu, Rocket, Banknote, Users, Scale, RefreshCw, Shield, Umbrella, TrendingUp, Monitor, Briefcase, HelpCircle, Moon, Compass } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { SidebarSection } from "@/components/guidance/SidebarSection";
@@ -38,6 +38,155 @@ interface UserProgress {
 interface QuickWinStep extends EnhancedGuidanceStep {
   section_title: string;
 }
+
+const guidanceCategories = [
+  {
+    id: 'company-setup',
+    title: 'Company Set-Up',
+    description: 'Essential steps to establish your business foundation',
+    icon: Rocket,
+    color: 'blue',
+    steps: [
+      {
+        id: 1,
+        title: 'Launch Essentials',
+        description: 'Get your business started with the fundamental requirements',
+        estimatedTime: '15 min',
+        difficulty: 'easy' as const
+      },
+      {
+        id: 2,
+        title: 'Business Registration',
+        description: 'Register your company with Companies House',
+        estimatedTime: '30 min',
+        difficulty: 'medium' as const
+      },
+      {
+        id: 3,
+        title: 'Business Bank Account',
+        description: 'Open a dedicated business bank account',
+        estimatedTime: '45 min',
+        difficulty: 'medium' as const
+      }
+    ]
+  },
+  {
+    id: 'tax-vat',
+    title: 'Tax and VAT',
+    description: 'Navigate tax obligations and VAT registration',
+    icon: Banknote,
+    color: 'green',
+    steps: [
+      {
+        id: 4,
+        title: 'Corporation Tax Registration',
+        description: 'Register for Corporation Tax with HMRC',
+        estimatedTime: '20 min',
+        difficulty: 'medium' as const
+      },
+      {
+        id: 5,
+        title: 'VAT Registration',
+        description: 'Determine if you need to register for VAT',
+        estimatedTime: '25 min',
+        difficulty: 'medium' as const
+      }
+    ]
+  },
+  {
+    id: 'employment',
+    title: 'Employment',
+    description: 'Set up employment processes and compliance',
+    icon: Users,
+    color: 'purple',
+    steps: [
+      {
+        id: 6,
+        title: 'PAYE Setup',
+        description: 'Set up PAYE for employee payroll',
+        estimatedTime: '30 min',
+        difficulty: 'complex' as const
+      },
+      {
+        id: 7,
+        title: 'Employment Contracts',
+        description: 'Create compliant employment contracts',
+        estimatedTime: '40 min',
+        difficulty: 'medium' as const
+      }
+    ]
+  },
+  {
+    id: 'legal-compliance',
+    title: 'Legal Compliance',
+    description: 'Ensure your business meets all legal requirements',
+    icon: Scale,
+    color: 'red',
+    steps: [
+      {
+        id: 8,
+        title: 'Terms and Conditions',
+        description: 'Create website terms and conditions',
+        estimatedTime: '35 min',
+        difficulty: 'medium' as const
+      },
+      {
+        id: 9,
+        title: 'Privacy Policy',
+        description: 'Draft a GDPR-compliant privacy policy',
+        estimatedTime: '30 min',
+        difficulty: 'medium' as const
+      }
+    ]
+  },
+  {
+    id: 'finance',
+    title: 'Finance',
+    description: 'Manage your business finances and accounting',
+    icon: TrendingUp,
+    color: 'yellow',
+    steps: [
+      {
+        id: 10,
+        title: 'Accounting Software',
+        description: 'Choose and set up accounting software',
+        estimatedTime: '45 min',
+        difficulty: 'medium' as const
+      },
+      {
+        id: 11,
+        title: 'Financial Planning',
+        description: 'Create business financial projections',
+        estimatedTime: '60 min',
+        difficulty: 'complex' as const
+      }
+    ]
+  },
+  {
+    id: 'data-protection',
+    title: 'Data Protection',
+    description: 'Implement GDPR compliance and data security',
+    icon: Shield,
+    color: 'indigo',
+    steps: [
+      {
+        id: 12,
+        title: 'GDPR Compliance',
+        description: 'Ensure your business is GDPR compliant',
+        estimatedTime: '50 min',
+        difficulty: 'complex' as const
+      },
+      {
+        id: 13,
+        title: 'Data Security',
+        description: 'Implement data protection measures',
+        estimatedTime: '40 min',
+        difficulty: 'medium' as const
+      }
+    ]
+  }
+];
+
 const EnhancedGuidedHelp = () => {
   const {
     user,
@@ -65,6 +214,8 @@ const EnhancedGuidedHelp = () => {
   const [companyAge, setCompanyAge] = useState(0);
   const [stepLoading, setStepLoading] = useState(false);
   const [syncStatus, setSyncStatus] = useState<'typing' | 'uploading' | 'syncing' | 'synced' | 'offline' | 'error'>('synced');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const {
     toggleTheme
   } = useTheme();
@@ -492,129 +643,128 @@ const EnhancedGuidedHelp = () => {
   const currentSectionData = sections.find(s => s.order_number === currentSection);
   const sectionProgress = currentSectionData ? getSectionProgress(currentSectionData.id) : 0;
   const overallProgress = Math.round(getOverallProgress());
+
+  const filteredSteps = guidanceCategories.flatMap(category => 
+    category.steps.filter(step => {
+      const matchesSearch = !searchQuery || 
+        step.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        step.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesCategory = !selectedCategory || category.id === selectedCategory;
+      
+      return matchesSearch && matchesCategory;
+    }).map(step => ({ ...step, category: category.title, categoryId: category.id }))
+  );
+
+  const getDifficultyColor = (difficulty: 'easy' | 'medium' | 'complex') => {
+    switch (difficulty) {
+      case 'easy': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+      case 'complex': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+    }
+  };
+
+  const getColorClasses = (color: string) => {
+    const colorMap = {
+      blue: 'text-blue-600 dark:text-blue-400',
+      green: 'text-green-600 dark:text-green-400',
+      purple: 'text-purple-600 dark:text-purple-400',
+      red: 'text-red-600 dark:text-red-400',
+      yellow: 'text-yellow-600 dark:text-yellow-400',
+      indigo: 'text-indigo-600 dark:text-indigo-400'
+    };
+    return colorMap[color as keyof typeof colorMap] || 'text-gray-600 dark:text-gray-400';
+  };
+
+  // Left sidebar content matching dashboard design
   const sidebarContent = (
-    <Sidebar className="border-r-0 w-[240px] max-w-[240px]">
-      <SidebarContent className="bg-[#0088cc] text-white h-screen sticky top-0">
+    <Sidebar className="border-r-0 w-16 max-w-16">
+      <SidebarContent className="bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 border-r border-slate-200 dark:border-slate-700 h-screen sticky top-0">
         {/* Logo - Matching dashboard height */}
-        <div className="p-6 bg-white flex items-center justify-center">
+        <div className="p-3 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
           <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-8 w-8" />
           </Link>
         </div>
 
-        {/* Progress Overview */}
-        <div className="p-4 bg-white/10 border-b border-white/20">
-          <div className="text-center">
-            <div className="text-2xl font-bold">{overallProgress}%</div>
-            <div className="text-sm opacity-80">Overall Progress</div>
-          </div>
+        {/* Navigation Icons */}
+        <div className="flex-1 p-2 space-y-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link to="/dashboard" className="flex items-center justify-center w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                  <Monitor className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Dashboard</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 border-2 border-blue-200 dark:border-blue-700">
+                  <Compass className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Guided Help</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link to="/dashboard/documents" className="flex items-center justify-center w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                  <Briefcase className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Documents</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
-
-        {/* Enhanced Progress Steps */}
-        <div className="flex-1 p-4 pt-2 overflow-y-auto">
-          <h2 className="text-base font-semibold mb-4">Your Business Setup Journey</h2>
-          <div className="space-y-3">
-            {businessSections.map(section => {
-              const isCompleted = isSectionCompleted(section.id);
-              const isCurrent = currentSection === section.order_number;
-              return (
-                <SidebarSection 
-                  key={section.id} 
-                  section={{
-                    id: section.id,
-                    title: section.title,
-                    description: section.description,
-                    order_number: section.order_number,
-                    icon: section.iconColor,
-                    emoji: undefined,
-                    estimated_time_minutes: parseInt(section.estimatedTime),
-                    priority_order: section.order_number,
-                    deadline_days: section.deadline ? parseInt(section.deadline.split(' ')[0]) : undefined,
-                    color_theme: section.iconColor.replace('text-', '').replace('-600', ''),
-                    created_at: new Date().toISOString(),
-                    total_steps: allSteps.filter(step => step.section_id === section.id).length,
-                    completed_steps: allSteps.filter(step => step.section_id === section.id && completedSteps.has(step.id)).length,
-                    progress: getSectionProgress(section.id)
-                  }} 
-                  isActive={isCurrent} 
-                  isCompleted={isCompleted} 
-                  onClick={() => {
-                    handleSidebarNavigation(section.order_number);
-                    setMobileMenuOpen(false);
-                  }} 
-                />
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Bottom gradient overlay */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0088cc] to-transparent pointer-events-none" />
       </SidebarContent>
     </Sidebar>
   );
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen bg-white flex w-full">
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex w-full">
         {/* Sidebar - Using the same approach as dashboard */}
         {sidebarContent}
 
         {/* Sidebar - Mobile Drawer */}
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <SheetContent side="left" className="w-64 p-0">
-            <div className="bg-[#0088cc] h-full text-white flex flex-col">
-              {/* Logo - Adjusted to match dashboard height */}
-              <div className="p-6 bg-white flex items-center justify-center">
-                <Link to="/dashboard" className="flex items-center justify-center">
-                  <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32" />
+            <div className="bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 h-full flex flex-col">
+              {/* Logo */}
+              <div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                <Link to="/dashboard" className="flex items-center gap-3">
+                  <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-8 w-8" />
+                  <span className="font-semibold text-gray-900 dark:text-white">Bizzy</span>
                 </Link>
               </div>
 
-              {/* Progress Overview */}
-              <div className="p-4 bg-white/10 border-b border-white/20">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">{overallProgress}%</div>
-                  <div className="text-sm opacity-80">Overall Progress</div>
+              {/* Navigation Links */}
+              <div className="flex-1 p-4 space-y-2">
+                <Link to="/dashboard" className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                  <Monitor className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                  <span className="text-gray-900 dark:text-white">Dashboard</span>
+                </Link>
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700">
+                  <Compass className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <span className="text-blue-600 dark:text-blue-400 font-medium">Guided Help</span>
                 </div>
-              </div>
-
-              {/* Enhanced Progress Steps */}
-              <div className="flex-1 p-4 pt-2 overflow-y-auto">
-                <h2 className="text-base font-semibold mb-4">Your Business Setup Journey</h2>
-                <div className="space-y-3">
-                  {businessSections.map(section => {
-                    const isCompleted = isSectionCompleted(section.id);
-                    const isCurrent = currentSection === section.order_number;
-                    return (
-                      <SidebarSection 
-                        key={section.id} 
-                        section={{
-                          id: section.id,
-                          title: section.title,
-                          description: section.description,
-                          order_number: section.order_number,
-                          icon: section.iconColor,
-                          emoji: undefined,
-                          estimated_time_minutes: parseInt(section.estimatedTime),
-                          priority_order: section.order_number,
-                          deadline_days: section.deadline ? parseInt(section.deadline.split(' ')[0]) : undefined,
-                          color_theme: section.iconColor.replace('text-', '').replace('-600', ''),
-                          created_at: new Date().toISOString(),
-                          total_steps: allSteps.filter(step => step.section_id === section.id).length,
-                          completed_steps: allSteps.filter(step => step.section_id === section.id && completedSteps.has(step.id)).length,
-                          progress: getSectionProgress(section.id)
-                        }} 
-                        isActive={isCurrent} 
-                        isCompleted={isCompleted} 
-                        onClick={() => {
-                          handleSidebarNavigation(section.order_number);
-                          setMobileMenuOpen(false);
-                        }} 
-                      />
-                    );
-                  })}
-                </div>
+                <Link to="/dashboard/documents" className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                  <Briefcase className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                  <span className="text-gray-900 dark:text-white">Documents</span>
+                </Link>
               </div>
             </div>
           </SheetContent>
@@ -629,7 +779,7 @@ const EnhancedGuidedHelp = () => {
                 variant="outline" 
                 size="icon" 
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
-                className="bg-white shadow-md"
+                className="bg-white dark:bg-gray-800 shadow-md"
               >
                 <Menu className="h-4 w-4" />
               </Button>
@@ -637,48 +787,15 @@ const EnhancedGuidedHelp = () => {
           )}
 
           {/* Fixed Floating Header - Dashboard Style */}
-          <div className="fixed top-0 right-0 left-0 md:left-64 bg-white border-b p-3 flex justify-between items-center h-16 shadow-sm z-40 transition-all duration-300">
+          <div className="fixed top-0 right-0 left-0 md:left-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-3 flex justify-between items-center h-16 shadow-sm z-40 transition-all duration-300">
             <div className="flex items-center gap-4">
-              {/* Fixed Sidebar Toggle using SidebarTrigger */}
-              {!isMobile && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <SidebarTrigger className="text-gray-700 hover:text-gray-900 hover:bg-gray-100" />
-                      </motion.div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Toggle Sidebar</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
-              <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Guided Help</h1>
-            </div>
-            
-            {/* Center Section Info - Consolidated from Secondary Header */}
-            <div className="flex-1 max-w-2xl mx-8 text-center">
-              <div className="text-base md:text-lg font-semibold text-gray-900">
-                {currentSection === 1 ? 'Start Your Company Documents' : businessSections.find(s => s.order_number === currentSection)?.title || 'Business Setup'}
-              </div>
-              <div className="flex items-center justify-center gap-4 text-xs md:text-sm text-gray-600">
-                <span>Step {currentStep} of {steps.length === 0 ? 1 : steps.length}</span>
-                {currentStepData?.estimated_time_minutes && <span>• {currentStepData.estimated_time_minutes} min</span>}
-                {currentSectionData?.deadline_days && <span>• Due in {currentSectionData.deadline_days} days</span>}
-                <span>• {overallProgress}% Complete</span>
-                <span>• {Math.floor(totalTimeSpent / 60)} min invested</span>
-                {achievements.length > 0 && (
-                  <div className="flex items-center gap-1">
-                    <Trophy className="w-4 h-4" />
-                    <span>{achievements.length}</span>
-                  </div>
-                )}
+              <div className="flex items-center gap-3">
+                <Compass className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Guided Help</h1>
               </div>
             </div>
             
             <div className="flex items-center gap-3">
-              {/* Sync Icon with CloudSyncIndicator */}
               <CloudSyncIndicator 
                 status={syncStatus} 
                 lastSaved={new Date(Date.now() - 30000)} 
@@ -686,7 +803,6 @@ const EnhancedGuidedHelp = () => {
                 onShowHistory={() => console.log('Show sync history')} 
               />
 
-              {/* Fixed Dark Mode Toggle */}
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
                   variant="ghost" 
@@ -698,7 +814,6 @@ const EnhancedGuidedHelp = () => {
                 </Button>
               </motion.div>
 
-              {/* Fixed Notifications with Click Functionality */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -740,7 +855,6 @@ const EnhancedGuidedHelp = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Account button */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
@@ -765,7 +879,6 @@ const EnhancedGuidedHelp = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Talk to Bizzy Button */}
               <motion.button 
                 whileHover={{ scale: 1.05 }} 
                 whileTap={{ scale: 0.95 }} 
@@ -778,159 +891,103 @@ const EnhancedGuidedHelp = () => {
             </div>
           </div>
 
-          {/* Content with Smart Recommendations - Add more padding top for fixed header */}
-          <div className="flex-1 pb-20 lg:pb-32 pt-24">
-            {/* Smart Recommendations Panel - Aligned with header */}
-            {user && completedStepIds.length >= 0 && (
-              <div className="mb-6 mt-8 px-4 lg:px-6">
-                <React.Suspense fallback={<div className="animate-pulse h-32 bg-gray-200 rounded"></div>}>
-                  <SmartRecommendationsPanel 
-                    userId={user.id} 
-                    completedStepIds={completedStepIds} 
-                    currentSectionCategory={currentSectionData?.color_theme || ''} 
-                    companyAge={companyAge} 
-                    onNavigateToStep={handleNavigateToStep} 
-                  />
-                </React.Suspense>
+          {/* Main Content with proper padding */}
+          <div className="pt-20 pb-8">
+            <div className="max-w-7xl mx-auto px-4 lg:px-6 space-y-6">
+              {/* Header */}
+              <div>
+                <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Business Setup Guidance</h1>
+                <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm lg:text-base">
+                  Step-by-step guidance to set up your business properly
+                </p>
               </div>
-            )}
 
-            {/* Quick Wins Panel */}
-            <div className="px-4 lg:px-6">
-              <QuickWinsPanel quickWins={quickWins} onNavigateToStep={handleNavigateToStep} />
-            </div>
+              {/* Filters */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    placeholder="Search guidance..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white"
+                  />
+                </div>
+                <select
+                  value={selectedCategory || ''}
+                  onChange={(e) => setSelectedCategory(e.target.value || null)}
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white"
+                >
+                  <option value="">All Categories</option>
+                  {guidanceCategories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            {/* Step Content */}
-            <div className="px-4 lg:px-6">
-              <SwipeableStepContent 
-                onNext={nextStep} 
-                onPrev={prevStep} 
-                canGoNext={currentSection < sections.length || currentStep < steps.length} 
-                canGoPrev={currentSection > 1 || currentStep > 1} 
-                currentStep={currentStep} 
-                totalSteps={steps.length || 1}
-              >
-                {steps.length === 0 ? (
-                  stepLoading ? (
-                    <StepContentSkeleton />
-                  ) : (
-                    <div className="max-w-4xl">
-                      <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                        Start Your Company Documents
-                      </h2>
-                      <Card className="mb-8">
-                        <CardContent className="p-4 lg:p-8">
-                          <div className="prose max-w-none">
-                            <p className="text-base leading-relaxed text-gray-600">
-                              {businessSections.find(s => s.order_number === currentSection)?.description || 'Content for this section is coming soon. You can still mark this section as complete to track your progress.'}
-                            </p>
+              {/* Category Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {guidanceCategories.map((category) => {
+                  const Icon = category.icon;
+                  const visibleSteps = category.steps.filter(step => {
+                    const matchesSearch = !searchQuery || 
+                      step.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      step.description.toLowerCase().includes(searchQuery.toLowerCase());
+                    return matchesSearch;
+                  });
+
+                  if (selectedCategory && category.id !== selectedCategory) return null;
+                  if (searchQuery && visibleSteps.length === 0) return null;
+
+                  return (
+                    <Card key={category.id} className="h-full hover:shadow-md transition-shadow">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center gap-3">
+                          <div className={`p-2 rounded-lg bg-${category.color}-50 dark:bg-${category.color}-900/20`}>
+                            <Icon className={`w-8 h-8 ${getColorClasses(category.color)}`} />
                           </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  )
-                ) : currentStepData ? (
-                  <motion.div key={`${currentSection}-${currentStep}`} className="max-w-4xl">
-                    <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-6">
-                      {currentSection === 1 ? "Start Your Company Documents" : currentStepData.title}
-                    </h2>
-
-                    {/* Video Section */}
-                    {currentStepData.video_url && (
-                      <div className="mb-8">
-                        <Card>
-                          
-                        </Card>
-                      </div>
-                    )}
-
-                    {/* Enhanced Rich Content */}
-                    <Card className="mb-8">
-                      <CardContent className="p-4 md:p-6 lg:p-8">
-                        <RichContentRenderer content={currentStepData} stepId={currentStepData.id} />
-
-                        {/* External Links */}
-                        {currentStepData.external_links && Array.isArray(currentStepData.external_links) && currentStepData.external_links.length > 0 && (
-                          <div className="mt-6 pt-6 border-t">
-                            <h3 className="text-lg font-semibold mb-3">Helpful Resources:</h3>
-                            <div className="space-y-2">
-                              {(currentStepData.external_links as any[]).map((link, index) => (
-                                <a 
-                                  key={index} 
-                                  href={link.url} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  className="flex items-center gap-2 text-[#0088cc] hover:underline text-base"
-                                >
-                                  <ExternalLink className="w-4 h-4" />
-                                  {link.title}
-                                </a>
-                              ))}
+                          <div>
+                            <CardTitle className="text-lg text-gray-900 dark:text-white">{category.title}</CardTitle>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{category.description}</p>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="space-y-3">
+                          {(searchQuery ? visibleSteps : category.steps).map((step) => (
+                            <div key={step.id} className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer transition-colors">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <h4 className="font-medium text-gray-900 dark:text-white text-sm">{step.title}</h4>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{step.description}</p>
+                                  <div className="flex items-center gap-2 mt-2">
+                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(step.difficulty)}`}>
+                                      {step.difficulty}
+                                    </span>
+                                    <span className="text-xs text-gray-500 dark:text-gray-400">{step.estimatedTime}</span>
+                                  </div>
+                                </div>
+                                <Button size="sm" variant="outline" className="ml-3">
+                                  <Play className="w-3 h-3 mr-1" />
+                                  Start
+                                </Button>
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          ))}
+                        </div>
                       </CardContent>
                     </Card>
-                  </motion.div>
-                ) : stepLoading ? (
-                  <StepContentSkeleton />
-                ) : null}
-              </SwipeableStepContent>
-            </div>
-          </div>
+                  );
+                })}
+              </div>
 
-          {/* Fixed Floating Bottom Navigation */}
-          <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-gradient-to-r from-blue-50 via-white to-indigo-50 backdrop-blur-sm border-t border-gray-200 shadow-lg p-3 lg:p-4 flex justify-between items-center z-40 transition-all duration-300">
-            <Button 
-              variant="outline" 
-              onClick={prevStep} 
-              disabled={currentSection === 1 && currentStep === 1} 
-              size={isMobile ? "sm" : "default"}
-            >
-              <ChevronLeft className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-              <span className="text-xs lg:text-sm">Back</span>
-            </Button>
-
-            <div className="flex gap-2 lg:gap-3">
-              {isLastStepInSection() && currentSectionData && (
-                <>
-                  <Button 
-                    onClick={() => toggleSectionCompleted(currentSectionData.id)} 
-                    className={
-                      isSectionCompleted(currentSectionData.id) 
-                        ? "bg-gray-400 hover:bg-gray-500 text-white text-xs lg:text-sm px-2 lg:px-4" 
-                        : "bg-green-600 hover:bg-green-700 text-white text-xs lg:text-sm px-2 lg:px-4"
-                    } 
-                    size={isMobile ? "sm" : "default"}
-                  >
-                    <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-                    {isMobile 
-                      ? (isSectionCompleted(currentSectionData.id) ? 'Incomplete' : 'Complete') 
-                      : (isSectionCompleted(currentSectionData.id) ? 'Mark as Incomplete' : 'Mark Section as Complete')
-                    }
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    onClick={skipSection} 
-                    disabled={currentSection === sections.length} 
-                    size={isMobile ? "sm" : "default"}
-                  >
-                    <SkipForward className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-                    <span className="text-xs lg:text-sm">{isMobile ? 'Skip' : 'Skip Section'}</span>
-                  </Button>
-                </>
+              {filteredSteps.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 dark:text-gray-400">No guidance found matching your criteria.</p>
+                </div>
               )}
-              
-              <Button 
-                onClick={nextStep} 
-                disabled={currentSection === sections.length && (steps.length === 0 || currentStep === steps.length)} 
-                className="bg-[#0088cc] hover:bg-[#0088cc]/90 text-xs lg:text-sm px-2 lg:px-4" 
-                size={isMobile ? "sm" : "default"}
-              >
-                <span className="text-xs lg:text-sm">Next</span>
-                <ChevronRight className="w-3 h-3 lg:w-4 lg:h-4 ml-1 lg:ml-2" />
-              </Button>
             </div>
           </div>
         </SidebarInset>
