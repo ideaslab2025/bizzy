@@ -243,6 +243,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   const wrappedContent = (
     <TiltCard 
       glass 
+      disabled={true}
       className={cn(
         "h-full flex flex-col transition-all duration-300 ease-in-out",
         "hover:-translate-y-1 hover:shadow-[0_8px_25px_rgba(37,99,235,0.15)]",
@@ -250,7 +251,6 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
         isCompleted && "opacity-75 bg-green-50",
         className
       )}
-      disabled={isMobile}
     >
       <div className="p-6">
         {cardContent}
