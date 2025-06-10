@@ -2,7 +2,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { SectionProgress } from '@/hooks/useProgressTracking';
+
+interface SectionProgress {
+  categoryId: string;
+  name: string;
+  completed: number;
+  total: number;
+  percentage: number;
+  description?: string;
+  nextAction?: string;
+}
 
 interface SectionProgressBarProps {
   section: SectionProgress;
@@ -54,7 +63,9 @@ export const SectionProgressBar: React.FC<SectionProgressBarProps> = ({
       <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="font-semibold text-gray-900 text-sm">{section.name}</h3>
-          <p className="text-xs text-gray-600 mt-1">{section.description}</p>
+          {section.description && (
+            <p className="text-xs text-gray-600 mt-1">{section.description}</p>
+          )}
         </div>
         <div className="text-right">
           <div className="text-sm font-medium text-gray-900">

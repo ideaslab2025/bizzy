@@ -214,7 +214,7 @@ const BusinessProgressCharts: React.FC<{ userId: string }> = ({ userId }) => {
         {progressCategories.map(category => (
           <CategoryProgressCard 
             key={category.id}
-            category={category}
+            categoryId={category.id}
             onViewDetails={handleCategoryDrill}
           />
         ))}
