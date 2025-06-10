@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useLocation, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { CheckCircle, Play, ExternalLink, ChevronLeft, ChevronRight, SkipForward, User, LogOut, Bell, Trophy, Menu, Rocket, Banknote, Users, Scale, RefreshCw, Shield, Umbrella, TrendingUp, Monitor, Briefcase, HelpCircle, Moon, Compass } from "lucide-react";
-import { Link } from "react-router-dom";
+import { CheckCircle, Play, ExternalLink, ChevronLeft, ChevronRight, SkipForward, User, LogOut, Bell, Trophy, Menu, Rocket, Banknote, Users, Scale, RefreshCw, Shield, Umbrella, TrendingUp, Monitor, Briefcase, HelpCircle, Moon, Compass, Home, FileText, FolderOpen, Settings as SettingsIcon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { SidebarSection } from "@/components/guidance/SidebarSection";
 import { RichContentRenderer } from "@/components/guidance/RichContentRenderer";
@@ -28,6 +27,7 @@ import type { EnhancedGuidanceSection, EnhancedGuidanceStep, UserAchievement, St
 import type { UserDocumentProgress } from "@/types/documents";
 import { StepContentSkeleton } from '@/components/ui/skeleton-loader';
 import { businessSections } from '@/data/businessSections';
+import { cn } from "@/lib/utils";
 
 interface UserProgress {
   section_id: number;
@@ -193,6 +193,7 @@ const EnhancedGuidedHelp = () => {
     signOut
   } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const isMobile = useIsMobile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -677,58 +678,87 @@ const EnhancedGuidedHelp = () => {
     return colorMap[color as keyof typeof colorMap] || 'text-gray-600 dark:text-gray-400';
   };
 
-  // Left sidebar content matching dashboard design
-  const sidebarContent = (
-    <Sidebar className="border-r-0 w-16 max-w-16">
-      <SidebarContent className="bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 border-r border-slate-200 dark:border-slate-700 h-screen sticky top-0">
-        {/* Logo - Matching dashboard height */}
-        <div className="p-3 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-          <Link to="/dashboard" className="flex items-center justify-center">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-8 w-8" />
-          </Link>
-        </div>
+  // Left sidebar navigation items matching dashboard design
+  const navigationItems = [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: Home,
+    },
+    {
+      title: "Document Library", 
+      url: "/dashboard/documents",
+      icon: FileText,
+    },
+    {
+      title: "My Documents",
+      url: "/dashboard/my-documents", 
+      icon: FolderOpen,
+    },
+    {
+      title: "Guided Help",
+      url: "/guided-help",
+      icon: HelpCircle,
+    },
+    {
+      title: "Consultations",
+      url: "/dashboard/consultations",
+      icon: Users,
+    },
+    {
+      title: "Settings",
+      url: "/dashboard/settings",
+      icon: SettingsIcon,
+    },
+  ];
 
-        {/* Navigation Icons */}
-        <div className="flex-1 p-2 space-y-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link to="/dashboard" className="flex items-center justify-center w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
-                  <Monitor className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>Dashboard</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 border-2 border-blue-200 dark:border-blue-700">
-                  <Compass className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>Guided Help</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link to="/dashboard/documents" className="flex items-center justify-center w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
-                  <Briefcase className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>Documents</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+  // Left sidebar content matching dashboard design exactly
+  const sidebarContent = (
+    <Sidebar className="border-r-0 w-[240px] max-w-[240px]">
+      <SidebarContent className="bg-[#0088cc] text-white h-screen sticky top-0">
+        <div className="px-3 py-6 h-full">
+          <div className="h-full">
+            <div className="space-y-2">
+              {navigationItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.url;
+                
+                return (
+                  <div key={item.title}>
+                    <Link
+                      to={item.url}
+                      className={cn(
+                        "transition-all duration-200 rounded-lg p-3 py-3 min-h-[48px] text-white/90 hover:text-white hover:bg-white/10",
+                        "border border-transparent hover:border-white/20",
+                        "group relative overflow-hidden text-left flex items-center gap-3 w-full",
+                        isActive && "bg-white text-[#0088cc] shadow-lg hover:bg-white hover:text-[#0088cc] border-white"
+                      )}
+                    >
+                      <div className={cn(
+                        "w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110",
+                        isActive ? "text-[#0088cc]" : "text-white/90 group-hover:text-white"
+                      )}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <span className={cn(
+                        "font-semibold text-sm transition-colors",
+                        isActive ? "text-[#0088cc]" : "text-white/90 group-hover:text-white"
+                      )}>
+                        {item.title}
+                      </span>
+                      {isActive && (
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#0088cc] rounded-l-full" />
+                      )}
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
+        
+        {/* Bottom gradient overlay */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0088cc] to-transparent pointer-events-none" />
       </SidebarContent>
     </Sidebar>
   );
@@ -736,35 +766,44 @@ const EnhancedGuidedHelp = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen bg-white dark:bg-gray-900 flex w-full">
-        {/* Sidebar - Using the same approach as dashboard */}
+        {/* Sidebar - Desktop */}
         {sidebarContent}
 
         {/* Sidebar - Mobile Drawer */}
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <SheetContent side="left" className="w-64 p-0">
-            <div className="bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 h-full flex flex-col">
+            <div className="bg-[#0088cc] text-white h-full flex flex-col">
               {/* Logo */}
-              <div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+              <div className="p-4 border-b border-white/20">
                 <Link to="/dashboard" className="flex items-center gap-3">
                   <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-8 w-8" />
-                  <span className="font-semibold text-gray-900 dark:text-white">Bizzy</span>
+                  <span className="font-semibold text-white">Bizzy</span>
                 </Link>
               </div>
 
               {/* Navigation Links */}
               <div className="flex-1 p-4 space-y-2">
-                <Link to="/dashboard" className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                  <Monitor className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-                  <span className="text-gray-900 dark:text-white">Dashboard</span>
-                </Link>
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700">
-                  <Compass className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <span className="text-blue-600 dark:text-blue-400 font-medium">Guided Help</span>
-                </div>
-                <Link to="/dashboard/documents" className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                  <Briefcase className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-                  <span className="text-gray-900 dark:text-white">Documents</span>
-                </Link>
+                {navigationItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.url;
+                  
+                  return (
+                    <Link 
+                      key={item.title}
+                      to={item.url} 
+                      className={cn(
+                        "flex items-center gap-3 p-3 rounded-lg transition-colors",
+                        isActive 
+                          ? "bg-white text-[#0088cc] font-medium" 
+                          : "hover:bg-white/10 text-white/90 hover:text-white"
+                      )}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span>{item.title}</span>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </SheetContent>
@@ -787,7 +826,7 @@ const EnhancedGuidedHelp = () => {
           )}
 
           {/* Fixed Floating Header - Dashboard Style */}
-          <div className="fixed top-0 right-0 left-0 md:left-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-3 flex justify-between items-center h-16 shadow-sm z-40 transition-all duration-300">
+          <div className="fixed top-0 right-0 left-0 md:left-[240px] bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-3 flex justify-between items-center h-16 shadow-sm z-40 transition-all duration-300">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
                 <Compass className="w-6 h-6 text-blue-600 dark:text-blue-400" />
