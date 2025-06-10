@@ -374,6 +374,7 @@ export type Database = {
           document_id: string | null
           downloaded: boolean | null
           id: string
+          is_completed: boolean | null
           user_id: string
           viewed: boolean | null
         }
@@ -384,6 +385,7 @@ export type Database = {
           document_id?: string | null
           downloaded?: boolean | null
           id?: string
+          is_completed?: boolean | null
           user_id: string
           viewed?: boolean | null
         }
@@ -394,6 +396,7 @@ export type Database = {
           document_id?: string | null
           downloaded?: boolean | null
           id?: string
+          is_completed?: boolean | null
           user_id?: string
           viewed?: boolean | null
         }
@@ -543,6 +546,14 @@ export type Database = {
               p_completed_steps: number[]
               p_current_category: string
             }
+        Returns: undefined
+      }
+      update_document_completion: {
+        Args: {
+          p_user_id: string
+          p_document_id: string
+          p_is_completed: boolean
+        }
         Returns: undefined
       }
     }

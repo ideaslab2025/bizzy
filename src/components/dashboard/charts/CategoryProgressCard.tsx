@@ -2,26 +2,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-
-interface CategoryData {
-  id: string;
-  name: string;
-  type: string;
-  completedDocuments: number;
-  totalDocuments: number;
-}
+import { useProgress } from '@/contexts/ProgressContext';
 
 interface CategoryProgressCardProps {
-  category: CategoryData;
+  categoryId: string;
   onViewDetails?: (categoryId: string) => void;
 }
 
-export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ category, onViewDetails }) => {
+export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ categoryId, onViewDetails }) => {
   const navigate = useNavigate();
+  const { categoryProgress } = useProgress();
   
-  const percentage = category.totalDocuments > 0 
-    ? Math.round((category.completedDocuments / category.totalDocuments) * 100) 
-    : 0;
+  const category = categoryProgress.find(cat => cat.categoryId === categoryId);
+  
+  if (!category) {
+    return null;
+  }
+
+  const percentage = category.percentage;
   
   // Circular progress calculation
   const circumference = 2 * Math.PI * 40; // radius = 40 for better consistency
@@ -29,11 +27,12 @@ export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ cate
 
   const getCategoryIcon = (categoryType: string) => {
     const icons: Record<string, string> = {
-      'finance': '💰',
-      'hr': '👥',
-      'legal': '⚖️',
-      'compliance': '📋',
-      'governance': '🏛️'
+      'company-setup': '🏢',
+      'tax-vat': '💰',
+      'employment': '👥',
+      'legal-compliance': '⚖️',
+      'finance': '📊',
+      'data-protection': '🔒'
     };
     return icons[categoryType] || '📄';
   };
@@ -45,25 +44,11 @@ export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ cate
     return '#EF4444'; // red
   };
 
-  // Map category names to URL-friendly IDs
-  const getCategoryUrlId = (categoryName: string) => {
-    const mapping: Record<string, string> = {
-      'Company Set-Up': 'company-setup',
-      'Tax and VAT': 'tax-vat',
-      'Employment': 'employment',
-      'Legal Compliance': 'legal-compliance',
-      'Finance': 'finance',
-      'Data Protection': 'data-protection'
-    };
-    return mapping[categoryName] || categoryName.toLowerCase().replace(/\s+/g, '-');
-  };
-
   const handleClick = () => {
-    const categoryUrlId = getCategoryUrlId(category.name);
-    navigate(`/dashboard/documents?category=${categoryUrlId}`);
+    navigate(`/dashboard/documents?category=${categoryId}`);
     
     if (onViewDetails) {
-      onViewDetails(category.id);
+      onViewDetails(categoryId);
     }
   };
 
@@ -101,7 +86,7 @@ export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ cate
         
         {/* Category Icon */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-xl">{getCategoryIcon(category.type)}</span>
+          <span className="text-xl">{getCategoryIcon(categoryId)}</span>
         </div>
         
         {/* Percentage Label */}
@@ -119,7 +104,7 @@ export const CategoryProgressCard: React.FC<CategoryProgressCardProps> = ({ cate
         </h3>
         <div className="flex items-center justify-center gap-2">
           <p className="text-xs text-gray-500 font-medium">
-            {category.completedDocuments}/{category.totalDocuments} complete
+            {category.completed}/{category.total} complete
           </p>
           <ChevronRight className="w-3 h-3 text-gray-400 group-hover:text-blue-600 transition-colors" />
         </div>

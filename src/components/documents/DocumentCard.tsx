@@ -2,10 +2,12 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import { TiltCard } from '@/components/ui/3d-tilt-card';
 import { SmartTooltip } from '@/components/ui/smart-tooltip';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRecentlyViewed } from '@/components/ui/recently-viewed';
+import { useProgress } from '@/contexts/ProgressContext';
 import { FileText, Download, Edit, Eye, CheckCircle, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DocumentHoverCard } from './DocumentHoverCard';
@@ -48,7 +50,9 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const { addItem } = useRecentlyViewed();
-  const isCompleted = progress?.completed_at;
+  const { completedDocuments, loading, toggleDocumentCompletion } = useProgress();
+  
+  const isCompleted = completedDocuments.has(document.id);
   const hasProgress = progress?.viewed || progress?.downloaded || progress?.customized;
   const hasFile = !!document.template_url;
 
@@ -62,6 +66,10 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
     onViewDetails(document);
   };
 
+  const handleCompletionToggle = (checked: boolean) => {
+    toggleDocumentCompletion(document.id, checked);
+  };
+
   const formatFileSize = (bytes: number | undefined) => {
     if (!bytes) return null;
     const sizes = ['B', 'KB', 'MB', 'GB'];
@@ -73,56 +81,84 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
     <div className="h-full flex flex-col">
       <div className="pb-3">
         <div className="flex items-start justify-between gap-2">
-          <div className="flex-1">
-            <h3 className={`line-clamp-2 font-semibold ${isMobile ? 'text-base' : 'text-lg'}`}>
-              {document.title}
-            </h3>
-            <div className="flex items-center gap-2 mt-2 flex-wrap">
+          <div className="flex items-start gap-3 flex-1">
+            {/* Completion Checkbox */}
+            <div className="mt-1">
               <SmartTooltip
-                id={`category-${document.category}`}
-                content={`This document is categorized under ${categoryLabels[document.category]}`}
+                id={`completion-${document.id}`}
+                content="Mark this document as complete"
               >
-                <Badge className={`${categoryColors[document.category]} text-xs`}>
-                  {categoryLabels[document.category]}
-                </Badge>
+                <Checkbox
+                  checked={isCompleted}
+                  onCheckedChange={handleCompletionToggle}
+                  disabled={loading}
+                  className={cn(
+                    "data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600",
+                    "transition-all duration-200 hover:scale-110"
+                  )}
+                />
               </SmartTooltip>
-              
-              {/* File status badge */}
-              {hasFile ? (
-                <Badge className="bg-green-100 text-green-800 text-xs">
-                  <CheckCircle className="w-3 h-3 mr-1" />
-                  Available
-                </Badge>
-              ) : (
-                <Badge variant="outline" className="text-gray-600 text-xs">
-                  <AlertTriangle className="w-3 h-3 mr-1" />
-                  Coming Soon
-                </Badge>
-              )}
-              
-              {document.is_required && (
-                <SmartTooltip
-                  id="required-doc"
-                  content="This document is required for your business setup"
-                >
-                  <Badge variant="outline" className="text-red-600 border-red-200 text-xs">
-                    Required
-                  </Badge>
-                </SmartTooltip>
-              )}
-              {document.file_type && (
-                <Badge variant="outline" className="text-xs">
-                  {document.file_type}
-                </Badge>
-              )}
             </div>
             
-            {/* File size */}
-            {document.file_size && (
-              <div className="text-xs text-gray-500 mt-1">
-                {formatFileSize(document.file_size)}
+            <div className="flex-1">
+              <h3 className={`line-clamp-2 font-semibold ${isMobile ? 'text-base' : 'text-lg'} ${isCompleted ? 'line-through text-gray-500' : ''}`}>
+                {document.title}
+              </h3>
+              <div className="flex items-center gap-2 mt-2 flex-wrap">
+                <SmartTooltip
+                  id={`category-${document.category}`}
+                  content={`This document is categorized under ${categoryLabels[document.category]}`}
+                >
+                  <Badge className={`${categoryColors[document.category]} text-xs`}>
+                    {categoryLabels[document.category]}
+                  </Badge>
+                </SmartTooltip>
+                
+                {/* Completion status badge */}
+                {isCompleted && (
+                  <Badge className="bg-green-100 text-green-800 text-xs">
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    Complete
+                  </Badge>
+                )}
+                
+                {/* File status badge */}
+                {hasFile ? (
+                  <Badge className="bg-green-100 text-green-800 text-xs">
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    Available
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="text-gray-600 text-xs">
+                    <AlertTriangle className="w-3 h-3 mr-1" />
+                    Coming Soon
+                  </Badge>
+                )}
+                
+                {document.is_required && (
+                  <SmartTooltip
+                    id="required-doc"
+                    content="This document is required for your business setup"
+                  >
+                    <Badge variant="outline" className="text-red-600 border-red-200 text-xs">
+                      Required
+                    </Badge>
+                  </SmartTooltip>
+                )}
+                {document.file_type && (
+                  <Badge variant="outline" className="text-xs">
+                    {document.file_type}
+                  </Badge>
+                )}
               </div>
-            )}
+              
+              {/* File size */}
+              {document.file_size && (
+                <div className="text-xs text-gray-500 mt-1">
+                  {formatFileSize(document.file_size)}
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex flex-col items-end gap-1">
             <FileText className="w-4 h-4 lg:w-5 lg:h-5 text-gray-400" />
@@ -134,7 +170,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
       </div>
       
       <div className="flex-1 flex flex-col">
-        <p className={`text-gray-600 line-clamp-3 mb-4 ${isMobile ? 'text-sm' : 'text-sm'}`}>
+        <p className={`text-gray-600 line-clamp-3 mb-4 ${isMobile ? 'text-sm' : 'text-sm'} ${isCompleted ? 'opacity-60' : ''}`}>
           {document.description}
         </p>
         
@@ -207,7 +243,11 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   const wrappedContent = (
     <TiltCard 
       glass 
-      className={cn("h-full flex flex-col hover:shadow-md transition-shadow", className)}
+      className={cn(
+        "h-full flex flex-col hover:shadow-md transition-all duration-200",
+        isCompleted && "opacity-75 bg-green-50",
+        className
+      )}
       disabled={isMobile}
     >
       <div className="p-6">
