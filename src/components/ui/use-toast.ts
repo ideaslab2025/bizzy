@@ -1,19 +1,21 @@
 
+import { toast } from "sonner";
+
 // Simple re-export to avoid circular dependencies
-export { toast } from "sonner";
+export { toast };
 
 // Compatibility function for existing code
 export const useToast = () => {
   return {
     toast: (props: any) => {
       if (typeof props === 'string') {
-        return import('sonner').then(({ toast }) => toast(props));
+        return toast(props);
       }
-      if (props.title && props.description) {
-        return import('sonner').then(({ toast }) => toast(props.title, { description: props.description }));
+      if (props?.title && props?.description) {
+        return toast(props.title, { description: props.description });
       }
-      return import('sonner').then(({ toast }) => toast(props.title || 'Notification'));
+      return toast(props?.title || 'Notification');
     },
-    dismiss: () => import('sonner').then(({ toast }) => toast.dismiss())
+    dismiss: () => toast.dismiss()
   };
 };

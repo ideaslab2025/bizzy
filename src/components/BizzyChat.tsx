@@ -12,8 +12,6 @@ type Message = {
   timestamp: Date;
 };
 
-// Predefined responses based on keywords
-// *** MODIFY THIS SECTION TO CHANGE CHATBOT RESPONSES ***
 const responses = [
   {
     keywords: ["hello", "hi", "hey", "greetings"],
@@ -37,8 +35,6 @@ const responses = [
   }
 ];
 
-// Default responses if no keyword matches
-// *** MODIFY THESE RESPONSES FOR NON-MATCHING QUERIES ***
 const defaultResponses = [
   "I'd be happy to help with that! Could you provide more details?",
   "That's a great question. Our platform is designed to make business admin simple for you.",
@@ -47,7 +43,12 @@ const defaultResponses = [
   "I'm here to make business admin easier. Could you tell me more about what you need?"
 ];
 
-const BizzyChat = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+interface BizzyChatProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const BizzyChat = ({ isOpen, onClose }: BizzyChatProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -63,7 +64,6 @@ const BizzyChat = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
     e.preventDefault();
     if (!newMessage.trim()) return;
 
-    // Add user message
     const userMessage: Message = {
       id: messages.length + 1,
       text: newMessage,
@@ -74,7 +74,6 @@ const BizzyChat = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
     setMessages((prev) => [...prev, userMessage]);
     setNewMessage("");
 
-    // Generate bot response after a short delay
     setTimeout(() => {
       const botMessage: Message = {
         id: messages.length + 2,
@@ -89,19 +88,16 @@ const BizzyChat = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
   const generateResponse = (userInput: string): string => {
     const input = userInput.toLowerCase();
     
-    // Check for keyword matches
     for (const item of responses) {
       if (item.keywords.some(keyword => input.includes(keyword))) {
         return item.response;
       }
     }
     
-    // If no matches, return a random default response
     const randomIndex = Math.floor(Math.random() * defaultResponses.length);
     return defaultResponses[randomIndex];
   };
 
-  // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
