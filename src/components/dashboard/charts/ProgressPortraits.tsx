@@ -9,15 +9,12 @@ import {
   CheckCircle, 
   Clock, 
   ArrowRight,
-  Rocket,
-  Banknote,
+  Building2,
+  Calculator,
   Users,
   Scale,
-  RefreshCw,
+  Banknote,
   Shield,
-  Umbrella,
-  TrendingUp,
-  Monitor,
   ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -29,38 +26,34 @@ interface ProgressPortraitsProps {
 export const ProgressPortraits: React.FC<ProgressPortraitsProps> = ({ className }) => {
   // Mock progress data - in a real app this would come from your state management
   const progressData = {
-    1: 0, // Launch Essentials
-    2: 0, // Financial Setup
-    3: 0, // Employment & HR
-    4: 0, // Legal & Compliance
-    5: 0, // Ongoing Operations
-    6: 0, // Data Protection & GDPR
-    7: 0, // Insurance & Risk Management
-    8: 0, // Business Growth & Scaling
-    9: 0, // Technology & Systems
-    10: 0 // Sector-Specific Requirements
+    1: 0, // Company Set-Up
+    2: 0, // Tax and VAT
+    3: 0, // Employment
+    4: 0, // Legal Compliance
+    5: 0, // Finance
+    6: 0, // Data Protection
   };
 
   const complianceCategories = [
     {
       id: 1,
-      title: "Launch Essentials",
-      icon: Rocket,
+      title: "Company Set-Up",
+      icon: Building2,
       progress: progressData[1] || 0,
       iconColor: "text-blue-600",
       bgColor: "bg-blue-50"
     },
     {
       id: 2,
-      title: "Financial Setup", 
-      icon: Banknote,
+      title: "Tax and VAT", 
+      icon: Calculator,
       progress: progressData[2] || 0,
       iconColor: "text-green-600",
       bgColor: "bg-green-50"
     },
     {
       id: 3,
-      title: "Employment & HR",
+      title: "Employment",
       icon: Users, 
       progress: progressData[3] || 0,
       iconColor: "text-orange-600",
@@ -68,7 +61,7 @@ export const ProgressPortraits: React.FC<ProgressPortraitsProps> = ({ className 
     },
     {
       id: 4,
-      title: "Legal & Compliance",
+      title: "Legal Compliance",
       icon: Scale,
       progress: progressData[4] || 0,
       iconColor: "text-red-600", 
@@ -76,51 +69,19 @@ export const ProgressPortraits: React.FC<ProgressPortraitsProps> = ({ className 
     },
     {
       id: 5,
-      title: "Ongoing Operations",
-      icon: RefreshCw,
+      title: "Finance",
+      icon: Banknote,
       progress: progressData[5] || 0,
       iconColor: "text-purple-600",
       bgColor: "bg-purple-50"
     },
     {
       id: 6,
-      title: "Data Protection & GDPR",
+      title: "Data Protection",
       icon: Shield,
       progress: progressData[6] || 0,
       iconColor: "text-indigo-600",
       bgColor: "bg-indigo-50"
-    },
-    {
-      id: 7,
-      title: "Insurance & Risk Management",
-      icon: Umbrella,
-      progress: progressData[7] || 0,
-      iconColor: "text-amber-600",
-      bgColor: "bg-amber-50"
-    },
-    {
-      id: 8,
-      title: "Business Growth & Scaling",
-      icon: TrendingUp,
-      progress: progressData[8] || 0,
-      iconColor: "text-emerald-600",
-      bgColor: "bg-emerald-50"
-    },
-    {
-      id: 9,
-      title: "Technology & Systems",
-      icon: Monitor,
-      progress: progressData[9] || 0,
-      iconColor: "text-sky-600",
-      bgColor: "bg-sky-50"
-    },
-    {
-      id: 10,
-      title: "Sector-Specific Requirements",
-      icon: Monitor,
-      progress: progressData[10] || 0,
-      iconColor: "text-rose-600",
-      bgColor: "bg-rose-50"
     }
   ];
 
@@ -134,11 +95,11 @@ export const ProgressPortraits: React.FC<ProgressPortraitsProps> = ({ className 
       <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
         <CardHeader className="pb-4">
           <CardTitle className="text-xl font-bold text-gray-900 dark:text-gray-100">
-            Progress
+            Progress Overview
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {complianceCategories.map((category, index) => {
               const IconComponent = category.icon;
               return (
@@ -147,7 +108,7 @@ export const ProgressPortraits: React.FC<ProgressPortraitsProps> = ({ className 
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex flex-col items-center p-4 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-200"
+                  className="flex flex-col items-center p-4 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-200 cursor-pointer"
                 >
                   <div className={cn(
                     "w-12 h-12 rounded-full flex items-center justify-center mb-3",

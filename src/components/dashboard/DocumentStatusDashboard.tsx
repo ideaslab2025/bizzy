@@ -38,7 +38,7 @@ export const DocumentStatusDashboard: React.FC<DocumentStatusDashboardProps> = (
     inProgressCount: inProgressDocIds.length,
     notStartedCount: documents.length - completedDocIds.length - inProgressDocIds.length,
     criticalCount: documents.filter(doc => doc.is_required && !completedDocIds.includes(doc.id)).length,
-    categories: ['all', 'legal', 'finance', 'hr', 'governance', 'compliance'],
+    categories: ['all', 'company-setup', 'tax-vat', 'employment', 'legal-compliance', 'finance', 'data-protection'],
     documents: documents.map(doc => {
       let status: 'completed' | 'in-progress' | 'not-started';
       if (completedDocIds.includes(doc.id)) {
