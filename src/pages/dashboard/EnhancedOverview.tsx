@@ -12,13 +12,12 @@ import {
   TrendingUp, Clock, FileText, Calendar, Award, 
   Zap, ArrowRight, CheckCircle, AlertTriangle,
   Target, PlayCircle, BookOpen, BarChart3,
-  Brain, Users
+  Users
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SimpleDocumentAnalytics } from '@/components/dashboard/charts/SimpleDocumentAnalytics';
 import { BusinessHistoryTimeline } from '@/components/dashboard/charts/BusinessHistoryTimeline';
 import { ProgressPortraits } from '@/components/dashboard/charts/ProgressPortraits';
-import { SuccessPredictionPanel } from '@/components/dashboard/charts/SuccessPredictionPanel';
 import { logger } from '@/utils/secureLogger';
 
 interface DashboardAnalytics {
@@ -227,7 +226,7 @@ const EnhancedOverview: React.FC = () => {
         </div>
       </div>
     );
-  }
+  };
 
   return (
     <div className="p-4 md:p-8 space-y-6 md:space-y-8">
@@ -241,9 +240,9 @@ const EnhancedOverview: React.FC = () => {
         </p>
       </div>
 
-      {/* Enhanced Tab Navigation with Mobile-Optimized Headers */}
+      {/* Enhanced Tab Navigation with Mobile-Optimized Headers - Updated to 3 columns */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-1 md:gap-0 h-auto md:h-10">
+        <TabsList className="grid w-full grid-cols-3 gap-1 md:gap-0 h-auto md:h-10">
           <TabsTrigger 
             value="overview" 
             className="flex flex-col md:flex-row items-center gap-1 md:gap-2 px-2 md:px-3 py-2 md:py-2 text-xs md:text-sm min-h-[48px] md:min-h-[40px]"
@@ -272,16 +271,6 @@ const EnhancedOverview: React.FC = () => {
             <span className="text-center leading-tight">
               Business<br className="md:hidden" />
               <span className="md:ml-1">Timeline</span>
-            </span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="ai-insights" 
-            className="flex flex-col md:flex-row items-center gap-1 md:gap-2 px-2 md:px-3 py-2 md:py-2 text-xs md:text-sm min-h-[48px] md:min-h-[40px]"
-          >
-            <Brain className="w-3 h-3 md:w-4 md:h-4" />
-            <span className="text-center leading-tight">
-              AI<br className="md:hidden" />
-              <span className="md:ml-1">Insights</span>
             </span>
           </TabsTrigger>
         </TabsList>
@@ -481,10 +470,10 @@ const EnhancedOverview: React.FC = () => {
                   <Button
                     variant="outline"
                     className="h-20 md:h-24 flex-col gap-2 min-h-[80px] touch-manipulation"
-                    onClick={() => setActiveTab('ai-insights')}
+                    onClick={() => navigate('/dashboard/consultations')}
                   >
-                    <Brain className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
-                    <span className="text-xs md:text-sm font-medium">AI Insights</span>
+                    <Users className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
+                    <span className="text-xs md:text-sm font-medium">Consult</span>
                   </Button>
                 </div>
               </CardContent>
@@ -498,10 +487,6 @@ const EnhancedOverview: React.FC = () => {
 
         <TabsContent value="timeline" className="space-y-6 mt-6">
           <BusinessHistoryTimeline />
-        </TabsContent>
-
-        <TabsContent value="ai-insights" className="space-y-6 mt-6">
-          <SuccessPredictionPanel />
         </TabsContent>
       </Tabs>
     </div>
