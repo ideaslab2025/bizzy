@@ -244,7 +244,9 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
     <TiltCard 
       glass 
       className={cn(
-        "h-full flex flex-col hover:shadow-md transition-all duration-200",
+        "h-full flex flex-col transition-all duration-300 ease-in-out",
+        "hover:-translate-y-1 hover:shadow-[0_8px_25px_rgba(37,99,235,0.15)]",
+        "cursor-pointer",
         isCompleted && "opacity-75 bg-green-50",
         className
       )}
