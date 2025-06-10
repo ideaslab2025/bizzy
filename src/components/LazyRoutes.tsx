@@ -10,7 +10,7 @@ const Documents = React.lazy(() => import('@/pages/dashboard/Documents'));
 const OptimizedDocuments = React.lazy(() => import('@/pages/dashboard/OptimizedDocuments'));
 const MyDocuments = React.lazy(() => import('@/pages/dashboard/MyDocuments'));
 const DocumentCustomizer = React.lazy(() => import('@/pages/dashboard/DocumentCustomizer'));
-const EnhancedGuidedHelp = React.lazy(() => import('@/pages/EnhancedGuidedHelp'));
+const EnhancedGuidedHelp = React.lazy(() => import('@/pages/dashboard/EnhancedGuidedHelp'));
 const ProgressCompanion = React.lazy(() => import('@/pages/ProgressCompanion'));
 const Pricing = React.lazy(() => import('@/pages/Pricing'));
 const Login = React.lazy(() => import('@/pages/Login'));
@@ -35,6 +35,7 @@ export const LazyRoutes: React.FC = () => {
           <Route path="documents" element={<OptimizedDocuments />} />
           <Route path="my-documents" element={<MyDocuments />} />
           <Route path="documents/customize/:id" element={<DocumentCustomizer />} />
+          <Route path="guided-help" element={<EnhancedGuidedHelp />} />
           <Route path="consultations" element={
             <div className="p-6">
               <h1 className="text-2xl font-bold">Consultations</h1>
@@ -49,7 +50,6 @@ export const LazyRoutes: React.FC = () => {
           } />
         </Route>
         <Route path="/profile" element={<Profile />} />
-        <Route path="/guided-help" element={<EnhancedGuidedHelp />} />
         <Route path="/progress-companion" element={<ProgressCompanion />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/login" element={<Login />} />

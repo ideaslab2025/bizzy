@@ -34,7 +34,7 @@ const items = [
   },
   {
     title: "Guided Help",
-    url: "/guided-help",
+    url: "/dashboard/guided-help",
     icon: HelpCircle,
   },
   {
