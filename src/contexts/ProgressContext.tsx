@@ -39,32 +39,3 @@ export const ProgressProvider: React.FC<ProgressProviderProps> = ({ children }) 
     </ProgressContext.Provider>
   );
 };
-</ProgressContext.Provider>
-
-Now I'll update the main Dashboard component to include the progress provider:
-
-<lov-write file_path="src/pages/Dashboard.tsx">
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/ui/app-sidebar';
-import { ProgressProvider } from '@/contexts/ProgressContext';
-
-const Dashboard = () => {
-  return (
-    <ProgressProvider>
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full">
-          <AppSidebar />
-          <main className="flex-1 overflow-auto">
-            <div className="container mx-auto p-6">
-              <Outlet />
-            </div>
-          </main>
-        </div>
-      </SidebarProvider>
-    </ProgressProvider>
-  );
-};
-
-export default Dashboard;
