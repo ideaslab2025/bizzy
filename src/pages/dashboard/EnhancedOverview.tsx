@@ -16,7 +16,6 @@ import {
   Brain, Users
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { businessSections } from '@/data/businessSections';
 import { SimpleDocumentAnalytics } from '@/components/dashboard/charts/SimpleDocumentAnalytics';
 import { BusinessHistoryTimeline } from '@/components/dashboard/charts/BusinessHistoryTimeline';
 import { ProgressPortraits } from '@/components/dashboard/charts/ProgressPortraits';
@@ -191,22 +190,11 @@ const EnhancedOverview: React.FC = () => {
     }
   };
 
-  const navigateToSection = (sectionId: number) => {
-    navigate(`/guided-help?section=${sectionId}`);
-  };
-
   const navigateToStep = (sectionId: number, stepNumber: number) => {
     const section = analytics?.sections.find(s => s.id === sectionId);
     if (section) {
       navigate(`/guided-help?section=${section.id}&step=${stepNumber}`);
     }
-  };
-
-  // IMPROVED: Function to check completion state from both sources
-  const getSectionCompletionFromStorage = (sectionId: number) => {
-    const localStorageComplete = localStorage.getItem(`bizzy_section_${sectionId}_complete`) === 'true';
-    const analyticsProgress = analytics?.completionBySection[sectionId] || 0;
-    return localStorageComplete || analyticsProgress >= 100;
   };
 
   if (loading || !analytics) {
@@ -282,91 +270,6 @@ const EnhancedOverview: React.FC = () => {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 md:space-y-8 mt-6">
-          {/* Visual Journey Map - Mobile-Optimized Icon Layout */}
-          <Card className="p-4 md:p-6">
-            <CardHeader className="px-0 pt-0 pb-4 md:pb-6">
-              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                <Target className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="leading-tight">Your Business Setup Journey</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="px-0">
-              <div className="w-full">
-                {/* Mobile-First Responsive Grid for Icons */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-2 lg:gap-4">
-                  {businessSections.map((section, index) => {
-                    const IconComponent = section.icon;
-                    const completion = analytics?.completionBySection[section.id] || 0;
-                    const isCompleted = completion === 100 || getSectionCompletionFromStorage(section.id);
-                    const isCurrent = section.id === analytics?.currentSection?.id;
-                    const isNext = index < businessSections.length - 1;
-                    
-                    return (
-                      <React.Fragment key={section.id}>
-                        <div className="flex flex-col items-center">
-                          <motion.div
-                            className="flex flex-col items-center cursor-pointer w-full touch-manipulation"
-                            whileHover={{ scale: 1.05 }}
-                            onClick={() => navigateToSection(section.id)}
-                          >
-                            {/* Section node with responsive sizing */}
-                            <div className={cn(
-                              "w-12 h-12 md:w-14 md:h-14 lg:w-12 lg:h-12 rounded-full flex items-center justify-center border-4 transition-all mb-3 md:mb-2 relative z-10 bg-white min-h-[48px] min-w-[48px]",
-                              isCompleted ? 
-                                "border-green-500" :
-                              isCurrent ? 
-                                "border-blue-500" : 
-                                "border-gray-300"
-                            )}>
-                              {isCompleted ? (
-                                <CheckCircle className="w-6 h-6 md:w-7 md:h-7 lg:w-6 lg:h-6 text-green-500" strokeWidth={2} />
-                              ) : (
-                                <IconComponent 
-                                  className={cn(
-                                    "w-6 h-6 md:w-7 md:h-7 lg:w-6 lg:h-6",
-                                    isCurrent ? "text-blue-500" : section.iconColor
-                                  )} 
-                                  strokeWidth={2} 
-                                />
-                              )}
-                            </div>
-                            
-                            {/* Mobile-optimized text with responsive sizing */}
-                            <p className="text-xs md:text-sm lg:text-xs text-center font-medium leading-tight px-1 max-w-full">
-                              {section.title}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {Math.round(completion)}%
-                            </p>
-                          </motion.div>
-
-                          {/* Connection lines - hidden on mobile for cleaner look */}
-                          {isNext && (
-                            <div className="hidden lg:block mt-4 w-full flex justify-center">
-                              <div className={cn(
-                                "h-1 w-full bg-gradient-to-r relative",
-                                isCompleted ? 
-                                  "from-green-500 to-green-400" : 
-                                  "from-gray-300 to-gray-200"
-                              )}>
-                                {/* Arrow head */}
-                                <div className={cn(
-                                  "absolute -right-1 top-1/2 -translate-y-1/2 w-0 h-0",
-                                  "border-l-4 border-t-2 border-b-2 border-t-transparent border-b-transparent",
-                                  isCompleted ? "border-l-green-400" : "border-l-gray-200"
-                                )} />
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </React.Fragment>
-                    );
-                  })}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Stats Grid with Mobile-Optimized Layout */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
             <StatCard
@@ -470,7 +373,7 @@ const EnhancedOverview: React.FC = () => {
                     
                     <Button 
                       className="w-full min-h-[48px]"
-                      onClick={() => navigateToSection(analytics.currentSection.id)}
+                      onClick={() => navigate('/guided-help')}
                     >
                       Continue Section
                       <ArrowRight className="w-4 h-4 ml-2" strokeWidth={2} />
