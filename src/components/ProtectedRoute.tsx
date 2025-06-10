@@ -1,6 +1,7 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
+import EmailVerificationGuard from "./EmailVerificationGuard";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -21,7 +22,11 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     return <Navigate to="/login" replace />;
   }
 
-  return <>{children}</>;
+  return (
+    <EmailVerificationGuard>
+      {children}
+    </EmailVerificationGuard>
+  );
 };
 
 export default ProtectedRoute;

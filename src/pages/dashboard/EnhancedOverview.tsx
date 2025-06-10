@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -20,6 +19,7 @@ import { SimpleDocumentAnalytics } from '@/components/dashboard/charts/SimpleDoc
 import { BusinessHistoryTimeline } from '@/components/dashboard/charts/BusinessHistoryTimeline';
 import { ProgressPortraits } from '@/components/dashboard/charts/ProgressPortraits';
 import { SuccessPredictionPanel } from '@/components/dashboard/charts/SuccessPredictionPanel';
+import { logger } from '@/utils/secureLogger';
 
 interface DashboardAnalytics {
   overallProgress: number;
@@ -64,6 +64,8 @@ const EnhancedOverview: React.FC = () => {
     if (!user) return;
 
     try {
+      logger.debug("Fetching dashboard data", { userId: user.id });
+      
       // Fetch sections and steps
       const { data: sections } = await supabase
         .from('guidance_sections')
@@ -127,7 +129,12 @@ const EnhancedOverview: React.FC = () => {
         
         completionBySection[section.id] = finalProgress;
         
-        console.log(`Section ${section.id} - Supabase: ${baseProgress}%, localStorage: ${progressFromStorage}%, Final: ${finalProgress}%`);
+        logger.debug("Section progress calculated", {
+          sectionId: section.id,
+          supabaseProgress: baseProgress,
+          localStorageProgress: progressFromStorage,
+          finalProgress
+        });
       });
 
       const totalSteps = allSteps?.length || 0;
@@ -183,8 +190,17 @@ const EnhancedOverview: React.FC = () => {
         estimated_time_minutes: step.estimated_time_minutes || 30
       })) || []);
 
+      logger.info("Dashboard data loaded successfully", {
+        sectionsCount: sections?.length || 0,
+        stepsCount: allSteps?.length || 0,
+        completedSteps,
+        overallProgress: Math.round(overallProgress)
+      });
+
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      logger.error('Error fetching dashboard data', { 
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
     } finally {
       setLoading(false);
     }
@@ -193,6 +209,7 @@ const EnhancedOverview: React.FC = () => {
   const navigateToStep = (sectionId: number, stepNumber: number) => {
     const section = analytics?.sections.find(s => s.id === sectionId);
     if (section) {
+      logger.audit("User navigating to step", { sectionId, stepNumber });
       navigate(`/guided-help?section=${section.id}&step=${stepNumber}`);
     }
   };

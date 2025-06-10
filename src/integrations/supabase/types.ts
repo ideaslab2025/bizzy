@@ -535,23 +535,15 @@ export type Database = {
     }
     Functions: {
       get_smart_recommendations: {
-        Args: {
-          p_user_id: string
-          p_company_age_days: number
-          p_completed_steps: number[]
-          p_current_category: string
-        }
-        Returns: {
-          step_id: number
-          section_id: number
-          title: string
-          estimated_time_minutes: number
-          difficulty_level: string
-          deadline_days: number
-          quick_win: boolean
-          prerequisites_met: boolean
-          category: string
-        }[]
+        Args:
+          | Record<PropertyKey, never>
+          | {
+              p_user_id: string
+              p_company_age_days: number
+              p_completed_steps: number[]
+              p_current_category: string
+            }
+        Returns: undefined
       }
     }
     Enums: {
