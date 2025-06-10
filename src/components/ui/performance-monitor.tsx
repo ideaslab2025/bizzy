@@ -19,13 +19,12 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
 
     trackPageLoad();
 
-    // Web Vitals tracking - using correct import method
+    // Web Vitals tracking - using available functions in current version
     const trackVitals = async () => {
       try {
-        const { onCLS, onFID, onFCP, onLCP, onTTFB } = await import('web-vitals');
+        const { onCLS, onFCP, onLCP, onTTFB } = await import('web-vitals');
         
         onCLS(console.log);
-        onFID(console.log);
         onFCP(console.log);
         onLCP(console.log);
         onTTFB(console.log);

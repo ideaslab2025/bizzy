@@ -35,7 +35,7 @@ export const useOptimizedDocuments = (options: UseOptimizedDocumentsOptions = {}
       setLoading(true);
       setError(null);
 
-      // Build optimized query - include all required Document properties
+      // Build optimized query - only include columns that exist in the database
       let query = supabase
         .from('documents')
         .select(`
@@ -43,9 +43,7 @@ export const useOptimizedDocuments = (options: UseOptimizedDocumentsOptions = {}
           title,
           description,
           category,
-          subcategory,
           file_type,
-          file_size,
           is_required,
           template_url,
           keywords,
