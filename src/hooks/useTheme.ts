@@ -1,55 +1,32 @@
-
 import { useState, useEffect } from 'react';
 
-type Theme = 'light' | 'dark' | 'system';
+type Theme = 'light';
 
 export const useTheme = () => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('theme') as Theme) || 'system';
-    }
-    return 'system';
-  });
-
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+  const [theme] = useState<Theme>('light');
+  const [resolvedTheme] = useState<'light'>('light');
 
   useEffect(() => {
     const root = window.document.documentElement;
     
-    const updateTheme = (newTheme: 'light' | 'dark') => {
-      root.classList.remove('light', 'dark');
-      root.classList.add(newTheme);
-      root.setAttribute('data-theme', newTheme);
-      setResolvedTheme(newTheme);
-    };
-
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      updateTheme(systemTheme);
-
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const handleChange = (e: MediaQueryListEvent) => {
-        updateTheme(e.matches ? 'dark' : 'light');
-      };
-      
-      mediaQuery.addEventListener('change', handleChange);
-      return () => mediaQuery.removeEventListener('change', handleChange);
-    } else {
-      updateTheme(theme);
-    }
-  }, [theme]);
+    // Always set light theme
+    root.classList.remove('light', 'dark');
+    root.classList.add('light');
+    root.setAttribute('data-theme', 'light');
+  }, []);
 
   const setThemeValue = (newTheme: Theme) => {
-    localStorage.setItem('theme', newTheme);
-    setTheme(newTheme);
+    // Always keep light theme
+    console.log('Theme switching disabled - using light mode only');
   };
 
   const toggleTheme = () => {
-    setThemeValue(resolvedTheme === 'dark' ? 'light' : 'dark');
+    // No-op since we only support light mode
+    console.log('Theme switching disabled - using light mode only');
   };
 
   return {
-    theme: resolvedTheme,
+    theme: 'light' as const,
     setTheme: setThemeValue,
     toggleTheme,
   };

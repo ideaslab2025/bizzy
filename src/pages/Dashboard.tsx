@@ -1,6 +1,7 @@
+
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Bell, Search, User, ChevronDown, Settings, LogOut, Moon, RefreshCw, Menu, Bot } from "lucide-react";
+import { Bell, Search, User, ChevronDown, Settings, LogOut, RefreshCw, Menu, Bot } from "lucide-react";
 import { motion } from "framer-motion";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
@@ -26,13 +27,11 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
-import { useTheme } from "@/hooks/useTheme";
 import { toast } from "@/components/ui/sonner";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { signOut } = useAuth();
-  const { toggleTheme } = useTheme();
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(false);
   const [hasNotifications] = useState(true);
@@ -150,11 +149,11 @@ const Dashboard = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex w-full bg-gray-50">
         <AppSidebar />
         <main className="flex-1 relative">
-          {/* Enhanced Header with White Text and Icons */}
-          <header className="sticky top-0 z-40 h-16 md:h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+          {/* Enhanced Header */}
+          <header className="sticky top-0 z-40 h-16 md:h-16 bg-white border-b border-gray-200 shadow-sm">
             <div className="h-full px-4 md:px-6 flex items-center justify-between">
               <div className="flex items-center gap-3 md:gap-4">
                 <TooltipProvider>
@@ -164,7 +163,7 @@ const Dashboard = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <SidebarTrigger className="text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 transition-all duration-200 p-3 min-h-[44px] min-w-[44px] touch-manipulation" />
+                        <SidebarTrigger className="text-gray-900 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200 p-3 min-h-[44px] min-w-[44px] touch-manipulation" />
                       </motion.div>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -172,7 +171,7 @@ const Dashboard = () => {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <h1 className="text-xl md:text-2xl font-bold text-white dark:text-white tracking-tight">
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">
                   Dashboard
                 </h1>
               </div>
@@ -184,17 +183,17 @@ const Dashboard = () => {
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="text"
                     placeholder="Search documents, guides..."
-                    className="w-full pl-10 pr-4 py-3 h-12 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-md text-base text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                    className="w-full pl-10 pr-4 py-3 h-12 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-md text-base text-gray-900 placeholder-gray-500"
                     onClick={() => setCommandPaletteOpen(true)}
                   />
                 </motion.div>
               </div>
 
-              {/* Right Actions with White Icons */}
+              {/* Right Actions */}
               <div className="flex items-center gap-2 md:gap-3">
                 {/* Search button for mobile */}
                 <motion.div
@@ -206,7 +205,7 @@ const Dashboard = () => {
                     variant="ghost" 
                     size="icon"
                     onClick={() => setCommandPaletteOpen(true)}
-                    className="text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                    className="text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
                   >
                     <Search className="h-5 w-5" />
                   </Button>
@@ -219,21 +218,6 @@ const Dashboard = () => {
                   onForceSync={() => setSyncStatus('syncing')}
                   onShowHistory={() => console.log('Show sync history')}
                 />
-
-                {/* Dark Mode Toggle */}
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={toggleTheme}
-                    className="text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
-                  >
-                    <Moon className="h-5 w-5" />
-                  </Button>
-                </motion.div>
                 
                 {/* Enhanced Notifications with Click Navigation */}
                 <DropdownMenu>
@@ -245,7 +229,7 @@ const Dashboard = () => {
                       <Button 
                         variant="ghost" 
                         size="icon"
-                        className="relative rounded-lg p-3 transition-all duration-200 hover:bg-gray-700 dark:hover:bg-gray-600 text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 hover:shadow-md min-h-[44px] min-w-[44px]"
+                        className="relative rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 text-gray-900 hover:text-gray-700 hover:shadow-md min-h-[44px] min-w-[44px]"
                       >
                         <Bell className="w-5 h-5" />
                         {hasNotifications && (
@@ -261,29 +245,29 @@ const Dashboard = () => {
                       </Button>
                     </motion.div>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg z-50">
-                    <div className="p-4 border-b border-gray-100 dark:border-gray-700">
-                      <h3 className="font-semibold text-gray-900 dark:text-gray-100">Notifications</h3>
+                  <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
+                    <div className="p-4 border-b border-gray-100">
+                      <h3 className="font-semibold text-gray-900">Notifications</h3>
                     </div>
                     {notifications.map((notification) => (
                       <DropdownMenuItem 
                         key={notification.id}
-                        className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 min-h-[60px] cursor-pointer transition-all duration-200 border-l-4 border-transparent hover:border-blue-500"
+                        className="p-4 hover:bg-gray-50 min-h-[60px] cursor-pointer transition-all duration-200 border-l-4 border-transparent hover:border-blue-500"
                         onClick={() => handleNotificationClick(notification)}
                       >
                         <div className="w-full">
                           <div className="flex items-start justify-between mb-1">
-                            <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+                            <p className="font-medium text-gray-900 text-sm">
                               {notification.title}
                             </p>
                             {!notification.read && (
                               <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 ml-2 mt-1"></div>
                             )}
                           </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                          <p className="text-sm text-gray-600 mb-1">
                             {notification.message}
                           </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-500">
+                          <p className="text-xs text-gray-500">
                             {notification.timestamp.toLocaleTimeString([], { 
                               hour: '2-digit', 
                               minute: '2-digit' 
@@ -295,7 +279,7 @@ const Dashboard = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Robot Button - Now in Top Navigation with White Styling */}
+                {/* Robot Button - Now in Top Navigation */}
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -307,7 +291,7 @@ const Dashboard = () => {
                           variant="ghost" 
                           size="icon"
                           onClick={handleRobotClick}
-                          className="text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 hover:bg-gray-700 dark:hover:bg-gray-600 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                          className="text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
                           aria-label="Open Progress Companion"
                         >
                           <Bot className="w-5 h-5" />
@@ -320,7 +304,7 @@ const Dashboard = () => {
                   </Tooltip>
                 </TooltipProvider>
 
-                {/* Enhanced User Menu with White Styling */}
+                {/* Enhanced User Menu */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div
@@ -329,7 +313,7 @@ const Dashboard = () => {
                     >
                       <Button 
                         variant="ghost" 
-                        className="flex items-center gap-2 rounded-lg p-3 transition-all duration-200 hover:bg-gray-700 dark:hover:bg-gray-600 hover:shadow-md text-white hover:text-gray-100 dark:text-white dark:hover:text-gray-200 min-h-[44px]"
+                        className="flex items-center gap-2 rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 hover:shadow-md text-gray-900 hover:text-gray-700 min-h-[44px]"
                       >
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                           <User className="w-4 h-4 text-white" />
@@ -339,17 +323,17 @@ const Dashboard = () => {
                       </Button>
                     </motion.div>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg z-50">
-                    <DropdownMenuItem onClick={handleProfileClick} className="hover:bg-gray-50 dark:hover:bg-gray-700 p-4 min-h-[48px] text-gray-900 dark:text-gray-100">
+                  <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
+                    <DropdownMenuItem onClick={handleProfileClick} className="hover:bg-gray-50 p-4 min-h-[48px] text-gray-900">
                       <User className="w-4 h-4 mr-3" />
                       Profile
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="hover:bg-gray-50 dark:hover:bg-gray-700 p-4 min-h-[48px] text-gray-900 dark:text-gray-100">
+                    <DropdownMenuItem className="hover:bg-gray-50 p-4 min-h-[48px] text-gray-900">
                       <Settings className="w-4 h-4 mr-3" />
                       Settings
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 p-4 min-h-[48px]">
+                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 text-red-600 hover:text-red-700 p-4 min-h-[48px]">
                       <LogOut className="w-4 h-4 mr-3" />
                       Logout
                     </DropdownMenuItem>
@@ -360,7 +344,7 @@ const Dashboard = () => {
           </header>
           
           {/* Main Content */}
-          <div className="p-4 md:p-6 bg-gray-50 dark:bg-gray-900 min-h-[calc(100vh-4rem)]">
+          <div className="p-4 md:p-6 bg-gray-50 min-h-[calc(100vh-4rem)]">
             <Outlet />
           </div>
           

@@ -38,36 +38,6 @@
     --tilt-perspective: 1000px;
     --tilt-scale: 1.05;
   }
-
-  .dark {
-    --background: 210 20% 6%;
-    --foreground: 210 40% 95%;
-    --card: 217 19% 9%;
-    --card-foreground: 210 40% 95%;
-    --popover: 217 19% 9%;
-    --popover-foreground: 210 40% 95%;
-    --primary: 210 40% 85%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 12%;
-    --secondary-foreground: 210 40% 95%;
-    --muted: 217.2 32.6% 12%;
-    --muted-foreground: 215 20.2% 55%;
-    --accent: 217.2 32.6% 12%;
-    --accent-foreground: 210 40% 95%;
-    --destructive: 0 62.8% 40%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 12%;
-    --input: 217.2 32.6% 12%;
-    --ring: 212.7 26.8% 73.9%;
-    --sidebar-background: 217 19% 8%;
-    --sidebar-foreground: 240 4.8% 85%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 12%;
-    --sidebar-accent-foreground: 240 4.8% 85%;
-    --sidebar-border: 240 3.7% 12%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
 }
 
 @layer base {
@@ -107,30 +77,16 @@
     line-height: 1.6;
   }
   
-  /* Dark mode image adjustments */
-  .dark img:not([data-no-dark-filter]) {
-    filter: brightness(0.8) contrast(1.1);
-  }
-  
-  /* Fixed header transparency issue - make it completely solid */
+  /* Fixed header styling */
   header.sticky {
-    @apply bg-[#0a192f] dark:bg-gray-900 !important;
-    background-color: #0a192f !important;
+    @apply bg-white !important;
+    background-color: #ffffff !important;
     backdrop-filter: none !important;
-  }
-  
-  .dark header.sticky {
-    background-color: rgb(17, 24, 39) !important;
-  }
-  
-  /* Platinum box fix - ensure text is visible */
-  [class*="from-slate-50"] {
-    @apply text-gray-800 dark:text-gray-200 !important;
   }
   
   /* Feature boxes styling */
   #features .relative.overflow-hidden {
-    @apply shadow-xl transition-all hover:-translate-y-1 hover:shadow-blue-500/30 dark:shadow-gray-900/50;
+    @apply shadow-xl transition-all hover:-translate-y-1 hover:shadow-blue-500/30;
   }
 
   /* Updated hero image styling with transparent background and drop-shadow */
@@ -138,10 +94,6 @@
     filter: drop-shadow(0 0 35px rgba(59,130,246,0.8));
     transform: scale(1.3) translateY(-50px);
     mix-blend-mode: normal;
-  }
-  
-  .dark .hero-image {
-    filter: drop-shadow(0 0 35px rgba(59,130,246,0.6)) brightness(0.9);
   }
   
   /* Increase hamburger menu icon size */
@@ -254,19 +206,6 @@
     transform: translateX(-50%);
     animation: float-3 20s ease-in-out infinite;
   }
-  
-  /* Dark mode gradient adjustments */
-  .dark .gradient-mesh-animated::before {
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
-  }
-  
-  .dark .gradient-mesh-animated::after {
-    background: radial-gradient(circle, rgba(147, 51, 234, 0.08) 0%, transparent 70%);
-  }
-  
-  .dark .gradient-mesh-animated .gradient-orb {
-    background: radial-gradient(circle, rgba(34, 211, 238, 0.06) 0%, transparent 70%);
-  }
 }
 
 @layer utilities {
@@ -307,14 +246,10 @@
     }
   }
 
-  /* Neon Glow Effects with Dark Mode Support */
+  /* Neon Glow Effects */
   .neon-glow-blue {
     --neon-color: #3b82f6;
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
-  }
-  
-  .dark .neon-glow-blue {
-    --neon-color: #60a5fa;
   }
   
   .neon-glow-green {
@@ -322,17 +257,9 @@
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
   }
   
-  .dark .neon-glow-green {
-    --neon-color: #34d399;
-  }
-  
   .neon-glow-purple {
     --neon-color: #8b5cf6;
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
-  }
-  
-  .dark .neon-glow-purple {
-    --neon-color: #a78bfa;
   }
   
   .neon-glow-pink {
@@ -340,26 +267,14 @@
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
   }
   
-  .dark .neon-glow-pink {
-    --neon-color: #f472b6;
-  }
-  
   .neon-glow-yellow {
     --neon-color: #f59e0b;
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
   }
   
-  .dark .neon-glow-yellow {
-    --neon-color: #fbbf24;
-  }
-  
   .neon-glow-red {
     --neon-color: #ef4444;
     --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
-  }
-  
-  .dark .neon-glow-red {
-    --neon-color: #f87171;
   }
   
   .neon-glow-rainbow {
@@ -402,41 +317,19 @@
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
   }
   
-  .dark .glow-blue {
-    box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
-  }
-  
   .glow-green {
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
-  }
-  
-  .dark .glow-green {
-    box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
   }
   
   .glow-purple {
     box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
   }
   
-  .dark .glow-purple {
-    box-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
-  }
-  
-  /* Glassmorphism utilities with dark mode support */
+  /* Glassmorphism utilities */
   .glass {
     background: rgba(255, 255, 255, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-  }
-  
-  .glass-dark {
-    background: rgba(17, 25, 40, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
-  }
-  
-  .dark .glass {
-    @apply glass-dark;
   }
   
   .glass-blur {
@@ -455,11 +348,6 @@
     transform: translateY(-2px);
   }
   
-  .dark .glass-card:hover {
-    background: rgba(17, 25, 40, 0.8);
-    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.3);
-  }
-  
   .glass-modal {
     @apply glass glass-blur;
     animation: glass-appear 0.3s ease-out;
@@ -475,11 +363,6 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-  }
-  
-  .dark .glass-navbar {
-    background: rgba(17, 25, 40, 0.85);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   /* Text utilities for consistent formatting */
