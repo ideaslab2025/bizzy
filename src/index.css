@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,6 +8,7 @@
 @import './styles/texture-effects.css';
 @import './styles/card-styles.css';
 @import './styles/utility-classes.css';
+@import './styles/dashboard-background.css';
 
 @layer base {
   :root {

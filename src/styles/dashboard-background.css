@@ -1,0 +1,79 @@
+
+/* Dashboard Background Image Styles */
+.dashboard-bg-image {
+  position: relative;
+  background: #f8fafc;
+  background-image: url('/lovable-uploads/6c4665c0-81d8-4a46-88e4-2182a3761f04.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  
+  /* Enhanced filter effects for depth and readability */
+  filter: contrast(1.02) brightness(1.05);
+}
+
+/* Add overlay for better text readability */
+.dashboard-bg-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(248, 250, 252, 0.3);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Enhanced overlay for better contrast */
+.dashboard-bg-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(248, 250, 252, 0.1) 0%,
+    rgba(241, 245, 249, 0.2) 50%,
+    rgba(248, 250, 252, 0.1) 100%
+  );
+  pointer-events: none;
+}
+
+/* Responsive background sizing */
+@media (max-width: 768px) {
+  .dashboard-bg-image {
+    background-size: 150% auto;
+    background-position: center top;
+    background-attachment: scroll;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-bg-image {
+    background-size: 200% auto;
+    background-position: center center;
+  }
+}
+
+/* Professional card styling with enhanced backdrop for the new background */
+.dashboard-bg-image .bg-white {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 8px 10px -2px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced header styling for new background */
+.dashboard-bg-image header.sticky {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.9);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}

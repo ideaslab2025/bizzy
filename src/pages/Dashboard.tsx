@@ -203,7 +203,7 @@ const Dashboard = () => {
   return (
     <ProgressProvider>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-gray-50">
+        <div className="min-h-screen flex w-full dashboard-bg-image">
           <AppSidebar />
           <main className="flex-1 relative">
             {/* Professional Header with Enhanced Styling */}
@@ -402,7 +402,7 @@ const Dashboard = () => {
             </header>
             
             {/* Professional Main Content */}
-            <div className="p-6 md:p-8 bg-gray-50 min-h-[calc(100vh-4rem)]">
+            <div className="p-6 md:p-8 min-h-[calc(100vh-4rem)]">
               <Outlet />
             </div>
             

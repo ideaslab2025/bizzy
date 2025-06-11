@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { DocumentStatusDashboard } from "@/components/dashboard/DocumentStatusDashboard";
@@ -38,7 +37,7 @@ const Overview = () => {
     window.addEventListener('companyNameUpdated', handleCompanyNameUpdate);
     
     return () => {
-      window.removeEventListener('companyNameUpdated', handleCompanyNameUpdate);
+      window.removeEventListener('companyNameUpdate', handleCompanyNameUpdate);
     };
   }, []);
 
@@ -94,7 +93,7 @@ const Overview = () => {
   return (
     <PullToRefresh onRefresh={handleOverviewRefresh}>
       {/* Professional dashboard with improved spacing and styling */}
-      <div className="space-y-8 md:space-y-10 pt-6 md:pt-24 px-0">
+      <div className="space-y-8 md:space-y-10 pt-6 md:pt-24 px-0 relative z-10">
         {/* Welcome Section with professional typography */}
         <section 
           className="text-center py-8 md:py-12"

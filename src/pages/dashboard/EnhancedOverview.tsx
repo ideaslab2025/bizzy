@@ -232,7 +232,7 @@ const EnhancedOverview: React.FC = () => {
   };
 
   return (
-    <div className="p-4 md:p-8 space-y-6 md:space-y-8">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 relative z-10">
       {/* Welcome Header with Mobile Typography */}
       <div className="mb-6 md:mb-8">
         <h1 className="text-xl md:text-3xl font-bold mb-2 md:mb-3 leading-tight">
