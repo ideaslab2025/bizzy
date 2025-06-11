@@ -24,7 +24,7 @@ const Register = () => {
   return (
     <div className="flex min-h-screen bg-muted/30 items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="flex justify-center mb-2">
+        <div className="flex justify-center">
           <Link to="/">
             <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-64 lg:h-80 xl:h-96" />
           </Link>
