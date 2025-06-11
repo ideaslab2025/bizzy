@@ -46,20 +46,15 @@ const EmailVerification = () => {
   return (
     <div className="flex min-h-screen bg-muted/30 items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center">
           <Link to="/">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-24" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-64 lg:h-80 xl:h-96" />
           </Link>
         </div>
         
         <Card>
-          <CardHeader className="text-center">
-            <div className="flex justify-center mb-4">
-              <div className="rounded-full bg-blue-100 p-3">
-                <Mail className="h-8 w-8 text-blue-600" />
-              </div>
-            </div>
-            <CardTitle className="text-2xl">Check Your Email</CardTitle>
+          <CardHeader>
+            <CardTitle>Check Your Email</CardTitle>
             <CardDescription>
               Please verify your email address to complete your Bizzy registration
             </CardDescription>
@@ -67,6 +62,12 @@ const EmailVerification = () => {
           
           <CardContent className="space-y-6">
             <div className="text-center space-y-4">
+              <div className="flex justify-center mb-4">
+                <div className="rounded-full bg-blue-100 p-3">
+                  <Mail className="h-8 w-8 text-blue-600" />
+                </div>
+              </div>
+
               <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                 <div className="flex items-start gap-3">
                   <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
@@ -108,19 +109,14 @@ const EmailVerification = () => {
                 </Button>
               </div>
             </div>
-          </CardContent>
-          
-          <div className="p-6 pt-0">
-            <div className="flex justify-center">
-              <Link 
-                to="/login" 
-                className="inline-flex items-center text-sm text-[#1d4ed8] hover:underline"
-              >
-                <ArrowLeft className="h-4 w-4 mr-1" />
+            
+            <p className="text-sm text-center text-muted-foreground mt-4">
+              Already verified your email?{" "}
+              <Link to="/login" className="text-[#1d4ed8] hover:underline">
                 Go to Sign In
               </Link>
-            </div>
-          </div>
+            </p>
+          </CardContent>
         </Card>
       </div>
     </div>
