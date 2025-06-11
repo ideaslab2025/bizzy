@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -233,6 +234,13 @@ const EnhancedOverview: React.FC = () => {
 
   return (
     <div className="p-4 md:p-8 space-y-6 md:space-y-8 relative z-10">
+      {/* Welcome Header with Mobile Typography */}
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-xl md:text-3xl font-bold mb-2 md:mb-3 leading-tight">
+          Welcome back! 
+        </h1>
+      </div>
+
       {/* Enhanced Tab Navigation with Mobile-Optimized Headers - Updated to 1 column */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-1 gap-1 md:gap-0 h-auto md:h-10">
