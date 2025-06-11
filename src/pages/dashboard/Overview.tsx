@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { DocumentStatusDashboard } from "@/components/dashboard/DocumentStatusDashboard";
@@ -104,7 +105,6 @@ const Overview = () => {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">{getDisplayTitle()}</h1>
-                <p className="text-gray-600">Track your business setup progress and key metrics</p>
               </div>
             </div>
           </div>

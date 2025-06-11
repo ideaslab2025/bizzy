@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -196,9 +195,6 @@ const Documents = () => {
       <div className="space-y-6">
         <div className="px-4 lg:px-0">
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Document Library</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm lg:text-base">
-            Access templates, forms, and guides to help set up your business
-          </p>
         </div>
 
         <div className="px-4 lg:px-0">
@@ -226,9 +222,6 @@ const Documents = () => {
     <div className="space-y-6">
       <div className="px-4 lg:px-0">
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Document Library</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm lg:text-base">
-          Access templates, forms, and guides to help set up your business
-        </p>
         
         {/* Example copyable reference information */}
         <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
