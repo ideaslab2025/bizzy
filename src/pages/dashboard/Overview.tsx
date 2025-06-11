@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { DocumentStatusDashboard } from "@/components/dashboard/DocumentStatusDashboard";
@@ -9,6 +10,7 @@ import { SuccessPredictionPanel } from "@/components/dashboard/charts/SuccessPre
 import { PullToRefresh } from "@/components/ui/pull-to-refresh";
 import { NeonGlow } from "@/components/ui/neon-glow";
 import { AnimatedCounter, CurrencyCounter, PercentageCounter } from "@/components/ui/animated-counter";
+import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useProgress } from "@/contexts/ProgressContext";
 import { useState, useEffect } from "react";
@@ -94,19 +96,25 @@ const Overview = () => {
     <PullToRefresh onRefresh={handleOverviewRefresh}>
       {/* Professional dashboard with improved spacing and styling */}
       <div className="space-y-8 md:space-y-10 pt-6 md:pt-24 px-0 relative z-10">
-        {/* Welcome Section with professional typography */}
+        {/* Welcome Section in a professional card */}
         <section 
-          className="text-center py-8 md:py-12"
+          className="flex justify-center"
           data-spotlight-first-view="true"
           data-spotlight-id="dashboard-welcome"
           data-spotlight-message="Welcome to Bizzy! This is your command center. Start exploring your business journey here."
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-black mb-4 md:mb-6 leading-tight">
-            Welcome back! 👋
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4 leading-relaxed font-medium">
-            You're {overallBusinessProgress}% through your business setup journey
-          </p>
+          <NeonGlow color="blue" hover>
+            <Card className="card-professional-hover max-w-2xl w-full">
+              <CardContent className="spacing-professional text-center">
+                <h1 className="text-3xl md:text-4xl font-bold text-black mb-4 md:mb-6 leading-tight">
+                  Welcome back! 👋
+                </h1>
+                <p className="text-lg md:text-xl text-black max-w-3xl mx-auto leading-relaxed font-medium">
+                  You're {overallBusinessProgress}% through your business setup journey
+                </p>
+              </CardContent>
+            </Card>
+          </NeonGlow>
         </section>
 
         {/* Professional Stats Grid with Enhanced Cards */}
