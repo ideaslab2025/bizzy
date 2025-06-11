@@ -11,11 +11,67 @@ import { PullToRefresh } from "@/components/ui/pull-to-refresh";
 import { NeonGlow } from "@/components/ui/neon-glow";
 import { AnimatedCounter, CurrencyCounter, PercentageCounter } from "@/components/ui/animated-counter";
 import { useAuth } from "@/hooks/useAuth";
+import { useProgress } from "@/contexts/ProgressContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 const Overview = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { overallBusinessProgress } = useProgress();
+  const [companyName, setCompanyName] = useState<string>("");
+
+  // Fetch company name from profile
+  useEffect(() => {
+    if (user) {
+      fetchCompanyName();
+    }
+  }, [user]);
+
+  // Listen for company name updates from profile page
+  useEffect(() => {
+    const handleCompanyNameUpdate = (event: CustomEvent) => {
+      setCompanyName(event.detail.companyName);
+    };
+
+    window.addEventListener('companyNameUpdated', handleCompanyNameUpdate);
+    
+    return () => {
+      window.removeEventListener('companyNameUpdated', handleCompanyNameUpdate);
+    };
+  }, []);
+
+  const fetchCompanyName = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('company_name')
+        .eq('id', user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching company name:", error);
+        return;
+      }
+
+      if (data?.company_name) {
+        setCompanyName(data.company_name);
+      }
+    } catch (error) {
+      console.error("Unexpected error fetching company name:", error);
+    }
+  };
+
+  // Get display title with fallback
+  const getDisplayTitle = () => {
+    if (companyName && companyName.trim()) {
+      return companyName;
+    }
+    return "Welcome back!";
+  };
 
   if (!user) {
     return (
@@ -47,10 +103,10 @@ const Overview = () => {
           data-spotlight-message="Welcome to Bizzy! This is your command center. Start exploring your business journey here."
         >
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4 leading-tight">
-            Welcome back! 👋
+            {getDisplayTitle()} 👋
           </h1>
           <p className="text-base md:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-4 leading-relaxed">
-            Let's continue building your business together
+            You're {overallBusinessProgress}% through your business setup journey
           </p>
         </section>
 
