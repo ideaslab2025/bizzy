@@ -99,9 +99,6 @@ const OptimizedDocuments = () => {
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
           Document Library
         </h1>
-        <p className="text-gray-600 mt-2 text-sm lg:text-base">
-          Access templates, forms, and guides to help set up your business
-        </p>
         
         {/* Performance stats for debugging */}
         {process.env.NODE_ENV === 'development' && (

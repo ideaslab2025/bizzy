@@ -28,9 +28,6 @@ const MyDocuments = () => {
             <FolderOpen className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">My Documents</h1>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 text-base">
-            Upload and manage your personal files securely
-          </p>
         </div>
 
         {/* Upload Section - Always Visible */}

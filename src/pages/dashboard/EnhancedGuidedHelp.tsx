@@ -226,9 +226,6 @@ const EnhancedGuidedHelp = () => {
       {/* Header */}
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Business Setup Guidance</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm lg:text-base">
-          Step-by-step guidance to set up your business properly
-        </p>
       </div>
 
       {/* Filters */}
