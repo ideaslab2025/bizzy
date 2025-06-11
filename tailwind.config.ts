@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,6 +18,17 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'sans': ['Inter', 'system-ui', 'sans-serif'],
+				'display': ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+				'body': ['Inter', 'system-ui', 'sans-serif'],
+			},
+			fontWeight: {
+				'normal': '500',
+				'medium': '600',
+				'semibold': '700',
+				'bold': '800',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -62,7 +72,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Enhanced vibrant colors while keeping Bizzy blue
+				'bizzy-blue': '#2563eb',
+				'vibrant-green': '#10b981',
+				'vibrant-orange': '#f59e0b',
+				'vibrant-red': '#ef4444',
+				'vibrant-purple': '#8b5cf6',
+				'charcoal': '#2d2d2d',
+				'dark-charcoal': '#1a1a1a',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
