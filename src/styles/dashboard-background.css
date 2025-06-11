@@ -8,39 +8,6 @@
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll; /* Changed from fixed for better mobile support */
-  
-  /* Reduced filter effects to show more of the original texture */
-  filter: contrast(1.1) brightness(1.1) saturate(1.05);
-}
-
-/* Reduced overlay opacity to show the stone texture */
-.dashboard-bg-image::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.15); /* Much lighter overlay */
-  mix-blend-mode: soft-light; /* Changed blend mode for better visibility */
-  pointer-events: none;
-}
-
-/* Very subtle gradient overlay for depth without hiding texture */
-.dashboard-bg-image::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(248, 250, 252, 0.05) 0%,
-    rgba(241, 245, 249, 0.08) 50%,
-    rgba(248, 250, 252, 0.05) 100%
-  );
-  pointer-events: none;
 }
 
 /* Responsive background sizing */
