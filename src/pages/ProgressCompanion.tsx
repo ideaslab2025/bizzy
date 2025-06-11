@@ -4,17 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bot, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BizzyRobotCharacter from '@/components/BizzyRobotCharacter';
-import { ProgressTrackingDashboard } from '@/components/progress/ProgressTrackingDashboard';
+import { EnhancedBizzyAssistant } from '@/components/guidance/EnhancedBizzyAssistant';
 import { MilestoneReached } from '@/components/celebrations/MilestoneReached';
 import { PersonalizationProvider, usePersonalization } from '@/contexts/PersonalizationContext';
-import { ProgressProvider } from '@/contexts/ProgressContext';
 import { useSmartMessaging } from '@/hooks/useSmartMessaging';
 import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 
 const ProgressCompanionContent = () => {
   const navigate = useNavigate();
   const { personalization, sessionDuration, isMobile } = usePersonalization();
-  const { getWelcomeMessage, getEncouragingMessage, getContextualMessage, getSessionMessage } = useSmartMessaging();
+  const { getWelcomeMessage, getEncouragingMessage, getSessionMessage } = useSmartMessaging();
   
   const [robotMessage, setRobotMessage] = useState("");
   const [robotAnimationState, setRobotAnimationState] = useState<'idle' | 'celebration' | 'encouraging'>('idle');
@@ -24,6 +23,44 @@ const ProgressCompanionContent = () => {
     description: string;
   } | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [showChatAssistant, setShowChatAssistant] = useState(true);
+
+  // Mock user progress data for the chat assistant
+  const mockUserProgress = {
+    completedSteps: [1, 2, 3],
+    sectionCompletion: { 1: 75, 2: 50, 3: 25 },
+    recentSteps: []
+  };
+
+  // Mock current step and section data
+  const mockCurrentStep = {
+    id: 4,
+    section_id: 2,
+    title: "Register for Corporation Tax",
+    content: "Complete your corporation tax registration with HMRC",
+    order_number: 4,
+    estimated_time_minutes: 45,
+    difficulty_level: 'medium' as const,
+    step_type: 'action' as const,
+    video_url: null,
+    external_links: null,
+    rich_content: null,
+    prerequisites: null,
+    deadline_info: "Must be completed within 3 months of incorporation",
+    quick_win: false,
+    created_at: new Date().toISOString()
+  };
+
+  const mockCurrentSection = {
+    id: 2,
+    title: "Tax and Legal Setup",
+    description: "Complete your tax registrations and legal requirements",
+    order_number: 2,
+    estimated_time_minutes: 120,
+    icon: "receipt",
+    color: "blue",
+    created_at: new Date().toISOString()
+  };
 
   // Initialize with welcome message
   useEffect(() => {
@@ -79,60 +116,14 @@ const ProgressCompanionContent = () => {
     }, 3000);
   };
 
-  const handleProgressUpdate = (overallProgress: number) => {
-    if (overallProgress > 0 && overallProgress % 20 === 0) {
-      setRobotMessage(`Amazing! You've reached ${overallProgress}% completion! 🎉`);
-      setRobotAnimationState('celebration');
-      
-      // Show milestone celebration for major milestones
-      if (overallProgress === 20) {
-        setActiveMilestone({
-          type: 'first_section',
-          title: 'Getting Started! 🎯',
-          description: 'Great start! You\'re building solid foundations for your business!'
-        });
-      } else if (overallProgress === 40) {
-        setActiveMilestone({
-          type: 'quick_wins',
-          title: 'Quick Win Champion! ⚡',
-          description: 'You\'re making excellent progress! Keep up the momentum!'
-        });
-      } else if (overallProgress === 60) {
-        setActiveMilestone({
-          type: 'halfway',
-          title: 'Halfway Hero! 🏆',
-          description: 'You\'re halfway there! Your business is really taking shape!'
-        });
-      } else if (overallProgress === 80) {
-        setActiveMilestone({
-          type: 'section_complete',
-          title: 'Nearly There! 🎖️',
-          description: 'So close! Just a few more steps to complete your business setup!'
-        });
-      } else if (overallProgress === 100) {
-        setActiveMilestone({
-          type: 'all_complete',
-          title: 'Business Setup Master! 👑',
-          description: 'Congratulations! You\'ve completed your entire business setup journey!'
-        });
-      }
-      
-      setTimeout(() => {
-        setRobotAnimationState('idle');
-        setRobotMessage("What would you like to work on next?");
-      }, 4000);
-    }
-  };
-
-  const handleSectionComplete = (sectionName: string) => {
-    const contextualMessage = getContextualMessage(sectionName, 'completed');
-    setRobotMessage(contextualMessage);
-    setRobotAnimationState('celebration');
+  const handleNavigateToStep = (sectionId: number, stepNumber: number) => {
+    console.log(`Navigating to section ${sectionId}, step ${stepNumber}`);
+    setRobotMessage(`Let me guide you to step ${stepNumber} in section ${sectionId}!`);
+    setRobotAnimationState('encouraging');
     
     setTimeout(() => {
       setRobotAnimationState('idle');
-      setRobotMessage("Ready to tackle the next section?");
-    }, 5000);
+    }, 3000);
   };
 
   const handleCloseMilestone = () => {
@@ -145,7 +136,7 @@ const ProgressCompanionContent = () => {
     // Simulate refresh - in real app this would reload progress data
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    setRobotMessage("Progress updated! Let's continue building your business!");
+    setRobotMessage("Chat updated! How can I help you with your business setup today?");
     setRobotAnimationState('encouraging');
     
     setTimeout(() => {
@@ -196,7 +187,7 @@ const ProgressCompanionContent = () => {
             } ${
               personalization.preferences.highContrast ? 'text-black dark:text-white' : 'text-gray-900 dark:text-gray-100'
             }`}>
-              Your Business Setup Companion
+              Chat with Bizzy
             </h1>
           </div>
 
@@ -227,15 +218,32 @@ const ProgressCompanionContent = () => {
               />
             </div>
 
-            {/* Progress Tracking Dashboard with Consistent Colors */}
-            <div className={personalization.preferences.textSize === 'large' ? 'text-lg' : ''}>
-              <ProgressProvider>
-                <ProgressTrackingDashboard
-                  onProgressUpdate={handleProgressUpdate}
-                  onSectionComplete={handleSectionComplete}
+            {/* Chat Assistant Interface - Replaces Progress Dashboard */}
+            <div className={`${personalization.preferences.textSize === 'large' ? 'text-lg' : ''} flex justify-center`}>
+              <div className="w-full max-w-4xl">
+                <EnhancedBizzyAssistant
+                  isOpen={showChatAssistant}
+                  onClose={() => setShowChatAssistant(false)}
+                  currentStep={mockCurrentStep}
+                  currentSection={mockCurrentSection}
+                  userProgress={mockUserProgress}
+                  onNavigateToStep={handleNavigateToStep}
                 />
-              </ProgressProvider>
+              </div>
             </div>
+
+            {/* Toggle Chat Button for mobile */}
+            {!showChatAssistant && (
+              <div className="fixed bottom-6 right-6">
+                <Button
+                  onClick={() => setShowChatAssistant(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg"
+                  aria-label="Open chat assistant"
+                >
+                  <Bot className="w-6 h-6" />
+                </Button>
+              </div>
+            )}
           </div>
         </main>
       </PullToRefresh>

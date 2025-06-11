@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { 
-  X, Send, FileText, Clock, Zap, AlertCircle, 
+  Send, FileText, Clock, Zap, AlertCircle, 
   CheckCircle, Calendar, TrendingUp, MessageCircle, Bot 
 } from 'lucide-react';
 import type { EnhancedGuidanceStep, EnhancedGuidanceSection } from '@/types/guidance';
@@ -367,115 +367,97 @@ export const EnhancedBizzyAssistant: React.FC<EnhancedBizzyAssistantProps> = ({
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ scale: 0, opacity: 0, x: 20, y: 20 }}
-        animate={{ scale: 1, opacity: 1, x: 0, y: 0 }}
-        exit={{ scale: 0, opacity: 0, x: 20, y: 20 }}
-        className="fixed bottom-4 right-4 w-96 h-[600px] bg-white rounded-xl shadow-2xl border z-50"
-      >
-        {/* Header */}
-        <CardHeader className="bg-[#0088cc] text-white rounded-t-xl">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {/* Updated to use Bot icon instead of image */}
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                <Bot className="w-6 h-6 text-[#0088cc]" strokeWidth={1.5} />
+    <div className="w-full h-[70vh] bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+      {/* Header */}
+      <CardHeader className="bg-[#0088cc] text-white rounded-t-xl">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+            <Bot className="w-6 h-6 text-[#0088cc]" strokeWidth={1.5} />
+          </div>
+          <div>
+            <h3 className="font-semibold">Bizzy Assistant</h3>
+            <p className="text-xs text-white/80">
+              {currentSection ? `Help with ${currentSection.title}` : 'Business Setup Guide'}
+            </p>
+          </div>
+        </div>
+      </CardHeader>
+
+      {/* Messages */}
+      <CardContent className="p-0 h-full flex flex-col">
+        <ScrollArea className="flex-1 p-4 h-[calc(70vh-200px)]">
+          <div className="space-y-4">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`max-w-[80%] rounded-lg p-3 ${
+                    message.role === 'user'
+                      ? 'bg-[#0088cc] text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
+                  }`}
+                >
+                  <p className="text-sm whitespace-pre-line">{message.content}</p>
+                  
+                  {/* Quick Actions */}
+                  {message.quickActions && message.quickActions.length > 0 && (
+                    <div className="mt-3 space-y-2">
+                      {message.quickActions.map((action) => (
+                        <Button
+                          key={action.id}
+                          variant={action.variant || "outline"}
+                          size="sm"
+                          onClick={action.action}
+                          className="w-full justify-start text-xs"
+                        >
+                          {action.icon}
+                          <span className="ml-2">{action.label}</span>
+                        </Button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold">Bizzy Assistant</h3>
-                <p className="text-xs text-white/80">
-                  {currentSection ? `Help with ${currentSection.title}` : 'Business Setup Guide'}
-                </p>
+            ))}
+            
+            {/* Typing indicator */}
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
+          </div>
+          <div ref={messagesEndRef} />
+        </ScrollArea>
+
+        {/* Input */}
+        <div className="p-4 border-t border-gray-200 dark:border-gray-600">
+          <div className="flex gap-2">
+            <Input
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder="Ask me anything..."
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              className="flex-1"
+            />
             <Button
-              variant="ghost"
+              onClick={handleSendMessage}
+              disabled={!inputMessage.trim() || isTyping}
               size="sm"
-              onClick={onClose}
-              className="text-white hover:bg-white/20"
             >
-              <X className="w-4 h-4" />
+              <Send className="w-4 h-4" />
             </Button>
           </div>
-        </CardHeader>
-
-        {/* Messages */}
-        <CardContent className="p-0 h-[440px] flex flex-col">
-          <ScrollArea className="flex-1 p-4">
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-lg p-3 ${
-                      message.role === 'user'
-                        ? 'bg-[#0088cc] text-white'
-                        : 'bg-gray-100 text-gray-900'
-                    }`}
-                  >
-                    <p className="text-sm whitespace-pre-line">{message.content}</p>
-                    
-                    {/* Quick Actions */}
-                    {message.quickActions && message.quickActions.length > 0 && (
-                      <div className="mt-3 space-y-2">
-                        {message.quickActions.map((action) => (
-                          <Button
-                            key={action.id}
-                            variant={action.variant || "outline"}
-                            size="sm"
-                            onClick={action.action}
-                            className="w-full justify-start text-xs"
-                          >
-                            {action.icon}
-                            <span className="ml-2">{action.label}</span>
-                          </Button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-              
-              {/* Typing indicator */}
-              {isTyping && (
-                <div className="flex justify-start">
-                  <div className="bg-gray-100 rounded-lg p-3">
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div ref={messagesEndRef} />
-          </ScrollArea>
-
-          {/* Input */}
-          <div className="p-4 border-t">
-            <div className="flex gap-2">
-              <Input
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                placeholder="Ask me anything..."
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                className="flex-1"
-              />
-              <Button
-                onClick={handleSendMessage}
-                disabled={!inputMessage.trim() || isTyping}
-                size="sm"
-              >
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </motion.div>
-    </AnimatePresence>
+        </div>
+      </CardContent>
+    </div>
   );
 };
