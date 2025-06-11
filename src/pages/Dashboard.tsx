@@ -205,7 +205,7 @@ const Dashboard = () => {
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-gray-50">
           <AppSidebar />
-          <div className="flex-1 flex flex-col min-w-0 pl-[240px]">
+          <main className="flex-1 relative">
             {/* Professional Header with Enhanced Styling */}
             <header className="sticky top-0 z-40 h-16 md:h-18 bg-white border-b border-gray-200 shadow-sm">
               <div className="h-full px-6 md:px-8 flex items-center justify-between">
@@ -216,7 +216,6 @@ const Dashboard = () => {
                         <motion.div
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          className="md:hidden"
                         >
                           <SidebarTrigger className="text-black hover:text-gray-700 hover:bg-gray-100 transition-all duration-200 p-3 min-h-[48px] min-w-[48px] touch-manipulation rounded-lg" />
                         </motion.div>
@@ -403,19 +402,19 @@ const Dashboard = () => {
             </header>
             
             {/* Professional Main Content */}
-            <main className="flex-1 p-6 md:p-8 bg-gray-50 min-h-[calc(100vh-4rem)]">
+            <div className="p-6 md:p-8 bg-gray-50 min-h-[calc(100vh-4rem)]">
               <Outlet />
-            </main>
-          </div>
-          
-          {/* Enhanced Recently Viewed Sidebar - Hidden on mobile for better UX */}
-          <div className="hidden lg:block fixed right-4 top-1/2 -translate-y-1/2 z-30">
-            <RecentlyViewed 
-              showSearch={true}
-              groupByTime={true}
-              collapsed={false}
-            />
-          </div>
+            </div>
+            
+            {/* Enhanced Recently Viewed Sidebar - Hidden on mobile for better UX */}
+            <div className="hidden lg:block fixed right-4 top-1/2 -translate-y-1/2 z-30">
+              <RecentlyViewed 
+                showSearch={true}
+                groupByTime={true}
+                collapsed={false}
+              />
+            </div>
+          </main>
         </div>
         
         {/* Enhanced Command Palette */}

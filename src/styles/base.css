@@ -25,7 +25,8 @@ body {
   box-shadow: 
     0 2px 4px 0 rgba(0, 0, 0, 0.08), 
     0 1px 2px 0 rgba(0, 0, 0, 0.04),
-    0 6px 8px -2px rgba(0, 0, 0, 0.1);
+    0 6px 8px -2px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* Fixed header styling */
@@ -106,27 +107,4 @@ button[aria-label="Toggle menu"] svg {
 /* Better button hover states for pricing cards */
 .pricing-button:hover {
   @apply transform scale-105 -translate-y-1 shadow-lg;
-}
-
-/* Mobile sidebar adjustments */
-@media (max-width: 767px) {
-  .sidebar-fixed {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .sidebar-fixed.sidebar-open {
-    transform: translateX(0);
-  }
-  
-  /* Remove padding on mobile when sidebar is hidden */
-  .pl-\[240px\] {
-    padding-left: 0 !important;
-  }
-}
-
-/* Smooth scrolling for main content */
-.dashboard-content {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
 }
