@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { EnhancedBizzyAssistant } from '@/components/guidance/EnhancedBizzyAssistant';
+import { UKBusinessChatbot } from '@/components/chatbot/UKBusinessChatbot';
 import { BizzyRobotCharacter } from '@/components/BizzyRobotCharacter';
 import { MilestoneReached } from '@/components/celebrations/MilestoneReached';
 import { PersonalizationProvider, usePersonalization } from '@/contexts/PersonalizationContext';
@@ -26,38 +26,7 @@ const ProgressCompanionContent = () => {
   // Mock user progress data for the chat assistant
   const mockUserProgress = {
     completedSteps: [1, 2, 3],
-    sectionCompletion: { 1: 75, 2: 50, 3: 25 },
-    recentSteps: []
-  };
-
-  // Mock current step and section data
-  const mockCurrentStep = {
-    id: 4,
-    section_id: 2,
-    title: "Register for Corporation Tax",
-    content: "Complete your corporation tax registration with HMRC",
-    order_number: 4,
-    estimated_time_minutes: 45,
-    difficulty_level: 'medium' as const,
-    step_type: 'action' as const,
-    video_url: null,
-    external_links: null,
-    rich_content: null,
-    prerequisites: null,
-    deadline_info: "Must be completed within 3 months of incorporation",
-    quick_win: false,
-    created_at: new Date().toISOString()
-  };
-
-  const mockCurrentSection = {
-    id: 2,
-    title: "Tax and Legal Setup",
-    description: "Complete your tax registrations and legal requirements",
-    order_number: 2,
-    estimated_time_minutes: 120,
-    icon: "receipt",
-    color: "blue",
-    created_at: new Date().toISOString()
+    sectionCompletion: { 1: 75, 2: 50, 3: 25 }
   };
 
   // Announce important changes for screen readers
@@ -80,10 +49,6 @@ const ProgressCompanionContent = () => {
 
   const handleBackClick = () => {
     navigate('/dashboard');
-  };
-
-  const handleNavigateToStep = (sectionId: number, stepNumber: number) => {
-    console.log(`Navigating to section ${sectionId}, step ${stepNumber}`);
   };
 
   const handleCloseMilestone = () => {
@@ -161,19 +126,16 @@ const ProgressCompanionContent = () => {
             {/* Large Robot Character */}
             <div className="flex justify-center mb-8">
               <BizzyRobotCharacter
-                message="Hi! I'm here to help you with your business setup. Ask me anything!"
+                message="Hi! I'm here to help you with your UK business setup. Ask me anything!"
                 onClick={handleRobotClick}
                 className="mb-6"
               />
             </div>
 
-            {/* Full-Width Chat Assistant Interface */}
+            {/* UK Business Chatbot Interface */}
             <div className={`${personalization.preferences.textSize === 'large' ? 'text-lg' : ''} w-full`}>
-              <EnhancedBizzyAssistant
-                currentStep={mockCurrentStep}
-                currentSection={mockCurrentSection}
+              <UKBusinessChatbot
                 userProgress={mockUserProgress}
-                onNavigateToStep={handleNavigateToStep}
               />
             </div>
           </div>
