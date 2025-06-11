@@ -14,7 +14,7 @@ interface PasswordStrengthIndicatorProps {
 }
 
 export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps> = ({ password }) => {
-  const requirements: PasswordRequirement[] = [
+  const basicRequirements: PasswordRequirement[] = [
     {
       label: 'At least 8 characters',
       test: (pwd) => pwd.length >= 8,
@@ -42,20 +42,95 @@ export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps>
     }
   ];
 
-  const calculateStrength = (): { strength: number; level: string; color: string } => {
-    const metRequirements = requirements.filter(req => req.met).length;
-    const strengthPercentage = (metRequirements / requirements.length) * 100;
+  const advancedRequirements: PasswordRequirement[] = [
+    {
+      label: 'At least 12 characters',
+      test: (pwd) => pwd.length >= 12,
+      met: password.length >= 12
+    },
+    {
+      label: 'Multiple special characters',
+      test: (pwd) => (pwd.match(/[^A-Za-z0-9]/g) || []).length >= 2,
+      met: (password.match(/[^A-Za-z0-9]/g) || []).length >= 2
+    },
+    {
+      label: 'Mix of numbers and symbols',
+      test: (pwd) => /\d/.test(pwd) && /[^A-Za-z0-9]/.test(pwd),
+      met: /\d/.test(password) && /[^A-Za-z0-9]/.test(password)
+    }
+  ];
 
-    if (strengthPercentage < 40) {
-      return { strength: strengthPercentage, level: 'Weak', color: 'bg-red-500' };
-    } else if (strengthPercentage < 80) {
-      return { strength: strengthPercentage, level: 'Medium', color: 'bg-amber-500' };
+  // Simple check for common patterns - basic implementation
+  const hasCommonPatterns = (pwd: string): boolean => {
+    const commonPatterns = [
+      /123/,
+      /abc/i,
+      /password/i,
+      /qwerty/i,
+      /admin/i,
+      /(.)\1{2,}/, // repeated characters
+    ];
+    return commonPatterns.some(pattern => pattern.test(pwd));
+  };
+
+  const noCommonPatternsRequirement: PasswordRequirement = {
+    label: 'No common patterns',
+    test: (pwd) => !hasCommonPatterns(pwd),
+    met: !hasCommonPatterns(password)
+  };
+
+  const allRequirements = [...basicRequirements, ...advancedRequirements, noCommonPatternsRequirement];
+
+  const calculateStrength = (): { strength: number; level: string; color: string; textColor: string } => {
+    const basicMet = basicRequirements.filter(req => req.met).length;
+    const advancedMet = advancedRequirements.filter(req => req.met).length;
+    const noPatterns = noCommonPatternsRequirement.met;
+
+    // Calculate percentage based on all requirements
+    const totalRequirements = allRequirements.length;
+    const metRequirements = allRequirements.filter(req => req.met).length;
+    const strengthPercentage = (metRequirements / totalRequirements) * 100;
+
+    // Determine strength level based on requirements met
+    if (basicMet < 3) {
+      return { 
+        strength: Math.min(strengthPercentage, 25), 
+        level: 'Weak', 
+        color: 'bg-red-500',
+        textColor: 'text-red-600'
+      };
+    } else if (basicMet < 5) {
+      return { 
+        strength: Math.min(strengthPercentage, 45), 
+        level: 'Medium', 
+        color: 'bg-orange-500',
+        textColor: 'text-orange-600'
+      };
+    } else if (basicMet === 5 && advancedMet < 2) {
+      return { 
+        strength: Math.min(strengthPercentage, 65), 
+        level: 'Good', 
+        color: 'bg-yellow-500',
+        textColor: 'text-yellow-600'
+      };
+    } else if (basicMet === 5 && advancedMet >= 2 && !noPatterns) {
+      return { 
+        strength: Math.min(strengthPercentage, 85), 
+        level: 'Strong', 
+        color: 'bg-green-500',
+        textColor: 'text-green-600'
+      };
     } else {
-      return { strength: strengthPercentage, level: 'Strong', color: 'bg-green-500' };
+      return { 
+        strength: strengthPercentage, 
+        level: 'Very Strong', 
+        color: 'bg-green-700',
+        textColor: 'text-green-700'
+      };
     }
   };
 
-  const { strength, level, color } = calculateStrength();
+  const { strength, level, color, textColor } = calculateStrength();
 
   if (!password) {
     return null;
@@ -67,11 +142,7 @@ export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps>
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-gray-700">Password Strength</span>
-          <span className={`text-sm font-medium transition-colors duration-200 ${
-            level === 'Weak' ? 'text-red-600' :
-            level === 'Medium' ? 'text-amber-600' :
-            'text-green-600'
-          }`}>
+          <span className={`text-sm font-medium transition-colors duration-500 ease-in-out ${textColor}`}>
             {level}
           </span>
         </div>
@@ -79,7 +150,7 @@ export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps>
         <div className="relative">
           <Progress value={strength} className="h-2" />
           <div 
-            className={`absolute top-0 left-0 h-2 rounded-full transition-all duration-300 ease-out ${color}`}
+            className={`absolute top-0 left-0 h-2 rounded-full transition-all duration-500 ease-in-out ${color}`}
             style={{ width: `${strength}%` }}
           />
         </div>
@@ -89,25 +160,25 @@ export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps>
       <div className="space-y-2">
         <span className="text-sm font-medium text-gray-700">Requirements:</span>
         <div className="space-y-1">
-          {requirements.map((requirement, index) => (
+          {allRequirements.map((requirement, index) => (
             <div
               key={index}
-              className={`flex items-center gap-2 text-sm transition-colors duration-200 ${
+              className={`flex items-center gap-2 text-sm transition-all duration-400 ease-in-out ${
                 requirement.met ? 'text-green-600' : 'text-gray-500'
               }`}
             >
-              <div className={`flex items-center justify-center w-4 h-4 rounded-full transition-all duration-200 ${
+              <div className={`flex items-center justify-center w-4 h-4 rounded-full transition-all duration-400 ease-in-out ${
                 requirement.met 
                   ? 'bg-green-500 text-white scale-100' 
                   : 'bg-gray-200 text-gray-400 scale-95'
               }`}>
                 {requirement.met ? (
-                  <Check className="w-2.5 h-2.5" />
+                  <Check className="w-2.5 h-2.5 transition-all duration-300 ease-in-out" />
                 ) : (
-                  <X className="w-2.5 h-2.5" />
+                  <X className="w-2.5 h-2.5 transition-all duration-300 ease-in-out" />
                 )}
               </div>
-              <span className={`transition-all duration-200 ${
+              <span className={`transition-all duration-400 ease-in-out ${
                 requirement.met ? 'font-medium' : 'font-normal'
               }`}>
                 {requirement.label}
