@@ -11,6 +11,7 @@ const OptimizedDocuments = React.lazy(() => import('@/pages/dashboard/OptimizedD
 const MyDocuments = React.lazy(() => import('@/pages/dashboard/MyDocuments'));
 const DocumentCustomizer = React.lazy(() => import('@/pages/dashboard/DocumentCustomizer'));
 const EnhancedGuidedHelp = React.lazy(() => import('@/pages/dashboard/EnhancedGuidedHelp'));
+const Settings = React.lazy(() => import('@/pages/dashboard/Settings'));
 const ProgressCompanion = React.lazy(() => import('@/pages/ProgressCompanion'));
 const Pricing = React.lazy(() => import('@/pages/Pricing'));
 const Login = React.lazy(() => import('@/pages/Login'));
@@ -44,12 +45,7 @@ export const LazyRoutes: React.FC = () => {
               <p>Coming soon...</p>
             </div>
           } />
-          <Route path="settings" element={
-            <div className="p-6">
-              <h1 className="text-2xl font-bold">Settings</h1>
-              <p>Coming soon...</p>
-            </div>
-          } />
+          <Route path="settings" element={<Settings />} />
         </Route>
         <Route path="/profile" element={<Profile />} />
         <Route path="/progress-companion" element={<ProgressCompanion />} />
