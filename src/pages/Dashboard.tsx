@@ -39,6 +39,20 @@ const Dashboard = () => {
   const [syncStatus, setSyncStatus] = useState<'typing' | 'uploading' | 'syncing' | 'synced' | 'offline' | 'error'>('synced');
   const [companyName, setCompanyName] = useState<string>("");
 
+  // Debug: Log when component mounts to verify background class
+  useEffect(() => {
+    console.log("Dashboard mounted - checking background image");
+    const dashboardElement = document.querySelector('.dashboard-bg-image');
+    if (dashboardElement) {
+      console.log("Dashboard background element found");
+      const styles = window.getComputedStyle(dashboardElement);
+      console.log("Background image:", styles.backgroundImage);
+      console.log("Background color:", styles.backgroundColor);
+    } else {
+      console.log("Dashboard background element NOT found");
+    }
+  }, []);
+
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -75,14 +89,12 @@ const Dashboard = () => {
     }
   ]);
 
-  // Fetch company name from profile
   useEffect(() => {
     if (user) {
       fetchCompanyName();
     }
   }, [user]);
 
-  // Listen for company name updates from profile page
   useEffect(() => {
     const handleCompanyNameUpdate = (event: CustomEvent) => {
       setCompanyName(event.detail.companyName);
@@ -202,10 +214,19 @@ const Dashboard = () => {
   return (
     <ProgressProvider>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full dashboard-bg-image">
+        {/* FORCE the background class application with multiple approaches */}
+        <div 
+          className="min-h-screen flex w-full dashboard-bg-image" 
+          style={{
+            backgroundImage: 'url(/lovable-uploads/ed8d4256-3283-4a4c-9dc4-6a2165785b13.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: '#ff0000' // Red fallback for debugging
+          }}
+        >
           <AppSidebar />
           <main className="flex-1 relative">
-            {/* Professional Header with Enhanced Styling */}
             <header className="sticky top-0 z-40 h-16 md:h-18 bg-white border-b border-gray-200 shadow-sm">
               <div className="h-full px-6 md:px-8 flex items-center justify-between">
                 <div className="flex items-center gap-4 md:gap-6">
@@ -250,9 +271,7 @@ const Dashboard = () => {
                   </motion.div>
                 </div>
 
-                {/* Professional Right Actions */}
                 <div className="flex items-center gap-3 md:gap-4">
-                  {/* Search button for mobile */}
                   <motion.div
                     className="md:hidden"
                     whileHover={{ scale: 1.05 }}
@@ -268,7 +287,6 @@ const Dashboard = () => {
                     </Button>
                   </motion.div>
 
-                  {/* Cloud Sync Indicator */}
                   <CloudSyncIndicator
                     status={syncStatus}
                     lastSaved={new Date(Date.now() - 30000)}
@@ -276,7 +294,6 @@ const Dashboard = () => {
                     onShowHistory={() => console.log('Show sync history')}
                   />
                   
-                  {/* Professional Notifications */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <motion.div
@@ -336,7 +353,6 @@ const Dashboard = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  {/* Robot Button */}
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -361,7 +377,6 @@ const Dashboard = () => {
                     </Tooltip>
                   </TooltipProvider>
 
-                  {/* Professional User Menu */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <motion.div
@@ -405,7 +420,6 @@ const Dashboard = () => {
               <Outlet />
             </div>
             
-            {/* Enhanced Recently Viewed Sidebar - Hidden on mobile for better UX */}
             <div className="hidden lg:block fixed right-4 top-1/2 -translate-y-1/2 z-30">
               <RecentlyViewed 
                 showSearch={true}
@@ -416,18 +430,15 @@ const Dashboard = () => {
           </main>
         </div>
         
-        {/* Enhanced Command Palette */}
         <EnhancedCommandPalette 
           open={commandPaletteOpen} 
           onOpenChange={setCommandPaletteOpen}
         />
         
-        {/* FAQ Trigger Button - Bottom Right Only with Professional Styling */}
         <div className="fixed bottom-6 right-6 z-50">
           <FAQTrigger onClick={() => setFaqOpen(true)} />
         </div>
         
-        {/* Contextual FAQ */}
         <ContextualFAQ
           isOpen={faqOpen}
           onClose={() => setFaqOpen(false)}
@@ -435,7 +446,6 @@ const Dashboard = () => {
           onContactSupport={() => console.log('Contact support')}
         />
         
-        {/* Global Keyboard Handlers */}
         <UndoKeyboardHandler />
         
         <FirstViewSpotlight />

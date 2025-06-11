@@ -1,18 +1,23 @@
 
-/* Dashboard Background Image Styles */
+/* Dashboard Background Image Styles - Enhanced for visibility */
+
+/* Main dashboard background container with debugging */
 .dashboard-bg-image {
   position: relative;
-  background-image: url('/lovable-uploads/ed8d4256-3283-4a4c-9dc4-6a2165785b13.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
   min-height: 100vh;
-  /* Enhanced visibility with stronger contrast and brightness */
-  filter: contrast(1.8) brightness(1.5) saturate(1.4);
+  /* Fallback solid color for debugging - should see red if image fails */
+  background-color: #ff0000 !important;
+  /* Primary background image */
+  background-image: url('/lovable-uploads/ed8d4256-3283-4a4c-9dc4-6a2165785b13.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  /* Strong filters for visibility */
+  filter: contrast(2.0) brightness(1.6) saturate(1.5) !important;
 }
 
-/* Ensure the background covers the full viewport */
+/* Alternative fallback with public path */
 .dashboard-bg-image::before {
   content: '';
   position: fixed;
@@ -20,76 +25,76 @@
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: -10;
+  /* Fallback color for debugging */
+  background-color: #00ff00;
+  /* Try alternative image path */
   background-image: url('/lovable-uploads/ed8d4256-3283-4a4c-9dc4-6a2165785b13.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  filter: contrast(1.8) brightness(1.5) saturate(1.4);
-  z-index: -1;
+  filter: contrast(2.0) brightness(1.6) saturate(1.5);
 }
 
-/* Responsive background sizing */
+/* Force override any conflicting styles */
+body .dashboard-bg-image {
+  background-color: #ff0000 !important;
+  background-image: url('/lovable-uploads/ed8d4256-3283-4a4c-9dc4-6a2165785b13.png') !important;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .dashboard-bg-image {
-    background-attachment: scroll;
-  }
-  
+  .dashboard-bg-image,
   .dashboard-bg-image::before {
-    background-attachment: scroll;
+    background-attachment: scroll !important;
   }
 }
 
-@media (max-width: 480px) {
-  .dashboard-bg-image {
-    background-size: cover;
-    background-position: center;
-  }
-  
-  .dashboard-bg-image::before {
-    background-size: cover;
-    background-position: center;
-  }
+/* UI Elements - Make them semi-transparent so background shows through */
+.dashboard-bg-image .bg-white,
+.dashboard-bg-image [class*="bg-white"] {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(229, 231, 235, 0.6) !important;
 }
 
-/* Solid card styling - completely opaque to let background show around them */
-.dashboard-bg-image .bg-white {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border: 1px solid rgba(229, 231, 235, 0.8);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    0 4px 8px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(10px);
-}
-
-/* Solid header styling - with slight transparency to show background */
+/* Header styling - semi-transparent */
+.dashboard-bg-image header,
 .dashboard-bg-image header.sticky {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  border-bottom: 1px solid rgba(229, 231, 235, 0.8);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.6) !important;
 }
 
-/* Solid sidebar styling - with slight transparency */
-.dashboard-bg-image .sidebar {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border-right: 1px solid rgba(229, 231, 235, 0.8);
-  backdrop-filter: blur(10px);
+/* Sidebar styling - semi-transparent */
+.dashboard-bg-image .sidebar,
+.dashboard-bg-image [class*="sidebar"] {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  border-right: 1px solid rgba(229, 231, 235, 0.6) !important;
 }
 
-/* Enhanced card hover effects */
+/* Card elements - semi-transparent */
+.dashboard-bg-image .bg-card,
+.dashboard-bg-image .bg-background,
+.dashboard-bg-image .bg-popover,
+.dashboard-bg-image [class*="bg-card"],
+.dashboard-bg-image [class*="bg-background"] {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Enhanced hover effects */
 .dashboard-bg-image .card-professional-hover:hover {
-  background: rgba(255, 255, 255, 0.98) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   transform: translateY(-2px);
   box-shadow: 
     0 12px 40px rgba(0, 0, 0, 0.15),
     0 6px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Override any remaining elements */
-.dashboard-bg-image .bg-card,
-.dashboard-bg-image .bg-background,
-.dashboard-bg-image .bg-popover {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(10px);
+/* Debug helper - temporary red border to see if class is applied */
+.dashboard-bg-image {
+  border: 3px solid red !important;
 }
