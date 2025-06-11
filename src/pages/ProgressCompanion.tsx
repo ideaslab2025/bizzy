@@ -7,6 +7,7 @@ import BizzyRobotCharacter from '@/components/BizzyRobotCharacter';
 import { ProgressTrackingDashboard } from '@/components/progress/ProgressTrackingDashboard';
 import { MilestoneReached } from '@/components/celebrations/MilestoneReached';
 import { PersonalizationProvider, usePersonalization } from '@/contexts/PersonalizationContext';
+import { ProgressProvider } from '@/contexts/ProgressContext';
 import { useSmartMessaging } from '@/hooks/useSmartMessaging';
 import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 
@@ -228,10 +229,12 @@ const ProgressCompanionContent = () => {
 
             {/* Progress Tracking Dashboard with Consistent Colors */}
             <div className={personalization.preferences.textSize === 'large' ? 'text-lg' : ''}>
-              <ProgressTrackingDashboard
-                onProgressUpdate={handleProgressUpdate}
-                onSectionComplete={handleSectionComplete}
-              />
+              <ProgressProvider>
+                <ProgressTrackingDashboard
+                  onProgressUpdate={handleProgressUpdate}
+                  onSectionComplete={handleSectionComplete}
+                />
+              </ProgressProvider>
             </div>
           </div>
         </main>
