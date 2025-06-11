@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings } from 'lucide-react';
+import { Settings, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePersonalization } from '@/contexts/PersonalizationContext';
 import { MobileRobotCustomization } from '@/components/personalization/MobileRobotCustomization';
@@ -23,7 +24,6 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
 }) => {
   const { personalization, incrementClicks, isMobile } = usePersonalization();
   const [currentState, setCurrentState] = useState<AnimationState>(animationState);
-  const [isBlinking, setIsBlinking] = useState(false);
   const [showSpeechBubble, setShowSpeechBubble] = useState(true);
   const [showCustomization, setShowCustomization] = useState(false);
   const [announcementText, setAnnouncementText] = useState('');
@@ -54,18 +54,6 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
     };
     return themes[personalization.colorTheme];
   }, [personalization.colorTheme, personalization.preferences.highContrast]);
-
-  // Blink animation effect
-  useEffect(() => {
-    if (personalization.preferences.reducedMotion) return;
-
-    const blinkInterval = setInterval(() => {
-      setIsBlinking(true);
-      setTimeout(() => setIsBlinking(false), 150);
-    }, 3500);
-
-    return () => clearInterval(blinkInterval);
-  }, [personalization.preferences.reducedMotion]);
 
   // Update animation state when prop changes
   useEffect(() => {
@@ -160,8 +148,8 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
   }, []);
 
   const robotSize = useMemo(() => {
-    const baseSize = isMobile ? 'w-16 h-16' : 'w-20 h-20';
-    return personalization.accessibility.touchTargetSize === 'large' ? 'w-20 h-20' : baseSize;
+    const baseSize = isMobile ? 'w-24 h-24' : 'w-32 h-32';
+    return personalization.accessibility.touchTargetSize === 'large' ? 'w-36 h-36' : baseSize;
   }, [isMobile, personalization.accessibility.touchTargetSize]);
 
   const touchTargetSize = personalization.accessibility.touchTargetSize === 'large' ? 'min-h-[52px] min-w-[52px]' : 'min-h-[44px] min-w-[44px]';
@@ -238,160 +226,84 @@ export const BizzyRobotCharacter: React.FC<BizzyRobotCharacterProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Robot Character - Enhanced with speaking animation */}
+      {/* Bot Icon Character - Large version of header bot icon */}
       <motion.div
         variants={robotVariants}
         animate={currentState}
         onClick={handleRobotClick}
         onKeyDown={handleKeyPress}
-        className={`relative cursor-pointer select-none focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 rounded-full ${touchTargetSize}`}
+        className={`relative cursor-pointer select-none focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 rounded-full ${touchTargetSize} flex items-center justify-center ${robotSize} ${
+          personalization.preferences.highContrast ? themeColors.primary : `bg-gradient-to-br ${themeColors.primary}`
+        } shadow-lg`}
         whileHover={personalization.preferences.reducedMotion ? {} : { scale: 1.05 }}
         whileTap={personalization.preferences.reducedMotion ? {} : { scale: 0.95 }}
         role="button"
         tabIndex={0}
         aria-label={`Click ${personalization.robotName} for encouragement or start chatting`}
       >
-        {/* Robot Body */}
-        <div className="relative">
-          {/* Head */}
-          <div className={`${robotSize} ${
-            personalization.preferences.highContrast ? themeColors.primary : `bg-gradient-to-br ${themeColors.primary}`
-          } rounded-2xl relative mx-auto mb-2 shadow-lg`}>
-            {/* Eyes */}
-            <div className="flex justify-center items-center pt-3 gap-2">
-              <motion.div
-                animate={isBlinking ? { scaleY: 0.1 } : { scaleY: 1 }}
-                transition={{ duration: 0.1 }}
-                className="w-3 h-3 bg-white rounded-full"
-                aria-hidden="true"
-              >
-                <div className="w-2 h-2 bg-blue-900 rounded-full mt-0.5 ml-0.5"></div>
-              </motion.div>
-              <motion.div
-                animate={isBlinking ? { scaleY: 0.1 } : { scaleY: 1 }}
-                transition={{ duration: 0.1 }}
-                className="w-3 h-3 bg-white rounded-full"
-                aria-hidden="true"
-              >
-                <div className="w-2 h-2 bg-blue-900 rounded-full mt-0.5 ml-0.5"></div>
-              </motion.div>
-            </div>
-            
-            {/* Mouth - Enhanced for speaking animation */}
-            <motion.div
-              animate={
-                currentState === 'speaking' && !personalization.preferences.reducedMotion
-                  ? { 
-                      scaleX: [1, 1.3, 1], 
-                      scaleY: [1, 0.7, 1],
-                      borderRadius: ['50%', '40%', '50%']
-                    }
-                  : currentState === 'celebration' && !personalization.preferences.reducedMotion 
-                  ? { scaleX: 1.2, scaleY: 0.8 } 
-                  : { scaleX: 1, scaleY: 1 }
-              }
-              transition={
-                currentState === 'speaking' 
-                  ? { duration: 0.5, repeat: Infinity, ease: "easeInOut" } 
-                  : { duration: 0.3 }
-              }
-              className="w-6 h-2 bg-white rounded-full mx-auto mt-2"
-              aria-hidden="true"
-            ></motion.div>
-
-            {/* Antenna */}
-            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2" aria-hidden="true">
-              <div className={`w-1 h-4 ${themeColors.secondary} rounded-full`}></div>
-              <motion.div 
-                className="w-2 h-2 bg-yellow-400 rounded-full -mt-1 -ml-0.5"
-                animate={currentState === 'speaking' ? {
+        {/* Bot Icon - Significantly larger version of header icon */}
+        <motion.div
+          animate={
+            currentState === 'speaking' && !personalization.preferences.reducedMotion
+              ? { 
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, -5, 0]
+                }
+              : currentState === 'celebration' && !personalization.preferences.reducedMotion 
+              ? { 
                   scale: [1, 1.2, 1],
-                  boxShadow: ['0 0 0 0 rgba(251, 191, 36, 0)', '0 0 0 4px rgba(251, 191, 36, 0.3)', '0 0 0 0 rgba(251, 191, 36, 0)']
-                } : {}}
-                transition={currentState === 'speaking' ? { duration: 1, repeat: Infinity } : {}}
-              ></motion.div>
-            </div>
-          </div>
+                  rotate: [0, 10, -10, 0]
+                } 
+              : { scale: 1, rotate: 0 }
+          }
+          transition={
+            currentState === 'speaking' 
+              ? { duration: 0.5, repeat: Infinity, ease: "easeInOut" } 
+              : currentState === 'celebration'
+              ? { duration: 0.3, repeat: 3, ease: "easeInOut" }
+              : { duration: 0.3 }
+          }
+        >
+          <Bot 
+            className={`${isMobile ? 'w-12 h-12' : 'w-16 h-16'} text-white`}
+            strokeWidth={1.5}
+          />
+        </motion.div>
 
-          {/* Body */}
-          <div className={`w-14 h-16 ${
-            personalization.preferences.highContrast ? themeColors.primary : `bg-gradient-to-br ${themeColors.primary}`
-          } rounded-xl mx-auto relative shadow-lg`}>
-            {/* Chest Panel */}
-            <div className={`w-6 h-6 ${themeColors.accent} rounded-lg mx-auto pt-2 relative`} aria-hidden="true">
-              <div className={`w-3 h-1 ${themeColors.secondary} rounded-full mx-auto mb-1`}></div>
-              <div className={`w-2 h-1 ${themeColors.secondary} rounded-full mx-auto mb-1`}></div>
-              <div className={`w-2 h-1 ${themeColors.secondary} rounded-full mx-auto`}></div>
-            </div>
-
-            {/* Arms */}
-            <motion.div
-              animate={currentState === 'celebration' && !personalization.preferences.reducedMotion ? {
-                rotate: [-45, -30, -45],
-                y: [-5, 0, -5],
-                transition: { duration: 0.3, repeat: 3 }
-              } : currentState === 'speaking' && !personalization.preferences.reducedMotion ? {
-                rotate: [-30, -35, -30],
-                transition: { duration: 0.8, repeat: Infinity, ease: "easeInOut" }
-              } : {}}
-              className={`absolute -left-3 top-2 w-2 h-6 ${themeColors.secondary} rounded-full origin-top`}
-              aria-hidden="true"
-            ></motion.div>
-            <motion.div
-              animate={currentState === 'celebration' && !personalization.preferences.reducedMotion ? {
-                rotate: [-45, -30, -45],
-                y: [-5, 0, -5],
-                transition: { duration: 0.3, repeat: 3 }
-              } : currentState === 'speaking' && !personalization.preferences.reducedMotion ? {
-                rotate: [30, 35, 30],
-                transition: { duration: 0.8, repeat: Infinity, ease: "easeInOut" }
-              } : {}}
-              className={`absolute -right-3 top-2 w-2 h-6 ${themeColors.secondary} rounded-full origin-top`}
-              aria-hidden="true"
-            ></motion.div>
-          </div>
-
-          {/* Legs */}
-          <div className="flex justify-center gap-2 mt-1" aria-hidden="true">
-            <div className={`w-2 h-6 ${themeColors.secondary} rounded-full`}></div>
-            <div className={`w-2 h-6 ${themeColors.secondary} rounded-full`}></div>
-          </div>
-
-          {/* Celebration Effects */}
-          <AnimatePresence>
-            {currentState === 'celebration' && 
-             personalization.preferences.celebrationIntensity === 'full' && 
-             !personalization.preferences.reducedMotion && (
-              <>
-                {[...Array(6)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ 
-                      opacity: 1, 
-                      scale: 0,
-                      x: 0,
-                      y: 0
-                    }}
-                    animate={{ 
-                      opacity: 0, 
-                      scale: 1,
-                      x: (Math.random() - 0.5) * 100,
-                      y: (Math.random() - 0.5) * 100
-                    }}
-                    exit={{ opacity: 0 }}
-                    transition={{ 
-                      duration: 1,
-                      delay: i * 0.1,
-                      ease: "easeOut"
-                    }}
-                    className="absolute top-1/2 left-1/2 w-2 h-2 bg-yellow-400 rounded-full"
-                    aria-hidden="true"
-                  />
-                ))}
-              </>
-            )}
-          </AnimatePresence>
-        </div>
+        {/* Celebration Effects */}
+        <AnimatePresence>
+          {currentState === 'celebration' && 
+           personalization.preferences.celebrationIntensity === 'full' && 
+           !personalization.preferences.reducedMotion && (
+            <>
+              {[...Array(6)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ 
+                    opacity: 1, 
+                    scale: 0,
+                    x: 0,
+                    y: 0
+                  }}
+                  animate={{ 
+                    opacity: 0, 
+                    scale: 1,
+                    x: (Math.random() - 0.5) * 100,
+                    y: (Math.random() - 0.5) * 100
+                  }}
+                  exit={{ opacity: 0 }}
+                  transition={{ 
+                    duration: 1,
+                    delay: i * 0.1,
+                    ease: "easeOut"
+                  }}
+                  className="absolute top-1/2 left-1/2 w-2 h-2 bg-yellow-400 rounded-full"
+                  aria-hidden="true"
+                />
+              ))}
+            </>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* Instruction Text */}

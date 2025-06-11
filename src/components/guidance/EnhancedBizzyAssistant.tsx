@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { 
   X, Send, FileText, Clock, Zap, AlertCircle, 
-  CheckCircle, Calendar, TrendingUp, MessageCircle 
+  CheckCircle, Calendar, TrendingUp, MessageCircle, Bot 
 } from 'lucide-react';
 import type { EnhancedGuidanceStep, EnhancedGuidanceSection } from '@/types/guidance';
 
@@ -379,12 +378,9 @@ export const EnhancedBizzyAssistant: React.FC<EnhancedBizzyAssistantProps> = ({
         <CardHeader className="bg-[#0088cc] text-white rounded-t-xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
+              {/* Updated to use Bot icon instead of image */}
               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                <img 
-                  src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
-                  alt="Bizzy" 
-                  className="w-8 h-8 object-contain"
-                />
+                <Bot className="w-6 h-6 text-[#0088cc]" strokeWidth={1.5} />
               </div>
               <div>
                 <h3 className="font-semibold">Bizzy Assistant</h3>
