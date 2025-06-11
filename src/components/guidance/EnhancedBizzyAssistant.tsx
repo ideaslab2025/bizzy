@@ -1,15 +1,15 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { 
   Send, FileText, Clock, Zap, AlertCircle, 
-  CheckCircle, Calendar, TrendingUp, MessageCircle, Bot 
+  CheckCircle, Calendar, TrendingUp, Bot 
 } from 'lucide-react';
 import type { EnhancedGuidanceStep, EnhancedGuidanceSection } from '@/types/guidance';
 
@@ -30,8 +30,6 @@ interface QuickAction {
 }
 
 interface EnhancedBizzyAssistantProps {
-  isOpen: boolean;
-  onClose: () => void;
   currentStep?: EnhancedGuidanceStep;
   currentSection?: EnhancedGuidanceSection;
   userProgress: {
@@ -43,8 +41,6 @@ interface EnhancedBizzyAssistantProps {
 }
 
 export const EnhancedBizzyAssistant: React.FC<EnhancedBizzyAssistantProps> = ({
-  isOpen,
-  onClose,
   currentStep,
   currentSection,
   userProgress,
@@ -59,11 +55,11 @@ export const EnhancedBizzyAssistant: React.FC<EnhancedBizzyAssistantProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
+    if (messages.length === 0) {
       initializeChat();
       fetchContextData();
     }
-  }, [isOpen, currentStep]);
+  }, [currentStep]);
 
   useEffect(() => {
     scrollToBottom();
@@ -364,10 +360,8 @@ export const EnhancedBizzyAssistant: React.FC<EnhancedBizzyAssistantProps> = ({
     return `That's a great question! Based on where you are in "${currentSection?.title || 'your business setup'}", I'd suggest focusing on completing your current step first. Need specific help with anything? I can show documents, time estimates, or your next recommended actions.`;
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="w-full h-[70vh] bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+    <div className="w-full h-[80vh] bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
       {/* Header */}
       <CardHeader className="bg-[#0088cc] text-white rounded-t-xl">
         <div className="flex items-center gap-3">
@@ -385,7 +379,7 @@ export const EnhancedBizzyAssistant: React.FC<EnhancedBizzyAssistantProps> = ({
 
       {/* Messages */}
       <CardContent className="p-0 h-full flex flex-col">
-        <ScrollArea className="flex-1 p-4 h-[calc(70vh-200px)]">
+        <ScrollArea className="flex-1 p-4 h-[calc(80vh-200px)]">
           <div className="space-y-4">
             {messages.map((message) => (
               <div

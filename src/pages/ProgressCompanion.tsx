@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bot, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import BizzyRobotCharacter from '@/components/BizzyRobotCharacter';
 import { EnhancedBizzyAssistant } from '@/components/guidance/EnhancedBizzyAssistant';
 import { MilestoneReached } from '@/components/celebrations/MilestoneReached';
 import { PersonalizationProvider, usePersonalization } from '@/contexts/PersonalizationContext';
+import { ProgressProvider } from '@/contexts/ProgressContext';
 import { useSmartMessaging } from '@/hooks/useSmartMessaging';
 import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 
@@ -15,15 +15,12 @@ const ProgressCompanionContent = () => {
   const { personalization, sessionDuration, isMobile } = usePersonalization();
   const { getWelcomeMessage, getEncouragingMessage, getSessionMessage } = useSmartMessaging();
   
-  const [robotMessage, setRobotMessage] = useState("");
-  const [robotAnimationState, setRobotAnimationState] = useState<'idle' | 'celebration' | 'encouraging'>('idle');
   const [activeMilestone, setActiveMilestone] = useState<{
     type: 'section_complete' | 'first_section' | 'halfway' | 'all_complete' | 'quick_wins';
     title: string;
     description: string;
   } | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [showChatAssistant, setShowChatAssistant] = useState(true);
 
   // Mock user progress data for the chat assistant
   const mockUserProgress = {
@@ -62,21 +59,6 @@ const ProgressCompanionContent = () => {
     created_at: new Date().toISOString()
   };
 
-  // Initialize with welcome message
-  useEffect(() => {
-    setRobotMessage(getWelcomeMessage());
-  }, [getWelcomeMessage]);
-
-  // Check for session messages
-  useEffect(() => {
-    const sessionMsg = getSessionMessage(sessionDuration);
-    if (sessionMsg && sessionDuration > 0) {
-      setRobotMessage(sessionMsg);
-      setRobotAnimationState('encouraging');
-      setTimeout(() => setRobotAnimationState('idle'), 3000);
-    }
-  }, [sessionDuration, getSessionMessage]);
-
   // Announce important changes for screen readers
   useEffect(() => {
     if (personalization.accessibility.screenReaderEnabled && activeMilestone) {
@@ -99,31 +81,8 @@ const ProgressCompanionContent = () => {
     navigate('/dashboard');
   };
 
-  const handleRobotClick = () => {
-    const encouragingMessage = getEncouragingMessage({
-      progressLevel: 35,
-      timeOfDay: 'afternoon',
-      sessionDuration,
-      completedSections: 2,
-      isStuck: false
-    });
-    
-    setRobotMessage(encouragingMessage);
-    setRobotAnimationState('encouraging');
-    
-    setTimeout(() => {
-      setRobotAnimationState('idle');
-    }, 3000);
-  };
-
   const handleNavigateToStep = (sectionId: number, stepNumber: number) => {
     console.log(`Navigating to section ${sectionId}, step ${stepNumber}`);
-    setRobotMessage(`Let me guide you to step ${stepNumber} in section ${sectionId}!`);
-    setRobotAnimationState('encouraging');
-    
-    setTimeout(() => {
-      setRobotAnimationState('idle');
-    }, 3000);
   };
 
   const handleCloseMilestone = () => {
@@ -135,13 +94,6 @@ const ProgressCompanionContent = () => {
     
     // Simulate refresh - in real app this would reload progress data
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setRobotMessage("Chat updated! How can I help you with your business setup today?");
-    setRobotAnimationState('encouraging');
-    
-    setTimeout(() => {
-      setRobotAnimationState('idle');
-    }, 2000);
     
     setIsRefreshing(false);
   };
@@ -208,22 +160,10 @@ const ProgressCompanionContent = () => {
       <PullToRefresh onRefresh={handleRefresh} disabled={isRefreshing}>
         <main className="p-4 md:p-8">
           <div className="max-w-6xl mx-auto">
-            {/* Robot Character Section */}
-            <div className="text-center mb-6 md:mb-8">
-              <BizzyRobotCharacter
-                animationState={robotAnimationState}
-                message={robotMessage}
-                onClick={handleRobotClick}
-                className="mb-6"
-              />
-            </div>
-
-            {/* Chat Assistant Interface - Replaces Progress Dashboard */}
+            {/* Chat Assistant Interface */}
             <div className={`${personalization.preferences.textSize === 'large' ? 'text-lg' : ''} flex justify-center`}>
               <div className="w-full max-w-4xl">
                 <EnhancedBizzyAssistant
-                  isOpen={showChatAssistant}
-                  onClose={() => setShowChatAssistant(false)}
                   currentStep={mockCurrentStep}
                   currentSection={mockCurrentSection}
                   userProgress={mockUserProgress}
@@ -231,19 +171,6 @@ const ProgressCompanionContent = () => {
                 />
               </div>
             </div>
-
-            {/* Toggle Chat Button for mobile */}
-            {!showChatAssistant && (
-              <div className="fixed bottom-6 right-6">
-                <Button
-                  onClick={() => setShowChatAssistant(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg"
-                  aria-label="Open chat assistant"
-                >
-                  <Bot className="w-6 h-6" />
-                </Button>
-              </div>
-            )}
           </div>
         </main>
       </PullToRefresh>
@@ -270,9 +197,11 @@ const ProgressCompanionContent = () => {
 const ProgressCompanion = () => {
   return (
     <PersonalizationProvider>
-      <div id="main-content">
-        <ProgressCompanionContent />
-      </div>
+      <ProgressProvider>
+        <div id="main-content">
+          <ProgressCompanionContent />
+        </div>
+      </ProgressProvider>
     </PersonalizationProvider>
   );
 };
