@@ -55,8 +55,8 @@ export function AppSidebar() {
   return (
     <Sidebar className="border-r-0 w-[240px] max-w-[240px]">
       <SidebarContent className="bg-[#0088cc] text-white h-screen sticky top-0">
-        <SidebarGroup className="px-3 py-6 h-full">
-          <SidebarGroupContent className="h-full">
+        <SidebarGroup className="px-3 py-6 h-full flex flex-col">
+          <SidebarGroupContent className="flex-1">
             <SidebarMenu className="space-y-2">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
@@ -91,6 +91,18 @@ export function AppSidebar() {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
+          
+          {/* Bizzy Logo at bottom */}
+          <div className="mt-auto px-4 py-6 hidden md:block">
+            <div className="flex justify-center">
+              <img 
+                src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
+                alt="Bizzy Logo" 
+                className="h-16 w-auto opacity-80"
+                style={{ pointerEvents: 'none' }}
+              />
+            </div>
+          </div>
         </SidebarGroup>
         
         {/* Bottom gradient overlay */}
