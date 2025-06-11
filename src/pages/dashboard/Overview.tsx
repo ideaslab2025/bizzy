@@ -15,6 +15,7 @@ import { useProgress } from "@/contexts/ProgressContext";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { BarChart3, TrendingUp, Clock, DollarSign } from "lucide-react";
 
 const Overview = () => {
   const navigate = useNavigate();
@@ -65,14 +66,6 @@ const Overview = () => {
     }
   };
 
-  // Get display title with fallback
-  const getDisplayTitle = () => {
-    if (companyName && companyName.trim()) {
-      return companyName;
-    }
-    return "Welcome back!";
-  };
-
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -91,88 +84,122 @@ const Overview = () => {
     toast.success('Overview updated');
   };
 
+  // Get display title with fallback
+  const getDisplayTitle = () => {
+    if (companyName && companyName.trim()) {
+      return companyName;
+    }
+    return "Dashboard Overview";
+  };
+
   return (
     <PullToRefresh onRefresh={handleOverviewRefresh}>
-      {/* Professional dashboard with improved spacing and styling */}
-      <div className="space-y-8 md:space-y-10 pt-6 md:pt-24 px-0 relative z-10">
-        {/* Professional Stats Grid with Enhanced Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          <NeonGlow color="blue" hover>
-            <div className="card-professional-hover spacing-professional min-h-[140px] md:min-h-[160px] flex flex-col justify-center">
-              <h3 className="text-sm md:text-base font-semibold text-gray-600 mb-3 leading-tight">Tasks Completed</h3>
-              <div className="text-2xl md:text-4xl font-bold text-black leading-tight">
-                <AnimatedCounter value={42} />
+      <div className="p-6 bg-gray-50 min-h-full">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                <BarChart3 className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">{getDisplayTitle()}</h1>
+                <p className="text-gray-600">Track your business setup progress and key metrics</p>
               </div>
             </div>
-          </NeonGlow>
-          
-          <NeonGlow color="green" hover>
-            <div className="card-professional-hover spacing-professional min-h-[140px] md:min-h-[160px] flex flex-col justify-center">
-              <h3 className="text-sm md:text-base font-semibold text-gray-600 mb-3 leading-tight">Progress</h3>
-              <div className="text-2xl md:text-4xl font-bold text-black leading-tight">
-                <PercentageCounter value={78.5} />
-              </div>
+          </div>
+
+          {/* Content */}
+          <div className="space-y-8">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              <Card className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <BarChart3 className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Tasks Completed</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      <AnimatedCounter value={42} />
+                    </p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Progress</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      <PercentageCounter value={78.5} />
+                    </p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Time Saved</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      <AnimatedCounter value={125} suffix=" hrs" />
+                    </p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                    <DollarSign className="w-6 h-6 text-pink-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Money Saved</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      <CurrencyCounter value={2450} />
+                    </p>
+                  </div>
+                </div>
+              </Card>
             </div>
-          </NeonGlow>
-          
-          <NeonGlow color="purple" hover>
-            <div className="card-professional-hover spacing-professional min-h-[140px] md:min-h-[160px] flex flex-col justify-center">
-              <h3 className="text-sm md:text-base font-semibold text-gray-600 mb-3 leading-tight">Time Saved</h3>
-              <div className="text-2xl md:text-4xl font-bold text-black leading-tight">
-                <AnimatedCounter value={125} suffix=" hrs" />
-              </div>
+
+            {/* AI Success Prediction Panel */}
+            <SuccessPredictionPanel />
+
+            {/* Business Overview Section */}
+            <BusinessOverview userId={user.id} />
+
+            {/* Document Analytics Section */}
+            <SimpleDocumentAnalytics userId={user.id} />
+
+            {/* Document Status Dashboard */}
+            <DocumentStatusDashboard userId={user.id} />
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 justify-center">
+              <button 
+                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-200"
+                onClick={handleNavigateToGuidedHelp}
+              >
+                Continue Journey
+              </button>
+              
+              <button className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-all duration-200">
+                Download Documents
+              </button>
+              
+              <button className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-semibold transition-all duration-200">
+                Premium Features
+              </button>
             </div>
-          </NeonGlow>
-          
-          <NeonGlow color="pink" hover>
-            <div className="card-professional-hover spacing-professional min-h-[140px] md:min-h-[160px] flex flex-col justify-center">
-              <h3 className="text-sm md:text-base font-semibold text-gray-600 mb-3 leading-tight">Money Saved</h3>
-              <div className="text-2xl md:text-4xl font-bold text-black leading-tight">
-                <CurrencyCounter value={2450} />
-              </div>
-            </div>
-          </NeonGlow>
-        </div>
-
-        {/* AI Success Prediction Panel */}
-        <SuccessPredictionPanel />
-
-        {/* Business Overview Section */}
-        <BusinessOverview userId={user.id} />
-
-        {/* Document Analytics Section */}
-        <SimpleDocumentAnalytics userId={user.id} />
-
-        {/* Document Status Dashboard */}
-        <DocumentStatusDashboard userId={user.id} />
-
-        {/* Professional Action Buttons with Enhanced Styling */}
-        <div 
-          className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 mt-8 md:mt-12 justify-center"
-          data-spotlight-first-view="true"
-          data-spotlight-id="dashboard-cta"
-          data-spotlight-message="Ready to start? Click 'Continue Journey' to begin your next step!"
-        >
-          <NeonGlow color="blue" pulse hover>
-            <button 
-              className="w-full sm:w-auto px-8 py-5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl font-semibold text-lg transition-all duration-300 min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-              onClick={handleNavigateToGuidedHelp}
-            >
-              Continue Journey
-            </button>
-          </NeonGlow>
-          
-          <NeonGlow color="green" hover>
-            <button className="w-full sm:w-auto px-8 py-5 bg-green-600 hover:bg-green-700 active:bg-green-800 text-white rounded-xl font-semibold text-lg transition-all duration-300 min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-              Download Documents
-            </button>
-          </NeonGlow>
-          
-          <NeonGlow color="rainbow" hover>
-            <button className="w-full sm:w-auto px-8 py-5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-semibold text-lg transition-all duration-300 min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-              Premium Features
-            </button>
-          </NeonGlow>
+          </div>
         </div>
       </div>
     </PullToRefresh>
