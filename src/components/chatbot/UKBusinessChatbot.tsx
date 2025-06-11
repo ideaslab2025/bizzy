@@ -347,16 +347,16 @@ Could you try rephrasing your question or select one of these topics?`,
   };
 
   return (
-    <div className={`w-full h-[70vh] bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 ${className}`}>
-      {/* Header */}
-      <CardHeader className="bg-[#0088cc] text-white rounded-t-xl">
+    <div className={`w-full h-[80vh] bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 ${className}`}>
+      {/* Header with Blue Branding */}
+      <CardHeader className="bg-[#2563eb] text-white rounded-t-xl">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-            <Bot className="w-6 h-6 text-[#0088cc]" strokeWidth={1.5} />
+          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+            <Bot className="w-8 h-8 text-[#2563eb]" strokeWidth={1.5} />
           </div>
           <div>
-            <h3 className="font-semibold">Bizzy - UK Business Assistant</h3>
-            <p className="text-xs text-white/80">
+            <h3 className="text-lg font-semibold">Bizzy - UK Business Assistant</h3>
+            <p className="text-sm text-white/80">
               Get help with your UK business setup
             </p>
           </div>
@@ -365,7 +365,7 @@ Could you try rephrasing your question or select one of these topics?`,
 
       {/* Messages */}
       <CardContent className="p-0 h-full flex flex-col">
-        <ScrollArea className="flex-1 p-4 h-[calc(70vh-180px)]">
+        <ScrollArea className="flex-1 p-4 h-[calc(80vh-180px)]">
           <div className="space-y-4">
             {messages.map((message) => (
               <div
@@ -375,7 +375,7 @@ Could you try rephrasing your question or select one of these topics?`,
                 <div
                   className={`max-w-[85%] rounded-lg p-3 ${
                     message.role === 'user'
-                      ? 'bg-[#0088cc] text-white'
+                      ? 'bg-[#2563eb] text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
                   }`}
                 >
@@ -446,7 +446,7 @@ Could you try rephrasing your question or select one of these topics?`,
               onClick={handleSendMessage}
               disabled={!inputMessage.trim() || isTyping}
               size="sm"
-              className="bg-[#0088cc] hover:bg-[#0077bb]"
+              className="bg-[#2563eb] hover:bg-[#1d4ed8]"
             >
               <Send className="w-4 h-4" />
             </Button>

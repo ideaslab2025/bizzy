@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UKBusinessChatbot } from '@/components/chatbot/UKBusinessChatbot';
-import { BizzyRobotCharacter } from '@/components/BizzyRobotCharacter';
 import { MilestoneReached } from '@/components/celebrations/MilestoneReached';
 import { PersonalizationProvider, usePersonalization } from '@/contexts/PersonalizationContext';
 import { ProgressProvider } from '@/contexts/ProgressContext';
@@ -64,10 +63,6 @@ const ProgressCompanionContent = () => {
     setIsRefreshing(false);
   };
 
-  const handleRobotClick = () => {
-    console.log('Robot clicked - encouraging interaction');
-  };
-
   // Enhanced touch target sizing based on accessibility preferences
   const buttonClasses = `${
     personalization.accessibility.touchTargetSize === 'large' 
@@ -123,19 +118,11 @@ const ProgressCompanionContent = () => {
       <PullToRefresh onRefresh={handleRefresh} disabled={isRefreshing}>
         <main className="p-4 md:p-8">
           <div className="max-w-7xl mx-auto">
-            {/* Large Robot Character */}
-            <div className="flex justify-center mb-8">
-              <BizzyRobotCharacter
-                message="Hi! I'm here to help you with your UK business setup. Ask me anything!"
-                onClick={handleRobotClick}
-                className="mb-6"
-              />
-            </div>
-
-            {/* UK Business Chatbot Interface */}
+            {/* UK Business Chatbot Interface - Full Width */}
             <div className={`${personalization.preferences.textSize === 'large' ? 'text-lg' : ''} w-full`}>
               <UKBusinessChatbot
                 userProgress={mockUserProgress}
+                className="w-full"
               />
             </div>
           </div>
