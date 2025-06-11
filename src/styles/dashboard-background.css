@@ -7,13 +7,13 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-attachment: scroll; /* Changed from fixed for better mobile support */
   
-  /* Enhanced filter effects for depth and readability */
-  filter: contrast(1.02) brightness(1.05);
+  /* Reduced filter effects to show more of the original texture */
+  filter: contrast(1.1) brightness(1.1) saturate(1.05);
 }
 
-/* Add overlay for better text readability */
+/* Reduced overlay opacity to show the stone texture */
 .dashboard-bg-image::before {
   content: '';
   position: absolute;
@@ -21,12 +21,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(248, 250, 252, 0.3);
-  mix-blend-mode: multiply;
+  background: rgba(255, 255, 255, 0.15); /* Much lighter overlay */
+  mix-blend-mode: soft-light; /* Changed blend mode for better visibility */
   pointer-events: none;
 }
 
-/* Enhanced overlay for better contrast */
+/* Very subtle gradient overlay for depth without hiding texture */
 .dashboard-bg-image::after {
   content: '';
   position: absolute;
@@ -36,9 +36,9 @@
   bottom: 0;
   background: linear-gradient(
     135deg,
-    rgba(248, 250, 252, 0.1) 0%,
-    rgba(241, 245, 249, 0.2) 50%,
-    rgba(248, 250, 252, 0.1) 100%
+    rgba(248, 250, 252, 0.05) 0%,
+    rgba(241, 245, 249, 0.08) 50%,
+    rgba(248, 250, 252, 0.05) 100%
   );
   pointer-events: none;
 }
@@ -46,34 +46,51 @@
 /* Responsive background sizing */
 @media (max-width: 768px) {
   .dashboard-bg-image {
-    background-size: 150% auto;
-    background-position: center top;
+    background-size: cover;
+    background-position: center;
     background-attachment: scroll;
   }
 }
 
 @media (max-width: 480px) {
   .dashboard-bg-image {
-    background-size: 200% auto;
-    background-position: center center;
+    background-size: cover;
+    background-position: center;
   }
 }
 
-/* Professional card styling with enhanced backdrop for the new background */
+/* Enhanced card styling with more transparency to show background */
 .dashboard-bg-image .bg-white {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.92); /* Slightly more transparent */
+  backdrop-filter: blur(10px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06),
-    0 8px 10px -2px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 4px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 /* Enhanced header styling for new background */
 .dashboard-bg-image header.sticky {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(12px) !important;
-  border-bottom: 1px solid rgba(229, 231, 235, 0.9);
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  background-color: rgba(255, 255, 255, 0.90) !important;
+  backdrop-filter: blur(20px) saturate(1.8) !important;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Enhanced sidebar styling for the background */
+.dashboard-bg-image .sidebar {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px) saturate(1.8);
+  border-right: 1px solid rgba(229, 231, 235, 0.8);
+}
+
+/* Card hover effects that work well with the stone background */
+.dashboard-bg-image .card-professional-hover:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.12),
+    0 6px 12px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
