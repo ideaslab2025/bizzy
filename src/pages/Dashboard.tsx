@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, RefreshCw, Menu, Bot } from "lucide-react";
 import { motion } from "framer-motion";
@@ -28,16 +28,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(false);
   const [hasNotifications] = useState(true);
   const [syncStatus, setSyncStatus] = useState<'typing' | 'uploading' | 'syncing' | 'synced' | 'offline' | 'error'>('synced');
+  const [companyName, setCompanyName] = useState<string>("");
 
-  // ... keep existing code (notifications state, handler functions, etc) the same ...
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -73,6 +74,49 @@ const Dashboard = () => {
       read: false
     }
   ]);
+
+  // Fetch company name from profile
+  useEffect(() => {
+    if (user) {
+      fetchCompanyName();
+    }
+  }, [user]);
+
+  // Listen for company name updates from profile page
+  useEffect(() => {
+    const handleCompanyNameUpdate = (event: CustomEvent) => {
+      setCompanyName(event.detail.companyName);
+    };
+
+    window.addEventListener('companyNameUpdated', handleCompanyNameUpdate);
+    
+    return () => {
+      window.removeEventListener('companyNameUpdated', handleCompanyNameUpdate);
+    };
+  }, []);
+
+  const fetchCompanyName = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('company_name')
+        .eq('id', user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching company name:", error);
+        return;
+      }
+
+      if (data?.company_name) {
+        setCompanyName(data.company_name);
+      }
+    } catch (error) {
+      console.error("Unexpected error fetching company name:", error);
+    }
+  };
 
   const handleSignOut = async () => {
     try {
@@ -147,13 +191,21 @@ const Dashboard = () => {
   const currentSectionCategory = "foundation"; // Example category
   const companyAge = 30; // Example company age in days
 
+  // Get display name with fallback
+  const getDisplayTitle = () => {
+    if (companyName && companyName.trim()) {
+      return companyName;
+    }
+    return "Welcome back!";
+  };
+
   return (
     <ProgressProvider>
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-gray-50">
           <AppSidebar />
           <main className="flex-1 relative">
-            {/* Enhanced Header */}
+            {/* Enhanced Header with Dynamic Company Name */}
             <header className="sticky top-0 z-40 h-16 md:h-16 bg-white border-b border-gray-200 shadow-sm">
               <div className="h-full px-4 md:px-6 flex items-center justify-between">
                 <div className="flex items-center gap-3 md:gap-4">
@@ -172,12 +224,16 @@ const Dashboard = () => {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-                  <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">
-                    Dashboard
-                  </h1>
+                  <div className="flex flex-col justify-center min-w-0">
+                    <h1 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight truncate leading-tight">
+                      {getDisplayTitle()}
+                    </h1>
+                    <p className="text-xs md:text-sm text-gray-600 leading-tight">
+                      Dashboard
+                    </p>
+                  </div>
                 </div>
                 
-                {/* ... keep existing code (center search, right actions) the same ... */}
                 <div className="hidden md:flex flex-1 max-w-md mx-8">
                   <motion.div 
                     className="relative w-full"

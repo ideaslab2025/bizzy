@@ -115,6 +115,11 @@ const Profile = () => {
 
       console.log("Profile saved successfully");
       toast.success("Profile updated successfully!");
+      
+      // Dispatch custom event to notify dashboard of company name change
+      window.dispatchEvent(new CustomEvent('companyNameUpdated', { 
+        detail: { companyName: profileData.company_name.trim() }
+      }));
     } catch (error) {
       console.error("Unexpected error saving profile:", error);
       toast.error("An unexpected error occurred while saving");
@@ -230,6 +235,9 @@ const Profile = () => {
                         onChange={(e) => handleInputChange('company_name', e.target.value)}
                         placeholder="Enter your company name"
                       />
+                      <p className="text-xs text-gray-500">
+                        This will appear in your dashboard header
+                      </p>
                     </div>
 
                     <div className="space-y-2">
