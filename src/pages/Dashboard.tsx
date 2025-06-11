@@ -249,9 +249,6 @@ const Dashboard = () => {
                     <h1 className="text-xl md:text-2xl font-bold text-black tracking-tight truncate leading-tight">
                       {getDisplayTitle()}
                     </h1>
-                    <p className="text-sm md:text-base text-gray-600 leading-tight font-medium">
-                      Dashboard
-                    </p>
                   </div>
                 </div>
                 
