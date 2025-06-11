@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Bell, Search, User, ChevronDown, Settings, LogOut, RefreshCw, Menu, Bot } from "lucide-react";
@@ -215,14 +214,14 @@ const Dashboard = () => {
   return (
     <ProgressProvider>
       <SidebarProvider>
-        {/* FORCE the background class application with multiple approaches - NEW STONE TEXTURE */}
+        {/* FORCE the background class application with multiple approaches - NEW WHITE STONE TEXTURE */}
         <div 
           className="min-h-screen flex w-full dashboard-bg-image" 
           style={{
-            backgroundImage: 'url(/lovable-uploads/39360b89-4264-4182-8266-a5609921867a.png)',
-            backgroundSize: 'cover',
+            backgroundImage: 'url(/lovable-uploads/c710d3e7-8162-4c3d-bdab-7bd91cea3dbd.png)',
+            backgroundSize: '80%',
             backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
+            backgroundRepeat: 'repeat',
             backgroundColor: '#ff0000' // Red fallback for debugging
           }}
         >
@@ -456,4 +455,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-

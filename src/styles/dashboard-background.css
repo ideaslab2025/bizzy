@@ -1,5 +1,6 @@
 
 
+
 /* Dashboard Background Image Styles - Enhanced for visibility */
 
 /* Main dashboard background container with debugging */
@@ -8,14 +9,14 @@
   min-height: 100vh;
   /* Fallback solid color for debugging - should see red if image fails */
   background-color: #ff0000 !important;
-  /* Primary background image - NEW STONE TEXTURE */
-  background-image: url('/lovable-uploads/39360b89-4264-4182-8266-a5609921867a.png') !important;
-  background-size: cover !important;
+  /* Primary background image - NEW WHITE STONE TEXTURE */
+  background-image: url('/lovable-uploads/c710d3e7-8162-4c3d-bdab-7bd91cea3dbd.png') !important;
+  background-size: 80% !important;
   background-position: center !important;
-  background-repeat: no-repeat !important;
+  background-repeat: repeat !important;
   background-attachment: fixed !important;
   /* Strong filters for visibility */
-  filter: contrast(2.0) brightness(1.6) saturate(1.5) !important;
+  filter: contrast(1.8) brightness(1.4) saturate(1.2) !important;
 }
 
 /* Alternative fallback with public path */
@@ -29,19 +30,19 @@
   z-index: -10;
   /* Fallback color for debugging */
   background-color: #00ff00;
-  /* Try alternative image path - NEW STONE TEXTURE */
-  background-image: url('/lovable-uploads/39360b89-4264-4182-8266-a5609921867a.png');
-  background-size: cover;
+  /* Try alternative image path - NEW WHITE STONE TEXTURE */
+  background-image: url('/lovable-uploads/c710d3e7-8162-4c3d-bdab-7bd91cea3dbd.png');
+  background-size: 80%;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-attachment: fixed;
-  filter: contrast(2.0) brightness(1.6) saturate(1.5);
+  filter: contrast(1.8) brightness(1.4) saturate(1.2);
 }
 
 /* Force override any conflicting styles */
 body .dashboard-bg-image {
   background-color: #ff0000 !important;
-  background-image: url('/lovable-uploads/39360b89-4264-4182-8266-a5609921867a.png') !important;
+  background-image: url('/lovable-uploads/c710d3e7-8162-4c3d-bdab-7bd91cea3dbd.png') !important;
 }
 
 /* Responsive adjustments */
@@ -49,6 +50,7 @@ body .dashboard-bg-image {
   .dashboard-bg-image,
   .dashboard-bg-image::before {
     background-attachment: scroll !important;
+    background-size: 90% !important;
   }
 }
 
@@ -99,4 +101,5 @@ body .dashboard-bg-image {
 .dashboard-bg-image {
   border: 3px solid red !important;
 }
+
 
