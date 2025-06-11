@@ -1,4 +1,5 @@
 
+
 /* Dashboard Background Image Styles - Enhanced for visibility */
 
 /* Main dashboard background container with debugging */
@@ -7,8 +8,8 @@
   min-height: 100vh;
   /* Fallback solid color for debugging - should see red if image fails */
   background-color: #ff0000 !important;
-  /* Primary background image */
-  background-image: url('/lovable-uploads/ed8d4256-3283-4a4c-9dc4-6a2165785b13.png') !important;
+  /* Primary background image - NEW STONE TEXTURE */
+  background-image: url('/lovable-uploads/39360b89-4264-4182-8266-a5609921867a.png') !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
@@ -28,8 +29,8 @@
   z-index: -10;
   /* Fallback color for debugging */
   background-color: #00ff00;
-  /* Try alternative image path */
-  background-image: url('/lovable-uploads/ed8d4256-3283-4a4c-9dc4-6a2165785b13.png');
+  /* Try alternative image path - NEW STONE TEXTURE */
+  background-image: url('/lovable-uploads/39360b89-4264-4182-8266-a5609921867a.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -40,7 +41,7 @@
 /* Force override any conflicting styles */
 body .dashboard-bg-image {
   background-color: #ff0000 !important;
-  background-image: url('/lovable-uploads/ed8d4256-3283-4a4c-9dc4-6a2165785b13.png') !important;
+  background-image: url('/lovable-uploads/39360b89-4264-4182-8266-a5609921867a.png') !important;
 }
 
 /* Responsive adjustments */
@@ -98,3 +99,4 @@ body .dashboard-bg-image {
 .dashboard-bg-image {
   border: 3px solid red !important;
 }
+
