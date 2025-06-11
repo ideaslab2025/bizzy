@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProgress } from "@/contexts/ProgressContext";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Overview = () => {
   const navigate = useNavigate();
