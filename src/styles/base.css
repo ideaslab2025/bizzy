@@ -108,13 +108,6 @@ button[aria-label="Toggle menu"] svg {
   @apply transform scale-105 -translate-y-1 shadow-lg;
 }
 
-/* Fixed sidebar spacing adjustments */
-@media (min-width: 768px) {
-  .dashboard-layout {
-    margin-left: 240px;
-  }
-}
-
 /* Mobile sidebar adjustments */
 @media (max-width: 767px) {
   .sidebar-fixed {
@@ -126,8 +119,9 @@ button[aria-label="Toggle menu"] svg {
     transform: translateX(0);
   }
   
-  .dashboard-layout {
-    margin-left: 0;
+  /* Remove padding on mobile when sidebar is hidden */
+  .pl-\[240px\] {
+    padding-left: 0 !important;
   }
 }
 
