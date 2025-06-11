@@ -26,7 +26,7 @@ const Register = () => {
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
           <Link to="/">
-            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-32 lg:h-40" />
+            <img src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" alt="Bizzy Logo" className="h-48 lg:h-64 xl:h-72" />
           </Link>
         </div>
         
