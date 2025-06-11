@@ -206,10 +206,10 @@ const Dashboard = () => {
         <div className="min-h-screen flex w-full bg-gray-50">
           <AppSidebar />
           <main className="flex-1 relative">
-            {/* Enhanced Header with Dynamic Company Name */}
-            <header className="sticky top-0 z-40 h-16 md:h-16 bg-white border-b border-gray-200 shadow-sm">
-              <div className="h-full px-4 md:px-6 flex items-center justify-between">
-                <div className="flex items-center gap-3 md:gap-4">
+            {/* Professional Header with Enhanced Styling */}
+            <header className="sticky top-0 z-40 h-16 md:h-18 bg-white border-b border-gray-200 shadow-sm">
+              <div className="h-full px-6 md:px-8 flex items-center justify-between">
+                <div className="flex items-center gap-4 md:gap-6">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -217,7 +217,7 @@ const Dashboard = () => {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                          <SidebarTrigger className="text-gray-900 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200 p-3 min-h-[44px] min-w-[44px] touch-manipulation" />
+                          <SidebarTrigger className="text-black hover:text-gray-700 hover:bg-gray-100 transition-all duration-200 p-3 min-h-[48px] min-w-[48px] touch-manipulation rounded-lg" />
                         </motion.div>
                       </TooltipTrigger>
                       <TooltipContent>
@@ -226,10 +226,10 @@ const Dashboard = () => {
                     </Tooltip>
                   </TooltipProvider>
                   <div className="flex flex-col justify-center min-w-0">
-                    <h1 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight truncate leading-tight">
+                    <h1 className="text-xl md:text-2xl font-bold text-black tracking-tight truncate leading-tight">
                       {getDisplayTitle()}
                     </h1>
-                    <p className="text-xs md:text-sm text-gray-600 leading-tight">
+                    <p className="text-sm md:text-base text-gray-600 leading-tight font-medium">
                       Dashboard
                     </p>
                   </div>
@@ -241,18 +241,18 @@ const Dashboard = () => {
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="text"
                       placeholder="Search documents, guides..."
-                      className="w-full pl-10 pr-4 py-3 h-12 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-md text-base text-gray-900 placeholder-gray-500"
+                      className="w-full pl-12 pr-4 py-4 h-12 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-md text-base text-black placeholder-gray-500 font-medium"
                       onClick={() => setCommandPaletteOpen(true)}
                     />
                   </motion.div>
                 </div>
 
-                {/* Right Actions */}
-                <div className="flex items-center gap-2 md:gap-3">
+                {/* Professional Right Actions */}
+                <div className="flex items-center gap-3 md:gap-4">
                   {/* Search button for mobile */}
                   <motion.div
                     className="md:hidden"
@@ -263,7 +263,7 @@ const Dashboard = () => {
                       variant="ghost" 
                       size="icon"
                       onClick={() => setCommandPaletteOpen(true)}
-                      className="text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                      className="text-black hover:text-gray-700 hover:bg-gray-100 rounded-xl p-3 transition-all duration-200 min-h-[48px] min-w-[48px]"
                     >
                       <Search className="h-5 w-5" />
                     </Button>
@@ -277,7 +277,7 @@ const Dashboard = () => {
                     onShowHistory={() => console.log('Show sync history')}
                   />
                   
-                  {/* Enhanced Notifications with Click Navigation */}
+                  {/* Professional Notifications */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <motion.div
@@ -287,7 +287,7 @@ const Dashboard = () => {
                         <Button 
                           variant="ghost" 
                           size="icon"
-                          className="relative rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 text-gray-900 hover:text-gray-700 hover:shadow-md min-h-[44px] min-w-[44px]"
+                          className="relative rounded-xl p-3 transition-all duration-200 hover:bg-gray-100 text-black hover:text-gray-700 hover:shadow-md min-h-[48px] min-w-[48px]"
                         >
                           <Bell className="w-5 h-5" />
                           {hasNotifications && (
@@ -303,29 +303,29 @@ const Dashboard = () => {
                         </Button>
                       </motion.div>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
-                      <div className="p-4 border-b border-gray-100">
-                        <h3 className="font-semibold text-gray-900">Notifications</h3>
+                    <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-xl rounded-xl z-50">
+                      <div className="p-6 border-b border-gray-100">
+                        <h3 className="font-bold text-black text-lg">Notifications</h3>
                       </div>
                       {notifications.map((notification) => (
                         <DropdownMenuItem 
                           key={notification.id}
-                          className="p-4 hover:bg-gray-50 min-h-[60px] cursor-pointer transition-all duration-200 border-l-4 border-transparent hover:border-blue-500"
+                          className="p-6 hover:bg-gray-50 min-h-[80px] cursor-pointer transition-all duration-200 border-l-4 border-transparent hover:border-blue-500"
                           onClick={() => handleNotificationClick(notification)}
                         >
                           <div className="w-full">
-                            <div className="flex items-start justify-between mb-1">
-                              <p className="font-medium text-gray-900 text-sm">
+                            <div className="flex items-start justify-between mb-2">
+                              <p className="font-semibold text-black text-base">
                                 {notification.title}
                               </p>
                               {!notification.read && (
                                 <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 ml-2 mt-1"></div>
                               )}
                             </div>
-                            <p className="text-sm text-gray-600 mb-1">
+                            <p className="text-base text-gray-600 mb-2 font-medium">
                               {notification.message}
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-sm text-gray-500 font-medium">
                               {notification.timestamp.toLocaleTimeString([], { 
                                 hour: '2-digit', 
                                 minute: '2-digit' 
@@ -337,7 +337,7 @@ const Dashboard = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  {/* Robot Button - Now in Top Navigation */}
+                  {/* Robot Button */}
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -349,7 +349,7 @@ const Dashboard = () => {
                             variant="ghost" 
                             size="icon"
                             onClick={handleRobotClick}
-                            className="text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 min-h-[44px] min-w-[44px]"
+                            className="text-black hover:text-gray-700 hover:bg-gray-100 rounded-xl p-3 transition-all duration-200 min-h-[48px] min-w-[48px]"
                             aria-label="Open Progress Companion"
                           >
                             <Bot className="w-5 h-5" />
@@ -362,7 +362,7 @@ const Dashboard = () => {
                     </Tooltip>
                   </TooltipProvider>
 
-                  {/* Enhanced User Menu */}
+                  {/* Professional User Menu */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <motion.div
@@ -371,27 +371,27 @@ const Dashboard = () => {
                       >
                         <Button 
                           variant="ghost" 
-                          className="flex items-center gap-2 rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 hover:shadow-md text-gray-900 hover:text-gray-700 min-h-[44px]"
+                          className="flex items-center gap-3 rounded-xl p-3 transition-all duration-200 hover:bg-gray-100 hover:shadow-md text-black hover:text-gray-700 min-h-[48px]"
                         >
                           <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                             <User className="w-4 h-4 text-white" />
                           </div>
-                          <span className="font-medium hidden md:inline-block">Account</span>
+                          <span className="font-semibold hidden md:inline-block">Account</span>
                           <ChevronDown className="w-4 h-4" />
                         </Button>
                       </motion.div>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
-                      <DropdownMenuItem onClick={handleProfileClick} className="hover:bg-gray-50 p-4 min-h-[48px] text-gray-900">
+                    <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-xl rounded-xl z-50">
+                      <DropdownMenuItem onClick={handleProfileClick} className="hover:bg-gray-50 p-4 min-h-[48px] text-black font-medium">
                         <User className="w-4 h-4 mr-3" />
                         Profile
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="hover:bg-gray-50 p-4 min-h-[48px] text-gray-900">
+                      <DropdownMenuItem className="hover:bg-gray-50 p-4 min-h-[48px] text-black font-medium">
                         <Settings className="w-4 h-4 mr-3" />
                         Settings
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 text-red-600 hover:text-red-700 p-4 min-h-[48px]">
+                      <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-50 text-red-600 hover:text-red-700 p-4 min-h-[48px] font-medium">
                         <LogOut className="w-4 h-4 mr-3" />
                         Logout
                       </DropdownMenuItem>
@@ -401,8 +401,8 @@ const Dashboard = () => {
               </div>
             </header>
             
-            {/* Main Content */}
-            <div className="p-4 md:p-6 bg-gray-50 min-h-[calc(100vh-4rem)]">
+            {/* Professional Main Content */}
+            <div className="p-6 md:p-8 bg-gray-50 min-h-[calc(100vh-4rem)]">
               <Outlet />
             </div>
             
@@ -423,7 +423,7 @@ const Dashboard = () => {
           onOpenChange={setCommandPaletteOpen}
         />
         
-        {/* FAQ Trigger Button - Bottom Right Only with Consistent Styling */}
+        {/* FAQ Trigger Button - Bottom Right Only with Professional Styling */}
         <div className="fixed bottom-6 right-6 z-50">
           <FAQTrigger onClick={() => setFaqOpen(true)} />
         </div>

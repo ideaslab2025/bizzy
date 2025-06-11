@@ -47,8 +47,11 @@
 
   body {
     @apply bg-background text-foreground transition-colors duration-300;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
     font-size: 16px;
     line-height: 1.5;
+    font-weight: 400;
+    color: #1a1a1a;
   }
   
   /* Highly Visible Rock Texture Background */
@@ -131,37 +134,83 @@
     @apply rock-textured-bg;
   }
   
-  /* Ensure cards and content maintain maximum contrast against enhanced background */
+  /* Professional card styling for enhanced contrast and shadows */
   .bg-white {
     background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(1px);
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 2px 3px 0 rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(2px);
+    box-shadow: 
+      0 1px 3px 0 rgba(0, 0, 0, 0.1), 
+      0 1px 2px 0 rgba(0, 0, 0, 0.06),
+      0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
   
-  /* Typography Hierarchy */
+  /* Professional card hover effects */
+  .card-professional-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .card-professional-hover:hover {
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+      0 4px 6px -2px rgba(0, 0, 0, 0.05),
+      0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+  
+  /* Typography Hierarchy - Professional and Clean */
   h1 {
     @apply text-2xl md:text-3xl lg:text-4xl font-bold;
     line-height: 1.2;
+    color: #000000;
+    font-weight: 700;
   }
   
   h2 {
     @apply text-xl md:text-2xl lg:text-3xl font-semibold;
     line-height: 1.3;
+    color: #000000;
+    font-weight: 600;
   }
   
   h3 {
     @apply text-lg md:text-xl lg:text-2xl font-semibold;
     line-height: 1.4;
+    color: #000000;
+    font-weight: 600;
   }
   
   h4 {
     @apply text-base md:text-lg font-medium;
     line-height: 1.4;
+    color: #000000;
+    font-weight: 500;
   }
   
   p {
     @apply text-base;
     line-height: 1.6;
+    color: #1a1a1a;
+  }
+  
+  /* Professional text colors */
+  .text-gray-900 {
+    color: #000000 !important;
+  }
+  
+  .text-gray-800 {
+    color: #1a1a1a !important;
+  }
+  
+  .text-gray-700 {
+    color: #262626 !important;
+  }
+  
+  .text-gray-600 {
+    color: #404040 !important;
+  }
+  
+  .text-gray-500 {
+    color: #525252 !important;
   }
   
   /* Fixed header styling */
@@ -170,6 +219,7 @@
     background-color: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(10px) !important;
     border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   }
   
   /* Feature boxes styling */
@@ -297,6 +347,39 @@
 }
 
 @layer utilities {
+  /* Professional card utilities */
+  .card-professional {
+    @apply bg-white rounded-xl border border-gray-200 shadow-lg;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+      0 2px 4px -1px rgba(0, 0, 0, 0.06),
+      0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-professional-hover {
+    @apply card-professional transition-all duration-300 ease-in-out;
+  }
+  
+  .card-professional-hover:hover {
+    @apply shadow-xl;
+    box-shadow: 
+      0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+      0 10px 10px -5px rgba(0, 0, 0, 0.04),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-4px);
+  }
+  
+  /* Professional spacing utilities */
+  .spacing-professional {
+    @apply p-6 md:p-8;
+  }
+  
+  .spacing-professional-sm {
+    @apply p-4 md:p-6;
+  }
+  
   /* Gradient mesh animation keyframes */
   @keyframes float-1 {
     0%, 100% {
@@ -456,14 +539,17 @@
   /* Text utilities for consistent formatting */
   .text-body {
     @apply text-base leading-relaxed;
+    color: #1a1a1a;
   }
   
   .text-caption {
     @apply text-sm leading-normal;
+    color: #404040;
   }
   
   .text-small {
     @apply text-xs leading-normal;
+    color: #525252;
   }
   
   /* Container utilities for text overflow */
