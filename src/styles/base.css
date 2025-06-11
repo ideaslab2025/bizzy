@@ -38,18 +38,6 @@ header.sticky {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
-/* Fixed sidebar support - ensure main content doesn't go under the sidebar */
-.sidebar-fixed-layout {
-  margin-left: 240px;
-}
-
-/* Mobile responsive - hide sidebar margin on mobile */
-@media (max-width: 768px) {
-  .sidebar-fixed-layout {
-    margin-left: 0;
-  }
-}
-
 /* Feature boxes styling */
 #features .relative.overflow-hidden {
   @apply shadow-xl transition-all hover:-translate-y-1 hover:shadow-blue-500/30;
