@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { DocumentStatusDashboard } from "@/components/dashboard/DocumentStatusDashboard";
@@ -109,9 +108,6 @@ const Overview = () => {
                 <h1 className="text-3xl md:text-4xl font-bold text-black mb-4 md:mb-6 leading-tight">
                   Welcome back! 👋
                 </h1>
-                <p className="text-lg md:text-xl text-black max-w-3xl mx-auto leading-relaxed font-medium">
-                  You're {overallBusinessProgress}% through your business setup journey
-                </p>
               </CardContent>
             </Card>
           </NeonGlow>
