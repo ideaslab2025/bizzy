@@ -1,0 +1,110 @@
+
+/* Professional card hover effects */
+.card-professional-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-professional-hover:hover {
+  box-shadow: 
+    0 12px 16px -4px rgba(0, 0, 0, 0.1), 
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    0 25px 30px -8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+/* Professional card utilities */
+.card-professional {
+  @apply bg-white rounded-xl border border-gray-200 shadow-lg;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.card-professional-hover {
+  @apply card-professional transition-all duration-300 ease-in-out;
+}
+
+.card-professional-hover:hover {
+  @apply shadow-xl;
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-4px);
+}
+
+/* Professional spacing utilities */
+.spacing-professional {
+  @apply p-6 md:p-8;
+}
+
+.spacing-professional-sm {
+  @apply p-4 md:p-6;
+}
+
+/* Glassmorphism utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.glass-blur {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.glass-card {
+  @apply glass glass-blur rounded-lg;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.2);
+  transform: translateY(-2px);
+}
+
+.glass-modal {
+  @apply glass glass-blur;
+  animation: glass-appear 0.3s ease-out;
+}
+
+.glass-dropdown {
+  @apply glass glass-blur rounded-md;
+  animation: glass-scale-in 0.2s ease-out;
+}
+
+.glass-navbar {
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Glass animation keyframes */
+@keyframes glass-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glass-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

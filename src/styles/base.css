@@ -1,0 +1,110 @@
+
+/* Base body and general styles */
+body {
+  @apply bg-background text-foreground transition-colors duration-300;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #1a1a1a;
+}
+
+* {
+  @apply border-border;
+}
+
+/* Apply enhanced texture to main dashboard background */
+.bg-gray-50 {
+  @apply rock-textured-bg;
+}
+
+/* Professional card styling for enhanced contrast against complex texture */
+.bg-white {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(4px);
+  box-shadow: 
+    0 2px 4px 0 rgba(0, 0, 0, 0.08), 
+    0 1px 2px 0 rgba(0, 0, 0, 0.04),
+    0 6px 8px -2px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Fixed header styling */
+header.sticky {
+  @apply bg-white !important;
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(10px) !important;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Feature boxes styling */
+#features .relative.overflow-hidden {
+  @apply shadow-xl transition-all hover:-translate-y-1 hover:shadow-blue-500/30;
+}
+
+/* Updated hero image styling with transparent background and drop-shadow */
+.hero-image {
+  filter: drop-shadow(0 0 35px rgba(59,130,246,0.8));
+  transform: scale(1.3) translateY(-50px);
+  mix-blend-mode: normal;
+}
+
+/* Increase hamburger menu icon size */
+button[aria-label="Toggle menu"] svg {
+  @apply w-10 h-10;
+}
+
+/* Make mobile login button bigger */
+.md\:hidden .text-\[\#1d4ed8\] {
+  @apply text-lg py-2 px-4;
+}
+
+/* Compress "Meet Bizzy" section */
+#meet-bizzy {
+  @apply py-6 !important;
+}
+
+#meet-bizzy .container {
+  @apply max-w-3xl;
+}
+
+#meet-bizzy .grid {
+  @apply gap-2;
+}
+
+#meet-bizzy h2 {
+  @apply mb-2;
+}
+
+#meet-bizzy .py-12 {
+  @apply py-4;
+}
+
+#meet-bizzy .py-8 {
+  @apply py-2;
+}
+
+#meet-bizzy .my-8 {
+  @apply my-2;
+}
+
+/* Fix spacing before "Everything You Need" section */
+#features {
+  @apply pt-12 pb-8;
+}
+
+/* Enhanced pricing card hover effects */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* Ensure pricing cards have consistent height and hover effects */
+.pricing-card {
+  @apply h-full transition-all duration-300;
+}
+
+/* Better button hover states for pricing cards */
+.pricing-button:hover {
+  @apply transform scale-105 -translate-y-1 shadow-lg;
+}

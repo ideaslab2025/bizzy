@@ -1,0 +1,125 @@
+
+/* Neon Glow Effects */
+.neon-glow-blue {
+  --neon-color: #3b82f6;
+  --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
+}
+
+.neon-glow-green {
+  --neon-color: #10b981;
+  --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
+}
+
+.neon-glow-purple {
+  --neon-color: #8b5cf6;
+  --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
+}
+
+.neon-glow-pink {
+  --neon-color: #ec4899;
+  --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
+}
+
+.neon-glow-yellow {
+  --neon-color: #f59e0b;
+  --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
+}
+
+.neon-glow-red {
+  --neon-color: #ef4444;
+  --neon-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
+}
+
+.neon-glow-rainbow {
+  --neon-shadow: 
+    0 0 5px #ff0000,
+    0 0 10px #ff7f00,
+    0 0 20px #ffff00,
+    0 0 30px #00ff00,
+    0 0 40px #0000ff,
+    0 0 50px #4b0082,
+    0 0 60px #9400d3;
+}
+
+.neon-intensity-low {
+  box-shadow: 0 0 3px var(--neon-color), 0 0 6px var(--neon-color);
+}
+
+.neon-intensity-medium {
+  box-shadow: var(--neon-shadow);
+}
+
+.neon-intensity-high {
+  box-shadow: var(--neon-shadow), 0 0 40px var(--neon-color);
+}
+
+.neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite alternate;
+}
+
+.neon-hover:hover {
+  box-shadow: var(--neon-shadow), 0 0 40px var(--neon-color);
+  transform: scale(1.02);
+}
+
+.neon-active {
+  box-shadow: var(--neon-shadow), 0 0 40px var(--neon-color);
+}
+
+.glow-blue {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.glow-green {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+}
+
+/* Gradient mesh animation keyframes */
+@keyframes float-1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.9);
+  }
+  33% {
+    transform: translate3d(30px, -20px, 0) rotate(0.5deg) scale(1.1);
+  }
+  66% {
+    transform: translate3d(-20px, 10px, 0) rotate(-0.3deg) scale(1.0);
+  }
+}
+
+@keyframes float-2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1.0);
+  }
+  33% {
+    transform: translate3d(-25px, 15px, 0) rotate(-0.4deg) scale(0.9);
+  }
+  66% {
+    transform: translate3d(35px, -25px, 0) rotate(0.6deg) scale(1.1);
+  }
+}
+
+@keyframes float-3 {
+  0%, 100% {
+    transform: translate3d(-50%, 0, 0) rotate(0deg) scale(1.0);
+  }
+  33% {
+    transform: translate3d(calc(-50% + 20px), -15px, 0) rotate(0.3deg) scale(1.1);
+  }
+  66% {
+    transform: translate3d(calc(-50% - 15px), 20px, 0) rotate(-0.5deg) scale(0.9);
+  }
+}
+
+@keyframes neon-pulse {
+  0% {
+    box-shadow: var(--neon-shadow);
+  }
+  100% {
+    box-shadow: var(--neon-shadow), 0 0 40px var(--neon-color);
+  }
+}
