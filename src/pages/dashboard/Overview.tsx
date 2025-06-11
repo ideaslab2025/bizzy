@@ -95,24 +95,6 @@ const Overview = () => {
     <PullToRefresh onRefresh={handleOverviewRefresh}>
       {/* Professional dashboard with improved spacing and styling */}
       <div className="space-y-8 md:space-y-10 pt-6 md:pt-24 px-0 relative z-10">
-        {/* Welcome Section in a professional card */}
-        <section 
-          className="flex justify-center"
-          data-spotlight-first-view="true"
-          data-spotlight-id="dashboard-welcome"
-          data-spotlight-message="Welcome to Bizzy! This is your command center. Start exploring your business journey here."
-        >
-          <NeonGlow color="blue" hover>
-            <Card className="card-professional-hover max-w-2xl w-full">
-              <CardContent className="spacing-professional text-center">
-                <h1 className="text-3xl md:text-4xl font-bold text-black mb-4 md:mb-6 leading-tight">
-                  Welcome back! 👋
-                </h1>
-              </CardContent>
-            </Card>
-          </NeonGlow>
-        </section>
-
         {/* Professional Stats Grid with Enhanced Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <NeonGlow color="blue" hover>
