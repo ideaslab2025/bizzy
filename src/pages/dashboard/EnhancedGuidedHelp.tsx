@@ -224,7 +224,7 @@ const EnhancedGuidedHelp = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
+      <div className="px-0">
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Business Setup Guidance</h1>
       </div>
 

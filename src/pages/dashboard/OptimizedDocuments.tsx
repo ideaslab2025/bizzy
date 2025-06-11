@@ -95,8 +95,9 @@ const OptimizedDocuments = () => {
 
   const documentsContent = (
     <div className="space-y-6">
-      <div className="px-4 lg:px-0">
-        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
+      {/* Header */}
+      <div className="px-0">
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
           Document Library
         </h1>
         
@@ -112,7 +113,7 @@ const OptimizedDocuments = () => {
         )}
       </div>
 
-      <div className="px-4 lg:px-0">
+      <div className="px-0">
         <DocumentFilters
           searchQuery={searchQuery}
           selectedCategory={selectedCategory}
@@ -122,7 +123,7 @@ const OptimizedDocuments = () => {
         />
       </div>
 
-      <div className="px-4 lg:px-0">
+      <div className="px-0">
         <VirtualizedDocumentList
           documents={documents}
           onViewDetails={handleViewDetails}

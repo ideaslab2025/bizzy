@@ -23,11 +23,9 @@ const MyDocuments = () => {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
       <div className="space-y-6">
+        {/* Header */}
         <div className="px-0">
-          <div className="flex items-center gap-3 mb-3">
-            <FolderOpen className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">My Documents</h1>
-          </div>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">My Documents</h1>
         </div>
 
         {/* Upload Section - Always Visible */}
