@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -89,7 +90,7 @@ export const SecureAuthForm: React.FC<SecureAuthFormProps> = ({ mode, onSuccess 
           if (error.message.includes('Invalid login credentials')) {
             toast.error('Invalid email or password. Please check your credentials.');
           } else if (error.message.includes('Email not confirmed')) {
-            toast.error('Please check your email and click the confirmation link.');
+            toast.error('Please verify your email address before signing in. Check your inbox for the verification link.');
           } else {
             toast.error('Login failed. Please try again.');
           }
@@ -97,6 +98,13 @@ export const SecureAuthForm: React.FC<SecureAuthFormProps> = ({ mode, onSuccess 
         }
 
         if (data.user) {
+          // Check if email is verified for login
+          if (!data.user.email_confirmed_at) {
+            toast.error('Please verify your email address before signing in. Check your inbox for the verification link.');
+            await supabase.auth.signOut();
+            return;
+          }
+          
           logSuccessfulLogin();
           toast.success('Logged in successfully!');
           onSuccess();
@@ -108,7 +116,7 @@ export const SecureAuthForm: React.FC<SecureAuthFormProps> = ({ mode, onSuccess 
           email: email.trim().toLowerCase(),
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
+            emailRedirectTo: `${window.location.origin}/email-verification-success`,
             data: {
               first_name: firstName.trim(),
               last_name: lastName.trim(),
@@ -129,7 +137,7 @@ export const SecureAuthForm: React.FC<SecureAuthFormProps> = ({ mode, onSuccess 
 
         if (data.user) {
           logSecurityEvent('registration_successful', { email });
-          toast.success('Account created successfully!');
+          // Don't show success toast here - only after email verification
           onSuccess();
         }
       }

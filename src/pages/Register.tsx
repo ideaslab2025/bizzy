@@ -17,8 +17,10 @@ const Register = () => {
   }, [user, navigate]);
 
   const handleSuccess = () => {
-    const userEmail = encodeURIComponent(''); // Email will be handled by the secure form
-    navigate(`/email-verification?email=${userEmail}`);
+    // Get the email from the form - we'll pass it via URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email') || '';
+    navigate(`/email-verification?email=${encodeURIComponent(email)}`);
   };
   
   return (

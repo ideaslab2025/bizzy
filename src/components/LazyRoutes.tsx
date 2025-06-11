@@ -15,6 +15,8 @@ const ProgressCompanion = React.lazy(() => import('@/pages/ProgressCompanion'));
 const Pricing = React.lazy(() => import('@/pages/Pricing'));
 const Login = React.lazy(() => import('@/pages/Login'));
 const Register = React.lazy(() => import('@/pages/Register'));
+const EmailVerification = React.lazy(() => import('@/pages/EmailVerification'));
+const EmailVerificationSuccess = React.lazy(() => import('@/pages/EmailVerificationSuccess'));
 const Profile = React.lazy(() => import('@/pages/Profile'));
 const Onboarding = React.lazy(() => import('@/pages/Onboarding'));
 
@@ -54,6 +56,8 @@ export const LazyRoutes: React.FC = () => {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/email-verification" element={<EmailVerification />} />
+        <Route path="/email-verification-success" element={<EmailVerificationSuccess />} />
         <Route path="/onboarding" element={<Onboarding />} />
       </Routes>
     </Suspense>
