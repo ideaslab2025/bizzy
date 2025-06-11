@@ -92,8 +92,8 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
           
-          {/* Bizzy Logo at bottom */}
-          <div className="mt-auto px-4 py-6 hidden md:block">
+          {/* Bizzy Logo at bottom corner */}
+          <div className="absolute bottom-2 left-2 right-2 hidden md:block">
             <div className="flex justify-center">
               <img 
                 src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
