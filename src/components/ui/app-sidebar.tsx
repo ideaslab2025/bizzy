@@ -53,8 +53,8 @@ export function AppSidebar() {
   const location = useLocation()
 
   return (
-    <Sidebar className="border-r-0 w-[240px] max-w-[240px]">
-      <SidebarContent className="bg-[#0088cc] text-white h-screen sticky top-0">
+    <Sidebar className="border-r-0 w-[240px] max-w-[240px] fixed top-0 left-0 h-screen z-50">
+      <SidebarContent className="bg-[#0088cc] text-white h-full">
         <SidebarGroup className="px-3 py-6 h-full flex flex-col">
           <SidebarGroupContent className="flex-1">
             <SidebarMenu className="space-y-2">
