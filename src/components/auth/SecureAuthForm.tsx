@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +8,7 @@ import { useSecurityMonitoring } from '@/hooks/useSecurityMonitoring';
 import { supabase } from '@/integrations/supabase/client';
 import { Eye, EyeOff, Shield, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import { PasswordStrengthIndicator } from './PasswordStrengthIndicator';
 
 interface SecureAuthFormProps {
   mode: 'login' | 'register';
@@ -206,6 +206,9 @@ export const SecureAuthForm: React.FC<SecureAuthFormProps> = ({ mode, onSuccess 
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </Button>
         </div>
+        
+        {/* Password Strength Indicator - only show during registration */}
+        {mode === 'register' && <PasswordStrengthIndicator password={password} />}
       </div>
 
       {mode === 'register' && (
