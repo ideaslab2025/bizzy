@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Bot, Menu } from 'lucide-react';
+import { ArrowLeft, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EnhancedBizzyAssistant } from '@/components/guidance/EnhancedBizzyAssistant';
+import { BizzyRobotCharacter } from '@/components/BizzyRobotCharacter';
 import { MilestoneReached } from '@/components/celebrations/MilestoneReached';
 import { PersonalizationProvider, usePersonalization } from '@/contexts/PersonalizationContext';
 import { ProgressProvider } from '@/contexts/ProgressContext';
@@ -98,6 +99,10 @@ const ProgressCompanionContent = () => {
     setIsRefreshing(false);
   };
 
+  const handleRobotClick = () => {
+    console.log('Robot clicked - encouraging interaction');
+  };
+
   // Enhanced touch target sizing based on accessibility preferences
   const buttonClasses = `${
     personalization.accessibility.touchTargetSize === 'large' 
@@ -127,13 +132,6 @@ const ProgressCompanionContent = () => {
           </Button>
           
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-              personalization.preferences.highContrast 
-                ? 'bg-blue-600' 
-                : 'bg-gradient-to-br from-blue-500 to-blue-600'
-            }`}>
-              <Bot className="w-5 h-5 text-white" />
-            </div>
             <h1 className={`text-lg md:text-2xl font-bold tracking-tight truncate ${
               personalization.preferences.textSize === 'large' ? 'text-xl md:text-3xl' : ''
             } ${
@@ -159,17 +157,24 @@ const ProgressCompanionContent = () => {
       {/* Main Content with Pull-to-Refresh */}
       <PullToRefresh onRefresh={handleRefresh} disabled={isRefreshing}>
         <main className="p-4 md:p-8">
-          <div className="max-w-6xl mx-auto">
-            {/* Chat Assistant Interface */}
-            <div className={`${personalization.preferences.textSize === 'large' ? 'text-lg' : ''} flex justify-center`}>
-              <div className="w-full max-w-4xl">
-                <EnhancedBizzyAssistant
-                  currentStep={mockCurrentStep}
-                  currentSection={mockCurrentSection}
-                  userProgress={mockUserProgress}
-                  onNavigateToStep={handleNavigateToStep}
-                />
-              </div>
+          <div className="max-w-7xl mx-auto">
+            {/* Large Robot Character */}
+            <div className="flex justify-center mb-8">
+              <BizzyRobotCharacter
+                message="Hi! I'm here to help you with your business setup. Ask me anything!"
+                onClick={handleRobotClick}
+                className="mb-6"
+              />
+            </div>
+
+            {/* Full-Width Chat Assistant Interface */}
+            <div className={`${personalization.preferences.textSize === 'large' ? 'text-lg' : ''} w-full`}>
+              <EnhancedBizzyAssistant
+                currentStep={mockCurrentStep}
+                currentSection={mockCurrentSection}
+                userProgress={mockUserProgress}
+                onNavigateToStep={handleNavigateToStep}
+              />
             </div>
           </div>
         </main>
