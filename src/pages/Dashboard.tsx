@@ -205,7 +205,7 @@ const Dashboard = () => {
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-gray-50">
           <AppSidebar />
-          <main className="flex-1 relative">
+          <main className="flex-1 relative ml-[240px]">
             {/* Professional Header with Enhanced Styling */}
             <header className="sticky top-0 z-40 h-16 md:h-18 bg-white border-b border-gray-200 shadow-sm">
               <div className="h-full px-6 md:px-8 flex items-center justify-between">
@@ -216,6 +216,7 @@ const Dashboard = () => {
                         <motion.div
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
+                          className="md:hidden"
                         >
                           <SidebarTrigger className="text-black hover:text-gray-700 hover:bg-gray-100 transition-all duration-200 p-3 min-h-[48px] min-w-[48px] touch-manipulation rounded-lg" />
                         </motion.div>
