@@ -23,7 +23,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
@@ -191,7 +190,7 @@ const Dashboard = () => {
   const currentSectionCategory = "foundation"; // Example category
   const companyAge = 30; // Example company age in days
 
-  // Get display name with fallback
+  // Get display title with fallback - Updated for header display
   const getDisplayTitle = () => {
     if (companyName && companyName.trim()) {
       return companyName;

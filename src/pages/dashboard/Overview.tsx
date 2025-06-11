@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { DocumentStatusDashboard } from "@/components/dashboard/DocumentStatusDashboard";
@@ -12,7 +11,6 @@ import { NeonGlow } from "@/components/ui/neon-glow";
 import { AnimatedCounter, CurrencyCounter, PercentageCounter } from "@/components/ui/animated-counter";
 import { useAuth } from "@/hooks/useAuth";
 import { useProgress } from "@/contexts/ProgressContext";
-import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -103,7 +101,7 @@ const Overview = () => {
           data-spotlight-message="Welcome to Bizzy! This is your command center. Start exploring your business journey here."
         >
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4 leading-tight">
-            {getDisplayTitle()} 👋
+            Welcome back! 👋
           </h1>
           <p className="text-base md:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-4 leading-relaxed">
             You're {overallBusinessProgress}% through your business setup journey
