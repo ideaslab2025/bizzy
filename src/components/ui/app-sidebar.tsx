@@ -98,7 +98,7 @@ export function AppSidebar() {
               <img 
                 src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
                 alt="Bizzy Logo" 
-                className="h-24 w-auto brightness-0 invert opacity-90"
+                className="h-48 w-auto brightness-0 invert opacity-90"
                 style={{ 
                   pointerEvents: 'none',
                   filter: 'brightness(0) invert(1)',
