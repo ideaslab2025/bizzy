@@ -25,37 +25,37 @@ const Index = () => {
       title: "Smart Document Templates",
       description: "Professionally crafted templates that adapt to your business needs",
       icon: FileText,
-      color: "text-blue-600"
+      color: "text-bizzy-blue"
     },
     {
       title: "Step-by-Step Guidance",
       description: "Clear, actionable steps to set up your business correctly",
       icon: Target,
-      color: "text-green-600"
+      color: "text-bizzy-blue"
     },
     {
       title: "AI-Powered Assistant",
       description: "Get instant answers and personalized recommendations",
       icon: Zap,
-      color: "text-purple-600"
+      color: "text-blue-600"
     },
     {
       title: "Compliance Made Easy",
       description: "Stay compliant with UK business regulations effortlessly",
       icon: Shield,
-      color: "text-red-600"
+      color: "text-blue-700"
     },
     {
       title: "Progress Tracking",
       description: "Monitor your business setup journey with visual progress indicators",
       icon: TrendingUp,
-      color: "text-yellow-600"
+      color: "text-bizzy-blue"
     },
     {
       title: "Time-Saving Automation",
       description: "Automate repetitive tasks and focus on what matters most",
       icon: Clock,
-      color: "text-indigo-600"
+      color: "text-blue-600"
     }
   ];
 
@@ -125,29 +125,29 @@ const Index = () => {
   ];
 
   return (
-    <div className="dashboard-bg-image min-h-screen">
+    <div className="rock-textured-bg min-h-screen">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 glass-navbar">
+      <nav className="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-blue-100/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-20">
             <div className="flex items-center">
               <img 
                 src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
                 alt="Bizzy Logo" 
-                className="h-8 w-8 mr-3"
+                className="h-16 w-16 mr-4"
               />
-              <span className="text-xl font-bold text-gray-900">Bizzy</span>
+              <span className="text-3xl font-bold text-bizzy-blue font-display">Bizzy</span>
             </div>
             
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="nav-text text-gray-700 hover:text-gray-900">Features</a>
-              <a href="#testimonials" className="nav-text text-gray-700 hover:text-gray-900">Testimonials</a>
-              <a href="#pricing" className="nav-text text-gray-700 hover:text-gray-900">Pricing</a>
+              <a href="#features" className="text-blue-700 hover:text-bizzy-blue font-semibold text-lg transition-colors">Features</a>
+              <a href="#testimonials" className="text-blue-700 hover:text-bizzy-blue font-semibold text-lg transition-colors">Testimonials</a>
+              <a href="#pricing" className="text-blue-700 hover:text-bizzy-blue font-semibold text-lg transition-colors">Pricing</a>
               <Link to="/login">
-                <Button variant="ghost" className="nav-text">Login</Button>
+                <Button variant="outline" className="font-semibold text-lg border-blue-300 text-blue-700 hover:bg-blue-50">Login</Button>
               </Link>
               <Link to="/register">
-                <EnhancedCTAButton variant="primary" size="sm">
+                <EnhancedCTAButton variant="primary" size="lg">
                   Get Started
                 </EnhancedCTAButton>
               </Link>
@@ -155,7 +155,7 @@ const Index = () => {
 
             <div className="md:hidden">
               <Button variant="ghost" size="icon">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </Button>
@@ -165,7 +165,7 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
+      <section className="relative py-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <motion.div
@@ -173,22 +173,22 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-charcoal mb-8 font-display leading-tight">
                 Business without the{" "}
-                <span className="text-bizzy-blue">busyness</span>
+                <span className="text-bizzy-blue bg-gradient-to-r from-bizzy-blue to-blue-600 bg-clip-text text-transparent">busyness</span>
               </h1>
-              <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              <p className="text-2xl md:text-3xl text-blue-800 mb-12 max-w-4xl mx-auto font-semibold leading-relaxed">
                 All the steps for helping you after company setup, with personalised document templates, 
                 step-by-step process guidance and AI assistance
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                 <Link to="/register">
-                  <EnhancedCTAButton variant="primary" size="lg" showArrow>
+                  <EnhancedCTAButton variant="primary" size="lg" showArrow className="text-xl px-12 py-6">
                     Start Your Journey
                   </EnhancedCTAButton>
                 </Link>
                 <Link to="/pricing">
-                  <Button variant="outline" size="lg" className="btn-text">
+                  <Button variant="outline" size="lg" className="text-xl px-12 py-6 border-blue-300 text-blue-700 hover:bg-blue-50 font-semibold">
                     View Pricing
                   </Button>
                 </Link>
@@ -199,18 +199,18 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20">
+      <section id="features" className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-charcoal mb-6 font-display">
               Everything You Need to Succeed
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-2xl text-blue-800 max-w-3xl mx-auto font-semibold">
               Comprehensive tools and guidance to make your business setup journey smooth and successful
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
@@ -220,15 +220,15 @@ const Index = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.6 }}
                 >
-                  <Card className="card-professional-hover h-full">
+                  <Card className="card-professional-hover h-full bg-white/90 backdrop-blur-sm border-blue-200/50">
                     <CardHeader>
-                      <div className={`w-12 h-12 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center mb-4`}>
-                        <Icon className={`w-6 h-6 ${feature.color}`} />
+                      <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-bizzy-blue to-blue-600 flex items-center justify-center mb-6">
+                        <Icon className="w-8 h-8 text-white" />
                       </div>
-                      <CardTitle className="text-xl font-bold text-gray-900">{feature.title}</CardTitle>
+                      <CardTitle className="text-2xl font-bold text-charcoal font-display">{feature.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-600">{feature.description}</p>
+                      <p className="text-blue-800 text-lg font-medium leading-relaxed">{feature.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -239,18 +239,18 @@ const Index = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-20">
+      <section id="testimonials" className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-charcoal mb-6 font-display">
               Trusted by Entrepreneurs
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-2xl text-blue-800 max-w-3xl mx-auto font-semibold">
               See what successful business owners are saying about Bizzy
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {testimonials.map((testimonial, index) => (
               <motion.div
                 key={testimonial.name}
@@ -258,17 +258,17 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.6 }}
               >
-                <Card className="card-professional-hover h-full">
-                  <CardContent className="pt-6">
-                    <div className="flex items-center mb-4">
+                <Card className="card-professional-hover h-full bg-white/90 backdrop-blur-sm border-blue-200/50">
+                  <CardContent className="pt-8">
+                    <div className="flex items-center mb-6">
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                        <Star key={i} className="w-6 h-6 text-bizzy-blue fill-current" />
                       ))}
                     </div>
-                    <p className="text-gray-600 mb-6 italic">"{testimonial.content}"</p>
+                    <p className="text-blue-800 mb-8 italic text-lg font-medium leading-relaxed">"{testimonial.content}"</p>
                     <div>
-                      <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                      <p className="text-sm text-gray-500">{testimonial.role}</p>
+                      <p className="font-bold text-charcoal text-lg font-display">{testimonial.name}</p>
+                      <p className="text-blue-600 font-semibold">{testimonial.role}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -279,18 +279,18 @@ const Index = () => {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20">
+      <section id="pricing" className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-charcoal mb-6 font-display">
               Simple, Transparent Pricing
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-2xl text-blue-800 max-w-3xl mx-auto font-semibold">
               Choose the plan that fits your business needs
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {pricingPlans.map((plan, index) => (
               <motion.div
                 key={plan.name}
@@ -300,34 +300,34 @@ const Index = () => {
                 className="relative"
               >
                 {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-bizzy-blue text-white px-4 py-1 rounded-full text-sm font-semibold">
+                  <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-bizzy-blue text-white px-6 py-2 rounded-full text-lg font-bold">
                       Most Popular
                     </span>
                   </div>
                 )}
-                <Card className={`card-professional-hover h-full ${plan.popular ? 'ring-2 ring-bizzy-blue' : ''}`}>
+                <Card className={`card-professional-hover h-full bg-white/90 backdrop-blur-sm ${plan.popular ? 'ring-4 ring-bizzy-blue border-bizzy-blue' : 'border-blue-200/50'}`}>
                   <CardHeader className="text-center">
-                    <CardTitle className="text-2xl font-bold text-gray-900">{plan.name}</CardTitle>
-                    <div className="mt-4">
-                      <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                      {plan.period && <span className="text-gray-500">{plan.period}</span>}
+                    <CardTitle className="text-3xl font-black text-charcoal font-display">{plan.name}</CardTitle>
+                    <div className="mt-6">
+                      <span className="text-5xl font-black text-bizzy-blue font-display">{plan.price}</span>
+                      {plan.period && <span className="text-blue-600 text-xl font-semibold">{plan.period}</span>}
                     </div>
-                    <p className="text-gray-600 mt-2">{plan.description}</p>
+                    <p className="text-blue-800 mt-4 text-lg font-semibold">{plan.description}</p>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-3 mb-8">
+                    <ul className="space-y-4 mb-10">
                       {plan.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-center">
-                          <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                          <span className="text-gray-600">{feature}</span>
+                          <CheckCircle className="w-6 h-6 text-bizzy-blue mr-4 flex-shrink-0" />
+                          <span className="text-blue-800 font-medium text-lg">{feature}</span>
                         </li>
                       ))}
                     </ul>
                     <Link to="/register" className="block">
                       <EnhancedCTAButton 
                         variant={plan.popular ? "primary" : "outline"} 
-                        className="w-full"
+                        className="w-full text-lg py-4"
                       >
                         {plan.name === "Enterprise" ? "Contact Sales" : "Get Started"}
                       </EnhancedCTAButton>
@@ -341,24 +341,24 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Card className="card-professional bg-gradient-to-r from-bizzy-blue to-blue-700 text-white">
-            <CardContent className="py-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      <section className="py-24">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <Card className="card-professional bg-gradient-to-r from-bizzy-blue to-blue-700 text-white border-0">
+            <CardContent className="py-20">
+              <h2 className="text-4xl md:text-5xl font-black mb-6 font-display">
                 Ready to Transform Your Business Setup?
               </h2>
-              <p className="text-xl mb-8 text-blue-100">
+              <p className="text-2xl mb-12 text-blue-100 font-semibold leading-relaxed">
                 Join thousands of entrepreneurs who've simplified their journey with Bizzy
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-6 justify-center">
                 <Link to="/register">
-                  <EnhancedCTAButton variant="secondary" size="lg" showArrow>
+                  <EnhancedCTAButton variant="secondary" size="lg" showArrow className="text-xl px-12 py-6">
                     Start Free Today
                   </EnhancedCTAButton>
                 </Link>
                 <Link to="/pricing">
-                  <Button variant="outline" size="lg" className="btn-text border-white text-white hover:bg-white hover:text-bizzy-blue">
+                  <Button variant="outline" size="lg" className="text-xl px-12 py-6 border-white text-white hover:bg-white hover:text-bizzy-blue font-semibold">
                     View Plans
                   </Button>
                 </Link>
@@ -369,25 +369,25 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-gray-200">
+      <footer className="py-16 border-t border-blue-200/50 bg-white/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center mb-4 md:mb-0">
+            <div className="flex items-center mb-6 md:mb-0">
               <img 
                 src="/lovable-uploads/502b3627-55d4-4915-b44e-a2aa01e5751e.png" 
                 alt="Bizzy Logo" 
-                className="h-8 w-8 mr-3"
+                className="h-12 w-12 mr-4"
               />
-              <span className="text-xl font-bold text-gray-900">Bizzy</span>
+              <span className="text-2xl font-bold text-bizzy-blue font-display">Bizzy</span>
             </div>
-            <div className="flex space-x-6">
-              <a href="#" className="text-gray-600 hover:text-gray-900 nav-text">Privacy</a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 nav-text">Terms</a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 nav-text">Support</a>
+            <div className="flex space-x-8">
+              <a href="#" className="text-blue-700 hover:text-bizzy-blue font-semibold text-lg transition-colors">Privacy</a>
+              <a href="#" className="text-blue-700 hover:text-bizzy-blue font-semibold text-lg transition-colors">Terms</a>
+              <a href="#" className="text-blue-700 hover:text-bizzy-blue font-semibold text-lg transition-colors">Support</a>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-gray-200 text-center">
-            <p className="text-gray-500">© 2024 Bizzy. All rights reserved.</p>
+          <div className="mt-10 pt-10 border-t border-blue-200/50 text-center">
+            <p className="text-blue-600 font-medium text-lg">© 2024 Bizzy. All rights reserved.</p>
           </div>
         </div>
       </footer>
