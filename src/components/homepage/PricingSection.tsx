@@ -1,148 +1,254 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Sparkles, Zap, Shield, Check, Users, Building2, Crown } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { EnhancedCTAButton } from "@/components/ui/enhanced-cta-button";
+import { Check, FileText, Building, Users, Crown } from "lucide-react";
 import { PricingSkeleton } from "./PricingSkeleton";
+import { ErrorRetry } from "@/components/ui/error-retry";
+import { NetworkError } from "@/components/ui/network-error";
+import { Link } from "react-router-dom";
 
 export const PricingSection = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isNetworkError, setIsNetworkError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+
+  const fetchPricingData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      setIsNetworkError(false);
+      
+      // Simulate API call - replace with actual pricing data fetch
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simulate occasional failures for demonstration
+          if (Math.random() < 0.1 && retryCount === 0) {
+            reject(new Error('Failed to load pricing'));
+          } else {
+            resolve(null);
+          }
+        }, Math.random() * 1000 + 500);
+      });
+      
+    } catch (err) {
+      console.error('Pricing fetch error:', err);
+      if (!navigator.onLine) {
+        setIsNetworkError(true);
+      } else {
+        setError('Unable to load pricing information');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Simulate loading time for pricing data
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
+    fetchPricingData();
   }, []);
 
-  const plans = [
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    fetchPricingData();
+  };
+
+  const tiers = [
     {
-      name: "Bronze",
-      price: "£100",
-      description: "Perfect for solo entrepreneurs and small startups",
-      icon: <Users className="w-6 h-6" />,
-      badge: null,
-      planId: "bronze",
-      features: ["Basic business setup guidance", "Essential document templates", "Email support", "Basic compliance checking", "1 consultation session"],
-      color: "border-amber-200 bg-amber-50",
-      buttonStyle: "bg-amber-600 hover:bg-amber-700 text-white",
-      textColor: "text-amber-700"
+      name: "Essential Start",
+      price: "£49",
+      description: "Perfect for solo entrepreneurs just getting started",
+      icon: FileText,
+      popular: false,
+      features: [
+        "Complete business setup checklist",
+        "20+ essential document templates", 
+        "Step-by-step guidance videos",
+        "Tax registration walkthrough",
+        "Banking setup assistance",
+        "Basic compliance calendar",
+        "Email support"
+      ]
     },
     {
-      name: "Silver",
-      price: "£200",
-      description: "Ideal for growing businesses and established companies",
-      icon: <Building2 className="w-6 h-6" />,
-      badge: <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Most Popular</Badge>,
-      planId: "silver",
-      features: ["Everything in Bronze", "Advanced business tools", "Priority email & chat support", "Custom document generation", "3 consultation sessions", "Advanced compliance monitoring", "Team collaboration tools"],
-      color: "border-gray-200 bg-gray-50 shadow-lg",
-      buttonStyle: "bg-gray-600 hover:bg-gray-700 text-white",
-      textColor: "text-gray-700"
+      name: "Business Builder",
+      price: "£99",
+      description: "Ideal for growing businesses with employees",
+      icon: Building,
+      popular: true,
+      features: [
+        "Everything in Essential Start",
+        "50+ advanced document templates",
+        "Employment law compliance pack",
+        "HR policies & procedures",
+        "Health & safety templates",
+        "GDPR compliance toolkit",
+        "Quarterly legal updates",
+        "Priority email support"
+      ]
     },
     {
-      name: "Gold",
-      price: "£350",
-      description: "Advanced solution for established businesses",
-      icon: <Crown className="w-6 h-6" />,
-      badge: null,
-      planId: "gold",
-      features: ["Everything in Silver", "Premium business tools", "Priority phone support", "Advanced integrations", "5 consultation sessions", "Custom branding options", "Advanced analytics", "Dedicated support"],
-      color: "border-yellow-200 bg-yellow-50",
-      buttonStyle: "bg-yellow-600 hover:bg-yellow-700 text-white",
-      textColor: "text-yellow-700"
+      name: "Scale & Succeed",
+      price: "£199",
+      description: "For established businesses ready to scale",
+      icon: Users,
+      popular: false,
+      features: [
+        "Everything in Business Builder",
+        "100+ premium templates",
+        "Advanced compliance monitoring",
+        "Custom policy generator",
+        "Multi-location setup guidance",
+        "Partnership & shareholder docs",
+        "Monthly compliance reviews",
+        "Phone & email support"
+      ]
     },
     {
-      name: "Platinum",
-      price: "£500",
-      description: "Comprehensive solution for large organizations",
-      icon: <Crown className="w-6 h-6" />,
-      badge: <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">Premium</Badge>,
-      planId: "platinum",
-      features: ["Everything in Gold", "Unlimited consultations", "Dedicated account manager", "Custom integrations", "White-label options", "24/7 phone support", "Legal review services", "Priority development requests"],
-      color: "border-purple-200 bg-purple-50",
-      buttonStyle: "bg-purple-600 hover:bg-purple-700 text-white",
-      textColor: "text-purple-700"
+      name: "Enterprise Ready",
+      price: "£399",
+      description: "Comprehensive solution for complex businesses",
+      icon: Crown,
+      popular: false,
+      features: [
+        "Everything in Scale & Succeed",
+        "Unlimited document generation",
+        "Dedicated account manager",
+        "Custom legal document review",
+        "Priority compliance alerts",
+        "Advanced reporting dashboard",
+        "White-label options",
+        "24/7 priority support"
+      ]
     }
   ];
 
-  return (
-    <section id="pricing" className="py-20 bg-gradient-to-br from-blue-800/50 to-blue-900/30">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="w-8 h-8 text-blue-600" />
-            <h1 className="text-4xl font-bold text-white">Choose Your Plan</h1>
+  if (loading) {
+    return (
+      <section id="pricing" className="py-20 bg-gradient-to-br from-blue-900/20 to-blue-800/10">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Choose Your Business Journey</h2>
+            <p className="text-xl text-blue-100/80 max-w-3xl mx-auto">One-time payment, lifetime access. No subscriptions, no hidden fees.</p>
           </div>
-          <p className="text-xl text-blue-100/80 max-w-3xl mx-auto">Select the perfect one-off plan (no subscriptions!) to accelerate your business journey with Bizzy's comprehensive tools and expert guidance.</p>
-        </div>
-
-        {/* Pricing Cards */}
-        {isLoading ? (
           <PricingSkeleton />
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-8xl mx-auto touch-interaction-spacing">
-            {plans.map((plan) => (
-              <Card key={plan.name} className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300 touch-target-card`}>
-                {plan.badge && (
-                  <div className="absolute top-4 right-4">
-                    {plan.badge}
+        </div>
+      </section>
+    );
+  }
+
+  if (error || isNetworkError) {
+    return (
+      <section id="pricing" className="py-20 bg-gradient-to-br from-blue-900/20 to-blue-800/10">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Choose Your Business Journey</h2>
+            <p className="text-xl text-blue-100/80 max-w-3xl mx-auto">One-time payment, lifetime access. No subscriptions, no hidden fees.</p>
+          </div>
+          <div className="max-w-2xl mx-auto">
+            {isNetworkError ? (
+              <NetworkError onRetry={handleRetry} isOffline={!navigator.onLine} />
+            ) : (
+              <ErrorRetry 
+                message={error || "Failed to load pricing information"}
+                onRetry={handleRetry}
+              />
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="pricing" className="py-20 bg-gradient-to-br from-blue-900/20 to-blue-800/10">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4 text-[#3b82f6]">Choose Your Business Journey</h2>
+          <p className="text-xl text-blue-100/80 max-w-3xl mx-auto">One-time payment, lifetime access. No subscriptions, no hidden fees.</p>
+        </div>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-8xl mx-auto touch-interaction-spacing">
+          {tiers.map((tier, index) => {
+            const Icon = tier.icon;
+            return (
+              <Card key={index} className={`relative overflow-hidden bg-white hover:shadow-xl transition-all duration-300 touch-target-card ${
+                tier.popular ? 'ring-2 ring-[#3b82f6] scale-105' : ''
+              }`}>
+                {tier.popular && (
+                  <div className="absolute top-0 left-0 right-0">
+                    <div className="bg-[#3b82f6] text-white text-center py-2 text-sm font-medium">
+                      Most Popular
+                    </div>
                   </div>
                 )}
                 
-                <CardHeader className="text-center pb-8">
+                <CardHeader className={`text-center ${tier.popular ? 'pt-12' : 'pt-8'} pb-8`}>
                   <div className="flex items-center justify-center gap-3 mb-4">
-                    <div className={plan.textColor}>
-                      {plan.icon}
-                    </div>
-                    <CardTitle className={`text-2xl font-bold ${plan.textColor}`}>{plan.name}</CardTitle>
+                    <Icon className="w-6 h-6 text-[#3b82f6]" />
+                    <h3 className="text-2xl font-bold text-gray-900">{tier.name}</h3>
                   </div>
                   
                   <div className="mb-4">
-                    <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                    <span className="text-4xl font-bold text-[#3b82f6]">{tier.price}</span>
+                    <span className="text-gray-600 ml-1">one-time</span>
                   </div>
                   
-                  <CardDescription className="text-gray-600 text-base">
-                    {plan.description}
-                  </CardDescription>
+                  <p className="text-gray-600 text-sm">{tier.description}</p>
                 </CardHeader>
 
                 <CardContent className="pt-0">
-                  <Link to={`/pricing?plan=${plan.planId}`} className="touch-target-cta">
-                    <EnhancedCTAButton 
-                      variant="primary" 
-                      size="lg" 
-                      className="w-full mb-8"
-                      showArrow
+                  <Link to="/register">
+                    <Button 
+                      className={`w-full mb-8 touch-target-cta ${
+                        tier.popular 
+                          ? 'bg-[#3b82f6] hover:bg-[#2563eb] text-white' 
+                          : 'bg-white border-2 border-[#3b82f6] text-[#3b82f6] hover:bg-[#3b82f6] hover:text-white'
+                      }`}
                     >
-                      <Zap className="w-5 h-5 mr-2" />
                       Get Started
-                    </EnhancedCTAButton>
+                    </Button>
                   </Link>
 
                   <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-900 flex items-center gap-2">
-                      <Shield className="w-4 h-4" />
-                      What's included:
-                    </h4>
-                    <ul className="space-y-3">
-                      {plan.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-start gap-3">
-                          <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700">{feature}</span>
-                        </li>
+                    <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                      <Check className="w-4 h-4 text-[#3b82f6]" />
+                      <span>What's included:</span>
+                    </div>
+                    <div className="space-y-3">
+                      {tier.features.map((feature, featureIndex) => (
+                        <div key={featureIndex} className="flex items-start gap-3">
+                          <Check className="w-5 h-5 text-[#3b82f6] mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700 text-sm">{feature}</span>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            );
+          })}
+        </div>
+
+        <div className="text-center mt-12">
+          <p className="text-blue-100/60 text-sm mb-4">
+            All plans include 12 months of updates • 30-day money-back guarantee
+          </p>
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-blue-100/80">
+            <div className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-[#3b82f6]" />
+              <span>Instant access</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-[#3b82f6]" />
+              <span>UK-specific content</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-[#3b82f6]" />
+              <span>No ongoing fees</span>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </section>
   );
