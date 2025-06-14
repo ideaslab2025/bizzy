@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BizzyCharacter from "@/components/BizzyCharacter";
@@ -29,15 +28,6 @@ const Index = () => {
   const featuresRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const floatingAnimation = () => {
-      setFloatingPosition(prev => ({
-        x: window.innerWidth - 150 + Math.sin(Date.now() / 1000) * 10,
-        y: window.innerHeight - 150 + Math.cos(Date.now() / 1200) * 15
-      }));
-      requestAnimationFrame(floatingAnimation);
-    };
-    const animation = requestAnimationFrame(floatingAnimation);
-    
     const handleResize = () => {
       setFloatingPosition({
         x: window.innerWidth - 150,
@@ -78,7 +68,6 @@ const Index = () => {
     window.addEventListener('hashchange', handleHashChange);
     
     return () => {
-      cancelAnimationFrame(animation);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('hashchange', handleHashChange);
@@ -161,11 +150,10 @@ const Index = () => {
         <FooterSection />
       </div>
 
-      {/* Floating Bizzy character */}
+      {/* Floating Bizzy character with CSS-based positioning */}
       <div className="fixed z-50" style={{
         left: `${floatingPosition.x}px`,
         top: `${floatingPosition.y}px`,
-        transition: 'all 0.5s ease-out'
       }}>
         <BizzyCharacter />
       </div>
