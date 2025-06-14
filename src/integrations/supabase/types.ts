@@ -203,42 +203,6 @@ export type Database = {
           },
         ]
       }
-      notifications: {
-        Row: {
-          category_id: string | null
-          created_at: string | null
-          id: string
-          message: string
-          read: boolean | null
-          title: string
-          type: string
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          category_id?: string | null
-          created_at?: string | null
-          id?: string
-          message: string
-          read?: boolean | null
-          title: string
-          type: string
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          category_id?: string | null
-          created_at?: string | null
-          id?: string
-          message?: string
-          read?: boolean | null
-          title?: string
-          type?: string
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
       orders: {
         Row: {
           amount: number
