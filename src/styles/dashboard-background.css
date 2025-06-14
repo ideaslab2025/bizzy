@@ -1,25 +1,23 @@
 
+/* Dashboard Background Image Styles - Fixed and Optimized */
 
-
-/* Dashboard Background Image Styles - Enhanced for visibility */
-
-/* Main dashboard background container with debugging */
+/* Main dashboard background container */
 .dashboard-bg-image {
   position: relative;
   min-height: 100vh;
-  /* Fallback solid color for debugging - should see red if image fails */
-  background-color: #ff0000 !important;
-  /* Primary background image - NEW WHITE STONE TEXTURE */
+  /* Elegant gradient fallback */
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%) !important;
+  /* Primary background image - WHITE STONE TEXTURE */
   background-image: url('/lovable-uploads/c710d3e7-8162-4c3d-bdab-7bd91cea3dbd.png') !important;
-  background-size: 80% !important;
+  background-size: 600px !important;
   background-position: center !important;
   background-repeat: repeat !important;
-  background-attachment: fixed !important;
-  /* Strong filters for visibility */
-  filter: contrast(1.8) brightness(1.4) saturate(1.2) !important;
+  background-attachment: scroll !important;
+  /* Subtle overlay for better readability */
+  background-blend-mode: overlay !important;
 }
 
-/* Alternative fallback with public path */
+/* Enhanced fallback with ::before pseudo-element */
 .dashboard-bg-image::before {
   content: '';
   position: fixed;
@@ -28,21 +26,28 @@
   right: 0;
   bottom: 0;
   z-index: -10;
-  /* Fallback color for debugging */
-  background-color: #00ff00;
-  /* Try alternative image path - NEW WHITE STONE TEXTURE */
+  /* Gradient fallback that matches the main design */
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 25%, #cbd5e1 75%, #94a3b8 100%);
+  /* Try the image again as fallback */
   background-image: url('/lovable-uploads/c710d3e7-8162-4c3d-bdab-7bd91cea3dbd.png');
-  background-size: 80%;
+  background-size: 600px;
   background-position: center;
   background-repeat: repeat;
-  background-attachment: fixed;
-  filter: contrast(1.8) brightness(1.4) saturate(1.2);
+  background-attachment: scroll;
+  opacity: 0.8;
 }
 
-/* Force override any conflicting styles */
-body .dashboard-bg-image {
-  background-color: #ff0000 !important;
-  background-image: url('/lovable-uploads/c710d3e7-8162-4c3d-bdab-7bd91cea3dbd.png') !important;
+/* Error handling - if image fails to load, hide the red debug background */
+.dashboard-bg-image {
+  /* Remove debug styling */
+  border: none !important;
+}
+
+/* Progressive enhancement for WebP support */
+@supports (background-image: url('image.webp')) {
+  .dashboard-bg-image {
+    background-image: url('/lovable-uploads/c710d3e7-8162-4c3d-bdab-7bd91cea3dbd.png') !important;
+  }
 }
 
 /* Responsive adjustments */
@@ -50,56 +55,90 @@ body .dashboard-bg-image {
   .dashboard-bg-image,
   .dashboard-bg-image::before {
     background-attachment: scroll !important;
-    background-size: 90% !important;
+    background-size: 400px !important;
   }
 }
 
-/* UI Elements - Make them semi-transparent so background shows through */
+@media (max-width: 480px) {
+  .dashboard-bg-image,
+  .dashboard-bg-image::before {
+    background-size: 300px !important;
+  }
+}
+
+/* UI Elements - Enhanced semi-transparent styling */
 .dashboard-bg-image .bg-white,
 .dashboard-bg-image [class*="bg-white"] {
-  background: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(8px) !important;
-  border: 1px solid rgba(229, 231, 235, 0.6) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px) saturate(150%) !important;
+  border: 1px solid rgba(229, 231, 235, 0.8) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Header styling - semi-transparent */
+/* Header styling - refined transparency */
 .dashboard-bg-image header,
 .dashboard-bg-image header.sticky {
-  background-color: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(8px) !important;
-  border-bottom: 1px solid rgba(229, 231, 235, 0.6) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px) saturate(150%) !important;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.8) !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Sidebar styling - semi-transparent */
+/* Sidebar styling - refined transparency */
 .dashboard-bg-image .sidebar,
 .dashboard-bg-image [class*="sidebar"] {
-  background: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(8px) !important;
-  border-right: 1px solid rgba(229, 231, 235, 0.6) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px) saturate(150%) !important;
+  border-right: 1px solid rgba(229, 231, 235, 0.8) !important;
+  box-shadow: 4px 0 6px -1px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Card elements - semi-transparent */
+/* Card elements - enhanced glass effect */
 .dashboard-bg-image .bg-card,
 .dashboard-bg-image .bg-background,
 .dashboard-bg-image .bg-popover,
 .dashboard-bg-image [class*="bg-card"],
 .dashboard-bg-image [class*="bg-background"] {
-  background: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(8px) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(10px) saturate(140%) !important;
+  border: 1px solid rgba(229, 231, 235, 0.6) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04) !important;
 }
 
-/* Enhanced hover effects */
-.dashboard-bg-image .card-professional-hover:hover {
-  background: rgba(255, 255, 255, 0.95) !important;
-  transform: translateY(-2px);
+/* Enhanced hover effects for cards */
+.dashboard-bg-image .card-professional-hover:hover,
+.dashboard-bg-image [class*="hover:"]:hover {
+  background: rgba(255, 255, 255, 0.98) !important;
+  transform: translateY(-1px);
   box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.15),
-    0 6px 12px rgba(0, 0, 0, 0.08);
+    0 8px 25px rgba(0, 0, 0, 0.1),
+    0 4px 10px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.2s ease-out;
 }
 
-/* Debug helper - temporary red border to see if class is applied */
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .dashboard-bg-image {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%) !important;
+  }
+  
+  .dashboard-bg-image::before {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 75%, #475569 100%);
+    opacity: 0.9;
+  }
+}
+
+/* Performance optimization - will-change for smooth animations */
 .dashboard-bg-image {
-  border: 3px solid red !important;
+  will-change: background-position;
 }
 
-
+/* Preload critical background image */
+.dashboard-bg-image::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  background-image: url('/lovable-uploads/c710d3e7-8162-4c3d-bdab-7bd91cea3dbd.png');
+  visibility: hidden;
+}

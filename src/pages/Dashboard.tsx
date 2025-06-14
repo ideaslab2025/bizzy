@@ -12,6 +12,7 @@ import { CloudSyncIndicator } from "@/components/ui/cloud-sync-indicator";
 import { ContextualFAQ } from "@/components/ui/contextual-faq";
 import { FAQTrigger } from "@/components/ui/faq-trigger";
 import { UndoKeyboardHandler } from "@/components/ui/undo-toast";
+import { BackgroundImageHandler } from "@/components/ui/background-image-handler";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -214,16 +215,10 @@ const Dashboard = () => {
   return (
     <ProgressProvider>
       <SidebarProvider>
-        {/* FORCE the background class application with multiple approaches - NEW WHITE STONE TEXTURE */}
-        <div 
-          className="min-h-screen flex w-full dashboard-bg-image" 
-          style={{
-            backgroundImage: 'url(/lovable-uploads/c710d3e7-8162-4c3d-bdab-7bd91cea3dbd.png)',
-            backgroundSize: '80%',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'repeat',
-            backgroundColor: '#ff0000' // Red fallback for debugging
-          }}
+        <BackgroundImageHandler
+          imageUrl="/lovable-uploads/c710d3e7-8162-4c3d-bdab-7bd91cea3dbd.png"
+          fallbackGradient="linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)"
+          className="min-h-screen flex w-full"
         >
           <AppSidebar />
           <main className="flex-1 relative">
@@ -412,7 +407,6 @@ const Dashboard = () => {
               </div>
             </header>
             
-            {/* Professional Main Content */}
             <div className="p-6 md:p-8 min-h-[calc(100vh-4rem)]">
               <Outlet />
             </div>
@@ -425,7 +419,7 @@ const Dashboard = () => {
               />
             </div>
           </main>
-        </div>
+        </BackgroundImageHandler>
         
         <EnhancedCommandPalette 
           open={commandPaletteOpen} 
