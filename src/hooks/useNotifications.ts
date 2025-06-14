@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 export interface Notification {
   id: string;
@@ -42,7 +42,11 @@ export const useNotifications = () => {
       setNotifications(data || []);
     } catch (error) {
       console.error('Error fetching notifications:', error);
-      toast({ title: 'Error loading notifications' });
+      toast({
+        title: 'Error',
+        description: 'Failed to load notifications',
+        variant: 'destructive'
+      });
     } finally {
       setLoading(false);
     }
@@ -111,10 +115,17 @@ export const useNotifications = () => {
       if (error) throw error;
 
       setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-      toast({ title: 'All notifications marked as read' });
+      toast({
+        title: 'Success',
+        description: 'All notifications marked as read'
+      });
     } catch (error) {
       console.error('Error marking all as read:', error);
-      toast({ title: 'Error updating notifications' });
+      toast({
+        title: 'Error',
+        description: 'Failed to update notifications',
+        variant: 'destructive'
+      });
     }
   };
 
