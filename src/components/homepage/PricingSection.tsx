@@ -1,11 +1,23 @@
-
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Sparkles, Zap, Shield, Check, Users, Building2, Crown } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EnhancedCTAButton } from "@/components/ui/enhanced-cta-button";
+import { PricingSkeleton } from "./PricingSkeleton";
 
 export const PricingSection = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading time for pricing data
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const plans = [
     {
       name: "Bronze",
@@ -70,63 +82,67 @@ export const PricingSection = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-8xl mx-auto touch-interaction-spacing">
-          {plans.map((plan) => (
-            <Card key={plan.name} className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300 touch-target-card`}>
-              {plan.badge && (
-                <div className="absolute top-4 right-4">
-                  {plan.badge}
-                </div>
-              )}
-              
-              <CardHeader className="text-center pb-8">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className={plan.textColor}>
-                    {plan.icon}
+        {isLoading ? (
+          <PricingSkeleton />
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-8xl mx-auto touch-interaction-spacing">
+            {plans.map((plan) => (
+              <Card key={plan.name} className={`relative overflow-hidden ${plan.color} hover:shadow-xl transition-all duration-300 touch-target-card`}>
+                {plan.badge && (
+                  <div className="absolute top-4 right-4">
+                    {plan.badge}
                   </div>
-                  <CardTitle className={`text-2xl font-bold ${plan.textColor}`}>{plan.name}</CardTitle>
-                </div>
+                )}
                 
-                <div className="mb-4">
-                  <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                </div>
-                
-                <CardDescription className="text-gray-600 text-base">
-                  {plan.description}
-                </CardDescription>
-              </CardHeader>
+                <CardHeader className="text-center pb-8">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <div className={plan.textColor}>
+                      {plan.icon}
+                    </div>
+                    <CardTitle className={`text-2xl font-bold ${plan.textColor}`}>{plan.name}</CardTitle>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                  </div>
+                  
+                  <CardDescription className="text-gray-600 text-base">
+                    {plan.description}
+                  </CardDescription>
+                </CardHeader>
 
-              <CardContent className="pt-0">
-                <Link to={`/pricing?plan=${plan.planId}`} className="touch-target-cta">
-                  <EnhancedCTAButton 
-                    variant="primary" 
-                    size="lg" 
-                    className="w-full mb-8"
-                    showArrow
-                  >
-                    <Zap className="w-5 h-5 mr-2" />
-                    Get Started
-                  </EnhancedCTAButton>
-                </Link>
+                <CardContent className="pt-0">
+                  <Link to={`/pricing?plan=${plan.planId}`} className="touch-target-cta">
+                    <EnhancedCTAButton 
+                      variant="primary" 
+                      size="lg" 
+                      className="w-full mb-8"
+                      showArrow
+                    >
+                      <Zap className="w-5 h-5 mr-2" />
+                      Get Started
+                    </EnhancedCTAButton>
+                  </Link>
 
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900 flex items-center gap-2">
-                    <Shield className="w-4 h-4" />
-                    What's included:
-                  </h4>
-                  <ul className="space-y-3">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-900 flex items-center gap-2">
+                      <Shield className="w-4 h-4" />
+                      What's included:
+                    </h4>
+                    <ul className="space-y-3">
+                      {plan.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-start gap-3">
+                          <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

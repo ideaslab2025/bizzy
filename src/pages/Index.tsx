@@ -10,11 +10,12 @@ import { FeaturesSection } from "@/components/homepage/FeaturesSection";
 import { PricingSection } from "@/components/homepage/PricingSection";
 import { FAQSection } from "@/components/homepage/FAQSection";
 import { FooterSection } from "@/components/homepage/FooterSection";
+import { PageLoadingSkeleton } from "@/components/homepage/PageLoadingSkeleton";
 import { EnhancedCTAButton } from "@/components/ui/enhanced-cta-button";
 import { Link } from "react-router-dom";
 
 const Index = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [floatingPosition, setFloatingPosition] = useState({
     x: window.innerWidth - 150,
@@ -22,10 +23,20 @@ const Index = () => {
   });
   const [isScrolled, setIsScrolled] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [pageLoading, setPageLoading] = useState(true);
 
   // Add refs for scroll targets
   const faqsRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    // Simulate initial page load
+    const timer = setTimeout(() => {
+      setPageLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -93,6 +104,10 @@ const Index = () => {
       console.error('Error signing out:', error);
     }
   };
+
+  if (pageLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
