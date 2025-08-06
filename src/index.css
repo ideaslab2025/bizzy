@@ -12,34 +12,34 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 16.5%; /* Darker for better contrast */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 16.5%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 16.5%;
-    --primary: 245 31% 29%; /* Updated to #3B385A */
+    --background: 245 31% 29%; /* #3B385A */
+    --foreground: 210 40% 98%; /* Light text for dark background */
+    --card: 245 31% 32%; /* Slightly lighter than background */
+    --card-foreground: 210 40% 98%;
+    --popover: 245 31% 32%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 221 83% 53%; /* Bizzy blue for accents */
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 0 0% 16.5%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 0 0% 32%; /* Darker for better contrast */
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 0 0% 16.5%;
+    --secondary: 245 31% 35%; /* Lighter variant of background */
+    --secondary-foreground: 210 40% 98%;
+    --muted: 245 31% 35%;
+    --muted-foreground: 210 40% 80%;
+    --accent: 221 83% 53%; /* Bizzy blue for accents */
+    --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 60.2%; /* Vibrant red */
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --border: 245 31% 40%; /* Lighter border */
+    --input: 245 31% 35%;
     --ring: 221 83% 53%; /* Bizzy blue unchanged */
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 16.5%;
-    --sidebar-primary: 0 0% 6%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 0 0% 6%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 221 83% 53%; /* Bizzy blue unchanged */
+    --sidebar-background: 221 83% 53%; /* Bizzy blue sidebar */
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 221 83% 45%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 221 83% 55%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 221 83% 45%;
+    --sidebar-ring: 221 83% 53%;
     
     --tilt-max: 15deg;
     --tilt-perspective: 1000px;

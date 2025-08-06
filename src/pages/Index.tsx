@@ -110,7 +110,7 @@ const Index = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0a192f] text-white">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <NavigationHeader 
         isScrolled={isScrolled}
         scrollToSection={scrollToSection}

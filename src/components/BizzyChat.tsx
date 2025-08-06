@@ -105,7 +105,7 @@ const BizzyChat = ({ isOpen, onClose }: BizzyChatProps) => {
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent className="fixed bottom-0 right-0 rounded-tl-xl h-[60vh] w-full max-w-[350px] mr-0 ml-auto">
-        <DrawerHeader className="bg-[#0a192f] text-white border-b border-blue-900/30">
+        <DrawerHeader className="bg-background text-foreground border-b border-border">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <img 
@@ -122,7 +122,7 @@ const BizzyChat = ({ isOpen, onClose }: BizzyChatProps) => {
           </div>
         </DrawerHeader>
 
-        <div className="flex flex-col h-full bg-[#0a192f]/95">
+        <div className="flex flex-col h-full bg-background/95">
           <div className="flex-1 p-4 overflow-y-auto">
             <div className="space-y-4">
               {messages.map((message) => (

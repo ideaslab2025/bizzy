@@ -423,7 +423,7 @@ const GuidedHelp = () => {
   return (
     <div className="min-h-screen bg-white flex">
       {/* Left Sidebar - Blue */}
-      <div className="w-80 bg-[#0088cc] text-white flex flex-col">
+      <div className="w-80 bg-sidebar-background text-sidebar-foreground flex flex-col">
         {/* Logo */}
         <div className="p-4 bg-white">
           <Link to="/dashboard" className="flex items-center justify-center">
@@ -457,7 +457,7 @@ const GuidedHelp = () => {
                         ? 'bg-green-500 text-white'
                         : 'bg-green-500 text-white'
                       : isCurrent
-                      ? 'bg-[#0088cc] text-white'
+                      ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                       : 'bg-white/20'
                   }`}>
                     {isCompleted ? (
@@ -489,7 +489,7 @@ const GuidedHelp = () => {
       {/* Main Content Area - White */}
       <div className="flex-1 flex flex-col">
         {/* Top Bar */}
-        <div className="bg-[#0088cc] border-b p-4 flex justify-between items-center">
+        <div className="bg-sidebar-background border-b p-4 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-white">
               {sections.find(s => s.order_number === currentSection)?.title}
@@ -698,7 +698,7 @@ const GuidedHelp = () => {
             <Button
               onClick={nextStep}
               disabled={currentSection === sections.length && (steps.length === 0 || currentStep === steps.length)}
-              className="bg-[#0088cc] hover:bg-[#0088cc]/90 text-sm sm:text-base"
+              className="bg-primary hover:bg-primary/90 text-sm sm:text-base"
             >
               Next
               <ChevronRight className="w-4 h-4 ml-2" />
@@ -711,7 +711,7 @@ const GuidedHelp = () => {
       {showChatbot && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg w-full max-w-md h-[500px] flex flex-col">
-            <div className="flex items-center justify-between p-4 border-b bg-[#0088cc] text-white rounded-t-lg">
+            <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground rounded-t-lg">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-white rounded-full overflow-hidden">
                   <AspectRatio ratio={1}>
@@ -748,7 +748,7 @@ const GuidedHelp = () => {
                   placeholder="Ask me anything..." 
                   className="flex-1 px-3 py-2 border rounded-md text-sm"
                 />
-                <Button className="bg-[#0088cc] hover:bg-[#0088cc]/90 text-sm">
+                <Button className="bg-primary hover:bg-primary/90 text-sm">
                   Send
                 </Button>
               </div>

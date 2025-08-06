@@ -81,9 +81,9 @@ const Onboarding = () => {
               Let's get your business set up on our platform
             </CardDescription>
             <div className="flex justify-between items-center mt-4">
-              <div className={`h-2 w-1/3 ${step >= 1 ? 'bg-[#0088cc]' : 'bg-gray-200'} rounded-l-full`}></div>
-              <div className={`h-2 w-1/3 ${step >= 2 ? 'bg-[#0088cc]' : 'bg-gray-200'}`}></div>
-              <div className={`h-2 w-1/3 ${step >= 3 ? 'bg-[#0088cc]' : 'bg-gray-200'} rounded-r-full`}></div>
+              <div className={`h-2 w-1/3 ${step >= 1 ? 'bg-primary' : 'bg-gray-200'} rounded-l-full`}></div>
+              <div className={`h-2 w-1/3 ${step >= 2 ? 'bg-primary' : 'bg-gray-200'}`}></div>
+              <div className={`h-2 w-1/3 ${step >= 3 ? 'bg-primary' : 'bg-gray-200'} rounded-r-full`}></div>
             </div>
           </CardHeader>
           <form onSubmit={handleSubmit}>
@@ -255,7 +255,7 @@ const Onboarding = () => {
               )}
               <Button 
                 type="submit" 
-                className="bg-[#0088cc] hover:bg-[#0088cc]/90"
+                className="bg-primary hover:bg-primary/90"
                 disabled={isLoading}
               >
                 {step < 3 ? "Next" : isLoading ? "Saving..." : "Complete"}

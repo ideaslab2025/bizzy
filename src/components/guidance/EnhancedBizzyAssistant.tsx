@@ -362,7 +362,7 @@ export const EnhancedBizzyAssistant: React.FC<EnhancedBizzyAssistantProps> = ({
   return (
     <div className="w-full h-[80vh] bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
       {/* Header */}
-      <CardHeader className="bg-[#0088cc] text-white rounded-t-xl">
+      <CardHeader className="bg-primary text-primary-foreground rounded-t-xl">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
             <Bot className="w-6 h-6 text-[#0088cc]" strokeWidth={1.5} />
@@ -388,7 +388,7 @@ export const EnhancedBizzyAssistant: React.FC<EnhancedBizzyAssistantProps> = ({
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.role === 'user'
-                      ? 'bg-[#0088cc] text-white'
+                      ? 'bg-primary text-primary-foreground'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
                   }`}
                 >

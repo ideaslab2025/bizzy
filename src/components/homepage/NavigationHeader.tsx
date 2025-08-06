@@ -72,7 +72,7 @@ export const NavigationHeader = ({ isScrolled, scrollToSection, handleSignOut }:
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-[#0a192f]/95 backdrop-blur-sm border-b border-blue-900/30' 
+        ? 'bg-background/95 backdrop-blur-sm border-b border-border' 
         : 'bg-transparent'
     }`}>
       <div className="container mx-auto px-4">
@@ -161,7 +161,7 @@ export const NavigationHeader = ({ isScrolled, scrollToSection, handleSignOut }:
               : 'max-h-0 opacity-0'
           }`}
         >
-          <div className="bg-[#0a192f]/95 backdrop-blur-sm border-t border-blue-900/30">
+          <div className="bg-background/95 backdrop-blur-sm border-t border-border">
             <div className="py-4 space-y-2">
               {navigationItems.map((item) => (
                 <button

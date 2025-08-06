@@ -136,7 +136,7 @@ export const SwipeableStepContent: React.FC<SwipeableStepContentProps> = ({
                   className={cn(
                     "w-2 h-2 rounded-full transition-all duration-300",
                     index === currentStep - 1 
-                      ? "bg-[#0088cc] w-6" 
+                      ? "bg-primary w-6" 
                       : "bg-gray-300"
                   )}
                 />

@@ -83,7 +83,7 @@ export const MilestoneReached: React.FC<MilestoneReachedProps> = ({ milestone, o
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onClose}
-            className="w-full bg-[#0088cc] text-white py-3 rounded-lg font-medium hover:bg-[#0077bb] transition-colors"
+            className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
           >
             Continue
           </motion.button>

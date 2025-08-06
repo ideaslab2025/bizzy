@@ -54,7 +54,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="border-r-0 w-[240px] max-w-[240px]">
-      <SidebarContent className="bg-[#0088cc] text-white h-screen sticky top-0">
+      <SidebarContent className="bg-sidebar-background text-sidebar-foreground h-screen sticky top-0">
         <SidebarGroup className="px-3 py-6 h-full flex flex-col">
           <SidebarGroupContent className="flex-1">
             <SidebarMenu className="space-y-2">
@@ -83,7 +83,7 @@ export function AppSidebar() {
                         {item.title}
                       </span>
                       {location.pathname === item.url && (
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#0088cc] rounded-l-full" />
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-sidebar-accent rounded-l-full" />
                       )}
                     </Link>
                   </SidebarMenuButton>
