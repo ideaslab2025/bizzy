@@ -12,34 +12,34 @@
 
 @layer base {
   :root {
-    --background: 245 31% 29%; /* #3B385A */
-    --foreground: 210 40% 98%; /* Light text for dark background */
-    --card: 245 31% 32%; /* Slightly lighter than background */
-    --card-foreground: 210 40% 98%;
-    --popover: 245 31% 32%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 221 83% 53%; /* Bizzy blue for accents */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 245 31% 35%; /* Lighter variant of background */
-    --secondary-foreground: 210 40% 98%;
-    --muted: 245 31% 35%;
-    --muted-foreground: 210 40% 80%;
-    --accent: 221 83% 53%; /* Bizzy blue for accents */
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 84.2% 60.2%; /* Vibrant red */
-    --destructive-foreground: 210 40% 98%;
-    --border: 245 31% 40%; /* Lighter border */
-    --input: 245 31% 35%;
-    --ring: 221 83% 53%; /* Bizzy blue unchanged */
+    --background: 189 100% 91% / 0.39; /* #D2F7FF at 39% opacity */
+    --foreground: 240 100% 57%; /* #2323FF for text */
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 240 100% 57%; /* Blue text on white cards */
+    --popover: 0 0% 100%; /* White popovers */
+    --popover-foreground: 240 100% 57%;
+    --primary: 240 100% 57%; /* #2323FF for buttons */
+    --primary-foreground: 0 0% 100%; /* White text on blue buttons */
+    --secondary: 0 0% 100%; /* White secondary elements */
+    --secondary-foreground: 240 100% 57%; /* Blue text on white */
+    --muted: 0 0% 100% / 0.8; /* Slightly transparent white */
+    --muted-foreground: 240 100% 57% / 0.7; /* Muted blue text */
+    --accent: 0 0% 100%; /* White accents */
+    --accent-foreground: 240 100% 57%; /* Blue text on white accents */
+    --destructive: 0 84.2% 60.2%; /* Keep red for destructive actions */
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 100% 57% / 0.2; /* Light blue borders */
+    --input: 0 0% 100%; /* White input fields */
+    --ring: 240 100% 57%; /* Blue focus rings */
     --radius: 0.5rem;
-    --sidebar-background: 221 83% 53%; /* Bizzy blue sidebar */
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 221 83% 45%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 221 83% 55%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 221 83% 45%;
-    --sidebar-ring: 221 83% 53%;
+    --sidebar-background: 0 0% 100%; /* White sidebar */
+    --sidebar-foreground: 240 100% 57%; /* Blue text in sidebar */
+    --sidebar-primary: 240 100% 57%; /* Blue primary in sidebar */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 100% 50%; /* Slightly darker blue accent */
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 240 100% 57% / 0.2; /* Light blue sidebar borders */
+    --sidebar-ring: 240 100% 57%;
     
     --tilt-max: 15deg;
     --tilt-perspective: 1000px;
